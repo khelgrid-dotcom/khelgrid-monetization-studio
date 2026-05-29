@@ -25,7 +25,11 @@ function Home() {
   const [sport, setSport] = useState("All Sports");
   const [location, setLocation] = useState("All Locations");
 
-  const submit = () => navigate({ to: "/trials" });
+  const submit = () =>
+    navigate({
+      to: "/search",
+      search: { q: query, sport, city: location, sort: "Soonest", free: false },
+    });
 
   return (
     <div className="flex">
