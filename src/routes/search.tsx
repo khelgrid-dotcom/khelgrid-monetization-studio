@@ -45,7 +45,7 @@ function SearchPage() {
   const [boost, setBoost] = useState<Trial | null>(null);
 
   const update = (patch: Partial<typeof params>) =>
-    navigate({ search: prev => ({ ...prev, ...patch }), replace: true });
+    navigate({ search: (prev: typeof params) => ({ ...prev, ...patch }), replace: true });
 
   const results = useMemo(() => {
     const q = params.q.trim().toLowerCase();
