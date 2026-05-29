@@ -9,18 +9,108 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as VerifyRouteImport } from './routes/verify'
 import { Route as TrialsRouteImport } from './routes/trials'
+import { Route as TalentScannerRouteImport } from './routes/talent-scanner'
+import { Route as StartFromZeroRouteImport } from './routes/start-from-zero'
+import { Route as SearchRouteImport } from './routes/search'
+import { Route as ResourcesRouteImport } from './routes/resources'
+import { Route as PricingRouteImport } from './routes/pricing'
+import { Route as OpportunitiesRouteImport } from './routes/opportunities'
+import { Route as MobileAppRouteImport } from './routes/mobile-app'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as LearningHubRouteImport } from './routes/learning-hub'
 import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as CommunityRouteImport } from './routes/community'
+import { Route as CoachesRouteImport } from './routes/coaches'
+import { Route as AiGuideRouteImport } from './routes/ai-guide'
+import { Route as AcademyRouteImport } from './routes/academy'
+import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 
+const VerifyRoute = VerifyRouteImport.update({
+  id: '/verify',
+  path: '/verify',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TrialsRoute = TrialsRouteImport.update({
   id: '/trials',
   path: '/trials',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TalentScannerRoute = TalentScannerRouteImport.update({
+  id: '/talent-scanner',
+  path: '/talent-scanner',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StartFromZeroRoute = StartFromZeroRouteImport.update({
+  id: '/start-from-zero',
+  path: '/start-from-zero',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SearchRoute = SearchRouteImport.update({
+  id: '/search',
+  path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResourcesRoute = ResourcesRouteImport.update({
+  id: '/resources',
+  path: '/resources',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PricingRoute = PricingRouteImport.update({
+  id: '/pricing',
+  path: '/pricing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OpportunitiesRoute = OpportunitiesRouteImport.update({
+  id: '/opportunities',
+  path: '/opportunities',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MobileAppRoute = MobileAppRouteImport.update({
+  id: '/mobile-app',
+  path: '/mobile-app',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LearningHubRoute = LearningHubRouteImport.update({
+  id: '/learning-hub',
+  path: '/learning-hub',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CommunityRoute = CommunityRouteImport.update({
+  id: '/community',
+  path: '/community',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CoachesRoute = CoachesRouteImport.update({
+  id: '/coaches',
+  path: '/coaches',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AiGuideRoute = AiGuideRouteImport.update({
+  id: '/ai-guide',
+  path: '/ai-guide',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AcademyRoute = AcademyRouteImport.update({
+  id: '/academy',
+  path: '/academy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -31,36 +121,158 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/academy': typeof AcademyRoute
+  '/ai-guide': typeof AiGuideRoute
+  '/coaches': typeof CoachesRoute
+  '/community': typeof CommunityRoute
   '/dashboard': typeof DashboardRoute
+  '/learning-hub': typeof LearningHubRoute
+  '/login': typeof LoginRoute
+  '/mobile-app': typeof MobileAppRoute
+  '/opportunities': typeof OpportunitiesRoute
+  '/pricing': typeof PricingRoute
+  '/resources': typeof ResourcesRoute
+  '/search': typeof SearchRoute
+  '/start-from-zero': typeof StartFromZeroRoute
+  '/talent-scanner': typeof TalentScannerRoute
   '/trials': typeof TrialsRoute
+  '/verify': typeof VerifyRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/academy': typeof AcademyRoute
+  '/ai-guide': typeof AiGuideRoute
+  '/coaches': typeof CoachesRoute
+  '/community': typeof CommunityRoute
   '/dashboard': typeof DashboardRoute
+  '/learning-hub': typeof LearningHubRoute
+  '/login': typeof LoginRoute
+  '/mobile-app': typeof MobileAppRoute
+  '/opportunities': typeof OpportunitiesRoute
+  '/pricing': typeof PricingRoute
+  '/resources': typeof ResourcesRoute
+  '/search': typeof SearchRoute
+  '/start-from-zero': typeof StartFromZeroRoute
+  '/talent-scanner': typeof TalentScannerRoute
   '/trials': typeof TrialsRoute
+  '/verify': typeof VerifyRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/academy': typeof AcademyRoute
+  '/ai-guide': typeof AiGuideRoute
+  '/coaches': typeof CoachesRoute
+  '/community': typeof CommunityRoute
   '/dashboard': typeof DashboardRoute
+  '/learning-hub': typeof LearningHubRoute
+  '/login': typeof LoginRoute
+  '/mobile-app': typeof MobileAppRoute
+  '/opportunities': typeof OpportunitiesRoute
+  '/pricing': typeof PricingRoute
+  '/resources': typeof ResourcesRoute
+  '/search': typeof SearchRoute
+  '/start-from-zero': typeof StartFromZeroRoute
+  '/talent-scanner': typeof TalentScannerRoute
   '/trials': typeof TrialsRoute
+  '/verify': typeof VerifyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/dashboard' | '/trials'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/academy'
+    | '/ai-guide'
+    | '/coaches'
+    | '/community'
+    | '/dashboard'
+    | '/learning-hub'
+    | '/login'
+    | '/mobile-app'
+    | '/opportunities'
+    | '/pricing'
+    | '/resources'
+    | '/search'
+    | '/start-from-zero'
+    | '/talent-scanner'
+    | '/trials'
+    | '/verify'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/dashboard' | '/trials'
-  id: '__root__' | '/' | '/dashboard' | '/trials'
+  to:
+    | '/'
+    | '/about'
+    | '/academy'
+    | '/ai-guide'
+    | '/coaches'
+    | '/community'
+    | '/dashboard'
+    | '/learning-hub'
+    | '/login'
+    | '/mobile-app'
+    | '/opportunities'
+    | '/pricing'
+    | '/resources'
+    | '/search'
+    | '/start-from-zero'
+    | '/talent-scanner'
+    | '/trials'
+    | '/verify'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/academy'
+    | '/ai-guide'
+    | '/coaches'
+    | '/community'
+    | '/dashboard'
+    | '/learning-hub'
+    | '/login'
+    | '/mobile-app'
+    | '/opportunities'
+    | '/pricing'
+    | '/resources'
+    | '/search'
+    | '/start-from-zero'
+    | '/talent-scanner'
+    | '/trials'
+    | '/verify'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
+  AcademyRoute: typeof AcademyRoute
+  AiGuideRoute: typeof AiGuideRoute
+  CoachesRoute: typeof CoachesRoute
+  CommunityRoute: typeof CommunityRoute
   DashboardRoute: typeof DashboardRoute
+  LearningHubRoute: typeof LearningHubRoute
+  LoginRoute: typeof LoginRoute
+  MobileAppRoute: typeof MobileAppRoute
+  OpportunitiesRoute: typeof OpportunitiesRoute
+  PricingRoute: typeof PricingRoute
+  ResourcesRoute: typeof ResourcesRoute
+  SearchRoute: typeof SearchRoute
+  StartFromZeroRoute: typeof StartFromZeroRoute
+  TalentScannerRoute: typeof TalentScannerRoute
   TrialsRoute: typeof TrialsRoute
+  VerifyRoute: typeof VerifyRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/verify': {
+      id: '/verify'
+      path: '/verify'
+      fullPath: '/verify'
+      preLoaderRoute: typeof VerifyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/trials': {
       id: '/trials'
       path: '/trials'
@@ -68,11 +280,109 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TrialsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/talent-scanner': {
+      id: '/talent-scanner'
+      path: '/talent-scanner'
+      fullPath: '/talent-scanner'
+      preLoaderRoute: typeof TalentScannerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/start-from-zero': {
+      id: '/start-from-zero'
+      path: '/start-from-zero'
+      fullPath: '/start-from-zero'
+      preLoaderRoute: typeof StartFromZeroRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/search': {
+      id: '/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/resources': {
+      id: '/resources'
+      path: '/resources'
+      fullPath: '/resources'
+      preLoaderRoute: typeof ResourcesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pricing': {
+      id: '/pricing'
+      path: '/pricing'
+      fullPath: '/pricing'
+      preLoaderRoute: typeof PricingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/opportunities': {
+      id: '/opportunities'
+      path: '/opportunities'
+      fullPath: '/opportunities'
+      preLoaderRoute: typeof OpportunitiesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mobile-app': {
+      id: '/mobile-app'
+      path: '/mobile-app'
+      fullPath: '/mobile-app'
+      preLoaderRoute: typeof MobileAppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/learning-hub': {
+      id: '/learning-hub'
+      path: '/learning-hub'
+      fullPath: '/learning-hub'
+      preLoaderRoute: typeof LearningHubRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/dashboard': {
       id: '/dashboard'
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/community': {
+      id: '/community'
+      path: '/community'
+      fullPath: '/community'
+      preLoaderRoute: typeof CommunityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/coaches': {
+      id: '/coaches'
+      path: '/coaches'
+      fullPath: '/coaches'
+      preLoaderRoute: typeof CoachesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ai-guide': {
+      id: '/ai-guide'
+      path: '/ai-guide'
+      fullPath: '/ai-guide'
+      preLoaderRoute: typeof AiGuideRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/academy': {
+      id: '/academy'
+      path: '/academy'
+      fullPath: '/academy'
+      preLoaderRoute: typeof AcademyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -87,8 +397,23 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
+  AcademyRoute: AcademyRoute,
+  AiGuideRoute: AiGuideRoute,
+  CoachesRoute: CoachesRoute,
+  CommunityRoute: CommunityRoute,
   DashboardRoute: DashboardRoute,
+  LearningHubRoute: LearningHubRoute,
+  LoginRoute: LoginRoute,
+  MobileAppRoute: MobileAppRoute,
+  OpportunitiesRoute: OpportunitiesRoute,
+  PricingRoute: PricingRoute,
+  ResourcesRoute: ResourcesRoute,
+  SearchRoute: SearchRoute,
+  StartFromZeroRoute: StartFromZeroRoute,
+  TalentScannerRoute: TalentScannerRoute,
   TrialsRoute: TrialsRoute,
+  VerifyRoute: VerifyRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
