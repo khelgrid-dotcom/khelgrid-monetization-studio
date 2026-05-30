@@ -39,24 +39,24 @@ function Home() {
         {/* Hero */}
         <section className="relative overflow-hidden">
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(800px_400px_at_50%_-10%,oklch(0.78_0.19_155/0.18),transparent_70%)]" />
-          <div className="relative mx-auto max-w-6xl px-4 pb-12 pt-16 sm:pt-24 text-center">
-            <Badge variant="outline" className="border-primary/40 bg-primary/10 text-primary">
-              KhelGrid — India's Sports Opportunity Network
+          <div className="relative mx-auto max-w-6xl px-4 pb-10 pt-10 text-center sm:pt-24">
+            <Badge variant="outline" className="border-primary/40 bg-primary/10 text-xs text-primary">
+              India's Sports Opportunity Network
             </Badge>
 
-            <h1 className="mt-8 text-5xl font-bold leading-[1.02] tracking-tight sm:text-7xl">
+            <h1 className="mt-5 text-4xl font-bold leading-[1.05] tracking-tight sm:mt-8 sm:text-7xl">
               <span className="block">Discover.</span>
               <span className="block bg-gradient-to-r from-[oklch(0.78_0.18_55)] via-[oklch(0.82_0.18_95)] to-[oklch(0.78_0.19_155)] bg-clip-text text-transparent">
                 Participate. Compete.
               </span>
             </h1>
 
-            <p className="mx-auto mt-6 max-w-2xl text-base text-muted-foreground sm:text-lg">
-              Find trials, tournaments, leagues, camps, scholarships, fitness events, and online competitions. Start where you are and build your sports journey.
+            <p className="mx-auto mt-4 max-w-2xl text-sm text-muted-foreground sm:mt-6 sm:text-lg">
+              Trials, tournaments, leagues, camps, scholarships and online competitions. Start where you are.
             </p>
 
-            {/* Search bar */}
-            <div className="mx-auto mt-10 flex max-w-4xl flex-col gap-2 rounded-2xl border border-border/60 bg-card/60 p-2 backdrop-blur-xl sm:flex-row sm:items-center">
+            {/* Search bar — stacked on mobile */}
+            <div className="mx-auto mt-6 flex max-w-4xl flex-col gap-2 rounded-2xl border border-border/60 bg-card/60 p-2 backdrop-blur-xl sm:mt-10 sm:flex-row sm:items-center">
               <div className="relative flex-1">
                 <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <input
@@ -68,28 +68,30 @@ function Home() {
                 />
               </div>
 
-              <Select value={sport} onValueChange={setSport}>
-                <SelectTrigger className="h-11 w-full rounded-xl border-border bg-secondary/40 sm:w-44">
-                  <Trophy className="mr-1 h-4 w-4 text-primary" />
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>{SPORTS.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent>
-              </Select>
+              <div className="grid grid-cols-2 gap-2 sm:contents">
+                <Select value={sport} onValueChange={setSport}>
+                  <SelectTrigger className="h-11 rounded-xl border-border bg-secondary/40 sm:w-44">
+                    <Trophy className="mr-1 h-4 w-4 text-primary" />
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>{SPORTS.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent>
+                </Select>
 
-              <Select value={location} onValueChange={setLocation}>
-                <SelectTrigger className="h-11 w-full rounded-xl border-border bg-secondary/40 sm:w-44">
-                  <MapPin className="mr-1 h-4 w-4 text-primary" />
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>{LOCATIONS.map(l => <SelectItem key={l} value={l}>{l}</SelectItem>)}</SelectContent>
-              </Select>
+                <Select value={location} onValueChange={setLocation}>
+                  <SelectTrigger className="h-11 rounded-xl border-border bg-secondary/40 sm:w-44">
+                    <MapPin className="mr-1 h-4 w-4 text-primary" />
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>{LOCATIONS.map(l => <SelectItem key={l} value={l}>{l}</SelectItem>)}</SelectContent>
+                </Select>
+              </div>
 
               <Button onClick={submit} size="lg" className="h-11 rounded-xl bg-gradient-hero px-6 text-primary-foreground hover:opacity-95">
                 Find Matches <ArrowRight className="ml-1 h-4 w-4" />
               </Button>
             </div>
 
-            <div className="mt-10 flex flex-wrap justify-center gap-6 text-sm text-muted-foreground">
+            <div className="mt-6 flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-muted-foreground sm:mt-10 sm:text-sm">
               <div>🏆 1,200+ live opportunities</div>
               <div>🛡️ 86k verified athletes</div>
               <div>👑 240 partner academies</div>
@@ -98,8 +100,10 @@ function Home() {
         </section>
 
         {/* Monetization cards */}
-        <section className="mx-auto max-w-6xl px-4 pb-20">
-          <h2 className="mb-6 text-center text-2xl font-bold tracking-tight">Built for athletes. Powered by academies.</h2>
+        <section className="mx-auto max-w-6xl px-4 pb-16 sm:pb-20">
+          <h2 className="mb-5 text-center text-xl font-bold tracking-tight sm:mb-6 sm:text-2xl">
+            Built for athletes. Powered by academies.
+          </h2>
           <div className="grid gap-4 md:grid-cols-3">
             {[
               { icon: Zap, title: "Micropayments", price: "₹49 per application", desc: "Free users get 2 applications. Unlock more via wallet or UPI.", to: "/trials" },
@@ -109,7 +113,7 @@ function Home() {
               <Link
                 key={card.title}
                 to={card.to}
-                className={`group rounded-2xl border bg-gradient-card p-6 transition-all hover:-translate-y-1 ${
+                className={`group rounded-2xl border bg-gradient-card p-5 transition-all hover:-translate-y-1 sm:p-6 ${
                   card.highlight ? "border-primary/40 animate-pulse-glow" : "border-border hover:border-border/80"
                 }`}
               >
