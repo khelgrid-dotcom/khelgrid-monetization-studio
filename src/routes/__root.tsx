@@ -13,6 +13,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { AuthProvider } from "@/context/AuthContext";
 import { Navbar } from "@/components/Navbar";
+import { BottomTabBar } from "@/components/BottomTabBar";
 import { Toaster } from "@/components/ui/sonner";
 
 function NotFoundComponent() {
@@ -99,7 +100,10 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <Navbar />
-        <Outlet />
+        <div className="pb-20 md:pb-0">
+          <Outlet />
+        </div>
+        <BottomTabBar />
         <Toaster theme="dark" position="top-right" />
       </AuthProvider>
     </QueryClientProvider>
