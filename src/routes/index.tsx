@@ -99,6 +99,33 @@ function Home() {
           </div>
         </section>
 
+        {/* Playo-style quick tiles */}
+        <section className="mx-auto -mt-2 max-w-6xl px-4 pb-8">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
+            {[
+              { to: "/play", label: "Play", desc: "Find games", icon: Users },
+              { to: "/book", label: "Book", desc: "Venues & turfs", icon: CalendarCheck },
+              { to: "/train", label: "Train", desc: "Coaching", icon: GraduationCap },
+              { to: "/events", label: "Events", desc: "Tournaments", icon: CalendarDays },
+              { to: "/memberships", label: "Memberships", desc: "Perks & passes", icon: Star },
+            ].map(t => (
+              <Link
+                key={t.to}
+                to={t.to}
+                className="group flex flex-col items-start gap-2 rounded-2xl border border-border bg-gradient-card p-4 transition-all hover:-translate-y-0.5 hover:border-primary/40"
+              >
+                <div className="grid h-10 w-10 place-items-center rounded-xl bg-primary/15 text-primary group-hover:bg-primary group-hover:text-primary-foreground">
+                  <t.icon className="h-5 w-5" />
+                </div>
+                <div>
+                  <div className="text-sm font-semibold">{t.label}</div>
+                  <div className="text-xs text-muted-foreground">{t.desc}</div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+
         {/* Monetization cards */}
         <section className="mx-auto max-w-6xl px-4 pb-16 sm:pb-20">
           <h2 className="mb-5 text-center text-xl font-bold tracking-tight sm:mb-6 sm:text-2xl">
