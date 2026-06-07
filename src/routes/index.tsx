@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { FeaturesSidebar } from "@/components/FeaturesSidebar";
-import { Search, Trophy, MapPin, ChevronDown, ArrowRight, Crown, Flame, Zap } from "lucide-react";
+import { Search, Trophy, MapPin, ChevronDown, ArrowRight, Crown, Flame, Zap, Users, CalendarCheck, GraduationCap, CalendarDays, Star } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export const Route = createFileRoute("/")({
