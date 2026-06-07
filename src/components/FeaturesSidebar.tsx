@@ -3,9 +3,15 @@ import { useState } from "react";
 import {
   Sparkles, Bot, ShieldCheck, ScanLine, Users, BookOpen, Crown,
   GraduationCap, Smartphone, Info, ChevronLeft, ChevronRight,
+  CalendarCheck, CalendarDays, Star,
 } from "lucide-react";
 
 const FEATURES = [
+  { to: "/play", label: "Play · Find games", icon: Users },
+  { to: "/book", label: "Book venues", icon: CalendarCheck },
+  { to: "/train", label: "Train · Coaching", icon: GraduationCap },
+  { to: "/events", label: "Events", icon: CalendarDays },
+  { to: "/memberships", label: "Memberships", icon: Star },
   { to: "/start-from-zero", label: "Start From Zero", icon: Sparkles },
   { to: "/ai-guide", label: "AI Guide", icon: Bot },
   { to: "/verify", label: "Verify", icon: ShieldCheck },
