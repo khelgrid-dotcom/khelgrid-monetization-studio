@@ -1,14 +1,15 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Home, Search, Compass, BookOpen, Globe, Zap, Trophy, Wallet } from "lucide-react";
+import { Home, Users, CalendarCheck, GraduationCap, CalendarDays, Globe, Zap, Trophy, Wallet } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { NavDrawer } from "@/components/NavDrawer";
 
 const NAV = [
   { to: "/", label: "Home", icon: Home },
-  { to: "/search", label: "Search", icon: Search },
-  { to: "/opportunities", label: "Opportunities", icon: Compass },
-  { to: "/resources", label: "Resources", icon: BookOpen },
+  { to: "/play", label: "Play", icon: Users },
+  { to: "/book", label: "Book", icon: CalendarCheck },
+  { to: "/train", label: "Train", icon: GraduationCap },
+  { to: "/events", label: "Events", icon: CalendarDays },
 ] as const;
 
 export function Navbar() {
