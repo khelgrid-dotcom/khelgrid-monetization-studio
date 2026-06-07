@@ -29,10 +29,18 @@ import {
   Wallet,
   LogIn,
   Zap,
+  CalendarCheck,
+  CalendarDays,
+  Star,
 } from "lucide-react";
 
 const PRIMARY = [
   { to: "/", label: "Home", icon: Home },
+  { to: "/play", label: "Play · Find games", icon: Users },
+  { to: "/book", label: "Book venues", icon: CalendarCheck },
+  { to: "/train", label: "Train · Coaching", icon: GraduationCap },
+  { to: "/events", label: "Events & tournaments", icon: CalendarDays },
+  { to: "/memberships", label: "Memberships", icon: Star },
   { to: "/search", label: "Search trials", icon: Search },
   { to: "/opportunities", label: "Opportunities", icon: Compass },
   { to: "/dashboard", label: "My Dashboard", icon: User },
