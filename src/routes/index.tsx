@@ -99,9 +99,9 @@ function Home() {
           </div>
         </section>
 
-        {/* Playo-style quick tiles */}
-        <section className="mx-auto -mt-2 max-w-6xl px-4 pb-8">
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
+        {/* Playo-style quick tiles — horizontal scroll on mobile */}
+        <section className="mx-auto -mt-2 max-w-6xl pb-8">
+          <div className="flex gap-3 overflow-x-auto px-4 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:grid sm:grid-cols-5 sm:overflow-visible sm:pb-0">
             {[
               { to: "/play", label: "Play", desc: "Find games", icon: Users },
               { to: "/book", label: "Book", desc: "Venues & turfs", icon: CalendarCheck },
@@ -112,7 +112,7 @@ function Home() {
               <Link
                 key={t.to}
                 to={t.to}
-                className="group flex flex-col items-start gap-2 rounded-2xl border border-border bg-gradient-card p-4 transition-all hover:-translate-y-0.5 hover:border-primary/40"
+                className="group flex w-[140px] shrink-0 flex-col items-start gap-2 rounded-2xl border border-border bg-gradient-card p-4 transition-all hover:-translate-y-0.5 hover:border-primary/40 active:scale-[0.98] sm:w-auto"
               >
                 <div className="grid h-10 w-10 place-items-center rounded-xl bg-primary/15 text-primary group-hover:bg-primary group-hover:text-primary-foreground">
                   <t.icon className="h-5 w-5" />
