@@ -1,9 +1,9 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   Sparkles, Bot, ShieldCheck, ScanLine, Users, BookOpen, Crown,
   GraduationCap, Smartphone, Info, ChevronLeft, ChevronRight,
-  CalendarCheck, CalendarDays, Star,
+  CalendarCheck, CalendarDays, Star, Search,
 } from "lucide-react";
 
 const FEATURES = [
