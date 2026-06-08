@@ -24,16 +24,16 @@ export function BottomTabBar() {
             <li key={t.to}>
               <Link
                 to={t.to}
-                className={`flex flex-col items-center justify-center gap-0.5 py-2 text-[10px] font-medium transition-colors ${
+                className={`flex min-h-[56px] flex-col items-center justify-center gap-0.5 py-1.5 text-[10px] font-medium transition-colors active:scale-95 ${
                   active ? "text-primary" : "text-muted-foreground"
                 }`}
               >
                 <span
-                  className={`grid h-8 w-12 place-items-center rounded-full transition-colors ${
+                  className={`grid h-9 w-14 place-items-center rounded-full transition-colors ${
                     active ? "bg-primary/15" : ""
                   }`}
                 >
-                  <t.icon className="h-4 w-4" />
+                  <t.icon className="h-[18px] w-[18px]" />
                 </span>
                 {t.label}
               </Link>
