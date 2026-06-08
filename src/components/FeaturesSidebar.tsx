@@ -1,9 +1,9 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   Sparkles, Bot, ShieldCheck, ScanLine, Users, BookOpen, Crown,
   GraduationCap, Smartphone, Info, ChevronLeft, ChevronRight,
-  CalendarCheck, CalendarDays, Star,
+  CalendarCheck, CalendarDays, Star, Search,
 } from "lucide-react";
 
 const FEATURES = [
@@ -26,7 +26,14 @@ const FEATURES = [
 
 export function FeaturesSidebar() {
   const [collapsed, setCollapsed] = useState(false);
+  const [query, setQuery] = useState("");
   const path = useRouterState({ select: s => s.location.pathname });
+
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return FEATURES.slice();
+    return FEATURES.filter(f => f.label.toLowerCase().includes(q));
+  }, [query]);
 
   return (
     <aside
@@ -49,8 +56,22 @@ export function FeaturesSidebar() {
         </button>
       </div>
 
+      {!collapsed && (
+        <div className="px-3 pb-2">
+          <div className="relative">
+            <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
+            <input
+              value={query}
+              onChange={e => setQuery(e.target.value)}
+              placeholder="Search features…"
+              className="w-full rounded-md border border-border bg-secondary/40 py-1.5 pl-8 pr-2.5 text-sm text-foreground placeholder:text-muted-foreground/70 focus:border-primary/40 focus:bg-background focus:outline-none focus:ring-1 focus:ring-primary/20"
+            />
+          </div>
+        </div>
+      )}
+
       <nav className="flex flex-1 flex-col gap-0.5 overflow-y-auto px-2 pb-4">
-        {FEATURES.map(f => {
+        {filtered.map(f => {
           const active = path === f.to;
           return (
             <Link
@@ -68,6 +89,9 @@ export function FeaturesSidebar() {
             </Link>
           );
         })}
+        {filtered.length === 0 && !collapsed && (
+          <p className="px-3 py-2 text-xs text-muted-foreground">No matches found</p>
+        )}
       </nav>
     </aside>
   );
