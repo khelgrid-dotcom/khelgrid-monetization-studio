@@ -30,7 +30,7 @@ export function FeaturesSidebar() {
 
   return (
     <aside
-      className={`sticky top-16 hidden h-[calc(100vh-4rem)] shrink-0 border-r border-border/60 bg-background/40 backdrop-blur-xl transition-all md:block ${
+      className={`sticky top-16 hidden h-[calc(100vh-4rem)] shrink-0 flex-col border-r border-border/60 bg-background/40 backdrop-blur-xl transition-all md:flex ${
         collapsed ? "w-16" : "w-60"
       }`}
     >
@@ -49,7 +49,7 @@ export function FeaturesSidebar() {
         </button>
       </div>
 
-      <nav className="flex flex-col gap-0.5 px-2">
+      <nav className="flex flex-1 flex-col gap-0.5 overflow-y-auto px-2 pb-4">
         {FEATURES.map(f => {
           const active = path === f.to;
           return (
