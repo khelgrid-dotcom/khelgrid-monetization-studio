@@ -61,13 +61,24 @@ const FEATURES = [
 
 export function NavDrawer() {
   const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState("");
   const { plan, wallet } = useAuth();
   const path = useRouterState({ select: s => s.location.pathname });
 
   // Close drawer on route change
   useEffect(() => {
     setOpen(false);
+    setQuery("");
   }, [path]);
+
+  const filteredPrimary = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return q ? PRIMARY.filter(i => i.label.toLowerCase().includes(q)) : PRIMARY.slice();
+  }, [query]);
+  const filteredFeatures = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return q ? FEATURES.filter(i => i.label.toLowerCase().includes(q)) : FEATURES.slice();
+  }, [query]);
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
