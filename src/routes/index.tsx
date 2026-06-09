@@ -39,7 +39,7 @@ function Home() {
         {/* Hero */}
         <section className="relative overflow-hidden">
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(800px_400px_at_50%_-10%,oklch(0.78_0.19_155/0.18),transparent_70%)]" />
-          <div className="relative mx-auto max-w-6xl px-4 pb-10 pt-10 text-center sm:pt-24">
+          <div className="relative mx-auto max-w-7xl px-4 pb-10 pt-10 text-center sm:pt-24">
             <Badge variant="outline" className="border-primary/40 bg-primary/10 text-xs text-primary">
               India's Sports Opportunity Network
             </Badge>
@@ -100,7 +100,7 @@ function Home() {
         </section>
 
         {/* Playo-style quick tiles — horizontal scroll on mobile */}
-        <section className="mx-auto -mt-2 max-w-6xl pb-8">
+        <section className="mx-auto -mt-2 max-w-7xl pb-8">
           <div className="flex gap-3 overflow-x-auto px-4 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:grid sm:grid-cols-5 sm:overflow-visible sm:pb-0">
             {[
               { to: "/play", label: "Play", desc: "Find games", icon: Users },
@@ -127,7 +127,7 @@ function Home() {
         </section>
 
         {/* Monetization cards */}
-        <section className="mx-auto max-w-6xl px-4 pb-16 sm:pb-20">
+        <section className="mx-auto max-w-7xl px-4 pb-16 sm:pb-20">
           <h2 className="mb-5 text-center text-xl font-bold tracking-tight sm:mb-6 sm:text-2xl">
             Built for athletes. Powered by academies.
           </h2>
