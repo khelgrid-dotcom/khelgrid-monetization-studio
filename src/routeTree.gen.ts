@@ -12,8 +12,11 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as VerifyRouteImport } from './routes/verify'
 import { Route as TrialsRouteImport } from './routes/trials'
 import { Route as TrainRouteImport } from './routes/train'
+import { Route as ToolsRouteImport } from './routes/tools'
 import { Route as TalentScannerRouteImport } from './routes/talent-scanner'
 import { Route as StartFromZeroRouteImport } from './routes/start-from-zero'
+import { Route as SportsRouteImport } from './routes/sports'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as ResourcesRouteImport } from './routes/resources'
 import { Route as PricingRouteImport } from './routes/pricing'
@@ -23,15 +26,21 @@ import { Route as MobileAppRouteImport } from './routes/mobile-app'
 import { Route as MembershipsRouteImport } from './routes/memberships'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LearningHubRouteImport } from './routes/learning-hub'
+import { Route as GuidesRouteImport } from './routes/guides'
 import { Route as EventsRouteImport } from './routes/events'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as CommunityRouteImport } from './routes/community'
 import { Route as CoachesRouteImport } from './routes/coaches'
+import { Route as CitiesRouteImport } from './routes/cities'
 import { Route as BookRouteImport } from './routes/book'
 import { Route as AiGuideRouteImport } from './routes/ai-guide'
 import { Route as AcademyRouteImport } from './routes/academy'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ToolsSlugRouteImport } from './routes/tools.$slug'
+import { Route as SportSlugRouteImport } from './routes/sport.$slug'
+import { Route as GuideSlugRouteImport } from './routes/guide.$slug'
+import { Route as CitySlugRouteImport } from './routes/city.$slug'
 
 const VerifyRoute = VerifyRouteImport.update({
   id: '/verify',
@@ -48,6 +57,11 @@ const TrainRoute = TrainRouteImport.update({
   path: '/train',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ToolsRoute = ToolsRouteImport.update({
+  id: '/tools',
+  path: '/tools',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TalentScannerRoute = TalentScannerRouteImport.update({
   id: '/talent-scanner',
   path: '/talent-scanner',
@@ -56,6 +70,16 @@ const TalentScannerRoute = TalentScannerRouteImport.update({
 const StartFromZeroRoute = StartFromZeroRouteImport.update({
   id: '/start-from-zero',
   path: '/start-from-zero',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SportsRoute = SportsRouteImport.update({
+  id: '/sports',
+  path: '/sports',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SearchRoute = SearchRouteImport.update({
@@ -103,6 +127,11 @@ const LearningHubRoute = LearningHubRouteImport.update({
   path: '/learning-hub',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GuidesRoute = GuidesRouteImport.update({
+  id: '/guides',
+  path: '/guides',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const EventsRoute = EventsRouteImport.update({
   id: '/events',
   path: '/events',
@@ -121,6 +150,11 @@ const CommunityRoute = CommunityRouteImport.update({
 const CoachesRoute = CoachesRouteImport.update({
   id: '/coaches',
   path: '/coaches',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CitiesRoute = CitiesRouteImport.update({
+  id: '/cities',
+  path: '/cities',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BookRoute = BookRouteImport.update({
@@ -148,6 +182,26 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ToolsSlugRoute = ToolsSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => ToolsRoute,
+} as any)
+const SportSlugRoute = SportSlugRouteImport.update({
+  id: '/sport/$slug',
+  path: '/sport/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GuideSlugRoute = GuideSlugRouteImport.update({
+  id: '/guide/$slug',
+  path: '/guide/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CitySlugRoute = CitySlugRouteImport.update({
+  id: '/city/$slug',
+  path: '/city/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -155,10 +209,12 @@ export interface FileRoutesByFullPath {
   '/academy': typeof AcademyRoute
   '/ai-guide': typeof AiGuideRoute
   '/book': typeof BookRoute
+  '/cities': typeof CitiesRoute
   '/coaches': typeof CoachesRoute
   '/community': typeof CommunityRoute
   '/dashboard': typeof DashboardRoute
   '/events': typeof EventsRoute
+  '/guides': typeof GuidesRoute
   '/learning-hub': typeof LearningHubRoute
   '/login': typeof LoginRoute
   '/memberships': typeof MembershipsRoute
@@ -168,11 +224,18 @@ export interface FileRoutesByFullPath {
   '/pricing': typeof PricingRoute
   '/resources': typeof ResourcesRoute
   '/search': typeof SearchRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/sports': typeof SportsRoute
   '/start-from-zero': typeof StartFromZeroRoute
   '/talent-scanner': typeof TalentScannerRoute
+  '/tools': typeof ToolsRouteWithChildren
   '/train': typeof TrainRoute
   '/trials': typeof TrialsRoute
   '/verify': typeof VerifyRoute
+  '/city/$slug': typeof CitySlugRoute
+  '/guide/$slug': typeof GuideSlugRoute
+  '/sport/$slug': typeof SportSlugRoute
+  '/tools/$slug': typeof ToolsSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -180,10 +243,12 @@ export interface FileRoutesByTo {
   '/academy': typeof AcademyRoute
   '/ai-guide': typeof AiGuideRoute
   '/book': typeof BookRoute
+  '/cities': typeof CitiesRoute
   '/coaches': typeof CoachesRoute
   '/community': typeof CommunityRoute
   '/dashboard': typeof DashboardRoute
   '/events': typeof EventsRoute
+  '/guides': typeof GuidesRoute
   '/learning-hub': typeof LearningHubRoute
   '/login': typeof LoginRoute
   '/memberships': typeof MembershipsRoute
@@ -193,11 +258,18 @@ export interface FileRoutesByTo {
   '/pricing': typeof PricingRoute
   '/resources': typeof ResourcesRoute
   '/search': typeof SearchRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/sports': typeof SportsRoute
   '/start-from-zero': typeof StartFromZeroRoute
   '/talent-scanner': typeof TalentScannerRoute
+  '/tools': typeof ToolsRouteWithChildren
   '/train': typeof TrainRoute
   '/trials': typeof TrialsRoute
   '/verify': typeof VerifyRoute
+  '/city/$slug': typeof CitySlugRoute
+  '/guide/$slug': typeof GuideSlugRoute
+  '/sport/$slug': typeof SportSlugRoute
+  '/tools/$slug': typeof ToolsSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -206,10 +278,12 @@ export interface FileRoutesById {
   '/academy': typeof AcademyRoute
   '/ai-guide': typeof AiGuideRoute
   '/book': typeof BookRoute
+  '/cities': typeof CitiesRoute
   '/coaches': typeof CoachesRoute
   '/community': typeof CommunityRoute
   '/dashboard': typeof DashboardRoute
   '/events': typeof EventsRoute
+  '/guides': typeof GuidesRoute
   '/learning-hub': typeof LearningHubRoute
   '/login': typeof LoginRoute
   '/memberships': typeof MembershipsRoute
@@ -219,11 +293,18 @@ export interface FileRoutesById {
   '/pricing': typeof PricingRoute
   '/resources': typeof ResourcesRoute
   '/search': typeof SearchRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/sports': typeof SportsRoute
   '/start-from-zero': typeof StartFromZeroRoute
   '/talent-scanner': typeof TalentScannerRoute
+  '/tools': typeof ToolsRouteWithChildren
   '/train': typeof TrainRoute
   '/trials': typeof TrialsRoute
   '/verify': typeof VerifyRoute
+  '/city/$slug': typeof CitySlugRoute
+  '/guide/$slug': typeof GuideSlugRoute
+  '/sport/$slug': typeof SportSlugRoute
+  '/tools/$slug': typeof ToolsSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -233,10 +314,12 @@ export interface FileRouteTypes {
     | '/academy'
     | '/ai-guide'
     | '/book'
+    | '/cities'
     | '/coaches'
     | '/community'
     | '/dashboard'
     | '/events'
+    | '/guides'
     | '/learning-hub'
     | '/login'
     | '/memberships'
@@ -246,11 +329,18 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/resources'
     | '/search'
+    | '/sitemap.xml'
+    | '/sports'
     | '/start-from-zero'
     | '/talent-scanner'
+    | '/tools'
     | '/train'
     | '/trials'
     | '/verify'
+    | '/city/$slug'
+    | '/guide/$slug'
+    | '/sport/$slug'
+    | '/tools/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -258,10 +348,12 @@ export interface FileRouteTypes {
     | '/academy'
     | '/ai-guide'
     | '/book'
+    | '/cities'
     | '/coaches'
     | '/community'
     | '/dashboard'
     | '/events'
+    | '/guides'
     | '/learning-hub'
     | '/login'
     | '/memberships'
@@ -271,11 +363,18 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/resources'
     | '/search'
+    | '/sitemap.xml'
+    | '/sports'
     | '/start-from-zero'
     | '/talent-scanner'
+    | '/tools'
     | '/train'
     | '/trials'
     | '/verify'
+    | '/city/$slug'
+    | '/guide/$slug'
+    | '/sport/$slug'
+    | '/tools/$slug'
   id:
     | '__root__'
     | '/'
@@ -283,10 +382,12 @@ export interface FileRouteTypes {
     | '/academy'
     | '/ai-guide'
     | '/book'
+    | '/cities'
     | '/coaches'
     | '/community'
     | '/dashboard'
     | '/events'
+    | '/guides'
     | '/learning-hub'
     | '/login'
     | '/memberships'
@@ -296,11 +397,18 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/resources'
     | '/search'
+    | '/sitemap.xml'
+    | '/sports'
     | '/start-from-zero'
     | '/talent-scanner'
+    | '/tools'
     | '/train'
     | '/trials'
     | '/verify'
+    | '/city/$slug'
+    | '/guide/$slug'
+    | '/sport/$slug'
+    | '/tools/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -309,10 +417,12 @@ export interface RootRouteChildren {
   AcademyRoute: typeof AcademyRoute
   AiGuideRoute: typeof AiGuideRoute
   BookRoute: typeof BookRoute
+  CitiesRoute: typeof CitiesRoute
   CoachesRoute: typeof CoachesRoute
   CommunityRoute: typeof CommunityRoute
   DashboardRoute: typeof DashboardRoute
   EventsRoute: typeof EventsRoute
+  GuidesRoute: typeof GuidesRoute
   LearningHubRoute: typeof LearningHubRoute
   LoginRoute: typeof LoginRoute
   MembershipsRoute: typeof MembershipsRoute
@@ -322,11 +432,17 @@ export interface RootRouteChildren {
   PricingRoute: typeof PricingRoute
   ResourcesRoute: typeof ResourcesRoute
   SearchRoute: typeof SearchRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  SportsRoute: typeof SportsRoute
   StartFromZeroRoute: typeof StartFromZeroRoute
   TalentScannerRoute: typeof TalentScannerRoute
+  ToolsRoute: typeof ToolsRouteWithChildren
   TrainRoute: typeof TrainRoute
   TrialsRoute: typeof TrialsRoute
   VerifyRoute: typeof VerifyRoute
+  CitySlugRoute: typeof CitySlugRoute
+  GuideSlugRoute: typeof GuideSlugRoute
+  SportSlugRoute: typeof SportSlugRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -352,6 +468,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TrainRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/tools': {
+      id: '/tools'
+      path: '/tools'
+      fullPath: '/tools'
+      preLoaderRoute: typeof ToolsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/talent-scanner': {
       id: '/talent-scanner'
       path: '/talent-scanner'
@@ -364,6 +487,20 @@ declare module '@tanstack/react-router' {
       path: '/start-from-zero'
       fullPath: '/start-from-zero'
       preLoaderRoute: typeof StartFromZeroRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sports': {
+      id: '/sports'
+      path: '/sports'
+      fullPath: '/sports'
+      preLoaderRoute: typeof SportsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/search': {
@@ -429,6 +566,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LearningHubRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/guides': {
+      id: '/guides'
+      path: '/guides'
+      fullPath: '/guides'
+      preLoaderRoute: typeof GuidesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/events': {
       id: '/events'
       path: '/events'
@@ -455,6 +599,13 @@ declare module '@tanstack/react-router' {
       path: '/coaches'
       fullPath: '/coaches'
       preLoaderRoute: typeof CoachesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cities': {
+      id: '/cities'
+      path: '/cities'
+      fullPath: '/cities'
+      preLoaderRoute: typeof CitiesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/book': {
@@ -492,8 +643,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/tools/$slug': {
+      id: '/tools/$slug'
+      path: '/$slug'
+      fullPath: '/tools/$slug'
+      preLoaderRoute: typeof ToolsSlugRouteImport
+      parentRoute: typeof ToolsRoute
+    }
+    '/sport/$slug': {
+      id: '/sport/$slug'
+      path: '/sport/$slug'
+      fullPath: '/sport/$slug'
+      preLoaderRoute: typeof SportSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/guide/$slug': {
+      id: '/guide/$slug'
+      path: '/guide/$slug'
+      fullPath: '/guide/$slug'
+      preLoaderRoute: typeof GuideSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/city/$slug': {
+      id: '/city/$slug'
+      path: '/city/$slug'
+      fullPath: '/city/$slug'
+      preLoaderRoute: typeof CitySlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
+
+interface ToolsRouteChildren {
+  ToolsSlugRoute: typeof ToolsSlugRoute
+}
+
+const ToolsRouteChildren: ToolsRouteChildren = {
+  ToolsSlugRoute: ToolsSlugRoute,
+}
+
+const ToolsRouteWithChildren = ToolsRoute._addFileChildren(ToolsRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -501,10 +690,12 @@ const rootRouteChildren: RootRouteChildren = {
   AcademyRoute: AcademyRoute,
   AiGuideRoute: AiGuideRoute,
   BookRoute: BookRoute,
+  CitiesRoute: CitiesRoute,
   CoachesRoute: CoachesRoute,
   CommunityRoute: CommunityRoute,
   DashboardRoute: DashboardRoute,
   EventsRoute: EventsRoute,
+  GuidesRoute: GuidesRoute,
   LearningHubRoute: LearningHubRoute,
   LoginRoute: LoginRoute,
   MembershipsRoute: MembershipsRoute,
@@ -514,22 +705,18 @@ const rootRouteChildren: RootRouteChildren = {
   PricingRoute: PricingRoute,
   ResourcesRoute: ResourcesRoute,
   SearchRoute: SearchRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
+  SportsRoute: SportsRoute,
   StartFromZeroRoute: StartFromZeroRoute,
   TalentScannerRoute: TalentScannerRoute,
+  ToolsRoute: ToolsRouteWithChildren,
   TrainRoute: TrainRoute,
   TrialsRoute: TrialsRoute,
   VerifyRoute: VerifyRoute,
+  CitySlugRoute: CitySlugRoute,
+  GuideSlugRoute: GuideSlugRoute,
+  SportSlugRoute: SportSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
