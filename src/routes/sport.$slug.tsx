@@ -54,7 +54,7 @@ function SportPage() {
       </div>
 
       <section className="mt-10 grid gap-3 sm:grid-cols-3">
-        {sport.highlights.map(h => (
+        {sport.highlights.map((h: string) => (
           <div key={h} className="rounded-2xl border border-border bg-gradient-card p-5 text-sm">
             <Trophy className="mb-2 h-4 w-4 text-primary" />{h}
           </div>

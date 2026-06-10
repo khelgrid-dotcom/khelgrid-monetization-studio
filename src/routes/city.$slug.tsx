@@ -49,7 +49,7 @@ function CityPage() {
       </div>
 
       <section className="mt-10 grid gap-3 sm:grid-cols-3">
-        {city.hubs.map(h => (
+        {city.hubs.map((h: string) => (
           <div key={h} className="rounded-2xl border border-border bg-gradient-card p-5 text-sm">
             <Building2 className="mb-2 h-4 w-4 text-primary" />{h}
           </div>

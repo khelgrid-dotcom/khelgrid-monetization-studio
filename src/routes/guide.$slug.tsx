@@ -43,7 +43,7 @@ function GuidePage() {
       <p className="mt-6 text-base text-muted-foreground">{guide.excerpt}</p>
 
       <ol className="mt-8 space-y-3">
-        {guide.steps.map((s, i) => (
+        {guide.steps.map((s: string, i: number) => (
           <li key={s} className="flex items-start gap-3 rounded-2xl border border-border bg-gradient-card p-4">
             <div className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-primary/10 text-xs font-semibold text-primary">{i + 1}</div>
             <span className="text-sm">{s}</span>

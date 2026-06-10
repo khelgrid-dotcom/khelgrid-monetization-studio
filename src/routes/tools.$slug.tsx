@@ -32,7 +32,7 @@ function ToolPage() {
   const [result, setResult] = useState<string | null>(null);
 
   const run = () => {
-    const filled = tool.inputs.filter(i => values[i.label]?.trim()).length;
+    const filled = tool.inputs.filter((i: { label: string }) => values[i.label]?.trim()).length;
     const score = Math.min(100, 40 + filled * 20 + Math.floor(Math.random() * 15));
     setResult(`Estimate: ${score}/100 · Based on ${filled}/${tool.inputs.length} inputs. Tap "Browse trials" to act on it.`);
   };
@@ -45,7 +45,7 @@ function ToolPage() {
       <p className="mt-2 text-muted-foreground">{tool.blurb}</p>
 
       <div className="mt-8 space-y-4 rounded-2xl border border-border bg-gradient-card p-5">
-        {tool.inputs.map(i => (
+        {tool.inputs.map((i: { label: string; placeholder: string }) => (
           <label key={i.label} className="block">
             <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">{i.label}</span>
             <input
