@@ -3,10 +3,15 @@ import { useMemo, useState } from "react";
 import {
   Sparkles, Bot, ShieldCheck, ScanLine, Users, BookOpen, Crown,
   GraduationCap, Smartphone, Info, ChevronLeft, ChevronRight,
-  CalendarCheck, CalendarDays, Star, Search,
+  CalendarCheck, CalendarDays, Star, Search, Trophy, MapPin, Wrench,
 } from "lucide-react";
 
 const FEATURES = [
+  { to: "/search", label: "Search trials", icon: Search },
+  { to: "/sports", label: "Sports", icon: Trophy },
+  { to: "/cities", label: "Cities", icon: MapPin },
+  { to: "/guides", label: "Guides", icon: BookOpen },
+  { to: "/tools", label: "Tools & calculators", icon: Wrench },
   { to: "/play", label: "Play · Find games", icon: Users },
   { to: "/book", label: "Book venues", icon: CalendarCheck },
   { to: "/train", label: "Train · Coaching", icon: GraduationCap },
