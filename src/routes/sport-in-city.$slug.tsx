@@ -96,11 +96,11 @@ function SportInCityPage() {
         {slice.map(t => (
           <div key={t.id} className="rounded-2xl border border-border bg-gradient-card p-5">
             <div className="flex items-center justify-between">
-              <Badge variant="outline">{t.level}</Badge>
+              <Badge variant="outline">{t.tag}</Badge>
               <span className="text-xs text-muted-foreground">{t.date}</span>
             </div>
             <h3 className="mt-2 font-semibold">{t.title}</h3>
-            <p className="text-xs text-muted-foreground">{t.venue} · {t.city}</p>
+            <p className="text-xs text-muted-foreground">{t.academy} · {t.city}</p>
             <Button asChild size="sm" className="mt-3"><Link to="/search">View & apply <ArrowRight className="ml-1 h-3 w-3" /></Link></Button>
           </div>
         ))}
