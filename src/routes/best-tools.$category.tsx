@@ -86,6 +86,7 @@ function BestToolsCategoryPage() {
   const totalPages = Math.max(1, Math.ceil(all.length / PAGE_SIZE));
   const safePage = Math.min(page, totalPages);
   const slice = all.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE);
+  const faqs = buildFaqs(category, all.length);
 
   return (
     <main className="mx-auto max-w-5xl px-4 py-10 sm:py-14">
@@ -139,6 +140,18 @@ function BestToolsCategoryPage() {
             </Link>
           ))}
         </div>
+      </section>
+
+      <section className="mt-12" aria-labelledby="faq-heading">
+        <h2 id="faq-heading" className="text-lg font-semibold">Frequently asked questions</h2>
+        <Accordion type="single" collapsible className="mt-3 rounded-2xl border border-border bg-gradient-card px-4">
+          {faqs.map((f, i) => (
+            <AccordionItem key={i} value={`faq-${i}`} className="border-border last:border-b-0">
+              <AccordionTrigger className="text-left text-sm font-medium">{f.q}</AccordionTrigger>
+              <AccordionContent className="text-sm text-muted-foreground">{f.a}</AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
       </section>
     </main>
   );
