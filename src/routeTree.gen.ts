@@ -37,10 +37,13 @@ import { Route as AiGuideRouteImport } from './routes/ai-guide'
 import { Route as AcademyRouteImport } from './routes/academy'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as TopGuidesCategoryRouteImport } from './routes/top-guides.$category'
 import { Route as ToolsSlugRouteImport } from './routes/tools.$slug'
 import { Route as SportSlugRouteImport } from './routes/sport.$slug'
+import { Route as SportInCitySlugRouteImport } from './routes/sport-in-city.$slug'
 import { Route as GuideSlugRouteImport } from './routes/guide.$slug'
 import { Route as CitySlugRouteImport } from './routes/city.$slug'
+import { Route as BestToolsCategoryRouteImport } from './routes/best-tools.$category'
 
 const VerifyRoute = VerifyRouteImport.update({
   id: '/verify',
@@ -182,6 +185,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TopGuidesCategoryRoute = TopGuidesCategoryRouteImport.update({
+  id: '/top-guides/$category',
+  path: '/top-guides/$category',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ToolsSlugRoute = ToolsSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
@@ -192,6 +200,11 @@ const SportSlugRoute = SportSlugRouteImport.update({
   path: '/sport/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SportInCitySlugRoute = SportInCitySlugRouteImport.update({
+  id: '/sport-in-city/$slug',
+  path: '/sport-in-city/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const GuideSlugRoute = GuideSlugRouteImport.update({
   id: '/guide/$slug',
   path: '/guide/$slug',
@@ -200,6 +213,11 @@ const GuideSlugRoute = GuideSlugRouteImport.update({
 const CitySlugRoute = CitySlugRouteImport.update({
   id: '/city/$slug',
   path: '/city/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BestToolsCategoryRoute = BestToolsCategoryRouteImport.update({
+  id: '/best-tools/$category',
+  path: '/best-tools/$category',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -232,10 +250,13 @@ export interface FileRoutesByFullPath {
   '/train': typeof TrainRoute
   '/trials': typeof TrialsRoute
   '/verify': typeof VerifyRoute
+  '/best-tools/$category': typeof BestToolsCategoryRoute
   '/city/$slug': typeof CitySlugRoute
   '/guide/$slug': typeof GuideSlugRoute
+  '/sport-in-city/$slug': typeof SportInCitySlugRoute
   '/sport/$slug': typeof SportSlugRoute
   '/tools/$slug': typeof ToolsSlugRoute
+  '/top-guides/$category': typeof TopGuidesCategoryRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -266,10 +287,13 @@ export interface FileRoutesByTo {
   '/train': typeof TrainRoute
   '/trials': typeof TrialsRoute
   '/verify': typeof VerifyRoute
+  '/best-tools/$category': typeof BestToolsCategoryRoute
   '/city/$slug': typeof CitySlugRoute
   '/guide/$slug': typeof GuideSlugRoute
+  '/sport-in-city/$slug': typeof SportInCitySlugRoute
   '/sport/$slug': typeof SportSlugRoute
   '/tools/$slug': typeof ToolsSlugRoute
+  '/top-guides/$category': typeof TopGuidesCategoryRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -301,10 +325,13 @@ export interface FileRoutesById {
   '/train': typeof TrainRoute
   '/trials': typeof TrialsRoute
   '/verify': typeof VerifyRoute
+  '/best-tools/$category': typeof BestToolsCategoryRoute
   '/city/$slug': typeof CitySlugRoute
   '/guide/$slug': typeof GuideSlugRoute
+  '/sport-in-city/$slug': typeof SportInCitySlugRoute
   '/sport/$slug': typeof SportSlugRoute
   '/tools/$slug': typeof ToolsSlugRoute
+  '/top-guides/$category': typeof TopGuidesCategoryRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -337,10 +364,13 @@ export interface FileRouteTypes {
     | '/train'
     | '/trials'
     | '/verify'
+    | '/best-tools/$category'
     | '/city/$slug'
     | '/guide/$slug'
+    | '/sport-in-city/$slug'
     | '/sport/$slug'
     | '/tools/$slug'
+    | '/top-guides/$category'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -371,10 +401,13 @@ export interface FileRouteTypes {
     | '/train'
     | '/trials'
     | '/verify'
+    | '/best-tools/$category'
     | '/city/$slug'
     | '/guide/$slug'
+    | '/sport-in-city/$slug'
     | '/sport/$slug'
     | '/tools/$slug'
+    | '/top-guides/$category'
   id:
     | '__root__'
     | '/'
@@ -405,10 +438,13 @@ export interface FileRouteTypes {
     | '/train'
     | '/trials'
     | '/verify'
+    | '/best-tools/$category'
     | '/city/$slug'
     | '/guide/$slug'
+    | '/sport-in-city/$slug'
     | '/sport/$slug'
     | '/tools/$slug'
+    | '/top-guides/$category'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -440,9 +476,12 @@ export interface RootRouteChildren {
   TrainRoute: typeof TrainRoute
   TrialsRoute: typeof TrialsRoute
   VerifyRoute: typeof VerifyRoute
+  BestToolsCategoryRoute: typeof BestToolsCategoryRoute
   CitySlugRoute: typeof CitySlugRoute
   GuideSlugRoute: typeof GuideSlugRoute
+  SportInCitySlugRoute: typeof SportInCitySlugRoute
   SportSlugRoute: typeof SportSlugRoute
+  TopGuidesCategoryRoute: typeof TopGuidesCategoryRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -643,6 +682,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/top-guides/$category': {
+      id: '/top-guides/$category'
+      path: '/top-guides/$category'
+      fullPath: '/top-guides/$category'
+      preLoaderRoute: typeof TopGuidesCategoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/tools/$slug': {
       id: '/tools/$slug'
       path: '/$slug'
@@ -657,6 +703,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SportSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/sport-in-city/$slug': {
+      id: '/sport-in-city/$slug'
+      path: '/sport-in-city/$slug'
+      fullPath: '/sport-in-city/$slug'
+      preLoaderRoute: typeof SportInCitySlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/guide/$slug': {
       id: '/guide/$slug'
       path: '/guide/$slug'
@@ -669,6 +722,13 @@ declare module '@tanstack/react-router' {
       path: '/city/$slug'
       fullPath: '/city/$slug'
       preLoaderRoute: typeof CitySlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/best-tools/$category': {
+      id: '/best-tools/$category'
+      path: '/best-tools/$category'
+      fullPath: '/best-tools/$category'
+      preLoaderRoute: typeof BestToolsCategoryRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -713,20 +773,13 @@ const rootRouteChildren: RootRouteChildren = {
   TrainRoute: TrainRoute,
   TrialsRoute: TrialsRoute,
   VerifyRoute: VerifyRoute,
+  BestToolsCategoryRoute: BestToolsCategoryRoute,
   CitySlugRoute: CitySlugRoute,
   GuideSlugRoute: GuideSlugRoute,
+  SportInCitySlugRoute: SportInCitySlugRoute,
   SportSlugRoute: SportSlugRoute,
+  TopGuidesCategoryRoute: TopGuidesCategoryRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
