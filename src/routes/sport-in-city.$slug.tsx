@@ -86,11 +86,8 @@ function SportInCityPage() {
       <section className="mt-8 grid gap-3 sm:grid-cols-2">
         {slice.length === 0 && (
           <div className="rounded-2xl border border-dashed border-border p-6 text-sm text-muted-foreground sm:col-span-2">
-            No live {sport.name} trials in {city.name} right now. Try{" "}
-            <Link to="/search" search={{ q: sport.name, city: city.name, sport: "", page: 1 } as never} className="text-primary underline">
-              the full search
-            </Link>{" "}
-            or set an alert.
+            No live {sport.name} trials in {city.name} right now.{" "}
+            <Link to="/search" className="text-primary underline">Open the full search</Link> or set an alert.
           </div>
         )}
         {slice.map(t => (
