@@ -4,9 +4,21 @@ import { fallback, zodValidator } from "@tanstack/zod-adapter";
 import { GUIDES_CATALOG, type Guide } from "@/data/catalog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Clock, ArrowRight } from "lucide-react";
 
 const PAGE_SIZE = 6;
+
+function buildFaqs(category: string, count: number) {
+  const c = category.toLowerCase();
+  return [
+    { q: `What are the best ${c} guides for Indian athletes?`, a: `KhelGrid curates ${count} ${c} guides written for Indian sport — covering trial prep, scripts, checklists and frameworks you can apply the same week.` },
+    { q: `Are these ${c} guides free to read?`, a: `Yes. Every ${c} guide on KhelGrid is free. You only pay when you choose to apply to a paid trial or unlock a premium tool.` },
+    { q: `How often are the ${c} guides updated?`, a: `Our editors refresh the ${c} library every month based on new trial cycles, federation rules and athlete feedback from across India.` },
+    { q: `Who writes the ${c} content on KhelGrid?`, a: `${category} guides are written by ex-athletes, certified coaches and scouts, then reviewed by our editorial team before publishing.` },
+    { q: `Can I use these ${c} guides on mobile?`, a: `Yes — every guide is mobile-first, loads on slow networks, and works offline once opened in the KhelGrid app.` },
+  ];
+}
 
 const CATEGORY_BY_SLUG: Record<string, Guide["category"]> = {
   "trial-prep": "Trial prep",
@@ -30,14 +42,32 @@ export const Route = createFileRoute("/top-guides/$category")({
     if (!category) throw notFound();
     return { category, slug: params.category };
   },
-  head: ({ loaderData }) => ({
-    meta: loaderData ? [
-      { title: `Top ${loaderData.category} guides for Indian athletes · KhelGrid` },
-      { name: "description", content: `The most read ${loaderData.category.toLowerCase()} guides on KhelGrid — checklists, scripts and frameworks built for Indian sport.` },
-      { property: "og:title", content: `Top ${loaderData.category} guides` },
-      { property: "og:description", content: `Hand-picked ${loaderData.category.toLowerCase()} playbooks for athletes, parents and coaches in India.` },
-    ] : [],
-  }),
+  head: ({ loaderData }) => {
+    if (!loaderData) return { meta: [] };
+    const count = GUIDES_CATALOG.filter(g => g.category === loaderData.category).length;
+    const faqs = buildFaqs(loaderData.category, count);
+    return {
+      meta: [
+        { title: `Top ${loaderData.category} guides for Indian athletes · KhelGrid` },
+        { name: "description", content: `The most read ${loaderData.category.toLowerCase()} guides on KhelGrid — checklists, scripts and frameworks built for Indian sport.` },
+        { property: "og:title", content: `Top ${loaderData.category} guides` },
+        { property: "og:description", content: `Hand-picked ${loaderData.category.toLowerCase()} playbooks for athletes, parents and coaches in India.` },
+      ],
+      links: [{ rel: "canonical", href: `/top-guides/${loaderData.slug}` }],
+      scripts: [{
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: faqs.map(f => ({
+            "@type": "Question",
+            name: f.q,
+            acceptedAnswer: { "@type": "Answer", text: f.a },
+          })),
+        }),
+      }],
+    };
+  },
   notFoundComponent: () => (
     <div className="mx-auto max-w-2xl px-4 py-20 text-center">
       <h1 className="text-3xl font-bold">Category not found</h1>
