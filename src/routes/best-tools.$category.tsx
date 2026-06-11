@@ -4,9 +4,21 @@ import { fallback, zodValidator } from "@tanstack/zod-adapter";
 import { TOOLS_CATALOG, type Tool } from "@/data/catalog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { ArrowRight } from "lucide-react";
 
 const PAGE_SIZE = 6;
+
+function buildFaqs(category: string, count: number) {
+  const c = category.toLowerCase();
+  return [
+    { q: `What are the best ${c}s for Indian athletes?`, a: `KhelGrid offers ${count} free ${c}s designed for Indian sport — covering trial prep, training load, scholarships and recovery.` },
+    { q: `Are these ${c}s free to use?`, a: `Yes. Every ${c} on KhelGrid runs free in your browser. No sign-up required for basic use; saving results needs a free KhelGrid account.` },
+    { q: `Do these ${c}s work on mobile?`, a: `Yes — every ${c} is mobile-first, works on slow networks and saves results to your KhelGrid profile when signed in.` },
+    { q: `How accurate are the ${c} results?`, a: `Our ${c}s are built with certified coaches and sports scientists, then validated against real Indian athlete data. They are decision-support, not medical advice.` },
+    { q: `Can coaches and academies use these ${c}s with their athletes?`, a: `Yes. Coaches on KhelGrid Pro can share ${c} results with athletes, track progress over time and export PDF reports.` },
+  ];
+}
 
 const CATEGORY_BY_SLUG: Record<string, Tool["category"]> = {
   calculator: "Calculator",
@@ -26,14 +38,32 @@ export const Route = createFileRoute("/best-tools/$category")({
     if (!category) throw notFound();
     return { category };
   },
-  head: ({ loaderData }) => ({
-    meta: loaderData ? [
-      { title: `Best ${loaderData.category.toLowerCase()}s for athletes · KhelGrid` },
-      { name: "description", content: `Free ${loaderData.category.toLowerCase()}s built for Indian athletes — trial prep, training load, scholarships and more.` },
-      { property: "og:title", content: `Best ${loaderData.category.toLowerCase()}s on KhelGrid` },
-      { property: "og:description", content: `Hand-picked ${loaderData.category.toLowerCase()}s for athletes, parents and coaches.` },
-    ] : [],
-  }),
+  head: ({ loaderData, params }) => {
+    if (!loaderData) return { meta: [] };
+    const count = TOOLS_CATALOG.filter(t => t.category === loaderData.category).length;
+    const faqs = buildFaqs(loaderData.category, count);
+    return {
+      meta: [
+        { title: `Best ${loaderData.category.toLowerCase()}s for athletes · KhelGrid` },
+        { name: "description", content: `Free ${loaderData.category.toLowerCase()}s built for Indian athletes — trial prep, training load, scholarships and more.` },
+        { property: "og:title", content: `Best ${loaderData.category.toLowerCase()}s on KhelGrid` },
+        { property: "og:description", content: `Hand-picked ${loaderData.category.toLowerCase()}s for athletes, parents and coaches.` },
+      ],
+      links: [{ rel: "canonical", href: `/best-tools/${params.category}` }],
+      scripts: [{
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: faqs.map(f => ({
+            "@type": "Question",
+            name: f.q,
+            acceptedAnswer: { "@type": "Answer", text: f.a },
+          })),
+        }),
+      }],
+    };
+  },
   notFoundComponent: () => (
     <div className="mx-auto max-w-2xl px-4 py-20 text-center">
       <h1 className="text-3xl font-bold">Category not found</h1>
@@ -56,6 +86,7 @@ function BestToolsCategoryPage() {
   const totalPages = Math.max(1, Math.ceil(all.length / PAGE_SIZE));
   const safePage = Math.min(page, totalPages);
   const slice = all.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE);
+  const faqs = buildFaqs(category, all.length);
 
   return (
     <main className="mx-auto max-w-5xl px-4 py-10 sm:py-14">
@@ -109,6 +140,18 @@ function BestToolsCategoryPage() {
             </Link>
           ))}
         </div>
+      </section>
+
+      <section className="mt-12" aria-labelledby="faq-heading">
+        <h2 id="faq-heading" className="text-lg font-semibold">Frequently asked questions</h2>
+        <Accordion type="single" collapsible className="mt-3 rounded-2xl border border-border bg-gradient-card px-4">
+          {faqs.map((f, i) => (
+            <AccordionItem key={i} value={`faq-${i}`} className="border-border last:border-b-0">
+              <AccordionTrigger className="text-left text-sm font-medium">{f.q}</AccordionTrigger>
+              <AccordionContent className="text-sm text-muted-foreground">{f.a}</AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
       </section>
     </main>
   );
