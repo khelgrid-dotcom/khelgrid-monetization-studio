@@ -6,19 +6,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { ArrowRight } from "lucide-react";
+import { generateFaqs, faqsToJsonLd } from "@/lib/faq-generator";
 
 const PAGE_SIZE = 6;
-
-function buildFaqs(category: string, count: number) {
-  const c = category.toLowerCase();
-  return [
-    { q: `What are the best ${c}s for Indian athletes?`, a: `KhelGrid offers ${count} free ${c}s designed for Indian sport — covering trial prep, training load, scholarships and recovery.` },
-    { q: `Are these ${c}s free to use?`, a: `Yes. Every ${c} on KhelGrid runs free in your browser. No sign-up required for basic use; saving results needs a free KhelGrid account.` },
-    { q: `Do these ${c}s work on mobile?`, a: `Yes — every ${c} is mobile-first, works on slow networks and saves results to your KhelGrid profile when signed in.` },
-    { q: `How accurate are the ${c} results?`, a: `Our ${c}s are built with certified coaches and sports scientists, then validated against real Indian athlete data. They are decision-support, not medical advice.` },
-    { q: `Can coaches and academies use these ${c}s with their athletes?`, a: `Yes. Coaches on KhelGrid Pro can share ${c} results with athletes, track progress over time and export PDF reports.` },
-  ];
-}
 
 const CATEGORY_BY_SLUG: Record<string, Tool["category"]> = {
   calculator: "Calculator",
