@@ -6,19 +6,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Clock, ArrowRight } from "lucide-react";
+import { generateFaqs, faqsToJsonLd } from "@/lib/faq-generator";
 
 const PAGE_SIZE = 6;
-
-function buildFaqs(category: string, count: number) {
-  const c = category.toLowerCase();
-  return [
-    { q: `What are the best ${c} guides for Indian athletes?`, a: `KhelGrid curates ${count} ${c} guides written for Indian sport — covering trial prep, scripts, checklists and frameworks you can apply the same week.` },
-    { q: `Are these ${c} guides free to read?`, a: `Yes. Every ${c} guide on KhelGrid is free. You only pay when you choose to apply to a paid trial or unlock a premium tool.` },
-    { q: `How often are the ${c} guides updated?`, a: `Our editors refresh the ${c} library every month based on new trial cycles, federation rules and athlete feedback from across India.` },
-    { q: `Who writes the ${c} content on KhelGrid?`, a: `${category} guides are written by ex-athletes, certified coaches and scouts, then reviewed by our editorial team before publishing.` },
-    { q: `Can I use these ${c} guides on mobile?`, a: `Yes — every guide is mobile-first, loads on slow networks, and works offline once opened in the KhelGrid app.` },
-  ];
-}
 
 const CATEGORY_BY_SLUG: Record<string, Guide["category"]> = {
   "trial-prep": "Trial prep",
