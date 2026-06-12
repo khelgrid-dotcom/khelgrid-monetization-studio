@@ -34,8 +34,6 @@ export const Route = createFileRoute("/top-guides/$category")({
   },
   head: ({ loaderData }) => {
     if (!loaderData) return { meta: [] };
-    const count = GUIDES_CATALOG.filter(g => g.category === loaderData.category).length;
-    const faqs = buildFaqs(loaderData.category, count);
     return {
       meta: [
         { title: `Top ${loaderData.category} guides for Indian athletes · KhelGrid` },
@@ -44,18 +42,6 @@ export const Route = createFileRoute("/top-guides/$category")({
         { property: "og:description", content: `Hand-picked ${loaderData.category.toLowerCase()} playbooks for athletes, parents and coaches in India.` },
       ],
       links: [{ rel: "canonical", href: `/top-guides/${loaderData.slug}` }],
-      scripts: [{
-        type: "application/ld+json",
-        children: JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "FAQPage",
-          mainEntity: faqs.map(f => ({
-            "@type": "Question",
-            name: f.q,
-            acceptedAnswer: { "@type": "Answer", text: f.a },
-          })),
-        }),
-      }],
     };
   },
   notFoundComponent: () => (
