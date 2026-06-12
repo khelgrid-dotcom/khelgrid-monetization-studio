@@ -56,13 +56,24 @@ export const Route = createFileRoute("/best-tools/$category")({
 });
 
 function BestToolsCategoryPage() {
-  const { category } = Route.useLoaderData();
+  const { category, slug } = Route.useLoaderData();
   const { page } = Route.useSearch();
   const all = TOOLS_CATALOG.filter(t => t.category === category);
   const totalPages = Math.max(1, Math.ceil(all.length / PAGE_SIZE));
   const safePage = Math.min(page, totalPages);
   const slice = all.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE);
-  const faqs = buildFaqs(category, all.length);
+  const faqs = generateFaqs({
+    category,
+    slug,
+    noun: category.toLowerCase(),
+    nounPlural: `${category.toLowerCase()}s`,
+    totalCount: all.length,
+    pageItemTitles: slice.map(t => t.name),
+    page: safePage,
+    totalPages,
+  });
+  const jsonLd = JSON.stringify(faqsToJsonLd(faqs));
+
 
   return (
     <main className="mx-auto max-w-5xl px-4 py-10 sm:py-14">
