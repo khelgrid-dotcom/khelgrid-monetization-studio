@@ -6,19 +6,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { ArrowRight } from "lucide-react";
+import { generateFaqs, faqsToJsonLd } from "@/lib/faq-generator";
 
 const PAGE_SIZE = 6;
-
-function buildFaqs(category: string, count: number) {
-  const c = category.toLowerCase();
-  return [
-    { q: `What are the best ${c}s for Indian athletes?`, a: `KhelGrid offers ${count} free ${c}s designed for Indian sport — covering trial prep, training load, scholarships and recovery.` },
-    { q: `Are these ${c}s free to use?`, a: `Yes. Every ${c} on KhelGrid runs free in your browser. No sign-up required for basic use; saving results needs a free KhelGrid account.` },
-    { q: `Do these ${c}s work on mobile?`, a: `Yes — every ${c} is mobile-first, works on slow networks and saves results to your KhelGrid profile when signed in.` },
-    { q: `How accurate are the ${c} results?`, a: `Our ${c}s are built with certified coaches and sports scientists, then validated against real Indian athlete data. They are decision-support, not medical advice.` },
-    { q: `Can coaches and academies use these ${c}s with their athletes?`, a: `Yes. Coaches on KhelGrid Pro can share ${c} results with athletes, track progress over time and export PDF reports.` },
-  ];
-}
 
 const CATEGORY_BY_SLUG: Record<string, Tool["category"]> = {
   calculator: "Calculator",
@@ -36,12 +26,10 @@ export const Route = createFileRoute("/best-tools/$category")({
   loader: ({ params }) => {
     const category = CATEGORY_BY_SLUG[params.category];
     if (!category) throw notFound();
-    return { category };
+    return { category, slug: params.category };
   },
   head: ({ loaderData, params }) => {
     if (!loaderData) return { meta: [] };
-    const count = TOOLS_CATALOG.filter(t => t.category === loaderData.category).length;
-    const faqs = buildFaqs(loaderData.category, count);
     return {
       meta: [
         { title: `Best ${loaderData.category.toLowerCase()}s for athletes · KhelGrid` },
@@ -50,18 +38,6 @@ export const Route = createFileRoute("/best-tools/$category")({
         { property: "og:description", content: `Hand-picked ${loaderData.category.toLowerCase()}s for athletes, parents and coaches.` },
       ],
       links: [{ rel: "canonical", href: `/best-tools/${params.category}` }],
-      scripts: [{
-        type: "application/ld+json",
-        children: JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "FAQPage",
-          mainEntity: faqs.map(f => ({
-            "@type": "Question",
-            name: f.q,
-            acceptedAnswer: { "@type": "Answer", text: f.a },
-          })),
-        }),
-      }],
     };
   },
   notFoundComponent: () => (
@@ -80,13 +56,24 @@ export const Route = createFileRoute("/best-tools/$category")({
 });
 
 function BestToolsCategoryPage() {
-  const { category } = Route.useLoaderData();
+  const { category, slug } = Route.useLoaderData();
   const { page } = Route.useSearch();
   const all = TOOLS_CATALOG.filter(t => t.category === category);
   const totalPages = Math.max(1, Math.ceil(all.length / PAGE_SIZE));
   const safePage = Math.min(page, totalPages);
   const slice = all.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE);
-  const faqs = buildFaqs(category, all.length);
+  const faqs = generateFaqs({
+    category,
+    slug,
+    noun: category.toLowerCase(),
+    nounPlural: `${category.toLowerCase()}s`,
+    totalCount: all.length,
+    pageItemTitles: slice.map(t => t.name),
+    page: safePage,
+    totalPages,
+  });
+  const jsonLd = JSON.stringify(faqsToJsonLd(faqs));
+
 
   return (
     <main className="mx-auto max-w-5xl px-4 py-10 sm:py-14">
@@ -144,17 +131,20 @@ function BestToolsCategoryPage() {
 
       <section className="mt-12" aria-labelledby="faq-heading">
         <h2 id="faq-heading" className="text-lg font-semibold">Frequently asked questions</h2>
+        <p className="mt-1 text-xs text-muted-foreground">Fresh questions for page {safePage} — answers below are unique to this view.</p>
         <Accordion type="single" collapsible className="mt-3 rounded-2xl border border-border bg-gradient-card px-4">
           {faqs.map((f, i) => (
-            <AccordionItem key={i} value={`faq-${i}`} className="border-border last:border-b-0">
+            <AccordionItem key={`${safePage}-${i}`} value={`faq-${i}`} className="border-border last:border-b-0">
               <AccordionTrigger className="text-left text-sm font-medium">{f.q}</AccordionTrigger>
               <AccordionContent className="text-sm text-muted-foreground">{f.a}</AccordionContent>
             </AccordionItem>
           ))}
         </Accordion>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd }} />
       </section>
     </main>
   );
 }
+
 
 export const BEST_TOOL_CATEGORY_SLUGS = Object.keys(CATEGORY_BY_SLUG);

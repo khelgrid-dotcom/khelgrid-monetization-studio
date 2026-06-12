@@ -6,19 +6,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Clock, ArrowRight } from "lucide-react";
+import { generateFaqs, faqsToJsonLd } from "@/lib/faq-generator";
 
 const PAGE_SIZE = 6;
-
-function buildFaqs(category: string, count: number) {
-  const c = category.toLowerCase();
-  return [
-    { q: `What are the best ${c} guides for Indian athletes?`, a: `KhelGrid curates ${count} ${c} guides written for Indian sport — covering trial prep, scripts, checklists and frameworks you can apply the same week.` },
-    { q: `Are these ${c} guides free to read?`, a: `Yes. Every ${c} guide on KhelGrid is free. You only pay when you choose to apply to a paid trial or unlock a premium tool.` },
-    { q: `How often are the ${c} guides updated?`, a: `Our editors refresh the ${c} library every month based on new trial cycles, federation rules and athlete feedback from across India.` },
-    { q: `Who writes the ${c} content on KhelGrid?`, a: `${category} guides are written by ex-athletes, certified coaches and scouts, then reviewed by our editorial team before publishing.` },
-    { q: `Can I use these ${c} guides on mobile?`, a: `Yes — every guide is mobile-first, loads on slow networks, and works offline once opened in the KhelGrid app.` },
-  ];
-}
 
 const CATEGORY_BY_SLUG: Record<string, Guide["category"]> = {
   "trial-prep": "Trial prep",
@@ -44,8 +34,6 @@ export const Route = createFileRoute("/top-guides/$category")({
   },
   head: ({ loaderData }) => {
     if (!loaderData) return { meta: [] };
-    const count = GUIDES_CATALOG.filter(g => g.category === loaderData.category).length;
-    const faqs = buildFaqs(loaderData.category, count);
     return {
       meta: [
         { title: `Top ${loaderData.category} guides for Indian athletes · KhelGrid` },
@@ -54,18 +42,6 @@ export const Route = createFileRoute("/top-guides/$category")({
         { property: "og:description", content: `Hand-picked ${loaderData.category.toLowerCase()} playbooks for athletes, parents and coaches in India.` },
       ],
       links: [{ rel: "canonical", href: `/top-guides/${loaderData.slug}` }],
-      scripts: [{
-        type: "application/ld+json",
-        children: JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "FAQPage",
-          mainEntity: faqs.map(f => ({
-            "@type": "Question",
-            name: f.q,
-            acceptedAnswer: { "@type": "Answer", text: f.a },
-          })),
-        }),
-      }],
     };
   },
   notFoundComponent: () => (
@@ -84,13 +60,24 @@ export const Route = createFileRoute("/top-guides/$category")({
 });
 
 function TopGuidesCategoryPage() {
-  const { category } = Route.useLoaderData();
+  const { category, slug } = Route.useLoaderData();
   const { page } = Route.useSearch();
   const all = GUIDES_CATALOG.filter(g => g.category === category);
   const totalPages = Math.max(1, Math.ceil(all.length / PAGE_SIZE));
   const safePage = Math.min(page, totalPages);
   const slice = all.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE);
-  const faqs = buildFaqs(category, all.length);
+  const faqs = generateFaqs({
+    category,
+    slug,
+    noun: "guide",
+    nounPlural: "guides",
+    totalCount: all.length,
+    pageItemTitles: slice.map(g => g.title),
+    page: safePage,
+    totalPages,
+  });
+  const jsonLd = JSON.stringify(faqsToJsonLd(faqs));
+
 
   return (
     <main className="mx-auto max-w-5xl px-4 py-10 sm:py-14">
@@ -151,17 +138,20 @@ function TopGuidesCategoryPage() {
 
       <section className="mt-12" aria-labelledby="faq-heading">
         <h2 id="faq-heading" className="text-lg font-semibold">Frequently asked questions</h2>
+        <p className="mt-1 text-xs text-muted-foreground">Fresh questions for page {safePage} — answers below are unique to this view.</p>
         <Accordion type="single" collapsible className="mt-3 rounded-2xl border border-border bg-gradient-card px-4">
           {faqs.map((f, i) => (
-            <AccordionItem key={i} value={`faq-${i}`} className="border-border last:border-b-0">
+            <AccordionItem key={`${safePage}-${i}`} value={`faq-${i}`} className="border-border last:border-b-0">
               <AccordionTrigger className="text-left text-sm font-medium">{f.q}</AccordionTrigger>
               <AccordionContent className="text-sm text-muted-foreground">{f.a}</AccordionContent>
             </AccordionItem>
           ))}
         </Accordion>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd }} />
       </section>
     </main>
   );
 }
+
 
 export const TOP_GUIDE_CATEGORY_SLUGS = Object.keys(CATEGORY_BY_SLUG);
