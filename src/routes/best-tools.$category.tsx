@@ -30,8 +30,6 @@ export const Route = createFileRoute("/best-tools/$category")({
   },
   head: ({ loaderData, params }) => {
     if (!loaderData) return { meta: [] };
-    const count = TOOLS_CATALOG.filter(t => t.category === loaderData.category).length;
-    const faqs = buildFaqs(loaderData.category, count);
     return {
       meta: [
         { title: `Best ${loaderData.category.toLowerCase()}s for athletes · KhelGrid` },
@@ -40,18 +38,6 @@ export const Route = createFileRoute("/best-tools/$category")({
         { property: "og:description", content: `Hand-picked ${loaderData.category.toLowerCase()}s for athletes, parents and coaches.` },
       ],
       links: [{ rel: "canonical", href: `/best-tools/${params.category}` }],
-      scripts: [{
-        type: "application/ld+json",
-        children: JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "FAQPage",
-          mainEntity: faqs.map(f => ({
-            "@type": "Question",
-            name: f.q,
-            acceptedAnswer: { "@type": "Answer", text: f.a },
-          })),
-        }),
-      }],
     };
   },
   notFoundComponent: () => (
