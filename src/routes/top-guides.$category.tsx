@@ -138,17 +138,20 @@ function TopGuidesCategoryPage() {
 
       <section className="mt-12" aria-labelledby="faq-heading">
         <h2 id="faq-heading" className="text-lg font-semibold">Frequently asked questions</h2>
+        <p className="mt-1 text-xs text-muted-foreground">Fresh questions for page {safePage} — answers below are unique to this view.</p>
         <Accordion type="single" collapsible className="mt-3 rounded-2xl border border-border bg-gradient-card px-4">
           {faqs.map((f, i) => (
-            <AccordionItem key={i} value={`faq-${i}`} className="border-border last:border-b-0">
+            <AccordionItem key={`${safePage}-${i}`} value={`faq-${i}`} className="border-border last:border-b-0">
               <AccordionTrigger className="text-left text-sm font-medium">{f.q}</AccordionTrigger>
               <AccordionContent className="text-sm text-muted-foreground">{f.a}</AccordionContent>
             </AccordionItem>
           ))}
         </Accordion>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd }} />
       </section>
     </main>
   );
 }
+
 
 export const TOP_GUIDE_CATEGORY_SLUGS = Object.keys(CATEGORY_BY_SLUG);
