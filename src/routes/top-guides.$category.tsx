@@ -60,13 +60,24 @@ export const Route = createFileRoute("/top-guides/$category")({
 });
 
 function TopGuidesCategoryPage() {
-  const { category } = Route.useLoaderData();
+  const { category, slug } = Route.useLoaderData();
   const { page } = Route.useSearch();
   const all = GUIDES_CATALOG.filter(g => g.category === category);
   const totalPages = Math.max(1, Math.ceil(all.length / PAGE_SIZE));
   const safePage = Math.min(page, totalPages);
   const slice = all.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE);
-  const faqs = buildFaqs(category, all.length);
+  const faqs = generateFaqs({
+    category,
+    slug,
+    noun: "guide",
+    nounPlural: "guides",
+    totalCount: all.length,
+    pageItemTitles: slice.map(g => g.title),
+    page: safePage,
+    totalPages,
+  });
+  const jsonLd = JSON.stringify(faqsToJsonLd(faqs));
+
 
   return (
     <main className="mx-auto max-w-5xl px-4 py-10 sm:py-14">
