@@ -116,12 +116,36 @@ function buildFaqBank(ctx: FaqContext): Faq[] {
   ];
 }
 
+const faqCache = new Map<string, Faq[]>();
+const MAX_FAQ_CACHE = 500;
+
+function faqCacheKey(ctx: FaqContext, perPage: number): string {
+  return JSON.stringify({
+    c: ctx.category,
+    s: ctx.slug,
+    n: ctx.noun,
+    np: ctx.nounPlural,
+    tc: ctx.totalCount,
+    p: ctx.page,
+    tp: ctx.totalPages,
+    b: ctx.brand,
+    f: ctx.pageItemTitles[0],
+    sc: ctx.pageItemTitles[1],
+    pp: perPage,
+  });
+}
+
 /**
  * Generate a stable, page-unique slice of FAQs so no two paginated URLs
  * share the same questions. Wraps around the bank only when total pages
  * exceed available unique windows.
+ * FAQ sets are memoised by context hash for fast re-renders.
  */
 export function generateFaqs(ctx: FaqContext, perPage = 5): Faq[] {
+  const key = faqCacheKey(ctx, perPage);
+  const hit = faqCache.get(key);
+  if (hit) return hit;
+
   const bank = buildFaqBank(ctx);
   if (bank.length === 0) return [];
   const start = ((ctx.page - 1) * perPage) % bank.length;
@@ -129,6 +153,12 @@ export function generateFaqs(ctx: FaqContext, perPage = 5): Faq[] {
   for (let i = 0; i < perPage && i < bank.length; i++) {
     out.push(bank[(start + i) % bank.length]);
   }
+
+  if (faqCache.size >= MAX_FAQ_CACHE) {
+    const first = faqCache.keys().next().value;
+    if (first !== undefined) faqCache.delete(first);
+  }
+  faqCache.set(key, out);
   return out;
 }
 
