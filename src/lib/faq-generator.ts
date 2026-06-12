@@ -3,6 +3,9 @@
 // then slices a non-overlapping window per page so paginated URLs never
 // repeat the same FAQ — improving long-tail SEO and avoiding duplicate
 // content penalties.
+//
+// Generated FAQ sets are cached by context hash so JSON-LD and accordion
+// markup re-render instantly on repeat visits without recomputing the bank.
 
 export interface Faq {
   q: string;
