@@ -26,7 +26,7 @@ export const Route = createFileRoute("/best-tools/$category")({
   loader: ({ params }) => {
     const category = CATEGORY_BY_SLUG[params.category];
     if (!category) throw notFound();
-    return { category };
+    return { category, slug: params.category };
   },
   head: ({ loaderData, params }) => {
     if (!loaderData) return { meta: [] };
