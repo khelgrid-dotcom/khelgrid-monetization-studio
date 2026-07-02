@@ -4,6 +4,7 @@ import {
   Sparkles, Bot, ShieldCheck, ScanLine, Users, BookOpen, Crown,
   GraduationCap, Smartphone, Info, ChevronLeft, ChevronRight,
   CalendarCheck, CalendarDays, Star, Search, Trophy, MapPin, Wrench,
+  Swords,
 } from "lucide-react";
 
 const FEATURES = [
