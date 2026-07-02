@@ -110,6 +110,7 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <Navbar />
+        <Breadcrumbs />
         <div className="pb-20 md:pb-0">
           <Outlet />
         </div>
