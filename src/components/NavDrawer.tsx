@@ -32,6 +32,7 @@ import {
   CalendarCheck,
   CalendarDays,
   Star,
+  Swords,
 } from "lucide-react";
 
 const PRIMARY = [
