@@ -32,6 +32,7 @@ import {
   CalendarCheck,
   CalendarDays,
   Star,
+  Swords,
 } from "lucide-react";
 
 const PRIMARY = [
@@ -41,7 +42,7 @@ const PRIMARY = [
   { to: "/cities", label: "Cities", icon: Compass },
   { to: "/guides", label: "Guides", icon: BookOpen },
   { to: "/tools", label: "Tools & calculators", icon: Zap },
-  { to: "/play", label: "Play · Find games", icon: Users },
+  { to: "/play", label: "Play · Find games", icon: Swords },
   { to: "/book", label: "Book venues", icon: CalendarCheck },
   { to: "/train", label: "Train · Coaching", icon: GraduationCap },
   { to: "/events", label: "Events & tournaments", icon: CalendarDays },
