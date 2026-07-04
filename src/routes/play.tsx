@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { MapPin, Calendar, Clock, Trophy, Users, Zap, Plus } from "lucide-react";
 import { toast } from "sonner";
+import { FeaturesSidebar } from "@/components/FeaturesSidebar";
 
 export const Route = createFileRoute("/play")({
   head: () => ({
