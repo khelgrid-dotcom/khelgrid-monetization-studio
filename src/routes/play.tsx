@@ -32,7 +32,10 @@ function PlayPage() {
   ), [sport, city, level]);
 
   return (
-    <main className="mx-auto max-w-7xl px-4 py-6 sm:py-10">
+    <div className="flex">
+      <FeaturesSidebar />
+      <main className="min-w-0 flex-1">
+        <div className="mx-auto max-w-7xl px-4 py-6 sm:py-10">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">Find players. Join games.</h1>
