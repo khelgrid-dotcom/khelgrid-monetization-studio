@@ -122,6 +122,8 @@ function PlayPage() {
           </div>
         )}
       </div>
-    </main>
+        </div>
+      </main>
+    </div>
   );
 }
