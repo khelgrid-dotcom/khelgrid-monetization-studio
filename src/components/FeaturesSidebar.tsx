@@ -7,7 +7,7 @@ import {
   Swords,
 } from "lucide-react";
 
-const FEATURES = [
+export const FEATURES = [
   { to: "/search", label: "Search trials", icon: Search },
   { to: "/sports", label: "Sports", icon: Trophy },
   { to: "/cities", label: "Cities", icon: MapPin },

@@ -35,7 +35,7 @@ import {
   Swords,
 } from "lucide-react";
 
-const PRIMARY = [
+export const PRIMARY = [
   { to: "/", label: "Home", icon: Home },
   { to: "/search", label: "Search trials", icon: Search },
   { to: "/sports", label: "Sports", icon: Trophy },
