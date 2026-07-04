@@ -1,13 +1,29 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import {
-  Sparkles, Bot, ShieldCheck, ScanLine, Users, BookOpen, Crown,
-  GraduationCap, Smartphone, Info, ChevronLeft, ChevronRight,
-  CalendarCheck, CalendarDays, Star, Search, Trophy, MapPin, Wrench,
+  Sparkles,
+  Bot,
+  ShieldCheck,
+  ScanLine,
+  Users,
+  BookOpen,
+  Crown,
+  GraduationCap,
+  Smartphone,
+  Info,
+  ChevronLeft,
+  ChevronRight,
+  CalendarCheck,
+  CalendarDays,
+  Star,
+  Search,
+  Trophy,
+  MapPin,
+  Wrench,
   Swords,
 } from "lucide-react";
 
-const FEATURES = [
+export const FEATURES = [
   { to: "/search", label: "Search trials", icon: Search },
   { to: "/sports", label: "Sports", icon: Trophy },
   { to: "/cities", label: "Cities", icon: MapPin },
@@ -33,12 +49,12 @@ const FEATURES = [
 export function FeaturesSidebar() {
   const [collapsed, setCollapsed] = useState(false);
   const [query, setQuery] = useState("");
-  const path = useRouterState({ select: s => s.location.pathname });
+  const path = useRouterState({ select: (s) => s.location.pathname });
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return FEATURES.slice();
-    return FEATURES.filter(f => f.label.toLowerCase().includes(q));
+    return FEATURES.filter((f) => f.label.toLowerCase().includes(q));
   }, [query]);
 
   return (
@@ -54,11 +70,15 @@ export function FeaturesSidebar() {
           </span>
         )}
         <button
-          onClick={() => setCollapsed(c => !c)}
+          onClick={() => setCollapsed((c) => !c)}
           className="ml-auto grid h-6 w-6 place-items-center rounded-md text-muted-foreground hover:bg-secondary hover:text-foreground"
           title={collapsed ? "Expand" : "Collapse"}
         >
-          {collapsed ? <ChevronRight className="h-3.5 w-3.5" /> : <ChevronLeft className="h-3.5 w-3.5" />}
+          {collapsed ? (
+            <ChevronRight className="h-3.5 w-3.5" />
+          ) : (
+            <ChevronLeft className="h-3.5 w-3.5" />
+          )}
         </button>
       </div>
 
@@ -68,7 +88,7 @@ export function FeaturesSidebar() {
             <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
             <input
               value={query}
-              onChange={e => setQuery(e.target.value)}
+              onChange={(e) => setQuery(e.target.value)}
               placeholder="Search features…"
               className="w-full rounded-md border border-border bg-secondary/40 py-1.5 pl-8 pr-2.5 text-sm text-foreground placeholder:text-muted-foreground/70 focus:border-primary/40 focus:bg-background focus:outline-none focus:ring-1 focus:ring-primary/20"
             />
@@ -77,7 +97,7 @@ export function FeaturesSidebar() {
       )}
 
       <nav className="flex flex-1 flex-col gap-0.5 overflow-y-auto px-2 pb-4">
-        {filtered.map(f => {
+        {filtered.map((f) => {
           const active = path === f.to;
           return (
             <Link

@@ -1,12 +1,6 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import {
@@ -35,7 +29,7 @@ import {
   Swords,
 } from "lucide-react";
 
-const PRIMARY = [
+export const PRIMARY = [
   { to: "/", label: "Home", icon: Home },
   { to: "/search", label: "Search trials", icon: Search },
   { to: "/sports", label: "Sports", icon: Trophy },
@@ -67,7 +61,7 @@ export function NavDrawer() {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const { plan, wallet } = useAuth();
-  const path = useRouterState({ select: s => s.location.pathname });
+  const path = useRouterState({ select: (s) => s.location.pathname });
 
   // Close drawer on route change
   useEffect(() => {
@@ -77,11 +71,11 @@ export function NavDrawer() {
 
   const filteredPrimary = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return q ? PRIMARY.filter(i => i.label.toLowerCase().includes(q)) : PRIMARY.slice();
+    return q ? PRIMARY.filter((i) => i.label.toLowerCase().includes(q)) : PRIMARY.slice();
   }, [query]);
   const filteredFeatures = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return q ? FEATURES.filter(i => i.label.toLowerCase().includes(q)) : FEATURES.slice();
+    return q ? FEATURES.filter((i) => i.label.toLowerCase().includes(q)) : FEATURES.slice();
   }, [query]);
 
   return (
@@ -94,7 +88,10 @@ export function NavDrawer() {
           <Menu className="h-5 w-5" />
         </button>
       </SheetTrigger>
-      <SheetContent side="left" className="flex w-[88vw] max-w-sm flex-col gap-0 p-0 pb-[env(safe-area-inset-bottom)] sm:max-w-sm">
+      <SheetContent
+        side="left"
+        className="flex w-[88vw] max-w-sm flex-col gap-0 p-0 pb-[env(safe-area-inset-bottom)] sm:max-w-sm"
+      >
         <SheetHeader className="border-b border-border/60 px-5 py-4 text-left">
           <SheetTitle className="flex items-center gap-2">
             <div className="grid h-8 w-8 place-items-center rounded-lg bg-gradient-hero text-primary-foreground">
@@ -122,8 +119,15 @@ export function NavDrawer() {
                 </div>
               </div>
             </div>
-            <Button asChild size="sm" variant="outline" className="rounded-full border-primary/50 text-primary hover:bg-primary/10 hover:text-primary">
-              <Link to="/login"><LogIn className="mr-1 h-3.5 w-3.5" /> Log in</Link>
+            <Button
+              asChild
+              size="sm"
+              variant="outline"
+              className="rounded-full border-primary/50 text-primary hover:bg-primary/10 hover:text-primary"
+            >
+              <Link to="/login">
+                <LogIn className="mr-1 h-3.5 w-3.5" /> Log in
+              </Link>
             </Button>
           </div>
         </div>
@@ -134,7 +138,7 @@ export function NavDrawer() {
             <Search className="pointer-events-none absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <input
               value={query}
-              onChange={e => setQuery(e.target.value)}
+              onChange={(e) => setQuery(e.target.value)}
               placeholder="Search features…"
               className="w-full rounded-lg border border-border bg-secondary/40 py-2 pl-9 pr-3 text-sm text-foreground placeholder:text-muted-foreground/70 focus:border-primary/40 focus:bg-background focus:outline-none focus:ring-1 focus:ring-primary/20"
             />
@@ -144,16 +148,28 @@ export function NavDrawer() {
         <div className="flex-1 overflow-y-auto px-2 py-3">
           {filteredPrimary.length > 0 && (
             <Section title="Navigate">
-              {filteredPrimary.map(i => (
-                <DrawerLink key={i.to} to={i.to} label={i.label} icon={i.icon} active={path === i.to} />
+              {filteredPrimary.map((i) => (
+                <DrawerLink
+                  key={i.to}
+                  to={i.to}
+                  label={i.label}
+                  icon={i.icon}
+                  active={path === i.to}
+                />
               ))}
             </Section>
           )}
 
           {filteredFeatures.length > 0 && (
             <Section title="Features">
-              {filteredFeatures.map(i => (
-                <DrawerLink key={i.to} to={i.to} label={i.label} icon={i.icon} active={path === i.to} />
+              {filteredFeatures.map((i) => (
+                <DrawerLink
+                  key={i.to}
+                  to={i.to}
+                  label={i.label}
+                  icon={i.icon}
+                  active={path === i.to}
+                />
               ))}
             </Section>
           )}
@@ -164,7 +180,10 @@ export function NavDrawer() {
         </div>
 
         <div className="sticky bottom-0 border-t border-border/60 bg-background/95 p-4 backdrop-blur-xl">
-          <Button asChild className="w-full rounded-xl bg-gradient-hero text-primary-foreground hover:opacity-95">
+          <Button
+            asChild
+            className="w-full rounded-xl bg-gradient-hero text-primary-foreground hover:opacity-95"
+          >
             <Link to="/pricing">
               <Zap className="mr-1 h-4 w-4" /> {plan === "pro" ? "Manage Pro" : "Go Pro · ₹499/mo"}
             </Link>
