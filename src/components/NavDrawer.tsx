@@ -221,9 +221,20 @@ function DrawerLink({
   icon: React.ComponentType<{ className?: string }>;
   active: boolean;
 }) {
+  const onClick =
+    to === PLAY_NAV_DESTINATION
+      ? () =>
+          trackEvent({
+            event: "nav_click",
+            label: PLAY_NAV_LABEL,
+            destination: PLAY_NAV_DESTINATION,
+            source: "sidebar_mobile",
+          })
+      : undefined;
   return (
     <Link
       to={to}
+      onClick={onClick}
       className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors ${
         active
           ? "bg-secondary text-foreground"
