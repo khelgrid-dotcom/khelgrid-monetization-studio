@@ -12,6 +12,7 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { AuthProvider } from "@/context/AuthContext";
+import { NotificationProvider } from "@/context/NotificationContext";
 import { Navbar } from "@/components/Navbar";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { BottomTabBar } from "@/components/BottomTabBar";
@@ -109,13 +110,15 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <Navbar />
-        <Breadcrumbs />
-        <div className="pb-20 md:pb-0">
-          <Outlet />
-        </div>
-        <BottomTabBar />
-        <Toaster theme="dark" position="top-right" />
+        <NotificationProvider>
+          <Navbar />
+          <Breadcrumbs />
+          <div className="pb-20 md:pb-0">
+            <Outlet />
+          </div>
+          <BottomTabBar />
+          <Toaster theme="dark" position="top-right" />
+        </NotificationProvider>
       </AuthProvider>
     </QueryClientProvider>
   );

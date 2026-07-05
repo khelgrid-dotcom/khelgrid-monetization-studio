@@ -26,6 +26,9 @@ import {
   Radio,
   Briefcase,
   Library,
+  Heart,
+  Shield,
+  TrendingUp,
 } from "lucide-react";
 
 export type NavItem = {
@@ -60,6 +63,9 @@ export const NAV_ITEMS: NavItem[] = [
   { to: "/train", label: "Train · Coaching", icon: GraduationCap, surfaces: ["primary", "features"] },
   { to: "/events", label: "Events & tournaments", icon: CalendarDays, surfaces: ["primary", "features"] },
   { to: "/memberships", label: "Memberships", icon: Star, surfaces: ["primary", "features"] },
+  { to: "/recommendations", label: "For You", icon: Heart, surfaces: ["primary", "features"] },
+  { to: "/trust-center", label: "Trust Center", icon: Shield, surfaces: ["primary", "features"] },
+  { to: "/my-stats", label: "My Stats", icon: TrendingUp, surfaces: ["primary", "features"] },
   { to: "/dashboard", label: "My Dashboard", icon: User, surfaces: ["primary"] },
   { to: "/start-from-zero", label: "Start From Zero", icon: Sparkles, surfaces: ["features"] },
   { to: "/ai-guide", label: "AI Guide", icon: Bot, surfaces: ["features"] },
@@ -89,6 +95,9 @@ export const DYNAMIC_ROUTE_LABELS: Record<string, string> = {
   "/sport-in-city/$slug": "Sport in city",
   "/top-guides/$category": "Top guides",
   "/best-tools/$category": "Best tools",
+  "/recommendations": "For You",
+  "/trust-center": "Trust Center",
+  "/my-stats": "My Stats",
 };
 
 /**

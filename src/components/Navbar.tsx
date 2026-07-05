@@ -1,6 +1,7 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Home, Users, CalendarCheck, GraduationCap, CalendarDays, Globe, Zap, Trophy, Wallet } from "lucide-react";
+import { Home, Users, CalendarCheck, GraduationCap, CalendarDays, Globe, Zap, Trophy, Wallet, Bell } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
+import { useNotifications } from "@/context/NotificationContext";
 import { Button } from "@/components/ui/button";
 import { NavDrawer } from "@/components/NavDrawer";
 
@@ -14,6 +15,7 @@ const NAV = [
 
 export function Navbar() {
   const { plan, wallet } = useAuth();
+  const { unreadCount } = useNotifications();
   const path = useRouterState({ select: s => s.location.pathname });
 
   return (
@@ -54,6 +56,16 @@ export function Navbar() {
 
         {/* Right cluster */}
         <div className="ml-auto flex items-center gap-2">
+          {/* Notifications */}
+          <Button asChild variant="ghost" size="sm" className="relative rounded-full md:px-3">
+            <Link to="/recommendations" className="relative">
+              <Bell className="h-4 w-4" />
+              {unreadCount > 0 && (
+                <span className="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full" />
+              )}
+            </Link>
+          </Button>
+
           {/* Mobile: compact wallet pill */}
           <Link
             to="/dashboard"
