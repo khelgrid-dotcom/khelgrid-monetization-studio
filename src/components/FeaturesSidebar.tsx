@@ -22,6 +22,11 @@ import {
   Wrench,
   Swords,
 } from "lucide-react";
+import {
+  trackEvent,
+  PLAY_NAV_LABEL,
+  PLAY_NAV_DESTINATION,
+} from "@/lib/analytics";
 
 export const FEATURES = [
   { to: "/search", label: "Search trials", icon: Search },
@@ -104,6 +109,17 @@ export function FeaturesSidebar() {
               key={f.to}
               to={f.to}
               title={f.label}
+              onClick={
+                f.to === PLAY_NAV_DESTINATION
+                  ? () =>
+                      trackEvent({
+                        event: "nav_click",
+                        label: PLAY_NAV_LABEL,
+                        destination: PLAY_NAV_DESTINATION,
+                        source: "sidebar_desktop",
+                      })
+                  : undefined
+              }
               className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors ${
                 active
                   ? "bg-secondary text-foreground"
