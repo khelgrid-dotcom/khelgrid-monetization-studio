@@ -31,7 +31,7 @@ import {
 export type NavItem = {
   to: string;
   label: string;
-  icon: React.ComponentType<{ className?: string }>;
+  icon: ComponentType<{ className?: string }>;
   /** Which nav surfaces should render this item. */
   surfaces: Array<"primary" | "features">;
 };
