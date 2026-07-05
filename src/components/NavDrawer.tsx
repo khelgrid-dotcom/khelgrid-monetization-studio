@@ -28,6 +28,11 @@ import {
   Star,
   Swords,
 } from "lucide-react";
+import {
+  trackEvent,
+  PLAY_NAV_LABEL,
+  PLAY_NAV_DESTINATION,
+} from "@/lib/analytics";
 
 export const PRIMARY = [
   { to: "/", label: "Home", icon: Home },
