@@ -1,55 +1,10 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import {
-  Sparkles,
-  Bot,
-  ShieldCheck,
-  ScanLine,
-  Users,
-  BookOpen,
-  Crown,
-  GraduationCap,
-  Smartphone,
-  Info,
-  ChevronLeft,
-  ChevronRight,
-  CalendarCheck,
-  CalendarDays,
-  Star,
-  Search,
-  Trophy,
-  MapPin,
-  Wrench,
-  Swords,
-} from "lucide-react";
-import {
-  trackEvent,
-  PLAY_NAV_LABEL,
-  PLAY_NAV_DESTINATION,
-} from "@/lib/analytics";
+import { ChevronLeft, ChevronRight, Search } from "lucide-react";
+import { FEATURE_ITEMS, type NavItem } from "@/config/nav";
 
-export const FEATURES = [
-  { to: "/search", label: "Search trials", icon: Search },
-  { to: "/sports", label: "Sports", icon: Trophy },
-  { to: "/cities", label: "Cities", icon: MapPin },
-  { to: "/guides", label: "Guides", icon: BookOpen },
-  { to: "/tools", label: "Tools & calculators", icon: Wrench },
-  { to: "/play", label: "Play · Find games", icon: Swords },
-  { to: "/book", label: "Book venues", icon: CalendarCheck },
-  { to: "/train", label: "Train · Coaching", icon: GraduationCap },
-  { to: "/events", label: "Events", icon: CalendarDays },
-  { to: "/memberships", label: "Memberships", icon: Star },
-  { to: "/start-from-zero", label: "Start From Zero", icon: Sparkles },
-  { to: "/ai-guide", label: "AI Guide", icon: Bot },
-  { to: "/verify", label: "Verify", icon: ShieldCheck },
-  { to: "/talent-scanner", label: "Talent Scanner", icon: ScanLine },
-  { to: "/community", label: "Community", icon: Users },
-  { to: "/learning-hub", label: "Learning Hub", icon: BookOpen },
-  { to: "/pricing", label: "Pricing", icon: Crown },
-  { to: "/coaches", label: "Coaches", icon: GraduationCap },
-  { to: "/mobile-app", label: "Mobile App", icon: Smartphone },
-  { to: "/about", label: "About", icon: Info },
-] as const;
+// Re-exported for tests and any callers that imported the array directly.
+export const FEATURES: readonly NavItem[] = FEATURE_ITEMS;
 
 export function FeaturesSidebar() {
   const [collapsed, setCollapsed] = useState(false);
@@ -104,29 +59,19 @@ export function FeaturesSidebar() {
       <nav className="flex flex-1 flex-col gap-0.5 overflow-y-auto px-2 pb-4">
         {filtered.map((f) => {
           const active = path === f.to;
+          const Icon = f.icon;
           return (
             <Link
               key={f.to}
               to={f.to}
               title={f.label}
-              onClick={
-                f.to === PLAY_NAV_DESTINATION
-                  ? () =>
-                      trackEvent({
-                        event: "nav_click",
-                        label: PLAY_NAV_LABEL,
-                        destination: PLAY_NAV_DESTINATION,
-                        source: "sidebar_desktop",
-                      })
-                  : undefined
-              }
               className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors ${
                 active
                   ? "bg-secondary text-foreground"
                   : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground"
               }`}
             >
-              <f.icon className={`h-4 w-4 shrink-0 ${active ? "text-primary" : ""}`} />
+              <Icon className={`h-4 w-4 shrink-0 ${active ? "text-primary" : ""}`} />
               {!collapsed && <span className="truncate">{f.label}</span>}
             </Link>
           );
