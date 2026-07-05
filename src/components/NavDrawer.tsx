@@ -3,64 +3,17 @@ import { useEffect, useMemo, useState } from "react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
-import {
-  Menu,
-  Trophy,
-  Sparkles,
-  Bot,
-  ShieldCheck,
-  ScanLine,
-  Users,
-  BookOpen,
-  Crown,
-  GraduationCap,
-  Smartphone,
-  Info,
-  Home,
-  Search,
-  Compass,
-  User,
-  Wallet,
-  LogIn,
-  Zap,
-  CalendarCheck,
-  CalendarDays,
-  Star,
-  Swords,
-} from "lucide-react";
+import { Menu, Trophy, Search, User, Wallet, LogIn, Zap } from "lucide-react";
 import {
   trackEvent,
   PLAY_NAV_LABEL,
   PLAY_NAV_DESTINATION,
 } from "@/lib/analytics";
+import { PRIMARY_ITEMS, FEATURE_ITEMS, type NavItem } from "@/config/nav";
 
-export const PRIMARY = [
-  { to: "/", label: "Home", icon: Home },
-  { to: "/search", label: "Search trials", icon: Search },
-  { to: "/sports", label: "Sports", icon: Trophy },
-  { to: "/cities", label: "Cities", icon: Compass },
-  { to: "/guides", label: "Guides", icon: BookOpen },
-  { to: "/tools", label: "Tools & calculators", icon: Zap },
-  { to: "/play", label: "Play · Find games", icon: Swords },
-  { to: "/book", label: "Book venues", icon: CalendarCheck },
-  { to: "/train", label: "Train · Coaching", icon: GraduationCap },
-  { to: "/events", label: "Events & tournaments", icon: CalendarDays },
-  { to: "/memberships", label: "Memberships", icon: Star },
-  { to: "/dashboard", label: "My Dashboard", icon: User },
-] as const;
-
-const FEATURES = [
-  { to: "/start-from-zero", label: "Start From Zero", icon: Sparkles },
-  { to: "/ai-guide", label: "AI Guide", icon: Bot },
-  { to: "/verify", label: "Verify", icon: ShieldCheck },
-  { to: "/talent-scanner", label: "Talent Scanner", icon: ScanLine },
-  { to: "/community", label: "Community", icon: Users },
-  { to: "/learning-hub", label: "Learning Hub", icon: BookOpen },
-  { to: "/coaches", label: "Coaches", icon: GraduationCap },
-  { to: "/academy", label: "For Academies", icon: Trophy },
-  { to: "/mobile-app", label: "Mobile App", icon: Smartphone },
-  { to: "/about", label: "About", icon: Info },
-] as const;
+// Re-exported for tests and any callers that imported the array directly.
+export const PRIMARY: readonly NavItem[] = PRIMARY_ITEMS;
+const FEATURES: readonly NavItem[] = FEATURE_ITEMS;
 
 export function NavDrawer() {
   const [open, setOpen] = useState(false);
