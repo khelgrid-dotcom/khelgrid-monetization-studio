@@ -2,6 +2,11 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { ChevronLeft, ChevronRight, Search } from "lucide-react";
 import { FEATURE_ITEMS, type NavItem } from "@/config/nav";
+import {
+  trackEvent,
+  PLAY_NAV_LABEL,
+  PLAY_NAV_DESTINATION,
+} from "@/lib/analytics";
 
 // Re-exported for tests and any callers that imported the array directly.
 export const FEATURES: readonly NavItem[] = FEATURE_ITEMS;
