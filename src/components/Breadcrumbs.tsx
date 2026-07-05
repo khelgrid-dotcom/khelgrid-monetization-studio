@@ -12,6 +12,9 @@ import { Home } from "lucide-react";
 const ROUTE_LABELS: Record<string, string> = {
   "/": "Home",
   "/search": "Search trials",
+  "/trials": "Live Trials",
+  "/opportunities": "Opportunities",
+  "/resources": "Resources",
   "/sports": "Sports",
   "/cities": "Cities",
   "/guides": "Guides",
