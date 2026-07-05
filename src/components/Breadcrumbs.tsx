@@ -8,43 +8,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Home } from "lucide-react";
-
-const ROUTE_LABELS: Record<string, string> = {
-  "/": "Home",
-  "/search": "Search trials",
-  "/trials": "Live Trials",
-  "/opportunities": "Opportunities",
-  "/resources": "Resources",
-  "/sports": "Sports",
-  "/cities": "Cities",
-  "/guides": "Guides",
-  "/tools": "Tools & calculators",
-  "/play": "Play · Find games",
-  "/book": "Book venues",
-  "/train": "Train · Coaching",
-  "/events": "Events & tournaments",
-  "/memberships": "Memberships",
-  "/dashboard": "My Dashboard",
-  "/login": "Log in",
-  "/pricing": "Pricing",
-  "/start-from-zero": "Start From Zero",
-  "/ai-guide": "AI Guide",
-  "/verify": "Verify",
-  "/talent-scanner": "Talent Scanner",
-  "/community": "Community",
-  "/learning-hub": "Learning Hub",
-  "/coaches": "Coaches",
-  "/academy": "For Academies",
-  "/mobile-app": "Mobile App",
-  "/about": "About",
-  "/sports/$slug": "Sport",
-  "/city/$slug": "City",
-  "/guide/$slug": "Guide",
-  "/tool/$slug": "Tool",
-  "/sport-in-city/$slug": "Sport in city",
-  "/top-guides/$category": "Top guides",
-  "/best-tools/$category": "Best tools",
-};
+import { ROUTE_LABELS } from "@/config/nav";
 
 function labelFor(match: { routeId: string; pathname: string }) {
   if (ROUTE_LABELS[match.routeId]) return ROUTE_LABELS[match.routeId];
