@@ -44,18 +44,20 @@ export function Breadcrumbs() {
           const isLast = idx === crumbs.length - 1;
           const label = labelFor(match);
           return (
-            <BreadcrumbItem key={match.routeId} className="flex items-center gap-1.5">
+            <Fragment key={match.routeId}>
               <BreadcrumbSeparator />
-              {isLast ? (
-                <BreadcrumbPage aria-current="page">{label}</BreadcrumbPage>
-              ) : (
-                <BreadcrumbLink asChild>
-                  <Link to={match.pathname} preload="intent">
-                    {label}
-                  </Link>
-                </BreadcrumbLink>
-              )}
-            </BreadcrumbItem>
+              <BreadcrumbItem>
+                {isLast ? (
+                  <BreadcrumbPage aria-current="page">{label}</BreadcrumbPage>
+                ) : (
+                  <BreadcrumbLink asChild>
+                    <Link to={match.pathname} preload="intent">
+                      {label}
+                    </Link>
+                  </BreadcrumbLink>
+                )}
+              </BreadcrumbItem>
+            </Fragment>
           );
         })}
       </BreadcrumbList>
