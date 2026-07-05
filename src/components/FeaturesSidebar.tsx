@@ -22,6 +22,11 @@ import {
   Wrench,
   Swords,
 } from "lucide-react";
+import {
+  trackEvent,
+  PLAY_NAV_LABEL,
+  PLAY_NAV_DESTINATION,
+} from "@/lib/analytics";
 
 export const FEATURES = [
   { to: "/search", label: "Search trials", icon: Search },
