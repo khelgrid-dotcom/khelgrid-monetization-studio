@@ -1,9 +1,11 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { Home, Users, CalendarCheck, GraduationCap, CalendarDays, Globe, Zap, Wallet, Bell } from "lucide-react";
+import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useNotifications } from "@/context/NotificationContext";
 import { Button } from "@/components/ui/button";
 import { NavDrawer } from "@/components/NavDrawer";
+import { SportsLauncher } from "@/components/SportsLauncher";
 
 const NAV = [
   { to: "/", label: "Home", icon: Home },
@@ -16,6 +18,7 @@ const NAV = [
 export function Navbar() {
   const { plan, wallet } = useAuth();
   const { unreadCount } = useNotifications();
+  const [sportsLauncherOpen, setSportsLauncherOpen] = useState(false);
   const path = useRouterState({ select: s => s.location.pathname });
 
   return (
@@ -26,12 +29,15 @@ export function Navbar() {
           <NavDrawer />
         </div>
 
-        <Link to="/" className="flex items-center gap-2">
-          <img src="https://cdn.builder.io/api/v1/image/assets%2Fbb0e1ceb11294a31a719df6ba93a7331%2Fc8513d4ae3bd4939b4defe6841f88dd7?format=webp&width=800&height=1200" alt="KhelGrid" className="h-8 w-8" />
+        <button
+          onClick={() => setSportsLauncherOpen(true)}
+          className="flex items-center gap-2 hover:opacity-80 transition"
+        >
+          <img src="https://cdn.builder.io/api/v1/image/assets%2Fbb0e1ceb11294a31a719df6ba93a7331%2Fc8513d4ae3bd4939b4defe6841f88dd7?format=webp&width=800&height=1200" alt="KhelGrid" className="h-8 w-8 cursor-pointer" />
           <span className="text-base font-bold tracking-tight sm:text-lg">
             Khel<span className="text-primary">Grid</span>
           </span>
-        </Link>
+        </button>
 
         {/* Desktop primary nav */}
         <nav className="ml-2 hidden items-center gap-1 rounded-full border border-border/60 bg-card/60 p-1 md:flex">
@@ -99,6 +105,8 @@ export function Navbar() {
           </Button>
         </div>
       </div>
+
+      <SportsLauncher open={sportsLauncherOpen} onOpenChange={setSportsLauncherOpen} />
     </header>
   );
 }
