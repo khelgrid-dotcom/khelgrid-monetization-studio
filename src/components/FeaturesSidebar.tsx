@@ -1,12 +1,8 @@
-import { Link, useRouterState } from "@tanstack/react-router";
+import { useRouterState } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { ChevronLeft, ChevronRight, Search } from "lucide-react";
 import { FEATURE_ITEMS, type NavItem } from "@/config/nav";
-import {
-  trackEvent,
-  PLAY_NAV_LABEL,
-  PLAY_NAV_DESTINATION,
-} from "@/lib/analytics";
+import { NavLink } from "@/components/NavLink";
 
 // Re-exported for tests and any callers that imported the array directly.
 export const FEATURES: readonly NavItem[] = FEATURE_ITEMS;
@@ -62,36 +58,15 @@ export function FeaturesSidebar() {
       )}
 
       <nav className="flex flex-1 flex-col gap-0.5 overflow-y-auto px-2 pb-4">
-        {filtered.map((f) => {
-          const active = path === f.to;
-          const Icon = f.icon;
-          return (
-            <Link
-              key={f.to}
-              to={f.to}
-              title={f.label}
-              onClick={
-                f.to === PLAY_NAV_DESTINATION
-                  ? () =>
-                      trackEvent({
-                        event: "nav_click",
-                        label: PLAY_NAV_LABEL,
-                        destination: PLAY_NAV_DESTINATION,
-                        source: "sidebar_desktop",
-                      })
-                  : undefined
-              }
-              className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors ${
-                active
-                  ? "bg-secondary text-foreground"
-                  : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground"
-              }`}
-            >
-              <Icon className={`h-4 w-4 shrink-0 ${active ? "text-primary" : ""}`} />
-              {!collapsed && <span className="truncate">{f.label}</span>}
-            </Link>
-          );
-        })}
+        {filtered.map((f) => (
+          <NavLink
+            key={f.to}
+            item={f}
+            active={path === f.to}
+            source="sidebar_desktop"
+            showLabel={!collapsed}
+          />
+        ))}
         {filtered.length === 0 && !collapsed && (
           <p className="px-3 py-2 text-xs text-muted-foreground">No matches found</p>
         )}
