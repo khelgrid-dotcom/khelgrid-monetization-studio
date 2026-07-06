@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Home, Users, CalendarCheck, GraduationCap, CalendarDays, Globe, Zap, Trophy, Wallet, Bell } from "lucide-react";
+import { Home, Users, CalendarCheck, GraduationCap, CalendarDays, Globe, Zap, Wallet, Bell } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useNotifications } from "@/context/NotificationContext";
 import { Button } from "@/components/ui/button";
@@ -27,9 +27,7 @@ export function Navbar() {
         </div>
 
         <Link to="/" className="flex items-center gap-2">
-          <div className="grid h-8 w-8 place-items-center rounded-lg bg-gradient-hero text-primary-foreground">
-            <Trophy className="h-4 w-4" />
-          </div>
+          <img src="/assets/kg-logo.svg" alt="KhelGrid" className="h-8 w-8" />
           <span className="text-base font-bold tracking-tight sm:text-lg">
             Khel<span className="text-primary">Grid</span>
           </span>

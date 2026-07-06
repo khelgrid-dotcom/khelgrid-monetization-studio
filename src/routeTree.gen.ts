@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as VerifyRouteImport } from './routes/verify'
+import { Route as TrustCenterRouteImport } from './routes/trust-center'
 import { Route as TrialsRouteImport } from './routes/trials'
 import { Route as TrainRouteImport } from './routes/train'
 import { Route as ToolsRouteImport } from './routes/tools'
@@ -19,9 +20,11 @@ import { Route as SportsRouteImport } from './routes/sports'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as ResourcesRouteImport } from './routes/resources'
+import { Route as RecommendationsRouteImport } from './routes/recommendations'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as PlayRouteImport } from './routes/play'
 import { Route as OpportunitiesRouteImport } from './routes/opportunities'
+import { Route as MyStatsRouteImport } from './routes/my-stats'
 import { Route as MobileAppRouteImport } from './routes/mobile-app'
 import { Route as MembershipsRouteImport } from './routes/memberships'
 import { Route as LoginRouteImport } from './routes/login'
@@ -48,6 +51,11 @@ import { Route as BestToolsCategoryRouteImport } from './routes/best-tools.$cate
 const VerifyRoute = VerifyRouteImport.update({
   id: '/verify',
   path: '/verify',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TrustCenterRoute = TrustCenterRouteImport.update({
+  id: '/trust-center',
+  path: '/trust-center',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TrialsRoute = TrialsRouteImport.update({
@@ -95,6 +103,11 @@ const ResourcesRoute = ResourcesRouteImport.update({
   path: '/resources',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RecommendationsRoute = RecommendationsRouteImport.update({
+  id: '/recommendations',
+  path: '/recommendations',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PricingRoute = PricingRouteImport.update({
   id: '/pricing',
   path: '/pricing',
@@ -108,6 +121,11 @@ const PlayRoute = PlayRouteImport.update({
 const OpportunitiesRoute = OpportunitiesRouteImport.update({
   id: '/opportunities',
   path: '/opportunities',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MyStatsRoute = MyStatsRouteImport.update({
+  id: '/my-stats',
+  path: '/my-stats',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MobileAppRoute = MobileAppRouteImport.update({
@@ -237,9 +255,11 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/memberships': typeof MembershipsRoute
   '/mobile-app': typeof MobileAppRoute
+  '/my-stats': typeof MyStatsRoute
   '/opportunities': typeof OpportunitiesRoute
   '/play': typeof PlayRoute
   '/pricing': typeof PricingRoute
+  '/recommendations': typeof RecommendationsRoute
   '/resources': typeof ResourcesRoute
   '/search': typeof SearchRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -249,6 +269,7 @@ export interface FileRoutesByFullPath {
   '/tools': typeof ToolsRouteWithChildren
   '/train': typeof TrainRoute
   '/trials': typeof TrialsRoute
+  '/trust-center': typeof TrustCenterRoute
   '/verify': typeof VerifyRoute
   '/best-tools/$category': typeof BestToolsCategoryRoute
   '/city/$slug': typeof CitySlugRoute
@@ -274,9 +295,11 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/memberships': typeof MembershipsRoute
   '/mobile-app': typeof MobileAppRoute
+  '/my-stats': typeof MyStatsRoute
   '/opportunities': typeof OpportunitiesRoute
   '/play': typeof PlayRoute
   '/pricing': typeof PricingRoute
+  '/recommendations': typeof RecommendationsRoute
   '/resources': typeof ResourcesRoute
   '/search': typeof SearchRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -286,6 +309,7 @@ export interface FileRoutesByTo {
   '/tools': typeof ToolsRouteWithChildren
   '/train': typeof TrainRoute
   '/trials': typeof TrialsRoute
+  '/trust-center': typeof TrustCenterRoute
   '/verify': typeof VerifyRoute
   '/best-tools/$category': typeof BestToolsCategoryRoute
   '/city/$slug': typeof CitySlugRoute
@@ -312,9 +336,11 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/memberships': typeof MembershipsRoute
   '/mobile-app': typeof MobileAppRoute
+  '/my-stats': typeof MyStatsRoute
   '/opportunities': typeof OpportunitiesRoute
   '/play': typeof PlayRoute
   '/pricing': typeof PricingRoute
+  '/recommendations': typeof RecommendationsRoute
   '/resources': typeof ResourcesRoute
   '/search': typeof SearchRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -324,6 +350,7 @@ export interface FileRoutesById {
   '/tools': typeof ToolsRouteWithChildren
   '/train': typeof TrainRoute
   '/trials': typeof TrialsRoute
+  '/trust-center': typeof TrustCenterRoute
   '/verify': typeof VerifyRoute
   '/best-tools/$category': typeof BestToolsCategoryRoute
   '/city/$slug': typeof CitySlugRoute
@@ -351,9 +378,11 @@ export interface FileRouteTypes {
     | '/login'
     | '/memberships'
     | '/mobile-app'
+    | '/my-stats'
     | '/opportunities'
     | '/play'
     | '/pricing'
+    | '/recommendations'
     | '/resources'
     | '/search'
     | '/sitemap.xml'
@@ -363,6 +392,7 @@ export interface FileRouteTypes {
     | '/tools'
     | '/train'
     | '/trials'
+    | '/trust-center'
     | '/verify'
     | '/best-tools/$category'
     | '/city/$slug'
@@ -388,9 +418,11 @@ export interface FileRouteTypes {
     | '/login'
     | '/memberships'
     | '/mobile-app'
+    | '/my-stats'
     | '/opportunities'
     | '/play'
     | '/pricing'
+    | '/recommendations'
     | '/resources'
     | '/search'
     | '/sitemap.xml'
@@ -400,6 +432,7 @@ export interface FileRouteTypes {
     | '/tools'
     | '/train'
     | '/trials'
+    | '/trust-center'
     | '/verify'
     | '/best-tools/$category'
     | '/city/$slug'
@@ -425,9 +458,11 @@ export interface FileRouteTypes {
     | '/login'
     | '/memberships'
     | '/mobile-app'
+    | '/my-stats'
     | '/opportunities'
     | '/play'
     | '/pricing'
+    | '/recommendations'
     | '/resources'
     | '/search'
     | '/sitemap.xml'
@@ -437,6 +472,7 @@ export interface FileRouteTypes {
     | '/tools'
     | '/train'
     | '/trials'
+    | '/trust-center'
     | '/verify'
     | '/best-tools/$category'
     | '/city/$slug'
@@ -463,9 +499,11 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   MembershipsRoute: typeof MembershipsRoute
   MobileAppRoute: typeof MobileAppRoute
+  MyStatsRoute: typeof MyStatsRoute
   OpportunitiesRoute: typeof OpportunitiesRoute
   PlayRoute: typeof PlayRoute
   PricingRoute: typeof PricingRoute
+  RecommendationsRoute: typeof RecommendationsRoute
   ResourcesRoute: typeof ResourcesRoute
   SearchRoute: typeof SearchRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
@@ -475,6 +513,7 @@ export interface RootRouteChildren {
   ToolsRoute: typeof ToolsRouteWithChildren
   TrainRoute: typeof TrainRoute
   TrialsRoute: typeof TrialsRoute
+  TrustCenterRoute: typeof TrustCenterRoute
   VerifyRoute: typeof VerifyRoute
   BestToolsCategoryRoute: typeof BestToolsCategoryRoute
   CitySlugRoute: typeof CitySlugRoute
@@ -491,6 +530,13 @@ declare module '@tanstack/react-router' {
       path: '/verify'
       fullPath: '/verify'
       preLoaderRoute: typeof VerifyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/trust-center': {
+      id: '/trust-center'
+      path: '/trust-center'
+      fullPath: '/trust-center'
+      preLoaderRoute: typeof TrustCenterRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/trials': {
@@ -556,6 +602,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResourcesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/recommendations': {
+      id: '/recommendations'
+      path: '/recommendations'
+      fullPath: '/recommendations'
+      preLoaderRoute: typeof RecommendationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/pricing': {
       id: '/pricing'
       path: '/pricing'
@@ -575,6 +628,13 @@ declare module '@tanstack/react-router' {
       path: '/opportunities'
       fullPath: '/opportunities'
       preLoaderRoute: typeof OpportunitiesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/my-stats': {
+      id: '/my-stats'
+      path: '/my-stats'
+      fullPath: '/my-stats'
+      preLoaderRoute: typeof MyStatsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/mobile-app': {
@@ -760,9 +820,11 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   MembershipsRoute: MembershipsRoute,
   MobileAppRoute: MobileAppRoute,
+  MyStatsRoute: MyStatsRoute,
   OpportunitiesRoute: OpportunitiesRoute,
   PlayRoute: PlayRoute,
   PricingRoute: PricingRoute,
+  RecommendationsRoute: RecommendationsRoute,
   ResourcesRoute: ResourcesRoute,
   SearchRoute: SearchRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
@@ -772,6 +834,7 @@ const rootRouteChildren: RootRouteChildren = {
   ToolsRoute: ToolsRouteWithChildren,
   TrainRoute: TrainRoute,
   TrialsRoute: TrialsRoute,
+  TrustCenterRoute: TrustCenterRoute,
   VerifyRoute: VerifyRoute,
   BestToolsCategoryRoute: BestToolsCategoryRoute,
   CitySlugRoute: CitySlugRoute,
@@ -783,3 +846,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

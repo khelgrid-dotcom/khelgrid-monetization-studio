@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
-import { Menu, Trophy, Search, User, Wallet, LogIn, Zap } from "lucide-react";
+import { Menu, Search, User, Wallet, LogIn, Zap } from "lucide-react";
 import {
   trackEvent,
   PLAY_NAV_LABEL,
@@ -52,9 +52,7 @@ export function NavDrawer() {
       >
         <SheetHeader className="border-b border-border/60 px-5 py-4 text-left">
           <SheetTitle className="flex items-center gap-2">
-            <div className="grid h-8 w-8 place-items-center rounded-lg bg-gradient-hero text-primary-foreground">
-              <Trophy className="h-4 w-4" />
-            </div>
+            <img src="/assets/kg-logo.svg" alt="KhelGrid" className="h-8 w-8" />
             <span className="text-lg font-bold tracking-tight">
               Khel<span className="text-primary">Grid</span>
             </span>
