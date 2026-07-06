@@ -14,13 +14,16 @@ export type NavLinkProps = {
 export function NavLink({ item, active, source, showLabel = true, className }: NavLinkProps) {
   const onClick =
     item.to === PLAY_NAV_DESTINATION && source
-      ? () =>
+      ? () => {
+          // eslint-disable-next-line no-console
+          console.log("navlink clicked", source);
           trackEvent({
             event: "nav_click",
             label: PLAY_NAV_LABEL,
             destination: PLAY_NAV_DESTINATION,
             source,
-          })
+          });
+        }
       : undefined;
 
   return (
