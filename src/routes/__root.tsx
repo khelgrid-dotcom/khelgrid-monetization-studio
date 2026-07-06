@@ -16,6 +16,7 @@ import { NotificationProvider } from "@/context/NotificationContext";
 import { Navbar } from "@/components/Navbar";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { BottomTabBar } from "@/components/BottomTabBar";
+import { Footer } from "@/components/Footer";
 import { Toaster } from "@/components/ui/sonner";
 
 function NotFoundComponent() {
@@ -116,6 +117,7 @@ function RootComponent() {
           <div className="pb-20 md:pb-0">
             <Outlet />
           </div>
+          <Footer />
           <BottomTabBar />
           <Toaster theme="dark" position="top-right" />
         </NotificationProvider>
