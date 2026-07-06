@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Home, Users, CalendarCheck, GraduationCap, CalendarDays, Globe, Zap, Wallet, Bell } from "lucide-react";
+import { Home, Users, CalendarCheck, GraduationCap, CalendarDays, Globe, Zap, Wallet, Bell, Settings } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useNotifications } from "@/context/NotificationContext";
@@ -67,6 +67,13 @@ export function Navbar() {
               {unreadCount > 0 && (
                 <span className="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full" />
               )}
+            </Link>
+          </Button>
+
+          {/* Settings */}
+          <Button asChild variant="ghost" size="sm" className="rounded-full md:px-3">
+            <Link to="/settings">
+              <Settings className="h-4 w-4" />
             </Link>
           </Button>
 

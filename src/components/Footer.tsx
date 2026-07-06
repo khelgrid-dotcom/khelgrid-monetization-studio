@@ -118,19 +118,19 @@ export function Footer() {
               <h4 className="font-semibold text-foreground mb-4">Legal</h4>
               <ul className="space-y-2">
                 <li>
-                  <a href="#" className="text-sm text-muted-foreground hover:text-primary transition">
+                  <Link to="/privacy" className="text-sm text-muted-foreground hover:text-primary transition">
                     Privacy Policy
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="#" className="text-sm text-muted-foreground hover:text-primary transition">
+                  <Link to="/terms" className="text-sm text-muted-foreground hover:text-primary transition">
                     Terms of Service
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="#" className="text-sm text-muted-foreground hover:text-primary transition">
-                    Refund Policy
-                  </a>
+                  <Link to="/settings" className="text-sm text-muted-foreground hover:text-primary transition">
+                    Settings
+                  </Link>
                 </li>
               </ul>
             </div>
@@ -144,15 +144,15 @@ export function Footer() {
         <div className="flex flex-col sm:flex-row justify-between items-center text-sm text-muted-foreground">
           <p>© {currentYear} KhelGrid. All rights reserved.</p>
           <div className="flex gap-6 mt-4 sm:mt-0">
-            <a href="#" className="hover:text-primary transition">
-              Status
-            </a>
-            <a href="#" className="hover:text-primary transition">
-              Sitemap
-            </a>
-            <a href="#" className="hover:text-primary transition">
-              Security
-            </a>
+            <Link to="/privacy" className="hover:text-primary transition">
+              Privacy
+            </Link>
+            <Link to="/terms" className="hover:text-primary transition">
+              Terms
+            </Link>
+            <Link to="/settings" className="hover:text-primary transition">
+              Settings
+            </Link>
           </div>
         </div>
       </div>
