@@ -29,12 +29,12 @@ export function Breadcrumbs() {
   if (crumbs.length <= 1 && crumbs[0]?.routeId === "/") return null;
 
   return (
-    <Breadcrumb className="mx-auto max-w-7xl px-4 py-3">
+    <Breadcrumb className="mx-auto max-w-7xl px-4 py-2 sm:py-3">
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbLink asChild>
             <Link to="/" preload="intent" className="flex items-center gap-1">
-              <Home className="h-3.5 w-3.5" />
+              <Home className="h-4 w-4" />
               <span className="hidden sm:inline">Home</span>
             </Link>
           </BreadcrumbLink>
@@ -48,7 +48,9 @@ export function Breadcrumbs() {
               <BreadcrumbSeparator />
               <BreadcrumbItem>
                 {isLast ? (
-                  <BreadcrumbPage aria-current="page">{label}</BreadcrumbPage>
+                  <BreadcrumbPage aria-current="page" className="font-medium">
+                    {label}
+                  </BreadcrumbPage>
                 ) : (
                   <BreadcrumbLink asChild>
                     <Link to={match.pathname} preload="intent">
