@@ -27,7 +27,7 @@ export function Navbar() {
         </div>
 
         <Link to="/" className="flex items-center gap-2">
-          <img src="/assets/kg-logo.svg" alt="KhelGrid" className="h-8 w-8" />
+          <img src="https://cdn.builder.io/api/v1/image/assets%2Fbb0e1ceb11294a31a719df6ba93a7331%2Fc8513d4ae3bd4939b4defe6841f88dd7?format=webp&width=800&height=1200" alt="KhelGrid" className="h-8 w-8" />
           <span className="text-base font-bold tracking-tight sm:text-lg">
             Khel<span className="text-primary">Grid</span>
           </span>
