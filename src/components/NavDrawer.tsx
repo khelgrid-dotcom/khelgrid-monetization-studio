@@ -4,11 +4,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/co
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Menu, Trophy, Search, User, Wallet, LogIn, Zap } from "lucide-react";
-import {
-  trackEvent,
-  PLAY_NAV_LABEL,
-  PLAY_NAV_DESTINATION,
-} from "@/lib/analytics";
+import { NavLink } from "@/components/NavLink";
 import { PRIMARY_ITEMS, FEATURE_ITEMS, type NavItem } from "@/config/nav";
 
 // Re-exported for tests and any callers that imported the array directly.
@@ -107,12 +103,11 @@ export function NavDrawer() {
           {filteredPrimary.length > 0 && (
             <Section title="Navigate">
               {filteredPrimary.map((i) => (
-                <DrawerLink
+                <NavLink
                   key={i.to}
-                  to={i.to}
-                  label={i.label}
-                  icon={i.icon}
+                  item={i}
                   active={path === i.to}
+                  source="sidebar_mobile"
                 />
               ))}
             </Section>
@@ -121,12 +116,11 @@ export function NavDrawer() {
           {filteredFeatures.length > 0 && (
             <Section title="Features">
               {filteredFeatures.map((i) => (
-                <DrawerLink
+                <NavLink
                   key={i.to}
-                  to={i.to}
-                  label={i.label}
-                  icon={i.icon}
+                  item={i}
                   active={path === i.to}
+                  source="sidebar_mobile"
                 />
               ))}
             </Section>
@@ -160,42 +154,5 @@ function Section({ title, children }: { title: string; children: React.ReactNode
       </div>
       <div className="flex flex-col gap-0.5">{children}</div>
     </div>
-  );
-}
-
-function DrawerLink({
-  to,
-  label,
-  icon: Icon,
-  active,
-}: {
-  to: string;
-  label: string;
-  icon: React.ComponentType<{ className?: string }>;
-  active: boolean;
-}) {
-  const onClick =
-    to === PLAY_NAV_DESTINATION
-      ? () =>
-          trackEvent({
-            event: "nav_click",
-            label: PLAY_NAV_LABEL,
-            destination: PLAY_NAV_DESTINATION,
-            source: "sidebar_mobile",
-          })
-      : undefined;
-  return (
-    <Link
-      to={to}
-      onClick={onClick}
-      className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors ${
-        active
-          ? "bg-secondary text-foreground"
-          : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground"
-      }`}
-    >
-      <Icon className={`h-4 w-4 shrink-0 ${active ? "text-primary" : ""}`} />
-      <span className="truncate">{label}</span>
-    </Link>
   );
 }
