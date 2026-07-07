@@ -104,6 +104,12 @@ export const ROUTE_LABELS: Record<string, string> = {
 export const PRIMARY_ITEMS = NAV_ITEMS.filter((i) => i.surfaces.includes("primary"));
 export const FEATURE_ITEMS = NAV_ITEMS.filter((i) => i.surfaces.includes("features"));
 
+/** Shared active-route matcher for nav surfaces (desktop + mobile). */
+export function isActivePath(path: string, to: string): boolean {
+  if (to === "/") return path === "/";
+  return path === to || path.startsWith(to + "/");
+}
+
 // Zap is re-exported so NavDrawer's "Go Pro" CTA can keep using it without
 // importing lucide directly if it prefers a single import site.
 export { Zap };
