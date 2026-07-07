@@ -11,6 +11,11 @@ import { PRIMARY_ITEMS, FEATURE_ITEMS, type NavItem } from "@/config/nav";
 export const PRIMARY: readonly NavItem[] = PRIMARY_ITEMS;
 const FEATURES: readonly NavItem[] = FEATURE_ITEMS;
 
+function isActivePath(path: string, to: string) {
+  if (to === "/") return path === "/";
+  return path === to || path.startsWith(to + "/");
+}
+
 export function NavDrawer() {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
