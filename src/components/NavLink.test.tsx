@@ -18,7 +18,7 @@ const playItem = {
   to: "/play",
   label: "Play · Find games",
   icon: MockIcon,
-  surfaces: ["primary", "features"] as const,
+  surfaces: ["primary", "features"] as Array<"primary" | "features">,
 };
 
 describe("NavLink aria-current", () => {
