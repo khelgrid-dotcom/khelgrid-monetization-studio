@@ -106,7 +106,7 @@ export function NavDrawer() {
                 <NavLink
                   key={i.to}
                   item={i}
-                  active={path === i.to}
+                  active={isActivePath(path, i.to)}
                   source="sidebar_mobile"
                 />
               ))}
@@ -119,7 +119,7 @@ export function NavDrawer() {
                 <NavLink
                   key={i.to}
                   item={i}
-                  active={path === i.to}
+                  active={isActivePath(path, i.to)}
                   source="sidebar_mobile"
                 />
               ))}
