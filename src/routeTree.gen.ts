@@ -35,6 +35,7 @@ import { Route as LearningHubRouteImport } from './routes/learning-hub'
 import { Route as GuidesRouteImport } from './routes/guides'
 import { Route as EventsRouteImport } from './routes/events'
 import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as CrawlerRouteImport } from './routes/crawler'
 import { Route as CommunityRouteImport } from './routes/community'
 import { Route as CoachesRouteImport } from './routes/coaches'
 import { Route as CitiesRouteImport } from './routes/cities'
@@ -181,6 +182,11 @@ const DashboardRoute = DashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CrawlerRoute = CrawlerRouteImport.update({
+  id: '/crawler',
+  path: '/crawler',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CommunityRoute = CommunityRouteImport.update({
   id: '/community',
   path: '/community',
@@ -266,6 +272,7 @@ export interface FileRoutesByFullPath {
   '/cities': typeof CitiesRoute
   '/coaches': typeof CoachesRoute
   '/community': typeof CommunityRoute
+  '/crawler': typeof CrawlerRoute
   '/dashboard': typeof DashboardRoute
   '/events': typeof EventsRoute
   '/guides': typeof GuidesRoute
@@ -309,6 +316,7 @@ export interface FileRoutesByTo {
   '/cities': typeof CitiesRoute
   '/coaches': typeof CoachesRoute
   '/community': typeof CommunityRoute
+  '/crawler': typeof CrawlerRoute
   '/dashboard': typeof DashboardRoute
   '/events': typeof EventsRoute
   '/guides': typeof GuidesRoute
@@ -353,6 +361,7 @@ export interface FileRoutesById {
   '/cities': typeof CitiesRoute
   '/coaches': typeof CoachesRoute
   '/community': typeof CommunityRoute
+  '/crawler': typeof CrawlerRoute
   '/dashboard': typeof DashboardRoute
   '/events': typeof EventsRoute
   '/guides': typeof GuidesRoute
@@ -398,6 +407,7 @@ export interface FileRouteTypes {
     | '/cities'
     | '/coaches'
     | '/community'
+    | '/crawler'
     | '/dashboard'
     | '/events'
     | '/guides'
@@ -441,6 +451,7 @@ export interface FileRouteTypes {
     | '/cities'
     | '/coaches'
     | '/community'
+    | '/crawler'
     | '/dashboard'
     | '/events'
     | '/guides'
@@ -484,6 +495,7 @@ export interface FileRouteTypes {
     | '/cities'
     | '/coaches'
     | '/community'
+    | '/crawler'
     | '/dashboard'
     | '/events'
     | '/guides'
@@ -528,6 +540,7 @@ export interface RootRouteChildren {
   CitiesRoute: typeof CitiesRoute
   CoachesRoute: typeof CoachesRoute
   CommunityRoute: typeof CommunityRoute
+  CrawlerRoute: typeof CrawlerRoute
   DashboardRoute: typeof DashboardRoute
   EventsRoute: typeof EventsRoute
   GuidesRoute: typeof GuidesRoute
@@ -746,6 +759,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/crawler': {
+      id: '/crawler'
+      path: '/crawler'
+      fullPath: '/crawler'
+      preLoaderRoute: typeof CrawlerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/community': {
       id: '/community'
       path: '/community'
@@ -873,6 +893,7 @@ const rootRouteChildren: RootRouteChildren = {
   CitiesRoute: CitiesRoute,
   CoachesRoute: CoachesRoute,
   CommunityRoute: CommunityRoute,
+  CrawlerRoute: CrawlerRoute,
   DashboardRoute: DashboardRoute,
   EventsRoute: EventsRoute,
   GuidesRoute: GuidesRoute,

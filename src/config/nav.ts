@@ -66,6 +66,7 @@ export const NAV_ITEMS: NavItem[] = [
   { to: "/recommendations", label: "For You", icon: Heart, surfaces: ["primary", "features"] },
   { to: "/trust-center", label: "Trust Center", icon: Shield, surfaces: ["primary", "features"] },
   { to: "/my-stats", label: "My Stats", icon: TrendingUp, surfaces: ["primary", "features"] },
+  { to: "/crawler", label: "Sports Crawler", icon: Bot, surfaces: ["features"] },
   { to: "/dashboard", label: "My Dashboard", icon: User, surfaces: ["primary"] },
   { to: "/start-from-zero", label: "Start From Zero", icon: Sparkles, surfaces: ["features"] },
   { to: "/ai-guide", label: "AI Guide", icon: Bot, surfaces: ["features"] },
