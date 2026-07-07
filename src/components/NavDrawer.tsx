@@ -3,17 +3,18 @@ import { useEffect, useMemo, useState } from "react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
-import { Menu, Search, User, Wallet, LogIn, Zap } from "lucide-react";
-import {
-  trackEvent,
-  PLAY_NAV_LABEL,
-  PLAY_NAV_DESTINATION,
-} from "@/lib/analytics";
+import { Menu, Trophy, Search, User, Wallet, LogIn, Zap } from "lucide-react";
+import { NavLink } from "@/components/NavLink";
 import { PRIMARY_ITEMS, FEATURE_ITEMS, type NavItem } from "@/config/nav";
 
 // Re-exported for tests and any callers that imported the array directly.
 export const PRIMARY: readonly NavItem[] = PRIMARY_ITEMS;
 const FEATURES: readonly NavItem[] = FEATURE_ITEMS;
+
+function isActivePath(path: string, to: string) {
+  if (to === "/") return path === "/";
+  return path === to || path.startsWith(to + "/");
+}
 
 export function NavDrawer() {
   const [open, setOpen] = useState(false);
@@ -52,7 +53,9 @@ export function NavDrawer() {
       >
         <SheetHeader className="border-b border-border/60 px-5 py-4 text-left">
           <SheetTitle className="flex items-center gap-2">
-            <img src="https://cdn.builder.io/api/v1/image/assets%2Fbb0e1ceb11294a31a719df6ba93a7331%2Fc8513d4ae3bd4939b4defe6841f88dd7?format=webp&width=800&height=1200" alt="KhelGrid" className="h-8 w-8" />
+            <div className="grid h-8 w-8 place-items-center rounded-lg bg-gradient-hero text-primary-foreground">
+              <Trophy className="h-4 w-4" />
+            </div>
             <span className="text-lg font-bold tracking-tight">
               Khel<span className="text-primary">Grid</span>
             </span>
@@ -105,12 +108,11 @@ export function NavDrawer() {
           {filteredPrimary.length > 0 && (
             <Section title="Navigate">
               {filteredPrimary.map((i) => (
-                <DrawerLink
+                <NavLink
                   key={i.to}
-                  to={i.to}
-                  label={i.label}
-                  icon={i.icon}
-                  active={path === i.to}
+                  item={i}
+                  active={isActivePath(path, i.to)}
+                  source="sidebar_mobile"
                 />
               ))}
             </Section>
@@ -119,12 +121,11 @@ export function NavDrawer() {
           {filteredFeatures.length > 0 && (
             <Section title="Features">
               {filteredFeatures.map((i) => (
-                <DrawerLink
+                <NavLink
                   key={i.to}
-                  to={i.to}
-                  label={i.label}
-                  icon={i.icon}
-                  active={path === i.to}
+                  item={i}
+                  active={isActivePath(path, i.to)}
+                  source="sidebar_mobile"
                 />
               ))}
             </Section>
@@ -158,42 +159,5 @@ function Section({ title, children }: { title: string; children: React.ReactNode
       </div>
       <div className="flex flex-col gap-0.5">{children}</div>
     </div>
-  );
-}
-
-function DrawerLink({
-  to,
-  label,
-  icon: Icon,
-  active,
-}: {
-  to: string;
-  label: string;
-  icon: React.ComponentType<{ className?: string }>;
-  active: boolean;
-}) {
-  const onClick =
-    to === PLAY_NAV_DESTINATION
-      ? () =>
-          trackEvent({
-            event: "nav_click",
-            label: PLAY_NAV_LABEL,
-            destination: PLAY_NAV_DESTINATION,
-            source: "sidebar_mobile",
-          })
-      : undefined;
-  return (
-    <Link
-      to={to}
-      onClick={onClick}
-      className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors ${
-        active
-          ? "bg-secondary text-foreground"
-          : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground"
-      }`}
-    >
-      <Icon className={`h-4 w-4 shrink-0 ${active ? "text-primary" : ""}`} />
-      <span className="truncate">{label}</span>
-    </Link>
   );
 }
