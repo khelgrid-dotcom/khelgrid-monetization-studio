@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
-import { Settings, Bell, Lock, Eye, Palette } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Settings, Bell, Lock, Eye, Palette, Sun, Moon, Monitor } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
@@ -17,6 +17,7 @@ interface SettingsState {
 }
 
 function SettingsPage() {
+  const [theme, setTheme] = useState<"light" | "dark" | "auto">("auto");
   const [settings, setSettings] = useState<SettingsState>({
     notifications: {
       email: true,
@@ -34,11 +35,41 @@ function SettingsPage() {
       targetedAds: true,
     },
     preferences: {
-      darkMode: "true",
+      theme: "auto",
       language: "en",
       emailFrequency: "weekly",
     },
   });
+
+  // Apply theme on mount and when theme changes
+  useEffect(() => {
+    const html = document.documentElement;
+
+    if (theme === "dark") {
+      html.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    } else if (theme === "light") {
+      html.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    } else {
+      // Auto: follow system preference
+      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      if (prefersDark) {
+        html.classList.add("dark");
+      } else {
+        html.classList.remove("dark");
+      }
+      localStorage.setItem("theme", "auto");
+    }
+  }, [theme]);
+
+  // Load saved theme on mount
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme") as "light" | "dark" | "auto" | null;
+    if (savedTheme) {
+      setTheme(savedTheme);
+    }
+  }, []);
 
   const toggleSetting = (category: keyof SettingsState, key: string) => {
     setSettings((prev) => ({
@@ -222,18 +253,66 @@ function SettingsPage() {
             </CardContent>
           </Card>
 
-          {/* Preferences */}
+          {/* Theme Selection */}
           <Card>
             <CardHeader>
               <div className="flex items-center gap-2">
                 <Palette className="h-5 w-5 text-primary" />
                 <div>
-                  <CardTitle>Preferences</CardTitle>
-                  <CardDescription>Customize your app experience</CardDescription>
+                  <CardTitle>Appearance</CardTitle>
+                  <CardDescription>Customize your app theme and display settings</CardDescription>
                 </div>
               </div>
             </CardHeader>
             <CardContent className="space-y-6">
+              <div>
+                <label className="block font-medium text-slate-900 mb-4">Theme</label>
+                <div className="grid grid-cols-3 gap-3">
+                  {/* Light Theme */}
+                  <button
+                    onClick={() => setTheme("light")}
+                    className={`flex flex-col items-center justify-center p-4 rounded-lg border-2 transition ${
+                      theme === "light"
+                        ? "border-primary bg-primary/10"
+                        : "border-border/60 bg-card/60 hover:border-border"
+                    }`}
+                  >
+                    <Sun className="h-6 w-6 text-yellow-500 mb-2" />
+                    <span className="text-sm font-medium text-slate-900">Light</span>
+                  </button>
+
+                  {/* Dark Theme */}
+                  <button
+                    onClick={() => setTheme("dark")}
+                    className={`flex flex-col items-center justify-center p-4 rounded-lg border-2 transition ${
+                      theme === "dark"
+                        ? "border-primary bg-primary/10"
+                        : "border-border/60 bg-card/60 hover:border-border"
+                    }`}
+                  >
+                    <Moon className="h-6 w-6 text-slate-700 mb-2" />
+                    <span className="text-sm font-medium text-slate-900">Dark</span>
+                  </button>
+
+                  {/* Auto Theme */}
+                  <button
+                    onClick={() => setTheme("auto")}
+                    className={`flex flex-col items-center justify-center p-4 rounded-lg border-2 transition ${
+                      theme === "auto"
+                        ? "border-primary bg-primary/10"
+                        : "border-border/60 bg-card/60 hover:border-border"
+                    }`}
+                  >
+                    <Monitor className="h-6 w-6 text-slate-500 mb-2" />
+                    <span className="text-sm font-medium text-slate-900">Auto</span>
+                  </button>
+                </div>
+                <p className="text-xs text-slate-600 mt-3">
+                  💡 <strong>Auto:</strong> Follows your system's theme preference
+                </p>
+              </div>
+
+              <div className="border-t pt-4" />
               <div>
                 <label className="block font-medium text-slate-900 mb-2">Language</label>
                 <select
