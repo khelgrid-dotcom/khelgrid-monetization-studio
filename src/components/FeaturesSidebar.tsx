@@ -62,7 +62,7 @@ export function FeaturesSidebar() {
           <NavLink
             key={f.to}
             item={f}
-            active={path === f.to}
+            active={isActivePath(path, f.to)}
             source="sidebar_desktop"
             showLabel={!collapsed}
           />
