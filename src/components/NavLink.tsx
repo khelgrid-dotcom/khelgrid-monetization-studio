@@ -27,6 +27,7 @@ export function NavLink({ item, active, source, showLabel = true, className }: N
     <Link
       to={item.to}
       title={item.label}
+      aria-current={active ? "page" : undefined}
       onClick={onClick}
       className={cn(
         "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors",
