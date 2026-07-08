@@ -37,6 +37,8 @@ function findPlayAnchors(html: string): Array<{ anchorClass: string; iconClass: 
     const iconMatch = inner.match(/<svg\b[^>]*\bclass="([^"]*)"/);
     return { anchorClass: match[1], iconClass: iconMatch?.[1] ?? "" };
   });
+}
+
 function hasToken(className: string, token: string) {
   return className.trim().split(/\s+/).includes(token);
 }
@@ -50,9 +52,9 @@ describe("NavDrawer /play active styling", () => {
 
     expect(links.length).toBeGreaterThan(0);
     for (const link of links) {
-      expect(link.anchorClass).toContain("bg-secondary");
-      expect(link.anchorClass).toContain("text-foreground");
-      expect(link.iconClass).toContain("text-primary");
+      expect(hasToken(link.anchorClass, "bg-secondary")).toBe(true);
+      expect(hasToken(link.anchorClass, "text-foreground")).toBe(true);
+      expect(hasToken(link.iconClass, "text-primary")).toBe(true);
     }
   });
 
@@ -64,8 +66,8 @@ describe("NavDrawer /play active styling", () => {
 
     expect(links.length).toBeGreaterThan(0);
     for (const link of links) {
-      expect(link.anchorClass).not.toContain("bg-secondary");
-      expect(link.iconClass).not.toContain("text-primary");
+      expect(hasToken(link.anchorClass, "bg-secondary")).toBe(false);
+      expect(hasToken(link.iconClass, "text-primary")).toBe(false);
     }
   });
 });
