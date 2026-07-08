@@ -1,8 +1,9 @@
 import { describe, it, expect, vi } from "vitest";
 import { renderToString } from "react-dom/server";
 import { NavDrawer } from "./NavDrawer";
-// @ts-expect-error — provided by the mocked @tanstack/react-router module below.
-import { setRouterPathname } from "@tanstack/react-router";
+import * as TanStackRouter from "@tanstack/react-router";
+
+const router = TanStackRouter as any;
 
 vi.mock("@tanstack/react-router", () => {
   let pathname = "/";
