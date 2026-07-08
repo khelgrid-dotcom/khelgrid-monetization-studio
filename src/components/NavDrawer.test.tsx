@@ -61,7 +61,7 @@ function findPlayAnchors(html: string): Array<{ anchorClass: string; iconClass: 
 
 describe("NavDrawer /play active styling", () => {
   it("applies active styling to the /play entry on the /play route", () => {
-    setRouterPathname("/play");
+    router.setRouterPathname("/play");
 
     const html = renderToString(<NavDrawer />);
     const links = findPlayAnchors(html);
