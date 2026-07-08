@@ -1,7 +1,7 @@
 import { useRouterState } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { ChevronLeft, ChevronRight, Search } from "lucide-react";
-import { FEATURE_ITEMS, type NavItem } from "@/config/nav";
+import { FEATURE_ITEMS, isActivePath, type NavItem } from "@/config/nav";
 import { NavLink } from "@/components/NavLink";
 
 // Re-exported for tests and any callers that imported the array directly.
@@ -62,7 +62,7 @@ export function FeaturesSidebar() {
           <NavLink
             key={f.to}
             item={f}
-            active={path === f.to}
+            active={isActivePath(path, f.to)}
             source="sidebar_desktop"
             showLabel={!collapsed}
           />

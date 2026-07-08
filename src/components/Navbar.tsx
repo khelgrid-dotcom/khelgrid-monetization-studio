@@ -1,11 +1,12 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Home, Users, CalendarCheck, GraduationCap, CalendarDays, Globe, Zap, Wallet, Bell, Settings } from "lucide-react";
+import { Home, Users, CalendarCheck, GraduationCap, CalendarDays, Globe, Zap, Trophy, Wallet, Bell, Settings } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useNotifications } from "@/context/NotificationContext";
 import { Button } from "@/components/ui/button";
 import { NavDrawer } from "@/components/NavDrawer";
 import { SportsLauncher } from "@/components/SportsLauncher";
+import { isActivePath } from "@/config/nav";
 
 const NAV = [
   { to: "/", label: "Home", icon: Home },
@@ -42,7 +43,7 @@ export function Navbar() {
         {/* Desktop primary nav */}
         <nav className="ml-2 hidden items-center gap-1 rounded-full border border-border/60 bg-card/60 p-1 md:flex">
           {NAV.map(n => {
-            const active = path === n.to;
+            const active = isActivePath(path, n.to);
             return (
               <Link
                 key={n.to}
