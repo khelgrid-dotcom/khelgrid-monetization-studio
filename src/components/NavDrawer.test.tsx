@@ -17,7 +17,9 @@ vi.mock("@/context/AuthContext", () => ({
 }));
 
 vi.mock("@/components/ui/button", () => ({
-  Button: ({ children, ...props }: any) => <button {...props}>{children}</button>,
+  Button: ({ asChild, size, variant, children, ...props }: any) => (
+    <button {...props}>{children}</button>
+  ),
 }));
 
 vi.mock("@/components/ui/sheet", () => ({
