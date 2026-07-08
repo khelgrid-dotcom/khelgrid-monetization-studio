@@ -3,6 +3,7 @@ import { Home, Users, CalendarCheck, GraduationCap, CalendarDays, Globe, Zap, Tr
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { NavDrawer } from "@/components/NavDrawer";
+import { isActivePath } from "@/config/nav";
 
 const NAV = [
   { to: "/", label: "Home", icon: Home },
