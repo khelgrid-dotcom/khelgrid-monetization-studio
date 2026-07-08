@@ -39,7 +39,7 @@ function findPlayAnchors(html: string): Array<{ anchorClass: string; iconClass: 
 
 describe("NavDrawer /play active styling", () => {
   it("applies active styling to the /play entry on the /play route", () => {
-    vi.mocked(useRouterState).mockReturnValue({ location: { pathname: "/play" } } as any);
+    (useRouterState as any).mockReturnValue({ location: { pathname: "/play" } } as any);
 
     const html = renderToString(<NavDrawer />);
     const links = findPlayAnchors(html);
