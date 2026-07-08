@@ -37,7 +37,7 @@ export function Navbar() {
         {/* Desktop primary nav */}
         <nav className="ml-2 hidden items-center gap-1 rounded-full border border-border/60 bg-card/60 p-1 md:flex">
           {NAV.map(n => {
-            const active = path === n.to;
+            const active = isActivePath(path, n.to);
             return (
               <Link
                 key={n.to}
