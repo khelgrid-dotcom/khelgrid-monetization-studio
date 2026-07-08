@@ -37,6 +37,8 @@ function findPlayAnchors(html: string): Array<{ anchorClass: string; iconClass: 
     const iconMatch = inner.match(/<svg\b[^>]*\bclass="([^"]*)"/);
     return { anchorClass: match[1], iconClass: iconMatch?.[1] ?? "" };
   });
+function hasToken(className: string, token: string) {
+  return className.trim().split(/\s+/).includes(token);
 }
 
 describe("NavDrawer /play active styling", () => {
