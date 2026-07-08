@@ -53,7 +53,7 @@ describe("NavDrawer /play active styling", () => {
   });
 
   it("does not apply active styling to /play on unrelated routes", () => {
-    vi.mocked(useRouterState).mockReturnValue({ location: { pathname: "/dashboard" } });
+    vi.mocked(useRouterState).mockReturnValue({ location: { pathname: "/dashboard" } } as any);
 
     const html = renderToString(<NavDrawer />);
     const links = findPlayAnchors(html);
