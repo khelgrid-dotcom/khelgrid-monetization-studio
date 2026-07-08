@@ -1,38 +1,16 @@
 import { describe, it, expect, vi } from "vitest";
 import { renderToString } from "react-dom/server";
 import { NavDrawer } from "./NavDrawer";
-import * as TanStackRouter from "@tanstack/react-router";
+import { useRouterState } from "@tanstack/react-router";
 
-const router = TanStackRouter as any;
-
-vi.mock("@tanstack/react-router", () => {
-  let pathname = "/";
-
-  return {
-    Link: ({ to, children, ...props }: any) => (
-      <a href={to} {...props}>
-        {children}
-      </a>
-    ),
-    setRouterPathname: (p: string) => {
-      pathname = p;
-    },
-    useRouterState: ({ select }: any = {}) => {
-      const state = {
-        location: {
-          pathname,
-          href: "",
-          search: {},
-          searchStr: "",
-          state: {},
-          hash: "",
-          maskedLocation: undefined,
-        },
-      };
-      return select ? select(state) : state;
-    },
-  };
-});
+vi.mock("@tanstack/react-router", () => ({
+  Link: ({ to, children, ...props }: any) => (
+    <a href={to} {...props}>
+      {children}
+    </a>
+  ),
+  useRouterState: vi.fn(),
+}));
 
 vi.mock("@/context/AuthContext", () => ({
   useAuth: () => ({ plan: "free", wallet: 0 }),
@@ -61,7 +39,7 @@ function findPlayAnchors(html: string): Array<{ anchorClass: string; iconClass: 
 
 describe("NavDrawer /play active styling", () => {
   it("applies active styling to the /play entry on the /play route", () => {
-    router.setRouterPathname("/play");
+    (useRouterState as any).mockReturnValue("/play");
 
     const html = renderToString(<NavDrawer />);
     const links = findPlayAnchors(html);
@@ -75,7 +53,7 @@ describe("NavDrawer /play active styling", () => {
   });
 
   it("does not apply active styling to /play on unrelated routes", () => {
-    router.setRouterPathname("/dashboard");
+    (useRouterState as any).mockReturnValue("/dashboard");
 
     const html = renderToString(<NavDrawer />);
     const links = findPlayAnchors(html);
