@@ -75,7 +75,7 @@ describe("NavDrawer /play active styling", () => {
   });
 
   it("does not apply active styling to /play on unrelated routes", () => {
-    setRouterPathname("/dashboard");
+    router.setRouterPathname("/dashboard");
 
     const html = renderToString(<NavDrawer />);
     const links = findPlayAnchors(html);
