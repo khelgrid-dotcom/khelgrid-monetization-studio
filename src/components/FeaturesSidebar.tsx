@@ -70,7 +70,15 @@ export function FeaturesSidebar() {
         {filtered.length === 0 && !collapsed && (
           <p className="px-3 py-2 text-xs text-muted-foreground">No matches found</p>
         )}
+
+        {/* Ad · desktop sidebar, hidden while collapsed */}
+        {!collapsed && (
+          <div className="mt-auto px-1">
+            <SidebarAd adSlot="sidebarBottom" minHeight={250} />
+          </div>
+        )}
       </nav>
+
     </aside>
   );
 }
