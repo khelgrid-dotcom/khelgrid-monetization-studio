@@ -165,6 +165,12 @@ function Home() {
             ))}
           </div>
         </section>
+
+        {/* Ad · end of page */}
+        <div className="mx-auto max-w-7xl px-4 pb-16">
+          <ResponsiveAd adSlot="homeFooter" minHeight={250} />
+        </div>
+
       </main>
     </div>
   );
