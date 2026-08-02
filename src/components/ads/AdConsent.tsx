@@ -1,4 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import type { AdsByGoogleQueue } from "./adsbygoogle";
+
 
 /**
  * Minimal, dependency-free consent layer for ads.
