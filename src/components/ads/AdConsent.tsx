@@ -68,8 +68,9 @@ export function AdConsentProvider({
     if (typeof window === "undefined") return;
     if (consent !== "denied") return;
     try {
-      window.adsbygoogle = window.adsbygoogle || [];
-      window.adsbygoogle.requestNonPersonalizedAds = 1;
+      const queue = (window.adsbygoogle ??= [] as unknown as AdsByGoogleQueue);
+      queue.requestNonPersonalizedAds = 1;
+
     } catch {
       // no-op
     }
