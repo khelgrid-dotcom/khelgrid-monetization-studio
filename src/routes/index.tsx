@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { FeaturesSidebar } from "@/components/FeaturesSidebar";
 import { Search, Trophy, MapPin, ChevronDown, ArrowRight, Crown, Flame, Zap, Users, CalendarCheck, GraduationCap, CalendarDays, Star } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { BannerAd, ResponsiveAd } from "@/components/ads";
 
 export const Route = createFileRoute("/")({
   head: () => ({
