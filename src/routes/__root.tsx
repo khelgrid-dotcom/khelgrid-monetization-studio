@@ -86,8 +86,29 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap" },
       { rel: "stylesheet", href: appCss },
+      // Ads: warm up Google's ad hosts so the first unit paints faster.
+      ...(hasValidPublisherId()
+        ? [
+            { rel: "preconnect", href: "https://pagead2.googlesyndication.com", crossOrigin: "anonymous" },
+            { rel: "dns-prefetch", href: "https://googleads.g.doubleclick.net" },
+            { rel: "dns-prefetch", href: "https://tpc.googlesyndication.com" },
+          ]
+        : []),
     ],
+    // Single global AdSense loader. Async + never blocking; only emitted once a
+    // real publisher ID is configured. Auto Ads are opt-in via config.
+    scripts: hasValidPublisherId()
+      ? [
+          {
+            src: adsenseScriptSrc(),
+            async: true,
+            crossOrigin: "anonymous",
+            ...(adsConfig.enableAutoAds ? { "data-overlays": "bottom" } : {}),
+          },
+        ]
+      : [],
   }),
+
   shellComponent: RootShell,
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
