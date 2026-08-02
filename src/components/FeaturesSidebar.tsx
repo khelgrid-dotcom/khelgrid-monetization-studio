@@ -3,6 +3,7 @@ import { useMemo, useState } from "react";
 import { ChevronLeft, ChevronRight, Search } from "lucide-react";
 import { FEATURE_ITEMS, isActivePath, type NavItem } from "@/config/nav";
 import { NavLink } from "@/components/NavLink";
+import { SidebarAd } from "@/components/ads";
 
 // Re-exported for tests and any callers that imported the array directly.
 export const FEATURES: readonly NavItem[] = FEATURE_ITEMS;
