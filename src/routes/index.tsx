@@ -126,6 +126,13 @@ function Home() {
           </div>
         </section>
 
+        {/* Ad · below the fold, lazy-loaded, height reserved to avoid layout shift */}
+        <div className="mx-auto max-w-7xl px-4">
+          <BannerAd adSlot="homeBelowHero" minHeight={100} />
+        </div>
+
+
+
         {/* Monetization cards */}
         <section className="mx-auto max-w-7xl px-4 pb-16 sm:pb-20">
           <h2 className="mb-5 text-center text-xl font-bold tracking-tight sm:mb-6 sm:text-2xl">
