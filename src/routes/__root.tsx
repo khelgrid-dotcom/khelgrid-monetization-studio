@@ -133,14 +133,19 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <Navbar />
-        <Breadcrumbs />
-        <div className="pb-20 md:pb-0">
-          <Outlet />
-        </div>
-        <BottomTabBar />
-        <Toaster theme="dark" position="top-right" />
+        <AdConsentProvider requireConsent={false}>
+          <Navbar />
+          <Breadcrumbs />
+          <div className="pb-20 md:pb-0">
+            <Outlet />
+          </div>
+          <BottomTabBar />
+          <StickyMobileAdSlot />
+          <AdConsentBanner />
+          <Toaster theme="dark" position="top-right" />
+        </AdConsentProvider>
       </AuthProvider>
     </QueryClientProvider>
+
   );
 }
