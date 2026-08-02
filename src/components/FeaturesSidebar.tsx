@@ -3,6 +3,7 @@ import { useMemo, useState } from "react";
 import { ChevronLeft, ChevronRight, Search } from "lucide-react";
 import { FEATURE_ITEMS, isActivePath, type NavItem } from "@/config/nav";
 import { NavLink } from "@/components/NavLink";
+import { SidebarAd } from "@/components/ads";
 
 // Re-exported for tests and any callers that imported the array directly.
 export const FEATURES: readonly NavItem[] = FEATURE_ITEMS;
@@ -70,7 +71,15 @@ export function FeaturesSidebar() {
         {filtered.length === 0 && !collapsed && (
           <p className="px-3 py-2 text-xs text-muted-foreground">No matches found</p>
         )}
+
+        {/* Ad · desktop sidebar, hidden while collapsed */}
+        {!collapsed && (
+          <div className="mt-auto px-1">
+            <SidebarAd adSlot="sidebarBottom" minHeight={250} />
+          </div>
+        )}
       </nav>
+
     </aside>
   );
 }

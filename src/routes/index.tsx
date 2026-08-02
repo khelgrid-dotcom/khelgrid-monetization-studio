@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { FeaturesSidebar } from "@/components/FeaturesSidebar";
 import { Search, Trophy, MapPin, ChevronDown, ArrowRight, Crown, Flame, Zap, Users, CalendarCheck, GraduationCap, CalendarDays, Star } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { BannerAd, ResponsiveAd } from "@/components/ads";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -126,6 +127,13 @@ function Home() {
           </div>
         </section>
 
+        {/* Ad · below the fold, lazy-loaded, height reserved to avoid layout shift */}
+        <div className="mx-auto max-w-7xl px-4">
+          <BannerAd adSlot="homeBelowHero" minHeight={100} />
+        </div>
+
+
+
         {/* Monetization cards */}
         <section className="mx-auto max-w-7xl px-4 pb-16 sm:pb-20">
           <h2 className="mb-5 text-center text-xl font-bold tracking-tight sm:mb-6 sm:text-2xl">
@@ -157,6 +165,12 @@ function Home() {
             ))}
           </div>
         </section>
+
+        {/* Ad · end of page */}
+        <div className="mx-auto max-w-7xl px-4 pb-16">
+          <ResponsiveAd adSlot="homeFooter" minHeight={250} />
+        </div>
+
       </main>
     </div>
   );

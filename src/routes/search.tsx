@@ -1,7 +1,8 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { z } from "zod";
-import { useMemo, useState } from "react";
+import { Fragment, useMemo, useState } from "react";
+import { BannerAd, InFeedAd } from "@/components/ads";
 import { TRIALS, SPORTS, CITIES, type Trial } from "@/data/trials";
 import { TrialCard } from "@/components/TrialCard";
 import { CheckoutModal } from "@/components/CheckoutModal";
@@ -306,18 +307,27 @@ function SearchPage() {
           </div>
         ) : (
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {results.regular.map(t => (
-              <TrialCard
-                key={t.id}
-                trial={t}
-                onApply={() => handleApply(t)}
-                onBoost={() => setBoost(t)}
-                showBoostAction={showBoostAction}
-              />
+            {results.regular.map((t, i) => (
+              <Fragment key={t.id}>
+                <TrialCard
+                  trial={t}
+                  onApply={() => handleApply(t)}
+                  onBoost={() => setBoost(t)}
+                  showBoostAction={showBoostAction}
+                />
+                {/* One inline ad per 6 results — keeps content:ad ratio policy-safe */}
+                {i > 0 && (i + 1) % 6 === 0 && (
+                  <InFeedAd adSlot="searchInline" minHeight={250} />
+                )}
+              </Fragment>
             ))}
           </div>
         )}
       </section>
+
+      {/* Ad · end of results */}
+      <BannerAd adSlot="listingInline" minHeight={100} />
+
 
       {checkout && (
         <CheckoutModal

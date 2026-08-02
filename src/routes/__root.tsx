@@ -16,6 +16,8 @@ import { Navbar } from "@/components/Navbar";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { BottomTabBar } from "@/components/BottomTabBar";
 import { Toaster } from "@/components/ui/sonner";
+import { AdConsentProvider, AdConsentBanner, StickyMobileAdSlot } from "@/components/ads";
+import { adsConfig, adsenseScriptSrc, hasValidPublisherId } from "@/config/ads";
 
 function NotFoundComponent() {
   return (
@@ -84,8 +86,30 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap" },
       { rel: "stylesheet", href: appCss },
+      // Ads: warm up Google's ad hosts so the first unit paints faster.
+      ...(hasValidPublisherId()
+        ? ([
+            { rel: "preconnect", href: "https://pagead2.googlesyndication.com", crossOrigin: "anonymous" },
+            { rel: "dns-prefetch", href: "https://googleads.g.doubleclick.net" },
+            { rel: "dns-prefetch", href: "https://tpc.googlesyndication.com" },
+          ] as const)
+        : []),
     ],
+    // Single global AdSense loader. Async + never blocking; only emitted once a
+    // real publisher ID is configured. Auto Ads are opt-in via config.
+    scripts: hasValidPublisherId()
+      ? ([
+          {
+            src: adsenseScriptSrc(),
+            async: true,
+            crossOrigin: "anonymous",
+            ...(adsConfig.enableAutoAds ? { "data-overlays": "bottom" } : {}),
+          },
+        ] as const)
+      : [],
+
   }),
+
   shellComponent: RootShell,
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
@@ -109,14 +133,19 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <Navbar />
-        <Breadcrumbs />
-        <div className="pb-20 md:pb-0">
-          <Outlet />
-        </div>
-        <BottomTabBar />
-        <Toaster theme="dark" position="top-right" />
+        <AdConsentProvider requireConsent={false}>
+          <Navbar />
+          <Breadcrumbs />
+          <div className="pb-20 md:pb-0">
+            <Outlet />
+          </div>
+          <BottomTabBar />
+          <StickyMobileAdSlot />
+          <AdConsentBanner />
+          <Toaster theme="dark" position="top-right" />
+        </AdConsentProvider>
       </AuthProvider>
     </QueryClientProvider>
+
   );
 }
