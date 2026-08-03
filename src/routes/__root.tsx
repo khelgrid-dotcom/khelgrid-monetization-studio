@@ -16,8 +16,8 @@ import { Navbar } from "@/components/Navbar";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { BottomTabBar } from "@/components/BottomTabBar";
 import { Toaster } from "@/components/ui/sonner";
-import { AdConsentProvider, AdConsentBanner, StickyMobileAdSlot } from "@/components/ads";
-import { adsConfig, adsenseScriptSrc, hasValidPublisherId } from "@/config/ads";
+import { AdConsentProvider, AdConsentBanner, AdSenseLoader, StickyMobileAdSlot } from "@/components/ads";
+import { adsConfig, hasValidPublisherId } from "@/config/ads";
 
 function NotFoundComponent() {
   return (
@@ -99,19 +99,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           ] as const)
         : []),
     ],
-    // Single global AdSense loader. Async + never blocking; only emitted once a
-    // real publisher ID is configured. Auto Ads are opt-in via config.
-    scripts: hasValidPublisherId()
-      ? ([
-          {
-            src: adsenseScriptSrc(),
-            async: true,
-            crossOrigin: "anonymous",
-            ...(adsConfig.enableAutoAds ? { "data-overlays": "bottom" } : {}),
-          },
-        ] as const)
-      : [],
-
+    // NOTE: the AdSense loader script is intentionally NOT emitted here.
+    // <AdSenseLoader /> injects it client-side only after the visitor answers
+    // the cookie banner, so no ad request happens without consent.
   }),
 
   shellComponent: RootShell,
@@ -137,7 +127,8 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <AdConsentProvider requireConsent={false}>
+        <AdConsentProvider requireConsent>
+          <AdSenseLoader />
           <Navbar />
           <Breadcrumbs />
           <div className="pb-20 md:pb-0">
