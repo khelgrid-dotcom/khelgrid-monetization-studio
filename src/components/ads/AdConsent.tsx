@@ -54,9 +54,11 @@ export function AdConsentProvider({
 }) {
   // Always start "unknown" so SSR and the first client render match.
   const [consent, setConsent] = useState<ConsentState>("unknown");
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
     setConsent(readStored());
+    setReady(true);
   }, []);
 
   const persist = useCallback((next: ConsentState) => {
@@ -76,23 +78,28 @@ export function AdConsentProvider({
     try {
       const queue = (window.adsbygoogle ??= [] as unknown as AdsByGoogleQueue);
       queue.requestNonPersonalizedAds = 1;
-
     } catch {
       // no-op
     }
   }, [consent]);
 
-  const value = useMemo<AdConsentValue>(
-    () => ({
+  const value = useMemo<AdConsentValue>(() => {
+    // With requireConsent, nothing (not even the loader script) runs until the
+    // visitor answers. Otherwise wait only for the stored choice to be read so
+    // the NPA flag is correct on the very first request.
+    const answered = consent !== "unknown";
+    const allowed = requireConsent ? ready && answered : ready;
+    return {
       consent,
-      canServeAds: requireConsent ? consent !== "unknown" : true,
+      canLoadScript: allowed,
+      canServeAds: allowed,
       nonPersonalized: consent === "denied",
+      ready,
       grant: () => persist("granted"),
       deny: () => persist("denied"),
       reset: () => persist("unknown"),
-    }),
-    [consent, persist, requireConsent],
-  );
+    };
+  }, [consent, persist, ready, requireConsent]);
 
   return <AdConsentContext.Provider value={value}>{children}</AdConsentContext.Provider>;
 }
@@ -103,8 +110,10 @@ export function useAdConsent(): AdConsentValue {
   return (
     ctx ?? {
       consent: "unknown",
-      canServeAds: true,
-      nonPersonalized: false,
+      canLoadScript: false,
+      canServeAds: false,
+      nonPersonalized: true,
+      ready: false,
       grant: () => {},
       deny: () => {},
       reset: () => {},
