@@ -80,6 +80,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:description", content: "India's premium grid for sports trials." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
+      // AdSense site ownership verification
+      ...(hasValidPublisherId()
+        ? ([{ name: "google-adsense-account", content: adsConfig.publisherId }] as const)
+        : []),
     ],
     links: [
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
