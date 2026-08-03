@@ -64,14 +64,23 @@ import { BannerAd, ResponsiveAd, SidebarAd, InArticleAd, InFeedAd } from "@/comp
 
 ## 4. Consent / GDPR
 
-`AdConsentProvider` in `src/routes/__root.tsx` takes `requireConsent`:
+The AdSense loader script is **not** in the document head. `AdSenseLoader`
+(mounted in `src/routes/__root.tsx`) injects it client-side only after the
+visitor answers the cookie banner, so nothing is requested from Google without
+a choice.
 
-- `false` (current) — ads serve immediately; declining switches to
-  non-personalized ads. Correct for an India-first audience.
-- `true` — **no** ad request happens until the visitor answers the banner. Use
-  this if you start serving significant EEA/UK traffic.
+`AdConsentProvider requireConsent`:
 
-The choice persists in `localStorage` under `khelgrid.ads.consent`.
+- `true` (current) — no script, no ad request until the banner is answered.
+  - **Accept all** → personalized ads
+  - **Non-personalized** → `requestNonPersonalizedAds = 1` is set *before* the
+    script is appended, so it applies to the first request
+- `false` — script loads as soon as the stored choice is read; declining still
+  switches to non-personalized ads.
+
+The choice persists in `localStorage` under `khelgrid.ads.consent`. Render
+`<CookieSettingsButton />` (e.g. in a footer) to let visitors change it.
+
 
 ## 5. Auto Ads
 
