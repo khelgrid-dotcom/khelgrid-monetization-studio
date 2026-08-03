@@ -9,7 +9,11 @@
  *   VITE_GOOGLE_ADSENSE_ID=ca-pub-XXXXXXXXXXXXXXXX
  */
 
-const RAW_PUBLISHER_ID = (import.meta.env["VITE_GOOGLE_ADSENSE_ID"] as string | undefined) ?? "";
+/** KhelGrid's live AdSense publisher ID (public value; env var can override it). */
+const DEFAULT_PUBLISHER_ID = "ca-pub-8352691151177209";
+
+const RAW_PUBLISHER_ID =
+  ((import.meta.env["VITE_GOOGLE_ADSENSE_ID"] as string | undefined) ?? "").trim() || DEFAULT_PUBLISHER_ID;
 
 /** ca-pub-XXXXXXXXXXXXXXXX (16 digits). */
 const PUBLISHER_ID_RE = /^ca-pub-\d{16}$/;
