@@ -101,17 +101,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     ],
     // Single global AdSense loader. Async + never blocking; only emitted once a
     // real publisher ID is configured. Auto Ads are opt-in via config.
-    scripts: hasValidPublisherId()
-      ? ([
-          {
-            src: adsenseScriptSrc(),
-            async: true,
-            crossOrigin: "anonymous",
-            ...(adsConfig.enableAutoAds ? { "data-overlays": "bottom" } : {}),
-          },
-        ] as const)
-      : [],
-
+    // NOTE: the AdSense loader script is intentionally NOT emitted here.
+    // <AdSenseLoader /> injects it client-side only after the visitor answers
+    // the cookie banner, so no ad request happens without consent.
   }),
 
   shellComponent: RootShell,
