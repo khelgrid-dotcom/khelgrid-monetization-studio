@@ -19,10 +19,14 @@ const STORAGE_KEY = "khelgrid.ads.consent";
 
 type AdConsentValue = {
   consent: ConsentState;
+  /** The AdSense loader script may be injected right now. */
+  canLoadScript: boolean;
   /** Ads may be requested right now. */
   canServeAds: boolean;
   /** Ads must be non-personalized. */
   nonPersonalized: boolean;
+  /** True once the stored choice has been read on the client. */
+  ready: boolean;
   grant: () => void;
   deny: () => void;
   reset: () => void;
