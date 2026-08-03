@@ -16,8 +16,8 @@ import { Navbar } from "@/components/Navbar";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { BottomTabBar } from "@/components/BottomTabBar";
 import { Toaster } from "@/components/ui/sonner";
-import { AdConsentProvider, AdConsentBanner, StickyMobileAdSlot } from "@/components/ads";
-import { adsConfig, adsenseScriptSrc, hasValidPublisherId } from "@/config/ads";
+import { AdConsentProvider, AdConsentBanner, AdSenseLoader, StickyMobileAdSlot } from "@/components/ads";
+import { adsConfig, hasValidPublisherId } from "@/config/ads";
 
 function NotFoundComponent() {
   return (
