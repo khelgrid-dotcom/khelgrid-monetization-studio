@@ -127,7 +127,8 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <AdConsentProvider requireConsent={false}>
+        <AdConsentProvider requireConsent>
+          <AdSenseLoader />
           <Navbar />
           <Breadcrumbs />
           <div className="pb-20 md:pb-0">
