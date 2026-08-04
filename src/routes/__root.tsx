@@ -19,6 +19,8 @@ import { Toaster } from "@/components/ui/sonner";
 import { AdConsentProvider, AdConsentBanner, AdSenseLoader, StickyMobileAdSlot } from "@/components/ads";
 import { adsConfig, hasValidPublisherId } from "@/config/ads";
 import { GoogleTagLoader } from "@/components/GoogleTagLoader";
+import { SiteFooter } from "@/components/SiteFooter";
+
 
 
 function NotFoundComponent() {
