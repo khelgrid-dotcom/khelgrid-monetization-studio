@@ -90,7 +90,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     links: [
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+      { rel: "preconnect", href: "https://www.googletagmanager.com" },
       { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap" },
+
       { rel: "stylesheet", href: appCss },
       // Ads: warm up Google's ad hosts so the first unit paints faster.
       ...(hasValidPublisherId()
@@ -130,7 +132,9 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <AdConsentProvider requireConsent>
+          <GoogleTagLoader />
           <AdSenseLoader />
+
           <Navbar />
           <Breadcrumbs />
           <div className="pb-20 md:pb-0">
