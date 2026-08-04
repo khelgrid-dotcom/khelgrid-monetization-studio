@@ -139,8 +139,10 @@ function RootComponent() {
           <Breadcrumbs />
           <div className="pb-20 md:pb-0">
             <Outlet />
+            <SiteFooter />
           </div>
           <BottomTabBar />
+
           <StickyMobileAdSlot />
           <AdConsentBanner />
           <Toaster theme="dark" position="top-right" />
