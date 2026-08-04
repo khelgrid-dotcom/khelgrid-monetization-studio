@@ -19,6 +19,8 @@ import { Toaster } from "@/components/ui/sonner";
 import { AdConsentProvider, AdConsentBanner, AdSenseLoader, StickyMobileAdSlot } from "@/components/ads";
 import { adsConfig, hasValidPublisherId } from "@/config/ads";
 import { GoogleTagLoader } from "@/components/GoogleTagLoader";
+import { SiteFooter } from "@/components/SiteFooter";
+
 
 
 function NotFoundComponent() {
@@ -139,8 +141,10 @@ function RootComponent() {
           <Breadcrumbs />
           <div className="pb-20 md:pb-0">
             <Outlet />
+            <SiteFooter />
           </div>
           <BottomTabBar />
+
           <StickyMobileAdSlot />
           <AdConsentBanner />
           <Toaster theme="dark" position="top-right" />
