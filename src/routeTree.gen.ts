@@ -13,6 +13,7 @@ import { Route as VerifyRouteImport } from './routes/verify'
 import { Route as TrialsRouteImport } from './routes/trials'
 import { Route as TrainRouteImport } from './routes/train'
 import { Route as ToolsRouteImport } from './routes/tools'
+import { Route as TermsRouteImport } from './routes/terms'
 import { Route as TalentScannerRouteImport } from './routes/talent-scanner'
 import { Route as StartFromZeroRouteImport } from './routes/start-from-zero'
 import { Route as SportsRouteImport } from './routes/sports'
@@ -64,6 +65,11 @@ const TrainRoute = TrainRouteImport.update({
 const ToolsRoute = ToolsRouteImport.update({
   id: '/tools',
   path: '/tools',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TalentScannerRoute = TalentScannerRouteImport.update({
@@ -253,6 +259,7 @@ export interface FileRoutesByFullPath {
   '/sports': typeof SportsRoute
   '/start-from-zero': typeof StartFromZeroRoute
   '/talent-scanner': typeof TalentScannerRoute
+  '/terms': typeof TermsRoute
   '/tools': typeof ToolsRouteWithChildren
   '/train': typeof TrainRoute
   '/trials': typeof TrialsRoute
@@ -291,6 +298,7 @@ export interface FileRoutesByTo {
   '/sports': typeof SportsRoute
   '/start-from-zero': typeof StartFromZeroRoute
   '/talent-scanner': typeof TalentScannerRoute
+  '/terms': typeof TermsRoute
   '/tools': typeof ToolsRouteWithChildren
   '/train': typeof TrainRoute
   '/trials': typeof TrialsRoute
@@ -330,6 +338,7 @@ export interface FileRoutesById {
   '/sports': typeof SportsRoute
   '/start-from-zero': typeof StartFromZeroRoute
   '/talent-scanner': typeof TalentScannerRoute
+  '/terms': typeof TermsRoute
   '/tools': typeof ToolsRouteWithChildren
   '/train': typeof TrainRoute
   '/trials': typeof TrialsRoute
@@ -370,6 +379,7 @@ export interface FileRouteTypes {
     | '/sports'
     | '/start-from-zero'
     | '/talent-scanner'
+    | '/terms'
     | '/tools'
     | '/train'
     | '/trials'
@@ -408,6 +418,7 @@ export interface FileRouteTypes {
     | '/sports'
     | '/start-from-zero'
     | '/talent-scanner'
+    | '/terms'
     | '/tools'
     | '/train'
     | '/trials'
@@ -446,6 +457,7 @@ export interface FileRouteTypes {
     | '/sports'
     | '/start-from-zero'
     | '/talent-scanner'
+    | '/terms'
     | '/tools'
     | '/train'
     | '/trials'
@@ -485,6 +497,7 @@ export interface RootRouteChildren {
   SportsRoute: typeof SportsRoute
   StartFromZeroRoute: typeof StartFromZeroRoute
   TalentScannerRoute: typeof TalentScannerRoute
+  TermsRoute: typeof TermsRoute
   ToolsRoute: typeof ToolsRouteWithChildren
   TrainRoute: typeof TrainRoute
   TrialsRoute: typeof TrialsRoute
@@ -525,6 +538,13 @@ declare module '@tanstack/react-router' {
       path: '/tools'
       fullPath: '/tools'
       preLoaderRoute: typeof ToolsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/talent-scanner': {
@@ -790,6 +810,7 @@ const rootRouteChildren: RootRouteChildren = {
   SportsRoute: SportsRoute,
   StartFromZeroRoute: StartFromZeroRoute,
   TalentScannerRoute: TalentScannerRoute,
+  TermsRoute: TermsRoute,
   ToolsRoute: ToolsRouteWithChildren,
   TrainRoute: TrainRoute,
   TrialsRoute: TrialsRoute,
@@ -804,13 +825,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

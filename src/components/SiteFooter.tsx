@@ -64,10 +64,15 @@ const COLUMNS: Array<{ title: string; items: ReturnType<typeof pick> }> = [
 ];
 
 const SOCIALS = [
-  { label: "Instagram", href: "https://instagram.com", icon: Instagram },
-  { label: "YouTube", href: "https://youtube.com", icon: Youtube },
-  { label: "X", href: "https://x.com", icon: Twitter },
+  {
+    label: "Instagram",
+    href: "https://www.instagram.com/khelgrid?igsh=YmZmeHI1M2hyMHMw",
+    icon: Instagram,
+  },
+  { label: "YouTube", href: "https://www.youtube.com/@khelgrid", icon: Youtube },
+  { label: "X", href: "https://x.com/Khelgrid", icon: Twitter },
 ];
+
 
 export function SiteFooter() {
   const year = new Date().getFullYear();
