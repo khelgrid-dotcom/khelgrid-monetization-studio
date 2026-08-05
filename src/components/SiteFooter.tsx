@@ -176,12 +176,13 @@ export function SiteFooter() {
             <Link to="/about" className="hover:text-foreground">
               About
             </Link>
-            <Link to="/about" className="hover:text-foreground">
+            <Link to="/privacy" className="hover:text-foreground">
               Privacy
             </Link>
-            <Link to="/about" className="hover:text-foreground">
+            <Link to="/terms" className="hover:text-foreground">
               Terms
             </Link>
+
             <a href="/sitemap.xml" className="hover:text-foreground">
               Sitemap
             </a>
