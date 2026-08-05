@@ -118,11 +118,12 @@ export function SiteFooter() {
               <MapPin className="h-4 w-4 shrink-0" /> India · 20+ cities
             </p>
             <a
-              href="mailto:hello@khelgrid.com"
+              href="mailto:khelgrid@gmail.com"
               className="mt-2 flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
             >
-              <Mail className="h-4 w-4 shrink-0" /> hello@khelgrid.com
+              <Mail className="h-4 w-4 shrink-0" /> khelgrid@gmail.com
             </a>
+
 
             <Link
               to="/pricing"
