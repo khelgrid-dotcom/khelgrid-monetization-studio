@@ -83,11 +83,13 @@ export function SiteFooter() {
       <section className="border-b border-border">
         <div className="mx-auto max-w-7xl px-4 py-10 md:px-6">
           <h2 className="font-heading text-lg font-semibold md:text-xl">
-            Built as a painkiller, not a vitamin
+            Your talent isn&apos;t the problem. Access is.
           </h2>
           <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
-            KhelGrid removes the four things that actually stop Indian athletes from getting scouted.
+            KhelGrid kills the four things that quietly end Indian sporting careers — share it with the one
+            player who deserves to be seen.
           </p>
+
           <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {PAIN_POINTS.map(({ icon: Icon, pain, cure }) => (
               <li key={pain} className="rounded-2xl border border-border bg-background/60 p-4">
