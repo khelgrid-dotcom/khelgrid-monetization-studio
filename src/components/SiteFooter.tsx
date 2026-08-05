@@ -64,10 +64,15 @@ const COLUMNS: Array<{ title: string; items: ReturnType<typeof pick> }> = [
 ];
 
 const SOCIALS = [
-  { label: "Instagram", href: "https://instagram.com", icon: Instagram },
-  { label: "YouTube", href: "https://youtube.com", icon: Youtube },
-  { label: "X", href: "https://x.com", icon: Twitter },
+  {
+    label: "Instagram",
+    href: "https://www.instagram.com/khelgrid?igsh=YmZmeHI1M2hyMHMw",
+    icon: Instagram,
+  },
+  { label: "YouTube", href: "https://www.youtube.com/@khelgrid", icon: Youtube },
+  { label: "X", href: "https://x.com/Khelgrid", icon: Twitter },
 ];
+
 
 export function SiteFooter() {
   const year = new Date().getFullYear();
@@ -78,11 +83,13 @@ export function SiteFooter() {
       <section className="border-b border-border">
         <div className="mx-auto max-w-7xl px-4 py-10 md:px-6">
           <h2 className="font-heading text-lg font-semibold md:text-xl">
-            Built as a painkiller, not a vitamin
+            Your talent isn&apos;t the problem. Access is.
           </h2>
           <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
-            KhelGrid removes the four things that actually stop Indian athletes from getting scouted.
+            KhelGrid kills the four things that quietly end Indian sporting careers — share it with the one
+            player who deserves to be seen.
           </p>
+
           <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {PAIN_POINTS.map(({ icon: Icon, pain, cure }) => (
               <li key={pain} className="rounded-2xl border border-border bg-background/60 p-4">
@@ -111,11 +118,12 @@ export function SiteFooter() {
               <MapPin className="h-4 w-4 shrink-0" /> India · 20+ cities
             </p>
             <a
-              href="mailto:hello@khelgrid.com"
+              href="mailto:khelgrid@gmail.com"
               className="mt-2 flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
             >
-              <Mail className="h-4 w-4 shrink-0" /> hello@khelgrid.com
+              <Mail className="h-4 w-4 shrink-0" /> khelgrid@gmail.com
             </a>
+
 
             <Link
               to="/pricing"
@@ -168,12 +176,13 @@ export function SiteFooter() {
             <Link to="/about" className="hover:text-foreground">
               About
             </Link>
-            <Link to="/about" className="hover:text-foreground">
+            <Link to="/privacy" className="hover:text-foreground">
               Privacy
             </Link>
-            <Link to="/about" className="hover:text-foreground">
+            <Link to="/terms" className="hover:text-foreground">
               Terms
             </Link>
+
             <a href="/sitemap.xml" className="hover:text-foreground">
               Sitemap
             </a>

@@ -13,12 +13,14 @@ import { Route as VerifyRouteImport } from './routes/verify'
 import { Route as TrialsRouteImport } from './routes/trials'
 import { Route as TrainRouteImport } from './routes/train'
 import { Route as ToolsRouteImport } from './routes/tools'
+import { Route as TermsRouteImport } from './routes/terms'
 import { Route as TalentScannerRouteImport } from './routes/talent-scanner'
 import { Route as StartFromZeroRouteImport } from './routes/start-from-zero'
 import { Route as SportsRouteImport } from './routes/sports'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as ResourcesRouteImport } from './routes/resources'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as PlayRouteImport } from './routes/play'
 import { Route as OpportunitiesRouteImport } from './routes/opportunities'
@@ -65,6 +67,11 @@ const ToolsRoute = ToolsRouteImport.update({
   path: '/tools',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TalentScannerRoute = TalentScannerRouteImport.update({
   id: '/talent-scanner',
   path: '/talent-scanner',
@@ -93,6 +100,11 @@ const SearchRoute = SearchRouteImport.update({
 const ResourcesRoute = ResourcesRouteImport.update({
   id: '/resources',
   path: '/resources',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PricingRoute = PricingRouteImport.update({
@@ -240,12 +252,14 @@ export interface FileRoutesByFullPath {
   '/opportunities': typeof OpportunitiesRoute
   '/play': typeof PlayRoute
   '/pricing': typeof PricingRoute
+  '/privacy': typeof PrivacyRoute
   '/resources': typeof ResourcesRoute
   '/search': typeof SearchRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sports': typeof SportsRoute
   '/start-from-zero': typeof StartFromZeroRoute
   '/talent-scanner': typeof TalentScannerRoute
+  '/terms': typeof TermsRoute
   '/tools': typeof ToolsRouteWithChildren
   '/train': typeof TrainRoute
   '/trials': typeof TrialsRoute
@@ -277,12 +291,14 @@ export interface FileRoutesByTo {
   '/opportunities': typeof OpportunitiesRoute
   '/play': typeof PlayRoute
   '/pricing': typeof PricingRoute
+  '/privacy': typeof PrivacyRoute
   '/resources': typeof ResourcesRoute
   '/search': typeof SearchRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sports': typeof SportsRoute
   '/start-from-zero': typeof StartFromZeroRoute
   '/talent-scanner': typeof TalentScannerRoute
+  '/terms': typeof TermsRoute
   '/tools': typeof ToolsRouteWithChildren
   '/train': typeof TrainRoute
   '/trials': typeof TrialsRoute
@@ -315,12 +331,14 @@ export interface FileRoutesById {
   '/opportunities': typeof OpportunitiesRoute
   '/play': typeof PlayRoute
   '/pricing': typeof PricingRoute
+  '/privacy': typeof PrivacyRoute
   '/resources': typeof ResourcesRoute
   '/search': typeof SearchRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sports': typeof SportsRoute
   '/start-from-zero': typeof StartFromZeroRoute
   '/talent-scanner': typeof TalentScannerRoute
+  '/terms': typeof TermsRoute
   '/tools': typeof ToolsRouteWithChildren
   '/train': typeof TrainRoute
   '/trials': typeof TrialsRoute
@@ -354,12 +372,14 @@ export interface FileRouteTypes {
     | '/opportunities'
     | '/play'
     | '/pricing'
+    | '/privacy'
     | '/resources'
     | '/search'
     | '/sitemap.xml'
     | '/sports'
     | '/start-from-zero'
     | '/talent-scanner'
+    | '/terms'
     | '/tools'
     | '/train'
     | '/trials'
@@ -391,12 +411,14 @@ export interface FileRouteTypes {
     | '/opportunities'
     | '/play'
     | '/pricing'
+    | '/privacy'
     | '/resources'
     | '/search'
     | '/sitemap.xml'
     | '/sports'
     | '/start-from-zero'
     | '/talent-scanner'
+    | '/terms'
     | '/tools'
     | '/train'
     | '/trials'
@@ -428,12 +450,14 @@ export interface FileRouteTypes {
     | '/opportunities'
     | '/play'
     | '/pricing'
+    | '/privacy'
     | '/resources'
     | '/search'
     | '/sitemap.xml'
     | '/sports'
     | '/start-from-zero'
     | '/talent-scanner'
+    | '/terms'
     | '/tools'
     | '/train'
     | '/trials'
@@ -466,12 +490,14 @@ export interface RootRouteChildren {
   OpportunitiesRoute: typeof OpportunitiesRoute
   PlayRoute: typeof PlayRoute
   PricingRoute: typeof PricingRoute
+  PrivacyRoute: typeof PrivacyRoute
   ResourcesRoute: typeof ResourcesRoute
   SearchRoute: typeof SearchRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SportsRoute: typeof SportsRoute
   StartFromZeroRoute: typeof StartFromZeroRoute
   TalentScannerRoute: typeof TalentScannerRoute
+  TermsRoute: typeof TermsRoute
   ToolsRoute: typeof ToolsRouteWithChildren
   TrainRoute: typeof TrainRoute
   TrialsRoute: typeof TrialsRoute
@@ -514,6 +540,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ToolsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/talent-scanner': {
       id: '/talent-scanner'
       path: '/talent-scanner'
@@ -554,6 +587,13 @@ declare module '@tanstack/react-router' {
       path: '/resources'
       fullPath: '/resources'
       preLoaderRoute: typeof ResourcesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/pricing': {
@@ -763,12 +803,14 @@ const rootRouteChildren: RootRouteChildren = {
   OpportunitiesRoute: OpportunitiesRoute,
   PlayRoute: PlayRoute,
   PricingRoute: PricingRoute,
+  PrivacyRoute: PrivacyRoute,
   ResourcesRoute: ResourcesRoute,
   SearchRoute: SearchRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   SportsRoute: SportsRoute,
   StartFromZeroRoute: StartFromZeroRoute,
   TalentScannerRoute: TalentScannerRoute,
+  TermsRoute: TermsRoute,
   ToolsRoute: ToolsRouteWithChildren,
   TrainRoute: TrainRoute,
   TrialsRoute: TrialsRoute,
