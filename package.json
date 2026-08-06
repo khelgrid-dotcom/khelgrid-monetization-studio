@@ -89,5 +89,8 @@
   },
   "overrides": {
     "@tanstack/router-core": "1.171.16"
+  },
+  "resolutions": {
+    "@tanstack/router-core": "1.171.16"
   }
 }
