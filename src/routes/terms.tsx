@@ -16,8 +16,10 @@ export const Route = createFileRoute("/terms")({
         content: "Accounts, applications, academy listings, payments, refunds and acceptable use on KhelGrid.",
       },
       { property: "og:type", content: "article" },
+      { property: "og:url", content: "/terms" },
       { name: "twitter:card", content: "summary" },
     ],
+    links: [{ rel: "canonical", href: "/terms" }],
   }),
   component: TermsPage,
 });

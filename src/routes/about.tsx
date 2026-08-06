@@ -3,7 +3,25 @@ import { ComingSoon } from "@/components/ComingSoon";
 import { Info } from "lucide-react";
 
 export const Route = createFileRoute("/about")({
-  head: () => ({ meta: [{ title: "About · KhelGrid" }, { name: "description", content: "We're building India's sports opportunity network — from grassroots to gold." }] }),
+  head: () => ({
+    meta: [
+      { title: "About KhelGrid · India's sports opportunity network" },
+      {
+        name: "description",
+        content:
+          "KhelGrid connects Indian athletes to verified trials, academies and coaching — from Tier-3 town nets to national camps.",
+      },
+      { property: "og:title", content: "About KhelGrid · India's sports opportunity network" },
+      {
+        property: "og:description",
+        content: "Why we built KhelGrid: transparent access to trials, academies and coaching across India.",
+      },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "/about" },
+      { name: "twitter:card", content: "summary" },
+    ],
+    links: [{ rel: "canonical", href: "/about" }],
+  }),
   component: () => (
     <ComingSoon
       icon={Info}
