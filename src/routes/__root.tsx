@@ -16,7 +16,6 @@ import { NotificationProvider } from "@/context/NotificationContext";
 import { Navbar } from "@/components/Navbar";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { BottomTabBar } from "@/components/BottomTabBar";
-import { Footer } from "@/components/Footer";
 import { Toaster } from "@/components/ui/sonner";
 import { AdConsentProvider, AdConsentBanner, AdSenseLoader, StickyMobileAdSlot } from "@/components/ads";
 import { adsConfig, hasValidPublisherId } from "@/config/ads";
@@ -146,7 +145,6 @@ function RootComponent() {
               <Outlet />
               <SiteFooter />
             </div>
-            <Footer />
             <BottomTabBar />
 
             <StickyMobileAdSlot />
