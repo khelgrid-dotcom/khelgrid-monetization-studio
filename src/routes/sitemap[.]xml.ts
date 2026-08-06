@@ -7,7 +7,7 @@ const BASE_URL = "";
 
 const STATIC_PATHS = [
   "/", "/about", "/academy", "/ai-guide", "/book", "/coaches", "/community",
-  "/dashboard", "/events", "/learning-hub", "/login", "/memberships",
+  "/events", "/learning-hub", "/memberships",
   "/mobile-app", "/play", "/pricing", "/search", "/start-from-zero",
   "/talent-scanner", "/train", "/verify", "/privacy", "/terms",
   "/sports", "/cities", "/guides", "/tools",
