@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import type {} from "@tanstack/react-start";
+import type {} from "@tanstack/start-client-core";
 import { ALL_CATALOG_PATHS, SPORTS_CATALOG, CITIES_CATALOG, GUIDES_CATALOG, TOOLS_CATALOG } from "@/data/catalog";
 
 // TODO: replace with your project URL once a project name or custom domain is set.
@@ -7,7 +7,7 @@ const BASE_URL = "";
 
 const STATIC_PATHS = [
   "/", "/about", "/academy", "/ai-guide", "/book", "/coaches", "/community",
-  "/dashboard", "/events", "/learning-hub", "/login", "/memberships",
+  "/events", "/learning-hub", "/memberships",
   "/mobile-app", "/play", "/pricing", "/search", "/start-from-zero",
   "/talent-scanner", "/train", "/verify", "/privacy", "/terms",
   "/sports", "/cities", "/guides", "/tools",
