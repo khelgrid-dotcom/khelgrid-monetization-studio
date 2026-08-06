@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import type {} from "@tanstack/react-start";
+import type {} from "@tanstack/start-client-core";
 import { ALL_CATALOG_PATHS, SPORTS_CATALOG, CITIES_CATALOG, GUIDES_CATALOG, TOOLS_CATALOG } from "@/data/catalog";
 
 // TODO: replace with your project URL once a project name or custom domain is set.
