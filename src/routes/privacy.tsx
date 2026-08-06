@@ -18,8 +18,10 @@ export const Route = createFileRoute("/privacy")({
           "Our full privacy policy: data we collect, cookies, third-party advertising partners and your choices.",
       },
       { property: "og:type", content: "article" },
+      { property: "og:url", content: "/privacy" },
       { name: "twitter:card", content: "summary" },
     ],
+    links: [{ rel: "canonical", href: "/privacy" }],
   }),
   component: PrivacyPage,
 });
