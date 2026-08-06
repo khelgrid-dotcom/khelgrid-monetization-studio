@@ -12,9 +12,11 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { AuthProvider } from "@/context/AuthContext";
+import { NotificationProvider } from "@/context/NotificationContext";
 import { Navbar } from "@/components/Navbar";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { BottomTabBar } from "@/components/BottomTabBar";
+import { Footer } from "@/components/Footer";
 import { Toaster } from "@/components/ui/sonner";
 import { AdConsentProvider, AdConsentBanner, AdSenseLoader, StickyMobileAdSlot } from "@/components/ads";
 import { adsConfig, hasValidPublisherId } from "@/config/ads";
@@ -133,22 +135,25 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <AdConsentProvider requireConsent>
-          <GoogleTagLoader />
-          <AdSenseLoader />
+        <NotificationProvider>
+          <AdConsentProvider requireConsent>
+            <GoogleTagLoader />
+            <AdSenseLoader />
 
-          <Navbar />
-          <Breadcrumbs />
-          <div className="pb-20 md:pb-0">
-            <Outlet />
-            <SiteFooter />
-          </div>
-          <BottomTabBar />
+            <Navbar />
+            <Breadcrumbs />
+            <div className="pb-20 md:pb-0">
+              <Outlet />
+              <SiteFooter />
+            </div>
+            <Footer />
+            <BottomTabBar />
 
-          <StickyMobileAdSlot />
-          <AdConsentBanner />
-          <Toaster theme="dark" position="top-right" />
-        </AdConsentProvider>
+            <StickyMobileAdSlot />
+            <AdConsentBanner />
+            <Toaster theme="dark" position="top-right" />
+          </AdConsentProvider>
+        </NotificationProvider>
       </AuthProvider>
     </QueryClientProvider>
 
