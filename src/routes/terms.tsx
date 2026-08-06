@@ -1,160 +1,124 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Scale } from "lucide-react";
 
 export const Route = createFileRoute("/terms")({
+  head: () => ({
+    meta: [
+      { title: "Terms of Service · KhelGrid" },
+      {
+        name: "description",
+        content:
+          "The rules for using KhelGrid: accounts, trial applications, academy listings, payments, refunds and acceptable use.",
+      },
+      { property: "og:title", content: "Terms of Service · KhelGrid" },
+      {
+        property: "og:description",
+        content: "Accounts, applications, academy listings, payments, refunds and acceptable use on KhelGrid.",
+      },
+      { property: "og:type", content: "article" },
+      { property: "og:url", content: "/terms" },
+      { name: "twitter:card", content: "summary" },
+    ],
+    links: [{ rel: "canonical", href: "/terms" }],
+  }),
   component: TermsPage,
 });
 
+const SECTIONS: Array<{ heading: string; body: string[] }> = [
+  {
+    heading: "1. Accepting these terms",
+    body: [
+      "By using khelgrid.com you agree to these terms. If you are under 18, a parent or guardian must accept them on your behalf and manage your account.",
+    ],
+  },
+  {
+    heading: "2. Your account",
+    body: [
+      "Keep your login details private and your profile information accurate. You are responsible for activity on your account. We may suspend accounts that submit false performance data, impersonate others, or abuse the platform.",
+    ],
+  },
+  {
+    heading: "3. Trials, opportunities and listings",
+    body: [
+      "KhelGrid lists trials, venues, coaching and events from third parties. We verify academies before a listing goes live, but we are not the organiser and do not guarantee selection, attendance, scheduling or outcomes.",
+      "Never pay a selector, scout or coach in cash for guaranteed selection. Report any such request to khelgrid@gmail.com and we will remove the listing.",
+    ],
+  },
+  {
+    heading: "4. Payments, Pro and boosts",
+    body: [
+      "Paid features include per-trial unlocks, the Verified Sports CV, Pro subscriptions and academy listing boosts. Prices are shown in INR and include applicable taxes.",
+      "Subscriptions renew until cancelled; cancel any time and access runs to the end of the paid period.",
+    ],
+  },
+  {
+    heading: "5. Refunds",
+    body: [
+      "Digital unlocks and boosts are non-refundable once delivered, except where a listing turns out to be fraudulent or is removed by us — in that case we refund in full. Email khelgrid@gmail.com within 14 days.",
+    ],
+  },
+  {
+    heading: "6. Acceptable use",
+    body: [
+      "Do not scrape the platform, resell listings, upload unlawful or abusive content, or attempt to bypass paywalls, verification or security controls.",
+    ],
+  },
+  {
+    heading: "7. Your content",
+    body: [
+      "You keep ownership of everything you upload. You grant us a licence to host and display it so we can run the service and show your profile to academies you apply to.",
+    ],
+  },
+  {
+    heading: "8. Advertising",
+    body: [
+      "KhelGrid is funded partly by advertising. Ads are labelled and separated from editorial and listing content. See our Privacy Policy for how advertising cookies work and how to change your choice.",
+    ],
+  },
+  {
+    heading: "9. Liability",
+    body: [
+      "The service is provided on an \"as is\" basis. To the extent permitted by law, we are not liable for indirect losses, or for injury, travel costs or missed opportunities arising from third-party trials and venues.",
+    ],
+  },
+  {
+    heading: "10. Changes and contact",
+    body: [
+      "We may update these terms; material changes will be posted here. Questions go to khelgrid@gmail.com. These terms are governed by the laws of India.",
+    ],
+  },
+];
+
 function TermsPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 py-12">
-      <div className="max-w-4xl mx-auto px-4">
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-slate-900 mb-2">Terms of Service</h1>
-          <p className="text-slate-600">Last updated: {new Date().toLocaleDateString()}</p>
-        </div>
-
-        <div className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>1. Acceptance of Terms</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p>
-                By accessing and using KhelGrid, you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to abide by the above, please do not use this service.
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>2. Use License</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p>
-                Permission is granted to temporarily download one copy of the materials (information or software) on KhelGrid for personal, non-commercial transitory viewing only. This is the grant of a license, not a transfer of title. Under this license you may not:
-              </p>
-              <ul className="list-disc pl-5 space-y-2 text-sm">
-                <li>Modify or copy the materials</li>
-                <li>Use the materials for any commercial purpose or for any public display</li>
-                <li>Attempt to decompile or reverse engineer any software on the platform</li>
-                <li>Remove any copyright or other proprietary notations from the materials</li>
-                <li>Transfer the materials to another person or "mirror" on any other server</li>
-                <li>Violate any applicable laws or regulations</li>
-              </ul>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>3. Disclaimer</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p>
-                The materials on KhelGrid are provided on an 'as is' basis. KhelGrid makes no warranties, expressed or implied, and hereby disclaims and negates all other warranties including, without limitation, implied warranties or conditions of merchantability, fitness for a particular purpose, or non-infringement of intellectual property or other violation of rights.
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>4. Limitations</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p>
-                In no event shall KhelGrid or its suppliers be liable for any damages (including, without limitation, damages for loss of data or profit, or due to business interruption) arising out of the use or inability to use the materials on KhelGrid.
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>5. Accuracy of Materials</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p>
-                The materials appearing on KhelGrid could include technical, typographical, or photographic errors. KhelGrid does not warrant that any of the materials on its website are accurate, complete, or current. KhelGrid may make changes to the materials contained on its website at any time without notice.
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>6. Links</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p>
-                KhelGrid has not reviewed all of the sites linked to its website and is not responsible for the contents of any such linked site. The inclusion of any link does not imply endorsement by KhelGrid of the site. Use of any such linked website is at the user's own risk.
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>7. Modifications</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p>
-                KhelGrid may revise these terms of service for its website at any time without notice. By using this website, you are agreeing to be bound by the then current version of these terms of service.
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>8. Governing Law</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p>
-                These terms and conditions are governed by and construed in accordance with the laws of India, and you irrevocably submit to the exclusive jurisdiction of the courts in that location.
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>9. User Content & Conduct</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p>
-                You agree not to post, transmit, or distribute content that:
-              </p>
-              <ul className="list-disc pl-5 space-y-2 text-sm">
-                <li>Is unlawful, threatening, abusive, defamatory, or obscene</li>
-                <li>Infringes on intellectual property rights</li>
-                <li>Interferes with the platform's normal operation</li>
-                <li>Violates any applicable laws or regulations</li>
-              </ul>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>10. Dispute Resolution</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p>
-                Any disputes arising from the use of KhelGrid shall be resolved through binding arbitration or in the courts of India, at the option of KhelGrid.
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>11. Contact Information</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p>
-                For questions about these Terms of Service, please contact:
-              </p>
-              <div className="space-y-2 text-sm">
-                <p><strong>Email:</strong> <a href="mailto:legal@khelgrid.com" className="text-primary hover:underline">legal@khelgrid.com</a></p>
-                <p><strong>Address:</strong> KhelGrid, Mumbai, India</p>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+    <main className="mx-auto max-w-3xl px-4 py-10 md:px-6 md:py-14">
+      <div className="flex items-center gap-3">
+        <Scale className="h-6 w-6 text-primary" aria-hidden="true" />
+        <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Legal</p>
       </div>
-    </div>
+      <h1 className="mt-3 font-heading text-3xl font-extrabold md:text-4xl">Terms of Service</h1>
+      <p className="mt-2 text-sm text-muted-foreground">Last updated: 5 August 2026</p>
+
+      <div className="mt-10 space-y-8">
+        {SECTIONS.map((s) => (
+          <section key={s.heading}>
+            <h2 className="font-heading text-lg font-semibold">{s.heading}</h2>
+            {s.body.map((p) => (
+              <p key={p} className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                {p}
+              </p>
+            ))}
+          </section>
+        ))}
+      </div>
+
+      <p className="mt-10 text-sm text-muted-foreground">
+        Contact us at{" "}
+        <a className="underline hover:text-foreground" href="mailto:khelgrid@gmail.com">
+          khelgrid@gmail.com
+        </a>
+        .
+      </p>
+    </main>
   );
 }

@@ -18,6 +18,12 @@ import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { BottomTabBar } from "@/components/BottomTabBar";
 import { Footer } from "@/components/Footer";
 import { Toaster } from "@/components/ui/sonner";
+import { AdConsentProvider, AdConsentBanner, AdSenseLoader, StickyMobileAdSlot } from "@/components/ads";
+import { adsConfig, hasValidPublisherId } from "@/config/ads";
+import { GoogleTagLoader } from "@/components/GoogleTagLoader";
+import { SiteFooter } from "@/components/SiteFooter";
+
+
 
 function NotFoundComponent() {
   return (
@@ -80,14 +86,32 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:description", content: "India's premium grid for sports trials." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
+      // AdSense site ownership verification
+      ...(hasValidPublisherId()
+        ? ([{ name: "google-adsense-account", content: adsConfig.publisherId }] as const)
+        : []),
     ],
     links: [
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+      { rel: "preconnect", href: "https://www.googletagmanager.com" },
       { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap" },
+
       { rel: "stylesheet", href: appCss },
+      // Ads: warm up Google's ad hosts so the first unit paints faster.
+      ...(hasValidPublisherId()
+        ? ([
+            { rel: "preconnect", href: "https://pagead2.googlesyndication.com", crossOrigin: "anonymous" },
+            { rel: "dns-prefetch", href: "https://googleads.g.doubleclick.net" },
+            { rel: "dns-prefetch", href: "https://tpc.googlesyndication.com" },
+          ] as const)
+        : []),
     ],
+    // NOTE: the AdSense loader script is intentionally NOT emitted here.
+    // <AdSenseLoader /> injects it client-side only after the visitor answers
+    // the cookie banner, so no ad request happens without consent.
   }),
+
   shellComponent: RootShell,
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
@@ -112,16 +136,26 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <NotificationProvider>
-          <Navbar />
-          <Breadcrumbs />
-          <div className="pb-20 md:pb-0">
-            <Outlet />
-          </div>
-          <Footer />
-          <BottomTabBar />
-          <Toaster theme="dark" position="top-right" />
+          <AdConsentProvider requireConsent>
+            <GoogleTagLoader />
+            <AdSenseLoader />
+
+            <Navbar />
+            <Breadcrumbs />
+            <div className="pb-20 md:pb-0">
+              <Outlet />
+              <SiteFooter />
+            </div>
+            <Footer />
+            <BottomTabBar />
+
+            <StickyMobileAdSlot />
+            <AdConsentBanner />
+            <Toaster theme="dark" position="top-right" />
+          </AdConsentProvider>
         </NotificationProvider>
       </AuthProvider>
     </QueryClientProvider>
+
   );
 }
