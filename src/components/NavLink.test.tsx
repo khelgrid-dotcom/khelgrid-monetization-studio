@@ -36,3 +36,21 @@ describe("NavLink aria-current", () => {
     expect(html).not.toContain('aria-current="page"');
   });
 });
+
+function hasToken(className: string, token: string) {
+  return className.trim().split(/\s+/).includes(token);
+}
+
+describe("NavLink tap target", () => {
+  it("uses mobile padding that yields at least a 48px tap target for /play", () => {
+    const html = renderToString(
+      <NavLink item={playItem} active={false} source="sidebar_mobile" />,
+    );
+    const classMatch = html.match(/class="([^"]+)"/);
+    expect(classMatch).toBeTruthy();
+    const className = classMatch?.[1] ?? "";
+    // 14px text + py-3.5 (14px each) = 48px minimum recommended tap height
+    expect(hasToken(className, "py-3.5")).toBe(true);
+    expect(hasToken(className, "sm:py-2.5")).toBe(true);
+  });
+});
