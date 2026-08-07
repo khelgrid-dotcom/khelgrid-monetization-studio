@@ -20,6 +20,7 @@ import { AdConsentProvider, AdConsentBanner, AdSenseLoader, StickyMobileAdSlot }
 import { adsConfig, hasValidPublisherId } from "@/config/ads";
 import { GoogleTagLoader } from "@/components/GoogleTagLoader";
 import { SiteFooter } from "@/components/SiteFooter";
+import { HydrationDiagnostics } from "@/components/HydrationDiagnostics";
 
 
 
@@ -148,6 +149,7 @@ function RootComponent() {
           <StickyMobileAdSlot />
           <AdConsentBanner />
           <Toaster theme="dark" position="top-right" />
+          <HydrationDiagnostics />
         </AdConsentProvider>
       </AuthProvider>
     </QueryClientProvider>
