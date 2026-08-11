@@ -115,7 +115,7 @@ export function SiteFooter() {
               India&apos;s grid for sports trials, venues, coaching and verified athlete profiles.
             </p>
             <p className="mt-4 flex items-center gap-2 text-sm text-muted-foreground">
-              <MapPin className="h-4 w-4 shrink-0" /> India · 20+ cities
+              <MapPin className="h-4 w-4 shrink-0" /> India · 16 cities in the current grid
             </p>
             <a
               href="mailto:khelgrid@gmail.com"
@@ -129,7 +129,7 @@ export function SiteFooter() {
               to="/pricing"
               className="mt-5 inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90"
             >
-              <Zap className="h-4 w-4" /> Go Pro — ₹199/mo
+              <Zap className="h-4 w-4" /> Go Pro — ₹499/mo
             </Link>
 
             <div className="mt-5 flex gap-2">
@@ -175,6 +175,9 @@ export function SiteFooter() {
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
             <Link to="/about" className="hover:text-foreground">
               About
+            </Link>
+            <Link to="/contact" className="hover:text-foreground">
+              Contact
             </Link>
             <Link to="/privacy" className="hover:text-foreground">
               Privacy

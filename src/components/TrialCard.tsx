@@ -1,5 +1,6 @@
 import { Calendar, MapPin, Users, Flame, Check, Zap } from "lucide-react";
 import type { Trial } from "@/data/trials";
+import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/context/AuthContext";
@@ -36,8 +37,15 @@ export function TrialCard({ trial, boosted, onApply, onBoost, showBoostAction }:
         <span>{trial.tag}</span>
       </div>
 
-      <h3 className="mt-3 text-lg font-semibold leading-snug">{trial.title}</h3>
+      <h3 className="mt-3 text-lg font-semibold leading-snug">
+        <Link to="/trial/$id" params={{ id: trial.id }} className="hover:text-primary">
+          {trial.title}
+        </Link>
+      </h3>
       <p className="text-sm text-muted-foreground">{trial.academy}</p>
+      <Link to="/trial/$id" params={{ id: trial.id }} className="mt-1 inline-flex text-xs font-medium text-primary hover:underline">
+        View full opportunity details →
+      </Link>
 
       <div className="mt-4 grid grid-cols-3 gap-2 text-xs text-muted-foreground">
         <div className="flex items-center gap-1.5"><MapPin className="h-3.5 w-3.5" />{trial.city}</div>

@@ -13,6 +13,7 @@ export const Route = createFileRoute("/")({
       { title: "KhelGrid · India's Sports Opportunity Network" },
       { name: "description", content: "Find trials, tournaments, leagues, camps, scholarships, fitness events, and online competitions across India." },
     ],
+    links: [{ rel: "canonical", href: "https://khelgrid.com/" }],
   }),
   component: Home,
 });
@@ -93,9 +94,9 @@ function Home() {
             </div>
 
             <div className="mt-6 flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-muted-foreground sm:mt-10 sm:text-sm">
-              <div>🏆 1,200+ live opportunities</div>
-              <div>🛡️ 86k verified athletes</div>
-              <div>👑 240 partner academies</div>
+              <div>🏆 Curated opportunity listings</div>
+              <div>🛡️ Verification-first discovery</div>
+              <div>👑 Built for athletes and academies</div>
             </div>
           </div>
         </section>

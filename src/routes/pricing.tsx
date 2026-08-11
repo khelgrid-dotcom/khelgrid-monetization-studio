@@ -6,7 +6,10 @@ import { useAuth } from "@/context/AuthContext";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/pricing")({
-  head: () => ({ meta: [{ title: "Pricing · KhelGrid" }, { name: "description", content: "Free, Pro and Academy plans for athletes and organizers." }] }),
+  head: () => ({
+    meta: [{ title: "Pricing · KhelGrid" }, { name: "description", content: "Free, Pro and Academy plans for athletes and organizers." }],
+    links: [{ rel: "canonical", href: "https://khelgrid.com/pricing" }],
+  }),
   component: Pricing,
 });
 
@@ -36,7 +39,7 @@ const TIERS = [
     period: "/ 7-day boost",
     icon: Flame,
     desc: "For organizers — boost trials and reach scouts.",
-    features: ["Featured listing", "8.4× more views", "3.2× more applications", "Analytics dashboard", "Bulk applicant export"],
+    features: ["Featured listing for 7 days", "Organizer analytics dashboard", "Applicant management tools", "Bulk applicant export"],
     cta: "Boost a trial",
   },
 ];

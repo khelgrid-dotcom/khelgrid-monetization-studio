@@ -9,12 +9,12 @@ export const Route = createFileRoute("/verify")({
       icon={ShieldCheck}
       eyebrow="Trust layer"
       title="Get Verified"
-      description="The blue tick for athletes. Aadhaar-verified identity, academy-attested stats, and a tamper-proof QR on your Sports CV."
+      description="A planned verification layer for athlete identity, academy-attested results, and a shareable Sports CV record. Availability and verification requirements will be shown before you submit documents."
       bullets={[
-        "Aadhaar e-KYC in under 2 minutes",
+        "Clear identity and document requirements",
         "Academy attestation for trial results",
-        "Anti-fraud QR on every CV download",
-        "Scouts trust verified profiles 6× more",
+        "A shareable record with verification context",
+        "A clear verification record for academies and scouts",
       ]}
       cta={{ to: "/dashboard", label: "Unlock Sports CV" }}
     />

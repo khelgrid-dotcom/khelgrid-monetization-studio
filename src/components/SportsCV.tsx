@@ -6,14 +6,13 @@ import { Lock, ShieldCheck, Share2, Download, QrCode, Sparkles, Wallet } from "l
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { toast } from "sonner";
 
-function FakeQR({ size = 96 }: { size?: number }) {
+function QrPreview({ size = 96 }: { size?: number }) {
   return (
-    <div className="rounded-md bg-white p-2" style={{ width: size, height: size }}>
-      <div className="grid h-full w-full grid-cols-10 grid-rows-10 gap-[1px]">
-        {Array.from({ length: 100 }).map((_, i) => (
-          <div key={i} className={(i * 11 + (i % 4)) % 3 === 0 ? "bg-black" : "bg-white"} />
-        ))}
-      </div>
+    <div
+      className="grid place-items-center rounded-md border border-dashed border-primary/40 bg-primary/5 text-center text-[10px] font-medium text-primary"
+      style={{ width: size, height: size }}
+    >
+      QR added when profile is published
     </div>
   );
 }
@@ -45,15 +44,15 @@ export function SportsCV() {
             <h3 className="text-2xl font-bold">{name}</h3>
             <p className="text-sm text-muted-foreground">Athlete · Cricket · U-19 · Delhi</p>
           </div>
-          <FakeQR size={88} />
+          <QrPreview size={88} />
         </div>
 
         <div className="mt-5 grid grid-cols-4 gap-3 text-center">
           {[
-            { v: "92", l: "Fitness" },
-            { v: "87", l: "Skill" },
-            { v: "14", l: "Trials" },
-            { v: "4.8", l: "Scout ★" },
+            { v: "Add", l: "Fitness" },
+            { v: "Add", l: "Results" },
+            { v: "Add", l: "Trials" },
+            { v: "Pending", l: "Review" },
           ].map(s => (
             <div key={s.l} className="rounded-xl border border-border bg-background/40 py-3">
               <div className="text-xl font-bold text-gradient">{s.v}</div>
@@ -63,7 +62,7 @@ export function SportsCV() {
         </div>
 
         <div className="mt-4 flex items-center justify-between rounded-lg border border-border bg-background/40 px-3 py-2 text-xs text-muted-foreground">
-          <span className="truncate">khelgrid.in/cv/<span className="text-foreground font-medium">arjun-mehta-2k7</span></span>
+          <span className="truncate">khelgrid.com/cv/<span className="text-foreground font-medium">your-profile</span></span>
           <div className="flex gap-2">
             <Button size="icon" variant="ghost" className="h-7 w-7"><Share2 className="h-3.5 w-3.5" /></Button>
             <Button size="icon" variant="ghost" className="h-7 w-7"><Download className="h-3.5 w-3.5" /></Button>

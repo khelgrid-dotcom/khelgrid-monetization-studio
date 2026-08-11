@@ -73,12 +73,14 @@ export function NotificationProvider({
   );
 }
 
-export function useNotifications() {
+export function useNotifications(): NotificationContextType {
   const context = useContext(NotificationContext);
-  if (!context) {
-    throw new Error(
-      "useNotifications must be used within NotificationProvider"
-    );
-  }
-  return context;
+  return context ?? {
+    notifications: [],
+    unreadCount: 0,
+    markAsRead: () => {},
+    markAllAsRead: () => {},
+    clearNotification: () => {},
+    addNotification: () => {},
+  };
 }

@@ -17,6 +17,7 @@ export const Route = createFileRoute("/guide/$slug")({
       { property: "og:title", content: loaderData.guide.title },
       { property: "og:description", content: loaderData.guide.excerpt },
     ] : [],
+    links: loaderData ? [{ rel: "canonical", href: `https://khelgrid.com/guide/${loaderData.guide.slug}` }] : [],
   }),
   notFoundComponent: () => (
     <div className="mx-auto max-w-2xl px-4 py-20 text-center">
@@ -41,6 +42,11 @@ function GuidePage() {
         <span className="inline-flex items-center gap-1"><BookOpen className="h-3 w-3" />KhelGrid Learning</span>
       </div>
       <p className="mt-6 text-base text-muted-foreground">{guide.excerpt}</p>
+      <div className="mt-5 rounded-xl border border-border bg-card/50 p-4 text-sm leading-relaxed text-muted-foreground">
+        <strong className="text-foreground">KhelGrid editorial note:</strong> This guide is general educational information,
+        not medical, legal, or selection advice. Rules, fees, eligibility, and performance standards can change; confirm
+        important details with the relevant federation, organizer, coach, or official notice.
+      </div>
 
       <ol className="mt-8 space-y-3">
         {guide.steps.map((s: string, i: number) => (

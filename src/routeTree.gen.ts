@@ -17,6 +17,7 @@ import { Route as BookRouteImport } from './routes/book'
 import { Route as CitiesRouteImport } from './routes/cities'
 import { Route as CoachesRouteImport } from './routes/coaches'
 import { Route as CommunityRouteImport } from './routes/community'
+import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CrawlerRouteImport } from './routes/crawler'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as EventsRouteImport } from './routes/events'
@@ -51,6 +52,7 @@ import { Route as SportInCitySlugRouteImport } from './routes/sport-in-city.$slu
 import { Route as SportSlugRouteImport } from './routes/sport.$slug'
 import { Route as ToolsSlugRouteImport } from './routes/tools.$slug'
 import { Route as TopGuidesCategoryRouteImport } from './routes/top-guides.$category'
+import { Route as TrialIdRouteImport } from './routes/trial.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -90,6 +92,11 @@ const CoachesRoute = CoachesRouteImport.update({
 const CommunityRoute = CommunityRouteImport.update({
   id: '/community',
   path: '/community',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CrawlerRoute = CrawlerRouteImport.update({
@@ -262,6 +269,11 @@ const TopGuidesCategoryRoute = TopGuidesCategoryRouteImport.update({
   path: '/top-guides/$category',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TrialIdRoute = TrialIdRouteImport.update({
+  id: '/trial/$id',
+  path: '/trial/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -272,6 +284,7 @@ export interface FileRoutesByFullPath {
   '/cities': typeof CitiesRoute
   '/coaches': typeof CoachesRoute
   '/community': typeof CommunityRoute
+  '/contact': typeof ContactRoute
   '/crawler': typeof CrawlerRoute
   '/dashboard': typeof DashboardRoute
   '/events': typeof EventsRoute
@@ -306,6 +319,7 @@ export interface FileRoutesByFullPath {
   '/sport/$slug': typeof SportSlugRoute
   '/tools/$slug': typeof ToolsSlugRoute
   '/top-guides/$category': typeof TopGuidesCategoryRoute
+  '/trial/$id': typeof TrialIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -316,6 +330,7 @@ export interface FileRoutesByTo {
   '/cities': typeof CitiesRoute
   '/coaches': typeof CoachesRoute
   '/community': typeof CommunityRoute
+  '/contact': typeof ContactRoute
   '/crawler': typeof CrawlerRoute
   '/dashboard': typeof DashboardRoute
   '/events': typeof EventsRoute
@@ -350,6 +365,7 @@ export interface FileRoutesByTo {
   '/sport/$slug': typeof SportSlugRoute
   '/tools/$slug': typeof ToolsSlugRoute
   '/top-guides/$category': typeof TopGuidesCategoryRoute
+  '/trial/$id': typeof TrialIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -361,6 +377,7 @@ export interface FileRoutesById {
   '/cities': typeof CitiesRoute
   '/coaches': typeof CoachesRoute
   '/community': typeof CommunityRoute
+  '/contact': typeof ContactRoute
   '/crawler': typeof CrawlerRoute
   '/dashboard': typeof DashboardRoute
   '/events': typeof EventsRoute
@@ -395,6 +412,7 @@ export interface FileRoutesById {
   '/sport/$slug': typeof SportSlugRoute
   '/tools/$slug': typeof ToolsSlugRoute
   '/top-guides/$category': typeof TopGuidesCategoryRoute
+  '/trial/$id': typeof TrialIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -407,6 +425,7 @@ export interface FileRouteTypes {
     | '/cities'
     | '/coaches'
     | '/community'
+    | '/contact'
     | '/crawler'
     | '/dashboard'
     | '/events'
@@ -441,6 +460,7 @@ export interface FileRouteTypes {
     | '/sport/$slug'
     | '/tools/$slug'
     | '/top-guides/$category'
+    | '/trial/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -451,6 +471,7 @@ export interface FileRouteTypes {
     | '/cities'
     | '/coaches'
     | '/community'
+    | '/contact'
     | '/crawler'
     | '/dashboard'
     | '/events'
@@ -485,6 +506,7 @@ export interface FileRouteTypes {
     | '/sport/$slug'
     | '/tools/$slug'
     | '/top-guides/$category'
+    | '/trial/$id'
   id:
     | '__root__'
     | '/'
@@ -495,6 +517,7 @@ export interface FileRouteTypes {
     | '/cities'
     | '/coaches'
     | '/community'
+    | '/contact'
     | '/crawler'
     | '/dashboard'
     | '/events'
@@ -529,6 +552,7 @@ export interface FileRouteTypes {
     | '/sport/$slug'
     | '/tools/$slug'
     | '/top-guides/$category'
+    | '/trial/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -540,6 +564,7 @@ export interface RootRouteChildren {
   CitiesRoute: typeof CitiesRoute
   CoachesRoute: typeof CoachesRoute
   CommunityRoute: typeof CommunityRoute
+  ContactRoute: typeof ContactRoute
   CrawlerRoute: typeof CrawlerRoute
   DashboardRoute: typeof DashboardRoute
   EventsRoute: typeof EventsRoute
@@ -573,6 +598,7 @@ export interface RootRouteChildren {
   SportInCitySlugRoute: typeof SportInCitySlugRoute
   SportSlugRoute: typeof SportSlugRoute
   TopGuidesCategoryRoute: typeof TopGuidesCategoryRoute
+  TrialIdRoute: typeof TrialIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -631,6 +657,13 @@ declare module '@tanstack/react-router' {
       path: '/community'
       fullPath: '/community'
       preLoaderRoute: typeof CommunityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/crawler': {
@@ -871,6 +904,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TopGuidesCategoryRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/trial/$id': {
+      id: '/trial/$id'
+      path: '/trial/$id'
+      fullPath: '/trial/$id'
+      preLoaderRoute: typeof TrialIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -893,6 +933,7 @@ const rootRouteChildren: RootRouteChildren = {
   CitiesRoute: CitiesRoute,
   CoachesRoute: CoachesRoute,
   CommunityRoute: CommunityRoute,
+  ContactRoute: ContactRoute,
   CrawlerRoute: CrawlerRoute,
   DashboardRoute: DashboardRoute,
   EventsRoute: EventsRoute,
@@ -926,6 +967,7 @@ const rootRouteChildren: RootRouteChildren = {
   SportInCitySlugRoute: SportInCitySlugRoute,
   SportSlugRoute: SportSlugRoute,
   TopGuidesCategoryRoute: TopGuidesCategoryRoute,
+  TrialIdRoute: TrialIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

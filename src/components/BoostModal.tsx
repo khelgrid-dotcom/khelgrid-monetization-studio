@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
-import { Flame, TrendingUp, Eye, Wallet, QrCode } from "lucide-react";
+import { Flame, Wallet, QrCode } from "lucide-react";
 import { toast } from "sonner";
 
 interface Props {
@@ -48,9 +48,9 @@ export function BoostModal({ open, onOpenChange, trialId, trialTitle }: Props) {
 
         <div className="grid grid-cols-3 gap-3">
           {[
-            { icon: Eye, label: "8.4× views" },
-            { icon: TrendingUp, label: "3.2× applies" },
             { icon: Flame, label: "Featured row" },
+            { icon: Flame, label: "7-day placement" },
+            { icon: Flame, label: "Organizer control" },
           ].map(s => (
             <div key={s.label} className="rounded-xl border border-border bg-background/40 p-3 text-center">
               <s.icon className="mx-auto h-4 w-4 text-primary" />
