@@ -14,6 +14,7 @@ const NAV = [
   { to: "/book", label: "Book", icon: CalendarCheck },
   { to: "/train", label: "Train", icon: GraduationCap },
   { to: "/events", label: "Events", icon: CalendarDays },
+  { to: "/community", label: "Community", icon: Users },
 ] as const;
 
 export function Navbar() {
