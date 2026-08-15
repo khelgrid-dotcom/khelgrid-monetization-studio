@@ -135,8 +135,9 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <NotificationProvider>
-          <AdConsentProvider requireConsent>
+        <SavedOpportunityProvider>
+          <NotificationProvider>
+            <AdConsentProvider requireConsent>
             <GoogleTagLoader />
             <AdSenseLoader />
 
@@ -151,8 +152,9 @@ function RootComponent() {
             <StickyMobileAdSlot />
             <AdConsentBanner />
             <Toaster theme="dark" position="top-right" />
-          </AdConsentProvider>
-        </NotificationProvider>
+            </AdConsentProvider>
+          </NotificationProvider>
+        </SavedOpportunityProvider>
       </AuthProvider>
     </QueryClientProvider>
 

@@ -1,11 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { Heart, Bell, Save } from "lucide-react";
+import { Heart, Bell, Save, Bot } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { TrialCard } from "@/components/TrialCard";
 import { mockSavedSearches, mockNotifications } from "@/data/recommendations";
 import { useNotifications } from "@/context/NotificationContext";
+import { ParticipationAgent } from "@/components/ParticipationAgent";
 
 export const Route = createFileRoute("/recommendations")({
   component: RecommendationsPage,
@@ -13,8 +14,8 @@ export const Route = createFileRoute("/recommendations")({
 
 function RecommendationsPage() {
   const { notifications, markAsRead } = useNotifications();
-  const [activeTab, setActiveTab] = useState<"for-you" | "saved" | "alerts">(
-    "for-you"
+  const [activeTab, setActiveTab] = useState<"agent" | "for-you" | "saved" | "alerts">(
+    "agent"
   );
 
   const unreadNotifications = notifications.filter((n) => !n.read);
@@ -33,7 +34,18 @@ function RecommendationsPage() {
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-2 mb-8 border-b border-slate-200">
+        <div className="flex gap-2 mb-8 overflow-x-auto border-b border-slate-200">
+          <button
+            onClick={() => setActiveTab("agent")}
+            className={`whitespace-nowrap px-4 py-3 font-medium border-b-2 transition ${
+              activeTab === "agent"
+                ? "border-blue-600 text-blue-600"
+                : "border-transparent text-slate-600 hover:text-slate-900"
+            }`}
+          >
+            <Bot className="inline mr-2 h-4 w-4" />
+            Participation Agent
+          </button>
           <button
             onClick={() => setActiveTab("for-you")}
             className={`px-4 py-3 font-medium border-b-2 transition ${
@@ -73,6 +85,11 @@ function RecommendationsPage() {
             )}
           </button>
         </div>
+
+        {/* Participation Agent Tab */}
+        {activeTab === "agent" && (
+          <ParticipationAgent />
+        )}
 
         {/* For You Tab */}
         {activeTab === "for-you" && (

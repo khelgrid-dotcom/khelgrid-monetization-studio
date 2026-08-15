@@ -1,9 +1,10 @@
-import { Calendar, MapPin, Users, Flame, Check, Zap } from "lucide-react";
+import { Calendar, MapPin, Users, Flame, Check, Zap, Bookmark } from "lucide-react";
 import type { Trial } from "@/data/trials";
 import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/context/AuthContext";
+import { useSavedOpportunities } from "@/context/SavedOpportunityContext";
 
 interface Props {
   trial: Trial;
@@ -15,7 +16,9 @@ interface Props {
 
 export function TrialCard({ trial, boosted, onApply, onBoost, showBoostAction }: Props) {
   const { applications } = useAuth();
+  const { isSaved, toggleSaved } = useSavedOpportunities();
   const applied = applications.includes(trial.id);
+  const saved = isSaved(trial.id);
 
   return (
     <div
@@ -54,6 +57,17 @@ export function TrialCard({ trial, boosted, onApply, onBoost, showBoostAction }:
       </div>
 
       <div className="mt-5 flex items-center gap-2">
+        <Button
+          type="button"
+          variant="outline"
+          size="icon"
+          onClick={() => toggleSaved(trial.id)}
+          aria-label={saved ? `Remove ${trial.title} from saved opportunities` : `Save ${trial.title}`}
+          title={saved ? "Saved opportunity" : "Save opportunity"}
+          className={saved ? "border-primary bg-primary/10 text-primary" : ""}
+        >
+          <Bookmark className={`h-4 w-4 ${saved ? "fill-current" : ""}`} />
+        </Button>
         <Button
           onClick={onApply}
           disabled={applied}
