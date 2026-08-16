@@ -122,7 +122,7 @@ function RootShell({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <head><HeadContent /></head>
-      <body>
+      <body className="overflow-x-hidden">
         {children}
         <Scripts />
       </body>
@@ -143,7 +143,7 @@ function RootComponent() {
 
             <Navbar />
             <Breadcrumbs />
-            <div className="pb-20 md:pb-0">
+            <div className="pb-20 xl:pb-0">
               <Outlet />
               <SiteFooter />
             </div>

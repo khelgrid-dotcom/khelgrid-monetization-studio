@@ -47,7 +47,7 @@ export function SportsCV() {
           <QrPreview size={88} />
         </div>
 
-        <div className="mt-5 grid grid-cols-4 gap-3 text-center">
+        <div className="mt-5 grid grid-cols-2 gap-3 text-center sm:grid-cols-4">
           {[
             { v: "Add", l: "Fitness" },
             { v: "Add", l: "Results" },

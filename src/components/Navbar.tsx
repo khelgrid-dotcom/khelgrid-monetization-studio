@@ -41,24 +41,24 @@ export function Navbar() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-border/60 bg-background/85 backdrop-blur-xl">
-      <div className="mx-auto flex h-14 max-w-[1400px] items-center gap-2 px-3 sm:h-16 sm:gap-4 sm:px-4">
+      <div className="mx-auto flex h-14 min-w-0 max-w-[1400px] items-center gap-2 overflow-hidden px-3 sm:h-16 sm:gap-4 sm:px-4">
         {/* Mobile: drawer */}
-        <div className="md:hidden">
+        <div className="xl:hidden">
           <NavDrawer />
         </div>
 
         <button
           onClick={() => setSportsLauncherOpen(true)}
-          className="flex items-center gap-2 hover:opacity-80 transition"
+          className="flex min-w-0 shrink-0 items-center gap-2 transition hover:opacity-80"
         >
           <img src="https://cdn.builder.io/api/v1/image/assets%2Fbb0e1ceb11294a31a719df6ba93a7331%2Fc8513d4ae3bd4939b4defe6841f88dd7?format=webp&width=800&height=1200" alt="KhelGrid" className="h-8 w-8 cursor-pointer" />
-          <span className="text-base font-bold tracking-tight sm:text-lg">
+          <span className="text-base font-bold tracking-tight sm:text-xl">
             Khel<span className="text-primary">Grid</span>
           </span>
         </button>
 
         {/* Desktop primary nav */}
-        <nav className="ml-2 hidden items-center gap-1 rounded-full border border-border/60 bg-card/60 p-1 md:flex">
+        <nav className="ml-2 hidden min-w-0 items-center gap-1 overflow-hidden rounded-full border border-border/60 bg-card/60 p-1 xl:flex">
           {NAV.map(n => {
             const active = isActivePath(path, n.to);
             return (
@@ -98,7 +98,7 @@ export function Navbar() {
           {/* Mobile: compact wallet pill */}
           <Link
             to="/dashboard"
-            className="flex items-center gap-1 rounded-full border border-border/60 bg-card/60 px-2.5 py-1 text-xs font-medium text-foreground md:hidden"
+            className="hidden items-center gap-1 rounded-full border border-border/60 bg-card/60 px-2.5 py-1 text-xs font-medium text-foreground sm:flex xl:hidden"
           >
             <Wallet className="h-3.5 w-3.5 text-primary" />
             ₹{wallet}
@@ -114,17 +114,17 @@ export function Navbar() {
           >
             {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </button>
-          <button className="hidden items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground lg:inline-flex">
+          <button className="hidden items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground xl:inline-flex">
             <Globe className="h-4 w-4" /> English
           </button>
-          <Button asChild variant="ghost" size="sm" className="hidden rounded-full px-4 md:inline-flex">
+          <Button asChild variant="ghost" size="sm" className="hidden rounded-full px-4 xl:inline-flex">
             <Link to="/login">Log In</Link>
           </Button>
           <Button
             asChild
             variant="outline"
             size="sm"
-            className="hidden rounded-full border-primary/60 text-primary hover:bg-primary/10 hover:text-primary md:inline-flex"
+            className="hidden rounded-full border-primary/60 text-primary hover:bg-primary/10 hover:text-primary xl:inline-flex"
           >
             <Link to="/pricing">
               <Zap className="mr-1 h-4 w-4" /> {plan === "pro" ? "Pro" : "Go Pro"}
@@ -133,7 +133,7 @@ export function Navbar() {
           <Button
             asChild
             size="sm"
-            className="hidden rounded-full bg-secondary text-foreground hover:bg-secondary/80 lg:inline-flex"
+            className="hidden rounded-full bg-secondary text-foreground hover:bg-secondary/80 xl:inline-flex"
           >
             <Link to="/academy">Academy</Link>
           </Button>

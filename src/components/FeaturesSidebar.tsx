@@ -21,7 +21,7 @@ export function FeaturesSidebar() {
 
   return (
     <aside
-      className={`sticky top-16 hidden h-[calc(100vh-4rem)] shrink-0 flex-col border-r border-border/60 bg-background/40 backdrop-blur-xl transition-all md:flex ${
+      className={`sticky top-16 hidden h-[calc(100vh-4rem)] shrink-0 flex-col border-r border-border/60 bg-background/40 backdrop-blur-xl transition-all xl:flex ${
         collapsed ? "w-16" : "w-60"
       }`}
     >

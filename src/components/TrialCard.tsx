@@ -50,10 +50,10 @@ export function TrialCard({ trial, boosted, onApply, onBoost, showBoostAction }:
         View full opportunity details →
       </Link>
 
-      <div className="mt-4 grid grid-cols-3 gap-2 text-xs text-muted-foreground">
-        <div className="flex items-center gap-1.5"><MapPin className="h-3.5 w-3.5" />{trial.city}</div>
-        <div className="flex items-center gap-1.5"><Calendar className="h-3.5 w-3.5" />{trial.date}</div>
-        <div className="flex items-center gap-1.5"><Users className="h-3.5 w-3.5" />{trial.spots} spots</div>
+      <div className="mt-4 grid grid-cols-2 gap-2 text-xs text-muted-foreground sm:grid-cols-3">
+        <div className="flex min-w-0 items-center gap-1.5"><MapPin className="h-3.5 w-3.5 shrink-0" /><span className="truncate">{trial.city}</span></div>
+        <div className="flex min-w-0 items-center gap-1.5"><Calendar className="h-3.5 w-3.5 shrink-0" /><span className="truncate">{trial.date}</span></div>
+        <div className="flex min-w-0 items-center gap-1.5"><Users className="h-3.5 w-3.5 shrink-0" /><span className="truncate">{trial.spots} spots</span></div>
       </div>
 
       <div className="mt-5 flex items-center gap-2">

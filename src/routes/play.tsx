@@ -69,7 +69,7 @@ function PlayPage() {
 
           <div className="mt-4 flex flex-wrap gap-2">
             <Select value={city} onValueChange={setCity}>
-              <SelectTrigger className="h-10 w-[150px] bg-secondary/40 border-border">
+              <SelectTrigger className="h-10 w-full min-w-0 bg-secondary/40 border-border sm:w-[150px]">
                 <MapPin className="mr-1 h-4 w-4 text-primary" />
                 <SelectValue />
               </SelectTrigger>
@@ -83,7 +83,7 @@ function PlayPage() {
               </SelectContent>
             </Select>
             <Select value={sport} onValueChange={setSport}>
-              <SelectTrigger className="h-10 w-[150px] bg-secondary/40 border-border">
+              <SelectTrigger className="h-10 w-full min-w-0 bg-secondary/40 border-border sm:w-[150px]">
                 <Trophy className="mr-1 h-4 w-4 text-primary" />
                 <SelectValue />
               </SelectTrigger>
@@ -97,7 +97,7 @@ function PlayPage() {
               </SelectContent>
             </Select>
             <Select value={level} onValueChange={setLevel}>
-              <SelectTrigger className="h-10 w-[150px] bg-secondary/40 border-border">
+              <SelectTrigger className="h-10 w-full min-w-0 bg-secondary/40 border-border sm:w-[150px]">
                 <Zap className="mr-1 h-4 w-4 text-primary" />
                 <SelectValue />
               </SelectTrigger>
