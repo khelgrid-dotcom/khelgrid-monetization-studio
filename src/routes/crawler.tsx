@@ -7,6 +7,13 @@ import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 
 export const Route = createFileRoute("/crawler")({
+  head: () => ({
+    meta: [
+      { title: "Sports Crawler · KhelGrid" },
+      { name: "description", content: "Internal sports organization notification collection controls." },
+      { name: "robots", content: "noindex,nofollow" },
+    ],
+  }),
   component: CrawlerPage,
 });
 

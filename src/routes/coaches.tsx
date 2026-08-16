@@ -3,7 +3,7 @@ import { ComingSoon } from "@/components/ComingSoon";
 import { GraduationCap } from "lucide-react";
 
 export const Route = createFileRoute("/coaches")({
-  head: () => ({ meta: [{ title: "Coaches · KhelGrid" }, { name: "description", content: "Book sessions with NIS-certified coaches across India." }] }),
+  head: () => ({ meta: [{ title: "Coaches · KhelGrid" }, { name: "description", content: "A planned KhelGrid marketplace for finding sports coaches." }, { name: "robots", content: "noindex,follow" }] }),
   component: () => (
     <ComingSoon
       icon={GraduationCap}

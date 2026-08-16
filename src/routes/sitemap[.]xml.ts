@@ -8,8 +8,8 @@ const BASE_URL = "https://khelgrid.com";
 const STATIC_PATHS = [
   "/", "/about", "/academy", "/book", "/coaches", "/community",
   "/events", "/memberships",
-  "/mobile-app", "/play", "/pricing",
-  "/talent-scanner", "/train", "/verify", "/trust-center", "/contact", "/privacy", "/terms",
+  "/play", "/pricing",
+  "/train", "/trust-center", "/contact", "/privacy", "/terms",
   "/sports", "/cities", "/guides", "/tools",
 ];
 

@@ -9,6 +9,13 @@ import { useNotifications } from "@/context/NotificationContext";
 import { ParticipationAgent } from "@/components/ParticipationAgent";
 
 export const Route = createFileRoute("/recommendations")({
+  head: () => ({
+    meta: [
+      { title: "Your Opportunities · KhelGrid" },
+      { name: "description", content: "Review saved opportunities, alerts and participation check-ins." },
+      { name: "robots", content: "noindex,follow" },
+    ],
+  }),
   component: RecommendationsPage,
 });
 

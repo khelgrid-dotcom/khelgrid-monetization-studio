@@ -8,7 +8,7 @@ import { Trophy, Smartphone } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/login")({
-  head: () => ({ meta: [{ title: "Log In · KhelGrid" }, { name: "description", content: "Log in to KhelGrid to apply to trials and manage your Sports CV." }] }),
+  head: () => ({ meta: [{ title: "Log In · KhelGrid" }, { name: "description", content: "Log in to KhelGrid to apply to trials and manage your Sports CV." }, { name: "robots", content: "noindex,follow" }] }),
   component: Login,
 });
 

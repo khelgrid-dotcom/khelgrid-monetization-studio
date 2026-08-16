@@ -12,6 +12,7 @@ export const Route = createFileRoute("/dashboard")({
     meta: [
       { title: "Dashboard · KhelGrid" },
       { name: "description", content: "Track your applications, wallet balance, and unlock your Verified Sports CV." },
+      { name: "robots", content: "noindex,follow" },
     ],
   }),
   component: Dashboard,

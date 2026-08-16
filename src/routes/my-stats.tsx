@@ -7,6 +7,13 @@ import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, R
 import { mockAthleteStats, mockLeaderboard } from "@/data/analytics";
 
 export const Route = createFileRoute("/my-stats")({
+  head: () => ({
+    meta: [
+      { title: "My Performance · KhelGrid" },
+      { name: "description", content: "Review your KhelGrid performance history and progress." },
+      { name: "robots", content: "noindex,follow" },
+    ],
+  }),
   component: MyStatsPage,
 });
 

@@ -3,7 +3,7 @@ import { ComingSoon } from "@/components/ComingSoon";
 import { ScanLine } from "lucide-react";
 
 export const Route = createFileRoute("/talent-scanner")({
-  head: () => ({ meta: [{ title: "Talent Scanner · KhelGrid" }, { name: "description", content: "Record a 60-second test and get instant AI scoring on speed, agility, and form." }] }),
+  head: () => ({ meta: [{ title: "Talent Scanner · KhelGrid" }, { name: "description", content: "A planned KhelGrid assessment tool for recording sports tests." }, { name: "robots", content: "noindex,follow" }] }),
   component: () => (
     <ComingSoon
       icon={ScanLine}

@@ -3,7 +3,7 @@ import { ComingSoon } from "@/components/ComingSoon";
 import { ShieldCheck } from "lucide-react";
 
 export const Route = createFileRoute("/verify")({
-  head: () => ({ meta: [{ title: "Verify · KhelGrid" }, { name: "description", content: "Get your KhelGrid Verified badge with Aadhaar and academy-attested stats." }] }),
+  head: () => ({ meta: [{ title: "Verify · KhelGrid" }, { name: "description", content: "Learn how KhelGrid plans to verify athlete identity and performance records." }, { name: "robots", content: "noindex,follow" }] }),
   component: () => (
     <ComingSoon
       icon={ShieldCheck}

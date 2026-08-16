@@ -7,6 +7,13 @@ import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 
 export const Route = createFileRoute("/settings")({
+  head: () => ({
+    meta: [
+      { title: "Settings · KhelGrid" },
+      { name: "description", content: "Manage your KhelGrid account, notifications, privacy, advertising and appearance preferences." },
+      { name: "robots", content: "noindex,follow" },
+    ],
+  }),
   component: SettingsPage,
 });
 

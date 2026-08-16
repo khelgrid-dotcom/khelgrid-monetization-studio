@@ -3,7 +3,7 @@ import { ComingSoon } from "@/components/ComingSoon";
 import { Smartphone } from "lucide-react";
 
 export const Route = createFileRoute("/mobile-app")({
-  head: () => ({ meta: [{ title: "Mobile App · KhelGrid" }, { name: "description", content: "KhelGrid on iOS and Android — apply on the go." }] }),
+  head: () => ({ meta: [{ title: "Mobile App · KhelGrid" }, { name: "description", content: "A planned KhelGrid mobile experience for athletes on the go." }, { name: "robots", content: "noindex,follow" }] }),
   component: () => (
     <ComingSoon
       icon={Smartphone}

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,16 +13,10 @@ interface SportsLauncherProps {
 
 export function SportsLauncher({ open, onOpenChange }: SportsLauncherProps) {
   const [searchQuery, setSearchQuery] = useState("");
-  const navigate = useNavigate();
 
   const filteredSports = SPORTS_CATALOG.filter((sport) =>
     sport.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
-
-  const handleSportClick = (slug: string) => {
-    navigate({ to: `/sport/${slug}` });
-    onOpenChange(false);
-  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -46,10 +40,12 @@ export function SportsLauncher({ open, onOpenChange }: SportsLauncherProps) {
           {/* Sports Grid */}
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
             {filteredSports.map((sport) => (
-              <button
+              <Link
                 key={sport.slug}
-                onClick={() => handleSportClick(sport.slug)}
-                className="group relative flex flex-col items-center justify-center p-4 rounded-xl border border-border/60 bg-card/60 hover:bg-secondary/60 transition-all hover:shadow-lg"
+                to="/sport/$slug"
+                params={{ slug: sport.slug }}
+                onClick={() => onOpenChange(false)}
+                className="group relative flex flex-col items-center justify-center rounded-xl border border-border/60 bg-card/60 p-4 transition-all hover:bg-secondary/60 hover:shadow-lg"
               >
                 {/* Emoji Icon */}
                 <div className="text-5xl mb-3 group-hover:scale-110 transition-transform">
@@ -70,7 +66,7 @@ export function SportsLauncher({ open, onOpenChange }: SportsLauncherProps) {
                 <span className="mt-2 px-2 py-0.5 text-xs font-medium rounded-full bg-primary/10 text-primary">
                   {sport.level}
                 </span>
-              </button>
+              </Link>
             ))}
           </div>
 
