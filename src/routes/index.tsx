@@ -6,6 +6,8 @@ import { FeaturesSidebar } from "@/components/FeaturesSidebar";
 import { Search, Trophy, MapPin, ChevronDown, ArrowRight, Crown, Flame, Zap, Users, CalendarCheck, GraduationCap, CalendarDays, Star } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { BannerAd, ResponsiveAd } from "@/components/ads";
+import { GUIDES_CATALOG, SPORTS_CATALOG } from "@/data/catalog";
+import { TRIALS } from "@/data/trials";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -20,6 +22,11 @@ export const Route = createFileRoute("/")({
 
 const SPORTS = ["All Sports", "Cricket", "Football", "Badminton", "Athletics", "Hockey", "Tennis"];
 const LOCATIONS = ["All Locations", "Delhi", "Mumbai", "Bengaluru", "Hyderabad", "Chandigarh", "Pune"];
+const FEATURED_TRIALS = TRIALS.slice(0, 12);
+const FEATURED_GUIDES = GUIDES_CATALOG.slice(0, 8);
+const FEATURED_SPORTS = SPORTS_CATALOG.filter((sport) =>
+  ["cricket", "football", "athletics", "badminton", "wrestling", "boxing", "swimming", "basketball"].includes(sport.slug),
+);
 
 function Home() {
   const navigate = useNavigate();
@@ -134,6 +141,77 @@ function Home() {
         </div>
 
 
+
+        {/* Editorial discovery content */}
+        <section className="mx-auto max-w-7xl px-4 pb-16 sm:pb-20">
+          <div className="max-w-3xl">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">Sports opportunities in India</p>
+            <h2 className="mt-2 text-2xl font-bold tracking-tight sm:text-3xl">Find the next practical step in your sports journey</h2>
+            <p className="mt-3 text-sm leading-relaxed text-muted-foreground sm:text-base">
+              KhelGrid brings trials, camps, tournaments, scholarships, training resources and preparation guidance
+              together for athletes and families. Each listing shows what is known, what still needs confirmation, and
+              where to check the organizer&apos;s latest instructions.
+            </p>
+          </div>
+
+          <div className="mt-8 flex items-end justify-between gap-4">
+            <div>
+              <h2 className="text-xl font-bold tracking-tight">Latest opportunities</h2>
+              <p className="mt-1 text-sm text-muted-foreground">Review the details before you apply, travel or pay.</p>
+            </div>
+            <Link to="/search" className="text-sm font-semibold text-primary hover:underline">Browse all →</Link>
+          </div>
+          <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {FEATURED_TRIALS.map((trial) => (
+              <Link key={trial.id} to="/trial/$id" params={{ id: trial.id }} className="rounded-2xl border border-border bg-gradient-card p-4 transition hover:border-primary/40">
+                <div className="text-[10px] font-semibold uppercase tracking-wider text-primary">{trial.sport} · {trial.tag}</div>
+                <h3 className="mt-2 line-clamp-2 text-sm font-semibold">{trial.title}</h3>
+                <p className="mt-2 text-xs text-muted-foreground">{trial.academy} · {trial.city}</p>
+                <p className="mt-3 text-xs text-muted-foreground">{trial.date} · {trial.fee === 0 ? "Free entry" : `₹${trial.fee}`}</p>
+              </Link>
+            ))}
+          </div>
+
+          <div className="mt-12 flex items-end justify-between gap-4">
+            <div>
+              <h2 className="text-xl font-bold tracking-tight">Sports guides</h2>
+              <p className="mt-1 text-sm text-muted-foreground">Practical reading for athletes, parents and coaches.</p>
+            </div>
+            <Link to="/guides" className="text-sm font-semibold text-primary hover:underline">Open Learning Hub →</Link>
+          </div>
+          <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {FEATURED_GUIDES.map((guide) => (
+              <Link key={guide.slug} to="/guide/$slug" params={{ slug: guide.slug }} className="rounded-2xl border border-border bg-gradient-card p-4 transition hover:border-primary/40">
+                <div className="text-[10px] font-semibold uppercase tracking-wider text-primary">{guide.category} · {guide.readMins} min</div>
+                <h3 className="mt-2 text-sm font-semibold">{guide.title}</h3>
+                <p className="mt-2 line-clamp-3 text-xs leading-relaxed text-muted-foreground">{guide.excerpt}</p>
+              </Link>
+            ))}
+          </div>
+
+          <div className="mt-12">
+            <h2 className="text-xl font-bold tracking-tight">Sports pathways</h2>
+            <p className="mt-1 max-w-2xl text-sm text-muted-foreground">Start with the sport page for an overview, current listings, city links and preparation resources.</p>
+            <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              {FEATURED_SPORTS.map((sport) => (
+                <Link key={sport.slug} to="/sport/$slug" params={{ slug: sport.slug }} className="rounded-2xl border border-border bg-gradient-card p-4 transition hover:border-primary/40">
+                  <div className="flex items-center gap-3"><span className="text-2xl">{sport.emoji}</span><span className="font-semibold">{sport.name}</span></div>
+                  <p className="mt-2 text-xs text-muted-foreground">{sport.tagline}</p>
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          <div className="mt-12 rounded-2xl border border-primary/25 bg-primary/5 p-6">
+            <h2 className="text-xl font-semibold">How KhelGrid verifies opportunity information</h2>
+            <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground">
+              We record the source used for a listing, separate organizer information from KhelGrid guidance, and ask
+              users to confirm dates, venues, eligibility and fees with the latest official notice. Verification is
+              context for safer research, not a guarantee of selection or event completion.
+            </p>
+            <Link to="/trust-center" className="mt-4 inline-flex text-sm font-semibold text-primary hover:underline">Read the Trust Center →</Link>
+          </div>
+        </section>
 
         {/* Monetization cards */}
         <section className="mx-auto max-w-7xl px-4 pb-16 sm:pb-20">

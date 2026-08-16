@@ -185,6 +185,15 @@ export function SiteFooter() {
             <Link to="/terms" className="hover:text-foreground">
               Terms
             </Link>
+            <Link to="/editorial-policy" className="hover:text-foreground">
+              Editorial
+            </Link>
+            <Link to="/verification-policy" className="hover:text-foreground">
+              Verification
+            </Link>
+            <Link to="/correction-policy" className="hover:text-foreground">
+              Corrections
+            </Link>
 
             <a href="/sitemap.xml" className="hover:text-foreground">
               Sitemap

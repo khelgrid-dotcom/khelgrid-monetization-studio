@@ -39,13 +39,12 @@ function GuidePage() {
       <h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">{guide.title}</h1>
       <div className="mt-3 flex items-center gap-3 text-xs text-muted-foreground">
         <span className="inline-flex items-center gap-1"><Clock className="h-3 w-3" />{guide.readMins} min read</span>
-        <span className="inline-flex items-center gap-1"><BookOpen className="h-3 w-3" />KhelGrid Learning</span>
+        <span className="inline-flex items-center gap-1"><BookOpen className="h-3 w-3" />{guide.author ?? "KhelGrid Sports Editorial Team"}</span>
       </div>
       <p className="mt-6 text-base text-muted-foreground">{guide.excerpt}</p>
+      <p className="mt-3 text-xs text-muted-foreground">Editorial review note: this guide is maintained as general educational information. Confirm time-sensitive details with the relevant official source.</p>
       <div className="mt-5 rounded-xl border border-border bg-card/50 p-4 text-sm leading-relaxed text-muted-foreground">
-        <strong className="text-foreground">KhelGrid editorial note:</strong> This guide is general educational information,
-        not medical, legal, or selection advice. Rules, fees, eligibility, and performance standards can change; confirm
-        important details with the relevant federation, organizer, coach, or official notice.
+        <strong className="text-foreground">KhelGrid editorial note:</strong> {guide.sourceNote ?? "This guide is general educational information; confirm rules, fees, eligibility, and performance standards with the relevant federation, organizer, coach, or official notice."} It is not medical, legal, or selection advice.
       </div>
 
       <ol className="mt-8 space-y-3">

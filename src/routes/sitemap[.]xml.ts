@@ -9,7 +9,7 @@ const STATIC_PATHS = [
   "/", "/about", "/academy", "/book", "/coaches", "/community",
   "/events", "/memberships",
   "/play", "/pricing",
-  "/train", "/trust-center", "/contact", "/privacy", "/terms",
+  "/train", "/trust-center", "/verification-policy", "/editorial-policy", "/correction-policy", "/contact", "/privacy", "/terms",
   "/sports", "/cities", "/guides", "/tools",
 ];
 

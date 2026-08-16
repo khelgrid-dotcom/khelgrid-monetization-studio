@@ -78,7 +78,7 @@ function SportInCityPage() {
             {sport.name} trials in {city.name}
           </h1>
           <p className="mt-1 text-muted-foreground">
-            <MapPin className="inline h-4 w-4" /> {city.state} · {city.venues}+ venues · {all.length} live opportunities
+            <MapPin className="inline h-4 w-4" /> {city.state} · {city.venueNote} · {all.length} listed opportunities
           </p>
         </div>
       </header>
@@ -118,7 +118,15 @@ function SportInCityPage() {
         </nav>
       )}
 
-      <section className="mt-12 rounded-2xl border border-border bg-secondary/40 p-6">
+      <section className="mt-8 rounded-2xl border border-border bg-card/50 p-6">
+        <h2 className="text-lg font-semibold">How to use this {sport.name} and {city.name} page</h2>
+        <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+          This page groups KhelGrid listings by sport and city. Read each opportunity detail page, check its source
+          status, and confirm the organizer&apos;s current notice before travelling or paying.
+        </p>
+      </section>
+
+      <section className="mt-8 rounded-2xl border border-border bg-secondary/40 p-6">
         <h2 className="text-lg font-semibold">Nearby {sport.name} hubs in {city.name}</h2>
         <ul className="mt-3 grid gap-2 text-sm text-muted-foreground sm:grid-cols-3">
           {city.hubs.map((h: string) => <li key={h}>📍 {h}</li>)}

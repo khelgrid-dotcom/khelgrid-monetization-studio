@@ -18,8 +18,10 @@ import { Route as CitiesRouteImport } from './routes/cities'
 import { Route as CoachesRouteImport } from './routes/coaches'
 import { Route as CommunityRouteImport } from './routes/community'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as CorrectionPolicyRouteImport } from './routes/correction-policy'
 import { Route as CrawlerRouteImport } from './routes/crawler'
 import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as EditorialPolicyRouteImport } from './routes/editorial-policy'
 import { Route as EventsRouteImport } from './routes/events'
 import { Route as GuidesRouteImport } from './routes/guides'
 import { Route as LearningHubRouteImport } from './routes/learning-hub'
@@ -44,12 +46,15 @@ import { Route as ToolsRouteImport } from './routes/tools'
 import { Route as TrainRouteImport } from './routes/train'
 import { Route as TrialsRouteImport } from './routes/trials'
 import { Route as TrustCenterRouteImport } from './routes/trust-center'
+import { Route as VerificationPolicyRouteImport } from './routes/verification-policy'
 import { Route as VerifyRouteImport } from './routes/verify'
 import { Route as BestToolsCategoryRouteImport } from './routes/best-tools.$category'
 import { Route as CitySlugRouteImport } from './routes/city.$slug'
 import { Route as GuideSlugRouteImport } from './routes/guide.$slug'
+import { Route as OpportunitiesIdRouteImport } from './routes/opportunities.$id'
 import { Route as SportInCitySlugRouteImport } from './routes/sport-in-city.$slug'
 import { Route as SportSlugRouteImport } from './routes/sport.$slug'
+import { Route as SportsSlugRouteImport } from './routes/sports.$slug'
 import { Route as ToolsSlugRouteImport } from './routes/tools.$slug'
 import { Route as TopGuidesCategoryRouteImport } from './routes/top-guides.$category'
 import { Route as TrialIdRouteImport } from './routes/trial.$id'
@@ -99,6 +104,11 @@ const ContactRoute = ContactRouteImport.update({
   path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CorrectionPolicyRoute = CorrectionPolicyRouteImport.update({
+  id: '/correction-policy',
+  path: '/correction-policy',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CrawlerRoute = CrawlerRouteImport.update({
   id: '/crawler',
   path: '/crawler',
@@ -107,6 +117,11 @@ const CrawlerRoute = CrawlerRouteImport.update({
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EditorialPolicyRoute = EditorialPolicyRouteImport.update({
+  id: '/editorial-policy',
+  path: '/editorial-policy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EventsRoute = EventsRouteImport.update({
@@ -229,6 +244,11 @@ const TrustCenterRoute = TrustCenterRouteImport.update({
   path: '/trust-center',
   getParentRoute: () => rootRouteImport,
 } as any)
+const VerificationPolicyRoute = VerificationPolicyRouteImport.update({
+  id: '/verification-policy',
+  path: '/verification-policy',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const VerifyRoute = VerifyRouteImport.update({
   id: '/verify',
   path: '/verify',
@@ -249,6 +269,11 @@ const GuideSlugRoute = GuideSlugRouteImport.update({
   path: '/guide/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OpportunitiesIdRoute = OpportunitiesIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => OpportunitiesRoute,
+} as any)
 const SportInCitySlugRoute = SportInCitySlugRouteImport.update({
   id: '/sport-in-city/$slug',
   path: '/sport-in-city/$slug',
@@ -258,6 +283,11 @@ const SportSlugRoute = SportSlugRouteImport.update({
   id: '/sport/$slug',
   path: '/sport/$slug',
   getParentRoute: () => rootRouteImport,
+} as any)
+const SportsSlugRoute = SportsSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => SportsRoute,
 } as any)
 const ToolsSlugRoute = ToolsSlugRouteImport.update({
   id: '/$slug',
@@ -285,8 +315,10 @@ export interface FileRoutesByFullPath {
   '/coaches': typeof CoachesRoute
   '/community': typeof CommunityRoute
   '/contact': typeof ContactRoute
+  '/correction-policy': typeof CorrectionPolicyRoute
   '/crawler': typeof CrawlerRoute
   '/dashboard': typeof DashboardRoute
+  '/editorial-policy': typeof EditorialPolicyRoute
   '/events': typeof EventsRoute
   '/guides': typeof GuidesRoute
   '/learning-hub': typeof LearningHubRoute
@@ -294,7 +326,7 @@ export interface FileRoutesByFullPath {
   '/memberships': typeof MembershipsRoute
   '/mobile-app': typeof MobileAppRoute
   '/my-stats': typeof MyStatsRoute
-  '/opportunities': typeof OpportunitiesRoute
+  '/opportunities': typeof OpportunitiesRouteWithChildren
   '/play': typeof PlayRoute
   '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
@@ -303,7 +335,7 @@ export interface FileRoutesByFullPath {
   '/search': typeof SearchRoute
   '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/sports': typeof SportsRoute
+  '/sports': typeof SportsRouteWithChildren
   '/start-from-zero': typeof StartFromZeroRoute
   '/talent-scanner': typeof TalentScannerRoute
   '/terms': typeof TermsRoute
@@ -311,12 +343,15 @@ export interface FileRoutesByFullPath {
   '/train': typeof TrainRoute
   '/trials': typeof TrialsRoute
   '/trust-center': typeof TrustCenterRoute
+  '/verification-policy': typeof VerificationPolicyRoute
   '/verify': typeof VerifyRoute
   '/best-tools/$category': typeof BestToolsCategoryRoute
   '/city/$slug': typeof CitySlugRoute
   '/guide/$slug': typeof GuideSlugRoute
+  '/opportunities/$id': typeof OpportunitiesIdRoute
   '/sport-in-city/$slug': typeof SportInCitySlugRoute
   '/sport/$slug': typeof SportSlugRoute
+  '/sports/$slug': typeof SportsSlugRoute
   '/tools/$slug': typeof ToolsSlugRoute
   '/top-guides/$category': typeof TopGuidesCategoryRoute
   '/trial/$id': typeof TrialIdRoute
@@ -331,8 +366,10 @@ export interface FileRoutesByTo {
   '/coaches': typeof CoachesRoute
   '/community': typeof CommunityRoute
   '/contact': typeof ContactRoute
+  '/correction-policy': typeof CorrectionPolicyRoute
   '/crawler': typeof CrawlerRoute
   '/dashboard': typeof DashboardRoute
+  '/editorial-policy': typeof EditorialPolicyRoute
   '/events': typeof EventsRoute
   '/guides': typeof GuidesRoute
   '/learning-hub': typeof LearningHubRoute
@@ -340,7 +377,7 @@ export interface FileRoutesByTo {
   '/memberships': typeof MembershipsRoute
   '/mobile-app': typeof MobileAppRoute
   '/my-stats': typeof MyStatsRoute
-  '/opportunities': typeof OpportunitiesRoute
+  '/opportunities': typeof OpportunitiesRouteWithChildren
   '/play': typeof PlayRoute
   '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
@@ -349,7 +386,7 @@ export interface FileRoutesByTo {
   '/search': typeof SearchRoute
   '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/sports': typeof SportsRoute
+  '/sports': typeof SportsRouteWithChildren
   '/start-from-zero': typeof StartFromZeroRoute
   '/talent-scanner': typeof TalentScannerRoute
   '/terms': typeof TermsRoute
@@ -357,12 +394,15 @@ export interface FileRoutesByTo {
   '/train': typeof TrainRoute
   '/trials': typeof TrialsRoute
   '/trust-center': typeof TrustCenterRoute
+  '/verification-policy': typeof VerificationPolicyRoute
   '/verify': typeof VerifyRoute
   '/best-tools/$category': typeof BestToolsCategoryRoute
   '/city/$slug': typeof CitySlugRoute
   '/guide/$slug': typeof GuideSlugRoute
+  '/opportunities/$id': typeof OpportunitiesIdRoute
   '/sport-in-city/$slug': typeof SportInCitySlugRoute
   '/sport/$slug': typeof SportSlugRoute
+  '/sports/$slug': typeof SportsSlugRoute
   '/tools/$slug': typeof ToolsSlugRoute
   '/top-guides/$category': typeof TopGuidesCategoryRoute
   '/trial/$id': typeof TrialIdRoute
@@ -378,8 +418,10 @@ export interface FileRoutesById {
   '/coaches': typeof CoachesRoute
   '/community': typeof CommunityRoute
   '/contact': typeof ContactRoute
+  '/correction-policy': typeof CorrectionPolicyRoute
   '/crawler': typeof CrawlerRoute
   '/dashboard': typeof DashboardRoute
+  '/editorial-policy': typeof EditorialPolicyRoute
   '/events': typeof EventsRoute
   '/guides': typeof GuidesRoute
   '/learning-hub': typeof LearningHubRoute
@@ -387,7 +429,7 @@ export interface FileRoutesById {
   '/memberships': typeof MembershipsRoute
   '/mobile-app': typeof MobileAppRoute
   '/my-stats': typeof MyStatsRoute
-  '/opportunities': typeof OpportunitiesRoute
+  '/opportunities': typeof OpportunitiesRouteWithChildren
   '/play': typeof PlayRoute
   '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
@@ -396,7 +438,7 @@ export interface FileRoutesById {
   '/search': typeof SearchRoute
   '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/sports': typeof SportsRoute
+  '/sports': typeof SportsRouteWithChildren
   '/start-from-zero': typeof StartFromZeroRoute
   '/talent-scanner': typeof TalentScannerRoute
   '/terms': typeof TermsRoute
@@ -404,12 +446,15 @@ export interface FileRoutesById {
   '/train': typeof TrainRoute
   '/trials': typeof TrialsRoute
   '/trust-center': typeof TrustCenterRoute
+  '/verification-policy': typeof VerificationPolicyRoute
   '/verify': typeof VerifyRoute
   '/best-tools/$category': typeof BestToolsCategoryRoute
   '/city/$slug': typeof CitySlugRoute
   '/guide/$slug': typeof GuideSlugRoute
+  '/opportunities/$id': typeof OpportunitiesIdRoute
   '/sport-in-city/$slug': typeof SportInCitySlugRoute
   '/sport/$slug': typeof SportSlugRoute
+  '/sports/$slug': typeof SportsSlugRoute
   '/tools/$slug': typeof ToolsSlugRoute
   '/top-guides/$category': typeof TopGuidesCategoryRoute
   '/trial/$id': typeof TrialIdRoute
@@ -426,8 +471,10 @@ export interface FileRouteTypes {
     | '/coaches'
     | '/community'
     | '/contact'
+    | '/correction-policy'
     | '/crawler'
     | '/dashboard'
+    | '/editorial-policy'
     | '/events'
     | '/guides'
     | '/learning-hub'
@@ -452,12 +499,15 @@ export interface FileRouteTypes {
     | '/train'
     | '/trials'
     | '/trust-center'
+    | '/verification-policy'
     | '/verify'
     | '/best-tools/$category'
     | '/city/$slug'
     | '/guide/$slug'
+    | '/opportunities/$id'
     | '/sport-in-city/$slug'
     | '/sport/$slug'
+    | '/sports/$slug'
     | '/tools/$slug'
     | '/top-guides/$category'
     | '/trial/$id'
@@ -472,8 +522,10 @@ export interface FileRouteTypes {
     | '/coaches'
     | '/community'
     | '/contact'
+    | '/correction-policy'
     | '/crawler'
     | '/dashboard'
+    | '/editorial-policy'
     | '/events'
     | '/guides'
     | '/learning-hub'
@@ -498,12 +550,15 @@ export interface FileRouteTypes {
     | '/train'
     | '/trials'
     | '/trust-center'
+    | '/verification-policy'
     | '/verify'
     | '/best-tools/$category'
     | '/city/$slug'
     | '/guide/$slug'
+    | '/opportunities/$id'
     | '/sport-in-city/$slug'
     | '/sport/$slug'
+    | '/sports/$slug'
     | '/tools/$slug'
     | '/top-guides/$category'
     | '/trial/$id'
@@ -518,8 +573,10 @@ export interface FileRouteTypes {
     | '/coaches'
     | '/community'
     | '/contact'
+    | '/correction-policy'
     | '/crawler'
     | '/dashboard'
+    | '/editorial-policy'
     | '/events'
     | '/guides'
     | '/learning-hub'
@@ -544,12 +601,15 @@ export interface FileRouteTypes {
     | '/train'
     | '/trials'
     | '/trust-center'
+    | '/verification-policy'
     | '/verify'
     | '/best-tools/$category'
     | '/city/$slug'
     | '/guide/$slug'
+    | '/opportunities/$id'
     | '/sport-in-city/$slug'
     | '/sport/$slug'
+    | '/sports/$slug'
     | '/tools/$slug'
     | '/top-guides/$category'
     | '/trial/$id'
@@ -565,8 +625,10 @@ export interface RootRouteChildren {
   CoachesRoute: typeof CoachesRoute
   CommunityRoute: typeof CommunityRoute
   ContactRoute: typeof ContactRoute
+  CorrectionPolicyRoute: typeof CorrectionPolicyRoute
   CrawlerRoute: typeof CrawlerRoute
   DashboardRoute: typeof DashboardRoute
+  EditorialPolicyRoute: typeof EditorialPolicyRoute
   EventsRoute: typeof EventsRoute
   GuidesRoute: typeof GuidesRoute
   LearningHubRoute: typeof LearningHubRoute
@@ -574,7 +636,7 @@ export interface RootRouteChildren {
   MembershipsRoute: typeof MembershipsRoute
   MobileAppRoute: typeof MobileAppRoute
   MyStatsRoute: typeof MyStatsRoute
-  OpportunitiesRoute: typeof OpportunitiesRoute
+  OpportunitiesRoute: typeof OpportunitiesRouteWithChildren
   PlayRoute: typeof PlayRoute
   PricingRoute: typeof PricingRoute
   PrivacyRoute: typeof PrivacyRoute
@@ -583,7 +645,7 @@ export interface RootRouteChildren {
   SearchRoute: typeof SearchRoute
   SettingsRoute: typeof SettingsRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
-  SportsRoute: typeof SportsRoute
+  SportsRoute: typeof SportsRouteWithChildren
   StartFromZeroRoute: typeof StartFromZeroRoute
   TalentScannerRoute: typeof TalentScannerRoute
   TermsRoute: typeof TermsRoute
@@ -591,6 +653,7 @@ export interface RootRouteChildren {
   TrainRoute: typeof TrainRoute
   TrialsRoute: typeof TrialsRoute
   TrustCenterRoute: typeof TrustCenterRoute
+  VerificationPolicyRoute: typeof VerificationPolicyRoute
   VerifyRoute: typeof VerifyRoute
   BestToolsCategoryRoute: typeof BestToolsCategoryRoute
   CitySlugRoute: typeof CitySlugRoute
@@ -666,6 +729,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/correction-policy': {
+      id: '/correction-policy'
+      path: '/correction-policy'
+      fullPath: '/correction-policy'
+      preLoaderRoute: typeof CorrectionPolicyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/crawler': {
       id: '/crawler'
       path: '/crawler'
@@ -678,6 +748,13 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/editorial-policy': {
+      id: '/editorial-policy'
+      path: '/editorial-policy'
+      fullPath: '/editorial-policy'
+      preLoaderRoute: typeof EditorialPolicyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/events': {
@@ -848,6 +925,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TrustCenterRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/verification-policy': {
+      id: '/verification-policy'
+      path: '/verification-policy'
+      fullPath: '/verification-policy'
+      preLoaderRoute: typeof VerificationPolicyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/verify': {
       id: '/verify'
       path: '/verify'
@@ -876,6 +960,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GuideSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/opportunities/$id': {
+      id: '/opportunities/$id'
+      path: '/$id'
+      fullPath: '/opportunities/$id'
+      preLoaderRoute: typeof OpportunitiesIdRouteImport
+      parentRoute: typeof OpportunitiesRoute
+    }
     '/sport-in-city/$slug': {
       id: '/sport-in-city/$slug'
       path: '/sport-in-city/$slug'
@@ -889,6 +980,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/sport/$slug'
       preLoaderRoute: typeof SportSlugRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/sports/$slug': {
+      id: '/sports/$slug'
+      path: '/$slug'
+      fullPath: '/sports/$slug'
+      preLoaderRoute: typeof SportsSlugRouteImport
+      parentRoute: typeof SportsRoute
     }
     '/tools/$slug': {
       id: '/tools/$slug'
@@ -914,6 +1012,29 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface OpportunitiesRouteChildren {
+  OpportunitiesIdRoute: typeof OpportunitiesIdRoute
+}
+
+const OpportunitiesRouteChildren: OpportunitiesRouteChildren = {
+  OpportunitiesIdRoute: OpportunitiesIdRoute,
+}
+
+const OpportunitiesRouteWithChildren = OpportunitiesRoute._addFileChildren(
+  OpportunitiesRouteChildren,
+)
+
+interface SportsRouteChildren {
+  SportsSlugRoute: typeof SportsSlugRoute
+}
+
+const SportsRouteChildren: SportsRouteChildren = {
+  SportsSlugRoute: SportsSlugRoute,
+}
+
+const SportsRouteWithChildren =
+  SportsRoute._addFileChildren(SportsRouteChildren)
+
 interface ToolsRouteChildren {
   ToolsSlugRoute: typeof ToolsSlugRoute
 }
@@ -934,8 +1055,10 @@ const rootRouteChildren: RootRouteChildren = {
   CoachesRoute: CoachesRoute,
   CommunityRoute: CommunityRoute,
   ContactRoute: ContactRoute,
+  CorrectionPolicyRoute: CorrectionPolicyRoute,
   CrawlerRoute: CrawlerRoute,
   DashboardRoute: DashboardRoute,
+  EditorialPolicyRoute: EditorialPolicyRoute,
   EventsRoute: EventsRoute,
   GuidesRoute: GuidesRoute,
   LearningHubRoute: LearningHubRoute,
@@ -943,7 +1066,7 @@ const rootRouteChildren: RootRouteChildren = {
   MembershipsRoute: MembershipsRoute,
   MobileAppRoute: MobileAppRoute,
   MyStatsRoute: MyStatsRoute,
-  OpportunitiesRoute: OpportunitiesRoute,
+  OpportunitiesRoute: OpportunitiesRouteWithChildren,
   PlayRoute: PlayRoute,
   PricingRoute: PricingRoute,
   PrivacyRoute: PrivacyRoute,
@@ -952,7 +1075,7 @@ const rootRouteChildren: RootRouteChildren = {
   SearchRoute: SearchRoute,
   SettingsRoute: SettingsRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
-  SportsRoute: SportsRoute,
+  SportsRoute: SportsRouteWithChildren,
   StartFromZeroRoute: StartFromZeroRoute,
   TalentScannerRoute: TalentScannerRoute,
   TermsRoute: TermsRoute,
@@ -960,6 +1083,7 @@ const rootRouteChildren: RootRouteChildren = {
   TrainRoute: TrainRoute,
   TrialsRoute: TrialsRoute,
   TrustCenterRoute: TrustCenterRoute,
+  VerificationPolicyRoute: VerificationPolicyRoute,
   VerifyRoute: VerifyRoute,
   BestToolsCategoryRoute: BestToolsCategoryRoute,
   CitySlugRoute: CitySlugRoute,
