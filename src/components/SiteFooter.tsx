@@ -47,7 +47,15 @@ function pick(paths: string[]) {
 const COLUMNS: Array<{ title: string; items: ReturnType<typeof pick> }> = [
   {
     title: "Compete",
-    items: pick(["/search", "/trials", "/opportunities", "/events", "/verify", "/talent-scanner"]),
+    items: pick([
+      "/search",
+      "/trials",
+      "/opportunities",
+      "/events",
+      "/verify",
+      "/talent-scanner",
+      "/scout-portal",
+    ]),
   },
   {
     title: "Play & train",

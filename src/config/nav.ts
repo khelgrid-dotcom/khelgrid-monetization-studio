@@ -84,6 +84,7 @@ export const NAV_ITEMS: NavItem[] = [
   { to: "/ai-guide", label: "AI Guide", icon: Bot, surfaces: ["features"] },
   { to: "/verify", label: "Verify", icon: ShieldCheck, surfaces: ["features"] },
   { to: "/talent-scanner", label: "Talent Scanner", icon: ScanLine, surfaces: ["features"] },
+  { to: "/scout-portal", label: "Scout Portal", icon: ScanLine, surfaces: ["features"] },
   { to: "/community", label: "Community", icon: Users, surfaces: ["features"] },
   { to: "/learning-hub", label: "Learning Hub", icon: BookOpen, surfaces: ["features"] },
   { to: "/pricing", label: "Pricing", icon: Crown, surfaces: ["features"] },
@@ -113,6 +114,7 @@ export const DYNAMIC_ROUTE_LABELS: Record<string, string> = {
   "/recommendations": "For You",
   "/trust-center": "Trust Center",
   "/my-stats": "My Stats",
+  "/scout-portal": "Scout Portal",
 };
 
 /**

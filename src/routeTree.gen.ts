@@ -36,6 +36,7 @@ import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as RecommendationsRouteImport } from './routes/recommendations'
 import { Route as ResourcesRouteImport } from './routes/resources'
+import { Route as ScoutPortalRouteImport } from './routes/scout-portal'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
@@ -197,6 +198,11 @@ const ResourcesRoute = ResourcesRouteImport.update({
   path: '/resources',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ScoutPortalRoute = ScoutPortalRouteImport.update({
+  id: '/scout-portal',
+  path: '/scout-portal',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
   path: '/search',
@@ -351,6 +357,7 @@ export interface FileRoutesByFullPath {
   '/privacy': typeof PrivacyRoute
   '/recommendations': typeof RecommendationsRoute
   '/resources': typeof ResourcesRoute
+  '/scout-portal': typeof ScoutPortalRoute
   '/search': typeof SearchRoute
   '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -405,6 +412,7 @@ export interface FileRoutesByTo {
   '/privacy': typeof PrivacyRoute
   '/recommendations': typeof RecommendationsRoute
   '/resources': typeof ResourcesRoute
+  '/scout-portal': typeof ScoutPortalRoute
   '/search': typeof SearchRoute
   '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -460,6 +468,7 @@ export interface FileRoutesById {
   '/privacy': typeof PrivacyRoute
   '/recommendations': typeof RecommendationsRoute
   '/resources': typeof ResourcesRoute
+  '/scout-portal': typeof ScoutPortalRoute
   '/search': typeof SearchRoute
   '/settings': typeof SettingsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -516,6 +525,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/recommendations'
     | '/resources'
+    | '/scout-portal'
     | '/search'
     | '/settings'
     | '/sitemap.xml'
@@ -570,6 +580,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/recommendations'
     | '/resources'
+    | '/scout-portal'
     | '/search'
     | '/settings'
     | '/sitemap.xml'
@@ -624,6 +635,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/recommendations'
     | '/resources'
+    | '/scout-portal'
     | '/search'
     | '/settings'
     | '/sitemap.xml'
@@ -679,6 +691,7 @@ export interface RootRouteChildren {
   PrivacyRoute: typeof PrivacyRoute
   RecommendationsRoute: typeof RecommendationsRoute
   ResourcesRoute: typeof ResourcesRoute
+  ScoutPortalRoute: typeof ScoutPortalRoute
   SearchRoute: typeof SearchRoute
   SettingsRoute: typeof SettingsRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
@@ -890,6 +903,13 @@ declare module '@tanstack/react-router' {
       path: '/resources'
       fullPath: '/resources'
       preLoaderRoute: typeof ResourcesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/scout-portal': {
+      id: '/scout-portal'
+      path: '/scout-portal'
+      fullPath: '/scout-portal'
+      preLoaderRoute: typeof ScoutPortalRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/search': {
@@ -1143,6 +1163,7 @@ const rootRouteChildren: RootRouteChildren = {
   PrivacyRoute: PrivacyRoute,
   RecommendationsRoute: RecommendationsRoute,
   ResourcesRoute: ResourcesRoute,
+  ScoutPortalRoute: ScoutPortalRoute,
   SearchRoute: SearchRoute,
   SettingsRoute: SettingsRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
