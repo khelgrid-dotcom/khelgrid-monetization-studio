@@ -3,6 +3,7 @@ import { useAuth } from "@/context/AuthContext";
 import { TRIALS } from "@/data/trials";
 import { SportsCV } from "@/components/SportsCV";
 import { DashboardCommunityWall } from "@/components/DashboardCommunityWall";
+import { DashboardProgressShare } from "@/components/DashboardProgressShare";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Wallet, Plus, Crown, Trophy, RotateCcw } from "lucide-react";
@@ -158,6 +159,7 @@ function Dashboard() {
         </div>
       </div>
 
+      <DashboardProgressShare name={name} />
       <DashboardCommunityWall />
     </main>
   );
