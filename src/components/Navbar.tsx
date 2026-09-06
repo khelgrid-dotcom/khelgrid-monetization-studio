@@ -1,5 +1,20 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Home, Users, CalendarCheck, GraduationCap, CalendarDays, Globe, Zap, Trophy, Wallet, Bell, Settings, Sun, Moon } from "lucide-react";
+import {
+  Home,
+  Users,
+  CalendarCheck,
+  GraduationCap,
+  CalendarDays,
+  Globe,
+  Zap,
+  Trophy,
+  Wallet,
+  Bell,
+  Settings,
+  Sun,
+  Moon,
+  Newspaper,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useNotifications } from "@/context/NotificationContext";
@@ -15,6 +30,7 @@ const NAV = [
   { to: "/train", label: "Train", icon: GraduationCap },
   { to: "/events", label: "Events", icon: CalendarDays },
   { to: "/community", label: "Community", icon: Users },
+  { to: "/blog", label: "Blog", icon: Newspaper },
 ] as const;
 
 export function Navbar() {
@@ -22,11 +38,12 @@ export function Navbar() {
   const { unreadCount } = useNotifications();
   const [sportsLauncherOpen, setSportsLauncherOpen] = useState(false);
   const [isDark, setIsDark] = useState(false);
-  const path = useRouterState({ select: s => s.location.pathname });
+  const path = useRouterState({ select: (s) => s.location.pathname });
 
   useEffect(() => {
     const storedTheme = localStorage.getItem("theme");
-    const nextIsDark = storedTheme === "dark" ||
+    const nextIsDark =
+      storedTheme === "dark" ||
       (storedTheme !== "light" && window.matchMedia("(prefers-color-scheme: dark)").matches);
     setIsDark(nextIsDark);
     document.documentElement.classList.toggle("dark", nextIsDark);
@@ -51,7 +68,11 @@ export function Navbar() {
           onClick={() => setSportsLauncherOpen(true)}
           className="flex min-w-0 shrink-0 items-center gap-2 transition hover:opacity-80"
         >
-          <img src="https://cdn.builder.io/api/v1/image/assets%2Fbb0e1ceb11294a31a719df6ba93a7331%2Fc8513d4ae3bd4939b4defe6841f88dd7?format=webp&width=800&height=1200" alt="KhelGrid" className="h-8 w-8 cursor-pointer" />
+          <img
+            src="https://cdn.builder.io/api/v1/image/assets%2Fbb0e1ceb11294a31a719df6ba93a7331%2Fc8513d4ae3bd4939b4defe6841f88dd7?format=webp&width=800&height=1200"
+            alt="KhelGrid"
+            className="h-8 w-8 cursor-pointer"
+          />
           <span className="text-base font-bold tracking-tight sm:text-xl">
             Khel<span className="text-primary">Grid</span>
           </span>
@@ -59,14 +80,16 @@ export function Navbar() {
 
         {/* Desktop primary nav */}
         <nav className="ml-2 hidden min-w-0 items-center gap-1 overflow-hidden rounded-full border border-border/60 bg-card/60 p-1 xl:flex">
-          {NAV.map(n => {
+          {NAV.map((n) => {
             const active = isActivePath(path, n.to);
             return (
               <Link
                 key={n.to}
                 to={n.to}
                 className={`flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-sm transition-colors ${
-                  active ? "bg-secondary text-foreground" : "text-muted-foreground hover:text-foreground"
+                  active
+                    ? "bg-secondary text-foreground"
+                    : "text-muted-foreground hover:text-foreground"
                 }`}
               >
                 <n.icon className="h-4 w-4" />
@@ -100,8 +123,7 @@ export function Navbar() {
             to="/dashboard"
             className="hidden items-center gap-1 rounded-full border border-border/60 bg-card/60 px-2.5 py-1 text-xs font-medium text-foreground sm:flex xl:hidden"
           >
-            <Wallet className="h-3.5 w-3.5 text-primary" />
-            ₹{wallet}
+            <Wallet className="h-3.5 w-3.5 text-primary" />₹{wallet}
           </Link>
 
           {/* Desktop only */}
@@ -117,7 +139,12 @@ export function Navbar() {
           <button className="hidden items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground xl:inline-flex">
             <Globe className="h-4 w-4" /> English
           </button>
-          <Button asChild variant="ghost" size="sm" className="hidden rounded-full px-4 xl:inline-flex">
+          <Button
+            asChild
+            variant="ghost"
+            size="sm"
+            className="hidden rounded-full px-4 xl:inline-flex"
+          >
             <Link to="/login">Log In</Link>
           </Button>
           <Button

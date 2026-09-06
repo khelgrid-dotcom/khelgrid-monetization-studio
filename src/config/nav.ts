@@ -29,6 +29,7 @@ import {
   Heart,
   Shield,
   TrendingUp,
+  Newspaper,
 } from "lucide-react";
 
 export type NavItem = {
@@ -57,11 +58,22 @@ export const NAV_ITEMS: NavItem[] = [
   { to: "/sports", label: "Sports", icon: Trophy, surfaces: ["primary", "features"] },
   { to: "/cities", label: "Cities", icon: Compass, surfaces: ["primary"] },
   { to: "/guides", label: "Guides", icon: BookOpen, surfaces: ["primary", "features"] },
+  { to: "/blog", label: "Blog", icon: Newspaper, surfaces: ["primary", "features"] },
   { to: "/tools", label: "Tools & calculators", icon: Wrench, surfaces: ["primary", "features"] },
   { to: "/play", label: "Play · Find games", icon: Swords, surfaces: ["primary", "features"] },
   { to: "/book", label: "Book venues", icon: CalendarCheck, surfaces: ["primary", "features"] },
-  { to: "/train", label: "Train · Coaching", icon: GraduationCap, surfaces: ["primary", "features"] },
-  { to: "/events", label: "Events & tournaments", icon: CalendarDays, surfaces: ["primary", "features"] },
+  {
+    to: "/train",
+    label: "Train · Coaching",
+    icon: GraduationCap,
+    surfaces: ["primary", "features"],
+  },
+  {
+    to: "/events",
+    label: "Events & tournaments",
+    icon: CalendarDays,
+    surfaces: ["primary", "features"],
+  },
   { to: "/memberships", label: "Memberships", icon: Star, surfaces: ["primary", "features"] },
   { to: "/recommendations", label: "For You", icon: Heart, surfaces: ["primary", "features"] },
   { to: "/trust-center", label: "Trust Center", icon: Shield, surfaces: ["primary", "features"] },
@@ -96,6 +108,8 @@ export const DYNAMIC_ROUTE_LABELS: Record<string, string> = {
   "/sport-in-city/$slug": "Sport in city",
   "/top-guides/$category": "Top guides",
   "/best-tools/$category": "Best tools",
+  "/blog/$slug": "Article",
+  "/blog/write": "Write article",
   "/recommendations": "For You",
   "/trust-center": "Trust Center",
   "/my-stats": "My Stats",

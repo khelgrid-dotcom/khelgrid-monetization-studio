@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AcademyRouteImport } from './routes/academy'
 import { Route as AiGuideRouteImport } from './routes/ai-guide'
+import { Route as BlogRouteImport } from './routes/blog'
 import { Route as BookRouteImport } from './routes/book'
 import { Route as CitiesRouteImport } from './routes/cities'
 import { Route as CoachesRouteImport } from './routes/coaches'
@@ -49,6 +50,8 @@ import { Route as TrustCenterRouteImport } from './routes/trust-center'
 import { Route as VerificationPolicyRouteImport } from './routes/verification-policy'
 import { Route as VerifyRouteImport } from './routes/verify'
 import { Route as BestToolsCategoryRouteImport } from './routes/best-tools.$category'
+import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
+import { Route as BlogWriteRouteImport } from './routes/blog.write'
 import { Route as CitySlugRouteImport } from './routes/city.$slug'
 import { Route as GuideSlugRouteImport } from './routes/guide.$slug'
 import { Route as OpportunitiesIdRouteImport } from './routes/opportunities.$id'
@@ -77,6 +80,11 @@ const AcademyRoute = AcademyRouteImport.update({
 const AiGuideRoute = AiGuideRouteImport.update({
   id: '/ai-guide',
   path: '/ai-guide',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogRoute = BlogRouteImport.update({
+  id: '/blog',
+  path: '/blog',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BookRoute = BookRouteImport.update({
@@ -259,6 +267,16 @@ const BestToolsCategoryRoute = BestToolsCategoryRouteImport.update({
   path: '/best-tools/$category',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => BlogRoute,
+} as any)
+const BlogWriteRoute = BlogWriteRouteImport.update({
+  id: '/write',
+  path: '/write',
+  getParentRoute: () => BlogRoute,
+} as any)
 const CitySlugRoute = CitySlugRouteImport.update({
   id: '/city/$slug',
   path: '/city/$slug',
@@ -310,6 +328,7 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/academy': typeof AcademyRoute
   '/ai-guide': typeof AiGuideRoute
+  '/blog': typeof BlogRouteWithChildren
   '/book': typeof BookRoute
   '/cities': typeof CitiesRoute
   '/coaches': typeof CoachesRoute
@@ -346,6 +365,8 @@ export interface FileRoutesByFullPath {
   '/verification-policy': typeof VerificationPolicyRoute
   '/verify': typeof VerifyRoute
   '/best-tools/$category': typeof BestToolsCategoryRoute
+  '/blog/$slug': typeof BlogSlugRoute
+  '/blog/write': typeof BlogWriteRoute
   '/city/$slug': typeof CitySlugRoute
   '/guide/$slug': typeof GuideSlugRoute
   '/opportunities/$id': typeof OpportunitiesIdRoute
@@ -361,6 +382,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/academy': typeof AcademyRoute
   '/ai-guide': typeof AiGuideRoute
+  '/blog': typeof BlogRouteWithChildren
   '/book': typeof BookRoute
   '/cities': typeof CitiesRoute
   '/coaches': typeof CoachesRoute
@@ -397,6 +419,8 @@ export interface FileRoutesByTo {
   '/verification-policy': typeof VerificationPolicyRoute
   '/verify': typeof VerifyRoute
   '/best-tools/$category': typeof BestToolsCategoryRoute
+  '/blog/$slug': typeof BlogSlugRoute
+  '/blog/write': typeof BlogWriteRoute
   '/city/$slug': typeof CitySlugRoute
   '/guide/$slug': typeof GuideSlugRoute
   '/opportunities/$id': typeof OpportunitiesIdRoute
@@ -413,6 +437,7 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/academy': typeof AcademyRoute
   '/ai-guide': typeof AiGuideRoute
+  '/blog': typeof BlogRouteWithChildren
   '/book': typeof BookRoute
   '/cities': typeof CitiesRoute
   '/coaches': typeof CoachesRoute
@@ -449,6 +474,8 @@ export interface FileRoutesById {
   '/verification-policy': typeof VerificationPolicyRoute
   '/verify': typeof VerifyRoute
   '/best-tools/$category': typeof BestToolsCategoryRoute
+  '/blog/$slug': typeof BlogSlugRoute
+  '/blog/write': typeof BlogWriteRoute
   '/city/$slug': typeof CitySlugRoute
   '/guide/$slug': typeof GuideSlugRoute
   '/opportunities/$id': typeof OpportunitiesIdRoute
@@ -466,6 +493,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/academy'
     | '/ai-guide'
+    | '/blog'
     | '/book'
     | '/cities'
     | '/coaches'
@@ -502,6 +530,8 @@ export interface FileRouteTypes {
     | '/verification-policy'
     | '/verify'
     | '/best-tools/$category'
+    | '/blog/$slug'
+    | '/blog/write'
     | '/city/$slug'
     | '/guide/$slug'
     | '/opportunities/$id'
@@ -517,6 +547,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/academy'
     | '/ai-guide'
+    | '/blog'
     | '/book'
     | '/cities'
     | '/coaches'
@@ -553,6 +584,8 @@ export interface FileRouteTypes {
     | '/verification-policy'
     | '/verify'
     | '/best-tools/$category'
+    | '/blog/$slug'
+    | '/blog/write'
     | '/city/$slug'
     | '/guide/$slug'
     | '/opportunities/$id'
@@ -568,6 +601,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/academy'
     | '/ai-guide'
+    | '/blog'
     | '/book'
     | '/cities'
     | '/coaches'
@@ -604,6 +638,8 @@ export interface FileRouteTypes {
     | '/verification-policy'
     | '/verify'
     | '/best-tools/$category'
+    | '/blog/$slug'
+    | '/blog/write'
     | '/city/$slug'
     | '/guide/$slug'
     | '/opportunities/$id'
@@ -620,6 +656,7 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   AcademyRoute: typeof AcademyRoute
   AiGuideRoute: typeof AiGuideRoute
+  BlogRoute: typeof BlogRouteWithChildren
   BookRoute: typeof BookRoute
   CitiesRoute: typeof CitiesRoute
   CoachesRoute: typeof CoachesRoute
@@ -692,6 +729,13 @@ declare module '@tanstack/react-router' {
       path: '/ai-guide'
       fullPath: '/ai-guide'
       preLoaderRoute: typeof AiGuideRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog': {
+      id: '/blog'
+      path: '/blog'
+      fullPath: '/blog'
+      preLoaderRoute: typeof BlogRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/book': {
@@ -946,6 +990,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BestToolsCategoryRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
+      parentRoute: typeof BlogRoute
+    }
+    '/blog/write': {
+      id: '/blog/write'
+      path: '/write'
+      fullPath: '/blog/write'
+      preLoaderRoute: typeof BlogWriteRouteImport
+      parentRoute: typeof BlogRoute
+    }
     '/city/$slug': {
       id: '/city/$slug'
       path: '/city/$slug'
@@ -1012,6 +1070,18 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface BlogRouteChildren {
+  BlogSlugRoute: typeof BlogSlugRoute
+  BlogWriteRoute: typeof BlogWriteRoute
+}
+
+const BlogRouteChildren: BlogRouteChildren = {
+  BlogSlugRoute: BlogSlugRoute,
+  BlogWriteRoute: BlogWriteRoute,
+}
+
+const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
+
 interface OpportunitiesRouteChildren {
   OpportunitiesIdRoute: typeof OpportunitiesIdRoute
 }
@@ -1050,6 +1120,7 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   AcademyRoute: AcademyRoute,
   AiGuideRoute: AiGuideRoute,
+  BlogRoute: BlogRouteWithChildren,
   BookRoute: BookRoute,
   CitiesRoute: CitiesRoute,
   CoachesRoute: CoachesRoute,

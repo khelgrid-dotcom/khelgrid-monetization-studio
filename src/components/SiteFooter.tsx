@@ -55,7 +55,15 @@ const COLUMNS: Array<{ title: string; items: ReturnType<typeof pick> }> = [
   },
   {
     title: "Learn",
-    items: pick(["/start-from-zero", "/ai-guide", "/guides", "/learning-hub", "/tools", "/resources"]),
+    items: pick([
+      "/start-from-zero",
+      "/ai-guide",
+      "/guides",
+      "/blog",
+      "/learning-hub",
+      "/tools",
+      "/resources",
+    ]),
   },
   {
     title: "Grow",
@@ -73,7 +81,6 @@ const SOCIALS = [
   { label: "X", href: "https://x.com/Khelgrid", icon: Twitter },
 ];
 
-
 export function SiteFooter() {
   const year = new Date().getFullYear();
 
@@ -86,8 +93,8 @@ export function SiteFooter() {
             Your talent isn&apos;t the problem. Access is.
           </h2>
           <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
-            KhelGrid kills the four things that quietly end Indian sporting careers — share it with the one
-            player who deserves to be seen.
+            KhelGrid kills the four things that quietly end Indian sporting careers — share it with
+            the one player who deserves to be seen.
           </p>
 
           <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -123,7 +130,6 @@ export function SiteFooter() {
             >
               <Mail className="h-4 w-4 shrink-0" /> khelgrid@gmail.com
             </a>
-
 
             <Link
               to="/pricing"
