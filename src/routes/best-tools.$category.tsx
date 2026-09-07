@@ -30,10 +30,10 @@ export const Route = createFileRoute("/best-tools/$category")({
     return { category, slug: params.category };
   },
   head: ({ loaderData, params }) => {
-    if (!loaderData) return { meta: [
-        noindexMeta(),] };
+    if (!loaderData) return { meta: [] };
     return {
       meta: [
+        noindexMeta(),
         { title: `Best ${loaderData.category.toLowerCase()}s for athletes · KhelGrid` },
         { name: "description", content: `Free ${loaderData.category.toLowerCase()}s built for Indian athletes — trial prep, training load, scholarships and more.` },
         { property: "og:title", content: `Best ${loaderData.category.toLowerCase()}s on KhelGrid` },

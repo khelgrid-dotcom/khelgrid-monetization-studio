@@ -34,10 +34,10 @@ export const Route = createFileRoute("/top-guides/$category")({
     return { category, slug: params.category };
   },
   head: ({ loaderData }) => {
-    if (!loaderData) return { meta: [
-        noindexMeta(),] };
+    if (!loaderData) return { meta: [] };
     return {
       meta: [
+        noindexMeta(),
         { title: `Top ${loaderData.category} guides for Indian athletes · KhelGrid` },
         { name: "description", content: `The most read ${loaderData.category.toLowerCase()} guides on KhelGrid — checklists, scripts and frameworks built for Indian sport.` },
         { property: "og:title", content: `Top ${loaderData.category} guides` },
