@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Clock, ArrowRight } from "lucide-react";
 import { generateFaqs, faqsToJsonLd } from "@/lib/faq-generator";
+import { noindexMeta } from "@/lib/seo";
 
 const PAGE_SIZE = 6;
 
@@ -36,6 +37,7 @@ export const Route = createFileRoute("/top-guides/$category")({
     if (!loaderData) return { meta: [] };
     return {
       meta: [
+        noindexMeta(),
         { title: `Top ${loaderData.category} guides for Indian athletes · KhelGrid` },
         { name: "description", content: `The most read ${loaderData.category.toLowerCase()} guides on KhelGrid — checklists, scripts and frameworks built for Indian sport.` },
         { property: "og:title", content: `Top ${loaderData.category} guides` },

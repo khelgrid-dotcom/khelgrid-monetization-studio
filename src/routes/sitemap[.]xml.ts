@@ -1,44 +1,31 @@
 import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/start-client-core";
-import { ALL_CATALOG_PATHS, SPORTS_CATALOG, CITIES_CATALOG, GUIDES_CATALOG, TOOLS_CATALOG } from "@/data/catalog";
+import { SPORTS_CATALOG, CITIES_CATALOG, GUIDES_CATALOG } from "@/data/catalog";
 
 // TODO: replace with your project URL once a project name or custom domain is set.
 const BASE_URL = "";
 
+/**
+ * The sitemap deliberately lists only pages that carry real, written content.
+ *
+ * Programmatically-generated permutations (`/sport-in-city/*`, paginated
+ * `/top-guides/*` and `/best-tools/*` category pages, and the single-purpose
+ * `/tools/*` widgets) are still reachable in the app but are marked
+ * `noindex, follow` and excluded here, so search engines and ad reviewers only
+ * ever assess KhelGrid on substantive pages.
+ */
 const STATIC_PATHS = [
-  "/", "/about", "/academy", "/ai-guide", "/book", "/coaches", "/community",
-  "/events", "/learning-hub", "/memberships",
-  "/mobile-app", "/play", "/pricing", "/search", "/start-from-zero",
-  "/talent-scanner", "/train", "/verify", "/privacy", "/terms",
-  "/sports", "/cities", "/guides", "/tools",
+  "/",
+  // Product surfaces
+  "/search", "/trials", "/opportunities", "/play", "/book", "/train",
+  "/events", "/memberships", "/coaches", "/academy", "/pricing",
+  // Editorial
+  "/guides", "/learning-hub", "/start-from-zero", "/resources",
+  "/talent-scanner", "/verify", "/ai-guide", "/community",
+  "/sports", "/cities", "/tools", "/mobile-app",
+  // Trust pages
+  "/about", "/contact", "/editorial-policy", "/privacy", "/terms",
 ];
-
-// Long-tail combo: every sport × every city
-const SPORT_IN_CITY_PATHS = SPORTS_CATALOG.flatMap(s =>
-  CITIES_CATALOG.map(c => `/sport-in-city/${s.slug}-in-${c.slug}`),
-);
-
-const GUIDE_CATEGORY_SLUGS = ["trial-prep", "sports-cv", "scholarships", "nutrition", "mindset", "parents", "recovery", "tech"];
-const TOOL_CATEGORY_SLUGS = ["calculator", "checklist", "planner", "estimator"];
-const PAGE_SIZE_GUIDES = 6;
-const PAGE_SIZE_TOOLS = 6;
-
-const TOP_GUIDE_PATHS = GUIDE_CATEGORY_SLUGS.flatMap(slug => {
-  const label = slug.replace("-", " ");
-  const count = GUIDES_CATALOG.filter(g => g.category.toLowerCase() === label).length;
-  const pages = Math.max(1, Math.ceil(count / PAGE_SIZE_GUIDES));
-  return Array.from({ length: pages }, (_, i) =>
-    i === 0 ? `/top-guides/${slug}` : `/top-guides/${slug}?page=${i + 1}`,
-  );
-});
-
-const BEST_TOOL_PATHS = TOOL_CATEGORY_SLUGS.flatMap(slug => {
-  const count = TOOLS_CATALOG.filter(t => t.category.toLowerCase() === slug).length;
-  const pages = Math.max(1, Math.ceil(count / PAGE_SIZE_TOOLS));
-  return Array.from({ length: pages }, (_, i) =>
-    i === 0 ? `/best-tools/${slug}` : `/best-tools/${slug}?page=${i + 1}`,
-  );
-});
 
 export const Route = createFileRoute("/sitemap.xml")({
   server: {
@@ -46,19 +33,22 @@ export const Route = createFileRoute("/sitemap.xml")({
       GET: async () => {
         const paths = [
           ...STATIC_PATHS,
-          ...ALL_CATALOG_PATHS,
-          ...SPORT_IN_CITY_PATHS,
-          ...TOP_GUIDE_PATHS,
-          ...BEST_TOOL_PATHS,
+          ...SPORTS_CATALOG.map((s) => `/sport/${s.slug}`),
+          ...CITIES_CATALOG.map((c) => `/city/${c.slug}`),
+          ...GUIDES_CATALOG.map((g) => `/guide/${g.slug}`),
         ];
-        const urls = paths.map(p => `  <url><loc>${BASE_URL}${p}</loc><changefreq>weekly</changefreq></url>`);
+        const urls = paths.map(
+          (p) => `  <url><loc>${BASE_URL}${p}</loc><changefreq>weekly</changefreq></url>`,
+        );
         const xml = [
           `<?xml version="1.0" encoding="UTF-8"?>`,
           `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`,
           ...urls,
           `</urlset>`,
         ].join("\n");
-        return new Response(xml, { headers: { "Content-Type": "application/xml", "Cache-Control": "public, max-age=3600" } });
+        return new Response(xml, {
+          headers: { "Content-Type": "application/xml", "Cache-Control": "public, max-age=3600" },
+        });
       },
     },
   },
