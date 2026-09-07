@@ -19,6 +19,7 @@ import { Route as CoachesRouteImport } from './routes/coaches'
 import { Route as CommunityRouteImport } from './routes/community'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as EditorialPolicyRouteImport } from './routes/editorial-policy'
 import { Route as EventsRouteImport } from './routes/events'
 import { Route as GuidesRouteImport } from './routes/guides'
 import { Route as LearningHubRouteImport } from './routes/learning-hub'
@@ -96,6 +97,11 @@ const ContactRoute = ContactRouteImport.update({
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EditorialPolicyRoute = EditorialPolicyRouteImport.update({
+  id: '/editorial-policy',
+  path: '/editorial-policy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EventsRoute = EventsRouteImport.update({
@@ -250,6 +256,7 @@ export interface FileRoutesByFullPath {
   '/community': typeof CommunityRoute
   '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRoute
+  '/editorial-policy': typeof EditorialPolicyRoute
   '/events': typeof EventsRoute
   '/guides': typeof GuidesRoute
   '/learning-hub': typeof LearningHubRoute
@@ -290,6 +297,7 @@ export interface FileRoutesByTo {
   '/community': typeof CommunityRoute
   '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRoute
+  '/editorial-policy': typeof EditorialPolicyRoute
   '/events': typeof EventsRoute
   '/guides': typeof GuidesRoute
   '/learning-hub': typeof LearningHubRoute
@@ -331,6 +339,7 @@ export interface FileRoutesById {
   '/community': typeof CommunityRoute
   '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRoute
+  '/editorial-policy': typeof EditorialPolicyRoute
   '/events': typeof EventsRoute
   '/guides': typeof GuidesRoute
   '/learning-hub': typeof LearningHubRoute
@@ -373,6 +382,7 @@ export interface FileRouteTypes {
     | '/community'
     | '/contact'
     | '/dashboard'
+    | '/editorial-policy'
     | '/events'
     | '/guides'
     | '/learning-hub'
@@ -413,6 +423,7 @@ export interface FileRouteTypes {
     | '/community'
     | '/contact'
     | '/dashboard'
+    | '/editorial-policy'
     | '/events'
     | '/guides'
     | '/learning-hub'
@@ -453,6 +464,7 @@ export interface FileRouteTypes {
     | '/community'
     | '/contact'
     | '/dashboard'
+    | '/editorial-policy'
     | '/events'
     | '/guides'
     | '/learning-hub'
@@ -494,6 +506,7 @@ export interface RootRouteChildren {
   CommunityRoute: typeof CommunityRoute
   ContactRoute: typeof ContactRoute
   DashboardRoute: typeof DashboardRoute
+  EditorialPolicyRoute: typeof EditorialPolicyRoute
   EventsRoute: typeof EventsRoute
   GuidesRoute: typeof GuidesRoute
   LearningHubRoute: typeof LearningHubRoute
@@ -593,6 +606,13 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/editorial-policy': {
+      id: '/editorial-policy'
+      path: '/editorial-policy'
+      fullPath: '/editorial-policy'
+      preLoaderRoute: typeof EditorialPolicyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/events': {
@@ -815,6 +835,7 @@ const rootRouteChildren: RootRouteChildren = {
   CommunityRoute: CommunityRoute,
   ContactRoute: ContactRoute,
   DashboardRoute: DashboardRoute,
+  EditorialPolicyRoute: EditorialPolicyRoute,
   EventsRoute: EventsRoute,
   GuidesRoute: GuidesRoute,
   LearningHubRoute: LearningHubRoute,
