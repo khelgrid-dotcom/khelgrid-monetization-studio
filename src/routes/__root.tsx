@@ -13,6 +13,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { AuthProvider } from "@/context/AuthContext";
 import { BlogProvider } from "@/context/BlogContext";
+import { FollowedAcademyProvider } from "@/context/FollowedAcademyContext";
 import { NotificationProvider } from "@/context/NotificationContext";
 import { SavedOpportunityProvider } from "@/context/SavedOpportunityContext";
 import { Navbar } from "@/components/Navbar";
@@ -163,24 +164,26 @@ function RootComponent() {
       <AuthProvider>
         <BlogProvider>
           <SavedOpportunityProvider>
-            <NotificationProvider>
-              <AdConsentProvider requireConsent>
-                <GoogleTagLoader />
-                <AdSenseLoader />
+            <FollowedAcademyProvider>
+              <NotificationProvider>
+                <AdConsentProvider requireConsent>
+                  <GoogleTagLoader />
+                  <AdSenseLoader />
 
-                <Navbar />
-                <Breadcrumbs />
-                <div className="pb-20 xl:pb-0">
-                  <Outlet />
-                  <SiteFooter />
-                </div>
-                <BottomTabBar />
+                  <Navbar />
+                  <Breadcrumbs />
+                  <div className="pb-20 xl:pb-0">
+                    <Outlet />
+                    <SiteFooter />
+                  </div>
+                  <BottomTabBar />
 
-                <StickyMobileAdSlot />
-                <AdConsentBanner />
-                <Toaster theme="dark" position="top-right" />
-              </AdConsentProvider>
-            </NotificationProvider>
+                  <StickyMobileAdSlot />
+                  <AdConsentBanner />
+                  <Toaster theme="dark" position="top-right" />
+                </AdConsentProvider>
+              </NotificationProvider>
+            </FollowedAcademyProvider>
           </SavedOpportunityProvider>
         </BlogProvider>
       </AuthProvider>

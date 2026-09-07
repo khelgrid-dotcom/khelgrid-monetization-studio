@@ -1,10 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { Heart, Bell, Save, Bot } from "lucide-react";
+import { Heart, Bell, Save, Bot, CheckCheck, Trash2 } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { TrialCard } from "@/components/TrialCard";
-import { mockSavedSearches, mockNotifications } from "@/data/recommendations";
+import { mockSavedSearches } from "@/data/recommendations";
 import { useNotifications } from "@/context/NotificationContext";
 import { ParticipationAgent } from "@/components/ParticipationAgent";
 
@@ -12,7 +13,10 @@ export const Route = createFileRoute("/recommendations")({
   head: () => ({
     meta: [
       { title: "Your Opportunities · KhelGrid" },
-      { name: "description", content: "Review saved opportunities, alerts and participation check-ins." },
+      {
+        name: "description",
+        content: "Review saved opportunities, alerts and participation check-ins.",
+      },
       { name: "robots", content: "noindex,follow" },
     ],
   }),
@@ -20,10 +24,8 @@ export const Route = createFileRoute("/recommendations")({
 });
 
 function RecommendationsPage() {
-  const { notifications, markAsRead } = useNotifications();
-  const [activeTab, setActiveTab] = useState<"agent" | "for-you" | "saved" | "alerts">(
-    "agent"
-  );
+  const { notifications, markAsRead, markAllAsRead, clearNotification } = useNotifications();
+  const [activeTab, setActiveTab] = useState<"agent" | "for-you" | "saved" | "alerts">("agent");
 
   const unreadNotifications = notifications.filter((n) => !n.read);
 
@@ -32,9 +34,7 @@ function RecommendationsPage() {
       <div className="max-w-4xl mx-auto px-4">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-slate-900 mb-2">
-            Your Opportunities
-          </h1>
+          <h1 className="text-4xl font-bold text-slate-900 mb-2">Your Opportunities</h1>
           <p className="text-slate-600">
             Personalized trials and events tailored to your interests
           </p>
@@ -94,19 +94,14 @@ function RecommendationsPage() {
         </div>
 
         {/* Participation Agent Tab */}
-        {activeTab === "agent" && (
-          <ParticipationAgent />
-        )}
+        {activeTab === "agent" && <ParticipationAgent />}
 
         {/* For You Tab */}
         {activeTab === "for-you" && (
           <div className="space-y-4">
             <div className="grid gap-4">
               {[1, 2, 3, 4].map((i) => (
-                <Card
-                  key={i}
-                  className="border-l-4 border-l-blue-600 hover:shadow-lg transition"
-                >
+                <Card key={i} className="border-l-4 border-l-blue-600 hover:shadow-lg transition">
                   <CardHeader>
                     <div className="flex justify-between items-start">
                       <div>
@@ -130,8 +125,8 @@ function RecommendationsPage() {
                         </CardDescription>
                       </div>
                       <div className="text-right">
-                        <div className="font-bold text-lg">₹
-                          {i === 1 ? "1,500" : i === 2 ? "2,000" : i === 3 ? "800" : "1,200"}
+                        <div className="font-bold text-lg">
+                          ₹{i === 1 ? "1,500" : i === 2 ? "2,000" : i === 3 ? "800" : "1,200"}
                         </div>
                         <Button variant="ghost" size="sm">
                           <Heart className="h-4 w-4" />
@@ -141,9 +136,24 @@ function RecommendationsPage() {
                   </CardHeader>
                   <CardContent>
                     <div className="flex gap-4 text-sm text-slate-600">
-                      <span>📍 {i === 1 ? "Mumbai" : i === 2 ? "Delhi" : i === 3 ? "Bangalore" : "Chennai"}</span>
-                      <span>📅 {i === 1 ? "Feb 10-12" : i === 2 ? "Feb 15" : i === 3 ? "Feb 18" : "Feb 20"}</span>
-                      <span>👥 {i === 1 ? "12 spots" : i === 2 ? "20 spots" : i === 3 ? "15 spots" : "8 spots"}</span>
+                      <span>
+                        📍{" "}
+                        {i === 1 ? "Mumbai" : i === 2 ? "Delhi" : i === 3 ? "Bangalore" : "Chennai"}
+                      </span>
+                      <span>
+                        📅{" "}
+                        {i === 1 ? "Feb 10-12" : i === 2 ? "Feb 15" : i === 3 ? "Feb 18" : "Feb 20"}
+                      </span>
+                      <span>
+                        👥{" "}
+                        {i === 1
+                          ? "12 spots"
+                          : i === 2
+                            ? "20 spots"
+                            : i === 3
+                              ? "15 spots"
+                              : "8 spots"}
+                      </span>
                     </div>
                     <Button className="mt-4 w-full">View Trial</Button>
                   </CardContent>
@@ -168,8 +178,7 @@ function RecommendationsPage() {
                       <CardDescription>
                         {search.sport} • {search.city}
                         {search.skillLevel && ` • ${search.skillLevel}`}
-                        {search.priceRange &&
-                          ` • ₹${search.priceRange[0]}-${search.priceRange[1]}`}
+                        {search.priceRange && ` • ₹${search.priceRange[0]}-${search.priceRange[1]}`}
                       </CardDescription>
                     </div>
                     <div className="text-right">
@@ -190,36 +199,85 @@ function RecommendationsPage() {
         {/* Alerts Tab */}
         {activeTab === "alerts" && (
           <div className="space-y-4">
+            <div className="flex items-center justify-between gap-3">
+              <div>
+                <h2 className="text-xl font-bold text-slate-900">Notification center</h2>
+                <p className="mt-1 text-sm text-slate-600">
+                  Saved trial reminders and followed academy schedule updates.
+                </p>
+              </div>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={markAllAsRead}
+                disabled={unreadNotifications.length === 0}
+              >
+                <CheckCheck className="mr-1.5 h-4 w-4" /> Mark all read
+              </Button>
+            </div>
             {notifications.length === 0 ? (
-              <Card className="text-center py-12">
-                <Bell className="h-12 w-12 mx-auto text-slate-300 mb-4" />
+              <Card className="py-12 text-center">
+                <Bell className="mx-auto mb-4 h-12 w-12 text-slate-300" />
                 <p className="text-slate-600">No notifications yet</p>
               </Card>
             ) : (
               notifications.map((notif) => (
                 <Card
                   key={notif.id}
-                  className={`cursor-pointer transition ${
-                    !notif.read ? "bg-blue-50 border-l-4 border-l-blue-600" : ""
-                  }`}
+                  className={`transition ${!notif.read ? "border-l-4 border-l-blue-600 bg-blue-50" : ""}`}
                   onClick={() => markAsRead(notif.id)}
                 >
                   <CardContent className="pt-6">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <h4 className="font-semibold text-slate-900">
-                          {notif.title}
-                        </h4>
-                        <p className="text-sm text-slate-600">
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="min-w-0">
+                        <p className="text-[11px] font-semibold uppercase tracking-wider text-blue-600">
+                          {notif.type === "saved_trial_approaching"
+                            ? "Saved trial"
+                            : notif.type === "followed_academy_schedule"
+                              ? "Followed academy"
+                              : "KhelGrid alert"}
+                        </p>
+                        <h4 className="mt-1 font-semibold text-slate-900">{notif.title}</h4>
+                        <p className="mt-1 text-sm leading-relaxed text-slate-600">
                           {notif.description}
                         </p>
-                        <p className="text-xs text-slate-500 mt-2">
-                          {new Date(notif.createdAt).toLocaleDateString()}
+                        <p className="mt-2 text-xs text-slate-500">
+                          {new Intl.DateTimeFormat("en-IN", {
+                            dateStyle: "medium",
+                            timeZone: "UTC",
+                          }).format(new Date(notif.createdAt))}
                         </p>
+                        {notif.trialId && (
+                          <Link
+                            to="/trial/$id"
+                            params={{ id: notif.trialId }}
+                            onClick={(event) => event.stopPropagation()}
+                            className="mt-2 inline-flex text-xs font-semibold text-blue-600 hover:underline"
+                          >
+                            Review saved trial →
+                          </Link>
+                        )}
                       </div>
-                      {!notif.read && (
-                        <div className="h-2 w-2 bg-blue-600 rounded-full mt-1" />
-                      )}
+                      <div className="flex shrink-0 items-center gap-2">
+                        {!notif.read && (
+                          <div
+                            className="h-2 w-2 rounded-full bg-blue-600"
+                            aria-label="Unread notification"
+                          />
+                        )}
+                        <button
+                          type="button"
+                          aria-label={`Remove ${notif.title}`}
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            clearNotification(notif.id);
+                          }}
+                          className="rounded-md p-1.5 text-slate-400 hover:bg-slate-200 hover:text-slate-700"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
