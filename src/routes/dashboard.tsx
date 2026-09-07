@@ -4,6 +4,7 @@ import { TRIALS } from "@/data/trials";
 import { SportsCV } from "@/components/SportsCV";
 import { DashboardCommunityWall } from "@/components/DashboardCommunityWall";
 import { DashboardProgressShare } from "@/components/DashboardProgressShare";
+import { OpportunityInterviewAgent } from "@/components/OpportunityInterviewAgent";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Wallet, Plus, Crown, Trophy, RotateCcw } from "lucide-react";
@@ -151,6 +152,7 @@ function Dashboard() {
               ))}
             </div>
           )}
+          <OpportunityInterviewAgent opportunities={TRIALS} />
         </div>
 
         <div>
