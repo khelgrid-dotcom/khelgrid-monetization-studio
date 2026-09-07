@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 import { Wrench, Sparkles } from "lucide-react";
+import { noindexMeta } from "@/lib/seo";
 
 export const Route = createFileRoute("/tools/$slug")({
   loader: ({ params }) => {

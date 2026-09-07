@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { ArrowRight } from "lucide-react";
 import { generateFaqs, faqsToJsonLd } from "@/lib/faq-generator";
+import { noindexMeta } from "@/lib/seo";
 
 const PAGE_SIZE = 6;
 
@@ -29,7 +30,8 @@ export const Route = createFileRoute("/best-tools/$category")({
     return { category, slug: params.category };
   },
   head: ({ loaderData, params }) => {
-    if (!loaderData) return { meta: [] };
+    if (!loaderData) return { meta: [
+        noindexMeta(),] };
     return {
       meta: [
         { title: `Best ${loaderData.category.toLowerCase()}s for athletes · KhelGrid` },

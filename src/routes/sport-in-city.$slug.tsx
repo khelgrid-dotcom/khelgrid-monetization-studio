@@ -6,6 +6,7 @@ import { TRIALS } from "@/data/trials";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { MapPin, ArrowRight } from "lucide-react";
+import { noindexMeta } from "@/lib/seo";
 
 const PAGE_SIZE = 8;
 
