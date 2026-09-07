@@ -14,6 +14,7 @@ export const Route = createFileRoute("/tools/$slug")({
   },
   head: ({ loaderData }) => ({
     meta: loaderData ? [
+      noindexMeta(),
       { title: `${loaderData.tool.name} · KhelGrid Tools` },
       { name: "description", content: loaderData.tool.blurb },
     ] : [],
