@@ -17,6 +17,7 @@ import { Route as BookRouteImport } from './routes/book'
 import { Route as CitiesRouteImport } from './routes/cities'
 import { Route as CoachesRouteImport } from './routes/coaches'
 import { Route as CommunityRouteImport } from './routes/community'
+import { Route as ContactRouteImport } from './routes/contact'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as EventsRouteImport } from './routes/events'
 import { Route as GuidesRouteImport } from './routes/guides'
@@ -85,6 +86,11 @@ const CoachesRoute = CoachesRouteImport.update({
 const CommunityRoute = CommunityRouteImport.update({
   id: '/community',
   path: '/community',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardRoute = DashboardRouteImport.update({
@@ -242,6 +248,7 @@ export interface FileRoutesByFullPath {
   '/cities': typeof CitiesRoute
   '/coaches': typeof CoachesRoute
   '/community': typeof CommunityRoute
+  '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRoute
   '/events': typeof EventsRoute
   '/guides': typeof GuidesRoute
@@ -281,6 +288,7 @@ export interface FileRoutesByTo {
   '/cities': typeof CitiesRoute
   '/coaches': typeof CoachesRoute
   '/community': typeof CommunityRoute
+  '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRoute
   '/events': typeof EventsRoute
   '/guides': typeof GuidesRoute
@@ -321,6 +329,7 @@ export interface FileRoutesById {
   '/cities': typeof CitiesRoute
   '/coaches': typeof CoachesRoute
   '/community': typeof CommunityRoute
+  '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRoute
   '/events': typeof EventsRoute
   '/guides': typeof GuidesRoute
@@ -362,6 +371,7 @@ export interface FileRouteTypes {
     | '/cities'
     | '/coaches'
     | '/community'
+    | '/contact'
     | '/dashboard'
     | '/events'
     | '/guides'
@@ -401,6 +411,7 @@ export interface FileRouteTypes {
     | '/cities'
     | '/coaches'
     | '/community'
+    | '/contact'
     | '/dashboard'
     | '/events'
     | '/guides'
@@ -440,6 +451,7 @@ export interface FileRouteTypes {
     | '/cities'
     | '/coaches'
     | '/community'
+    | '/contact'
     | '/dashboard'
     | '/events'
     | '/guides'
@@ -480,6 +492,7 @@ export interface RootRouteChildren {
   CitiesRoute: typeof CitiesRoute
   CoachesRoute: typeof CoachesRoute
   CommunityRoute: typeof CommunityRoute
+  ContactRoute: typeof ContactRoute
   DashboardRoute: typeof DashboardRoute
   EventsRoute: typeof EventsRoute
   GuidesRoute: typeof GuidesRoute
@@ -566,6 +579,13 @@ declare module '@tanstack/react-router' {
       path: '/community'
       fullPath: '/community'
       preLoaderRoute: typeof CommunityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard': {
@@ -793,6 +813,7 @@ const rootRouteChildren: RootRouteChildren = {
   CitiesRoute: CitiesRoute,
   CoachesRoute: CoachesRoute,
   CommunityRoute: CommunityRoute,
+  ContactRoute: ContactRoute,
   DashboardRoute: DashboardRoute,
   EventsRoute: EventsRoute,
   GuidesRoute: GuidesRoute,
