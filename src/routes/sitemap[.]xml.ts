@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/start-client-core";
 import { SPORTS_CATALOG, CITIES_CATALOG, GUIDES_CATALOG } from "@/data/catalog";
+import { hasGuideBody } from "@/content/guide-bodies";
 
 // TODO: replace with your project URL once a project name or custom domain is set.
 const BASE_URL = "";
@@ -35,7 +36,7 @@ export const Route = createFileRoute("/sitemap.xml")({
           ...STATIC_PATHS,
           ...SPORTS_CATALOG.map((s) => `/sport/${s.slug}`),
           ...CITIES_CATALOG.map((c) => `/city/${c.slug}`),
-          ...GUIDES_CATALOG.map((g) => `/guide/${g.slug}`),
+          ...GUIDES_CATALOG.filter((g) => hasGuideBody(g.slug)).map((g) => `/guide/${g.slug}`),
         ];
         const urls = paths.map(
           (p) => `  <url><loc>${BASE_URL}${p}</loc><changefreq>weekly</changefreq></url>`,
