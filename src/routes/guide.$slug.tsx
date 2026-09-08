@@ -3,6 +3,28 @@ import { GUIDES_CATALOG } from "@/data/catalog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { BookOpen, Clock, CheckCircle2 } from "lucide-react";
+import { GUIDE_BODIES } from "@/content/guide-bodies";
+import { ArticlePage } from "@/components/ArticlePage";
+import { noindexMeta } from "@/lib/seo";
+import type { ContentPage } from "@/content/types";
+
+/** Guides with a full editorial body render as long-form articles. */
+function toContentPage(guide: (typeof GUIDES_CATALOG)[number]): ContentPage | null {
+  const body = GUIDE_BODIES[guide.slug];
+  if (!body) return null;
+  return {
+    path: `/guide/${guide.slug}`,
+    eyebrow: guide.category,
+    title: guide.title,
+    description: guide.excerpt,
+    updated: "2026-02-01",
+    readMins: guide.readMins,
+    intro: body.intro,
+    sections: body.sections,
+    faqs: body.faqs,
+    cta: { to: "/search", label: "Browse live trials" },
+  };
+}
 
 export const Route = createFileRoute("/guide/$slug")({
   loader: ({ params }) => {
@@ -12,6 +34,7 @@ export const Route = createFileRoute("/guide/$slug")({
   },
   head: ({ loaderData }) => ({
     meta: loaderData ? [
+      ...(GUIDE_BODIES[loaderData.guide.slug] ? [] : [noindexMeta()]),
       { title: `${loaderData.guide.title} · KhelGrid` },
       { name: "description", content: loaderData.guide.excerpt },
       { property: "og:title", content: loaderData.guide.title },
@@ -29,6 +52,8 @@ export const Route = createFileRoute("/guide/$slug")({
 
 function GuidePage() {
   const { guide } = Route.useLoaderData();
+  const article = toContentPage(guide);
+  if (article) return <ArticlePage page={article} />;
   const related = GUIDES_CATALOG.filter(g => g.category === guide.category && g.slug !== guide.slug).slice(0, 4);
 
   return (
