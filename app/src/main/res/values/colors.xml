@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_80">#D0BCFF</color>
+    <color name="purple_grey_80">#CCC2DC</color>
+    <color name="pink_80">#EFB8C8</color>
+
+    <color name="purple_40">#6650a4</color>
+    <color name="purple_grey_40">#625b71</color>
+    <color name="pink_40">#7D5260</color>
+
+    <!-- KhelGrid Midnight Indigo & Neon Theme -->
+    <color name="khelgrid_bg">#130E22</color>
+    <color name="khelgrid_card">#1B1530</color>
+    <color name="khelgrid_primary">#7B4DFF</color>
+    <color name="khelgrid_neon">#9D68FF</color>
+    <color name="khelgrid_gold">#FFB800</color>
+</resources>
