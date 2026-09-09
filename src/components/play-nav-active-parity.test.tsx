@@ -58,8 +58,9 @@ const ACTIVE_TOKENS = {
 
 describe("/play active styling parity between desktop sidebar and mobile drawer", () => {
   it("applies the same active styling to /play in both surfaces on the /play route", () => {
-    const { useRouterState } = require("@tanstack/react-router");
-    useRouterState.mockImplementation(({ select }: any) => select({ location: { pathname: "/play" } }));
+    (useRouterState as any).mockImplementation(({ select }: any) =>
+      select({ location: { pathname: "/play" } }),
+    );
 
     const desktopHtml = renderToString(<FeaturesSidebar />);
     const mobileHtml = renderToString(<NavDrawer />);
