@@ -18,7 +18,11 @@ data class UserAuthState(
     val paidApplications: List<String> = emptyList(),
     val boostedTrials: List<String> = listOf("t-3"),
     val sportsCVUnlocked: Boolean = false,
-    val role: UserRole = UserRole.ATHLETE
+    val role: UserRole = UserRole.ATHLETE,
+    val referralCode: String = "ARJUN100",
+    val successfulReferrals: Int = 2,
+    val referralRewards: Int = 200,
+    val referralInvitesSent: Int = 4
 ) {
     val freeLimit: Int = 2
 

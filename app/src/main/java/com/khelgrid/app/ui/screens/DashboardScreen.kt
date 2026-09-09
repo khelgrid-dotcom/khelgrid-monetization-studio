@@ -1,5 +1,8 @@
 package com.khelgrid.app.ui.screens
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -16,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -33,6 +37,7 @@ fun DashboardScreen(
     onShowMessage: (String) -> Unit
 ) {
     var showTopUpDialog by remember { mutableStateOf(false) }
+    val context = LocalContext.current
 
     LazyColumn(
         modifier = Modifier
@@ -253,6 +258,105 @@ fun DashboardScreen(
                                 color = if (userState.plan == UserPlan.PRO) TextSecondary else Color.Black
                             )
                         }
+                    }
+                }
+            }
+        }
+
+        // Referral community section
+        item {
+            val referralGoal = 3
+            val referralProgress = (userState.successfulReferrals.toFloat() / referralGoal).coerceIn(0f, 1f)
+            val inviteLink = "https://khelgrid.com/join?ref=${userState.referralCode}"
+
+            Surface(
+                shape = RoundedCornerShape(18.dp),
+                color = KhelGridCard,
+                border = androidx.compose.foundation.BorderStroke(1.dp, KhelGridPrimary.copy(alpha = 0.6f)),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Icon(Icons.Default.Group, contentDescription = "Refer teammates", tint = KhelGridPrimaryLight)
+                            Text("Build Your KhelGrid Crew", fontWeight = FontWeight.Bold, fontSize = 16.sp, color = TextPrimary)
+                        }
+                        Surface(
+                            shape = RoundedCornerShape(6.dp),
+                            color = KhelGridGreen.copy(alpha = 0.15f)
+                        ) {
+                            Text(
+                                text = "₹100 / FRIEND",
+                                fontSize = 10.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = KhelGridGreen,
+                                modifier = Modifier.padding(horizontal = 7.dp, vertical = 4.dp)
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = "Invite teammates to join KhelGrid. You both get ₹100 wallet credit when they complete their first application.",
+                        fontSize = 12.sp,
+                        color = TextSecondary
+                    )
+
+                    Spacer(modifier = Modifier.height(14.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text("${userState.successfulReferrals}/$referralGoal friends joined", fontSize = 13.sp, fontWeight = FontWeight.Bold, color = TextPrimary)
+                            Spacer(modifier = Modifier.height(7.dp))
+                            LinearProgressIndicator(
+                                progress = { referralProgress },
+                                modifier = Modifier.fillMaxWidth().height(7.dp),
+                                color = KhelGridPrimary,
+                                trackColor = KhelGridSurface
+                            )
+                            Spacer(modifier = Modifier.height(5.dp))
+                            Text("₹${userState.referralRewards} earned · ${userState.referralInvitesSent} invites sent", fontSize = 11.sp, color = TextSecondary)
+                        }
+
+                        Surface(
+                            shape = RoundedCornerShape(10.dp),
+                            color = KhelGridSurface,
+                            border = androidx.compose.foundation.BorderStroke(1.dp, KhelGridCardBorder)
+                        ) {
+                            Column(
+                                modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text("YOUR CODE", fontSize = 9.sp, color = TextMuted, fontWeight = FontWeight.Bold)
+                                Text(userState.referralCode, fontSize = 14.sp, color = KhelGridGold, fontWeight = FontWeight.Bold)
+                            }
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Button(
+                        onClick = {
+                            val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                            clipboard.setPrimaryClip(ClipData.newPlainText("KhelGrid invite", inviteLink))
+                            UserSessionRepository.recordReferralInvite()
+                            onShowMessage("Invite link copied. Share it with your teammates!")
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = KhelGridPrimary),
+                        shape = RoundedCornerShape(10.dp),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Icon(Icons.Default.ContentCopy, contentDescription = "Copy invite link", modifier = Modifier.size(16.dp))
+                        Spacer(modifier = Modifier.width(7.dp))
+                        Text("Copy Invite Link", fontWeight = FontWeight.Bold, fontSize = 13.sp)
                     }
                 }
             }
