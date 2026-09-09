@@ -124,14 +124,22 @@ export function NavDrawer() {
 
           {filteredFeatures.length > 0 && (
             <Section title="Features">
-              {filteredFeatures.map((i) => (
-                <NavLink
-                  key={i.to}
-                  item={i}
-                  active={isActivePath(path, i.to)}
-                  source="sidebar_mobile"
-                />
-              ))}
+              {filteredFeatures.map((i) =>
+                i.to === "/play" ? (
+                  <PlayNavLink
+                    key={i.to}
+                    active={isActivePath(path, i.to)}
+                    source="sidebar_mobile"
+                  />
+                ) : (
+                  <NavLink
+                    key={i.to}
+                    item={i}
+                    active={isActivePath(path, i.to)}
+                    source="sidebar_mobile"
+                  />
+                )
+              )}
             </Section>
           )}
 
