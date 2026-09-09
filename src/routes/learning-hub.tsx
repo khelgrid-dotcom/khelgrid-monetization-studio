@@ -1,7 +1,9 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute } from "@tanstack/react-router";
+import { ArticlePage } from "@/components/ArticlePage";
+import { articleHead } from "@/lib/article-head";
+import { learningHubPage } from "@/content/platform-pages";
+
 export const Route = createFileRoute("/learning-hub")({
-  beforeLoad: () => {
-    throw redirect({ to: "/guides" });
-  },
-  component: () => null,
+  head: () => articleHead(learningHubPage),
+  component: () => <ArticlePage page={learningHubPage} />,
 });

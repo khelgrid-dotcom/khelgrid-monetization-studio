@@ -6,6 +6,7 @@ import { TRIALS } from "@/data/trials";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { MapPin, ArrowRight } from "lucide-react";
+import { noindexMeta } from "@/lib/seo";
 
 const PAGE_SIZE = 8;
 
@@ -27,6 +28,7 @@ export const Route = createFileRoute("/sport-in-city/$slug")({
   },
   head: ({ loaderData }) => ({
     meta: loaderData ? [
+      noindexMeta(),
       { title: `${loaderData.sport.name} trials in ${loaderData.city.name} · KhelGrid` },
       { name: "description", content: `Live ${loaderData.sport.name} trials, academies & scouts in ${loaderData.city.name}, ${loaderData.city.state}. ${loaderData.sport.tagline}.` },
       { property: "og:title", content: `${loaderData.sport.name} in ${loaderData.city.name}` },

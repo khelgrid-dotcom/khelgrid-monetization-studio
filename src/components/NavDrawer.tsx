@@ -5,6 +5,7 @@ import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Menu, Trophy, Search, User, Wallet, LogIn, Zap } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
+import { PlayNavLink } from "@/components/PlayNavLink";
 import { PRIMARY_ITEMS, FEATURE_ITEMS, isActivePath, type NavItem } from "@/config/nav";
 
 // Re-exported for tests and any callers that imported the array directly.
@@ -102,27 +103,43 @@ export function NavDrawer() {
         <div className="flex-1 overflow-y-auto px-2 py-3">
           {filteredPrimary.length > 0 && (
             <Section title="Navigate">
-              {filteredPrimary.map((i) => (
-                <NavLink
-                  key={i.to}
-                  item={i}
-                  active={isActivePath(path, i.to)}
-                  source="sidebar_mobile"
-                />
-              ))}
+              {filteredPrimary.map((i) =>
+                i.to === "/play" ? (
+                  <PlayNavLink
+                    key={i.to}
+                    active={isActivePath(path, i.to)}
+                    source="sidebar_mobile"
+                  />
+                ) : (
+                  <NavLink
+                    key={i.to}
+                    item={i}
+                    active={isActivePath(path, i.to)}
+                    source="sidebar_mobile"
+                  />
+                )
+              )}
             </Section>
           )}
 
           {filteredFeatures.length > 0 && (
             <Section title="Features">
-              {filteredFeatures.map((i) => (
-                <NavLink
-                  key={i.to}
-                  item={i}
-                  active={isActivePath(path, i.to)}
-                  source="sidebar_mobile"
-                />
-              ))}
+              {filteredFeatures.map((i) =>
+                i.to === "/play" ? (
+                  <PlayNavLink
+                    key={i.to}
+                    active={isActivePath(path, i.to)}
+                    source="sidebar_mobile"
+                  />
+                ) : (
+                  <NavLink
+                    key={i.to}
+                    item={i}
+                    active={isActivePath(path, i.to)}
+                    source="sidebar_mobile"
+                  />
+                )
+              )}
             </Section>
           )}
 

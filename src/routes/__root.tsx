@@ -29,6 +29,7 @@ import {
 import { adsConfig, hasValidPublisherId } from "@/config/ads";
 import { GoogleTagLoader } from "@/components/GoogleTagLoader";
 import { SiteFooter } from "@/components/SiteFooter";
+import { HydrationDiagnostics } from "@/components/HydrationDiagnostics";
 
 function NotFoundComponent() {
   return (
@@ -181,6 +182,7 @@ function RootComponent() {
                   <StickyMobileAdSlot />
                   <AdConsentBanner />
                   <Toaster theme="dark" position="top-right" />
+                  <HydrationDiagnostics />
                 </AdConsentProvider>
               </NotificationProvider>
             </FollowedAcademyProvider>

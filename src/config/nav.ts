@@ -30,6 +30,9 @@ import {
   Shield,
   TrendingUp,
   Newspaper,
+  FileText,
+  Mail,
+  ScrollText,
 } from "lucide-react";
 
 export type NavItem = {
@@ -93,6 +96,10 @@ export const NAV_ITEMS: NavItem[] = [
   { to: "/mobile-app", label: "Mobile App", icon: Smartphone, surfaces: ["features"] },
   { to: "/about", label: "About", icon: Info, surfaces: ["primary", "features"] },
   { to: "/login", label: "Log in", icon: LogIn, surfaces: [] },
+  { to: "/privacy", label: "Privacy Policy", icon: ShieldCheck, surfaces: [] },
+  { to: "/terms", label: "Terms of Service", icon: FileText, surfaces: [] },
+  { to: "/contact", label: "Contact", icon: Mail, surfaces: [] },
+  { to: "/editorial-policy", label: "Editorial Policy", icon: ScrollText, surfaces: [] },
 ];
 
 /**

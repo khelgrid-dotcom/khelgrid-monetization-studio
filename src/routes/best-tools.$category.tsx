@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { ArrowRight } from "lucide-react";
 import { generateFaqs, faqsToJsonLd } from "@/lib/faq-generator";
+import { noindexMeta } from "@/lib/seo";
 
 const PAGE_SIZE = 6;
 
@@ -32,6 +33,7 @@ export const Route = createFileRoute("/best-tools/$category")({
     if (!loaderData) return { meta: [] };
     return {
       meta: [
+        noindexMeta(),
         { title: `Best ${loaderData.category.toLowerCase()}s for athletes · KhelGrid` },
         { name: "description", content: `Free ${loaderData.category.toLowerCase()}s built for Indian athletes — trial prep, training load, scholarships and more.` },
         { property: "og:title", content: `Best ${loaderData.category.toLowerCase()}s on KhelGrid` },
