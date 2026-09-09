@@ -3,6 +3,7 @@ import { useMemo, useState } from "react";
 import { ChevronLeft, ChevronRight, Search } from "lucide-react";
 import { FEATURE_ITEMS, isActivePath, type NavItem } from "@/config/nav";
 import { NavLink } from "@/components/NavLink";
+import { PlayNavLink } from "@/components/PlayNavLink";
 import { SidebarAd } from "@/components/ads";
 
 // Re-exported for tests and any callers that imported the array directly.
@@ -59,15 +60,24 @@ export function FeaturesSidebar() {
       )}
 
       <nav className="flex flex-1 flex-col gap-0.5 overflow-y-auto px-2 pb-4">
-        {filtered.map((f) => (
-          <NavLink
-            key={f.to}
-            item={f}
-            active={isActivePath(path, f.to)}
-            source="sidebar_desktop"
-            showLabel={!collapsed}
-          />
-        ))}
+        {filtered.map((f) =>
+          f.to === "/play" ? (
+            <PlayNavLink
+              key={f.to}
+              active={isActivePath(path, f.to)}
+              source="sidebar_desktop"
+              showLabel={!collapsed}
+            />
+          ) : (
+            <NavLink
+              key={f.to}
+              item={f}
+              active={isActivePath(path, f.to)}
+              source="sidebar_desktop"
+              showLabel={!collapsed}
+            />
+          )
+        )}
         {filtered.length === 0 && !collapsed && (
           <p className="px-3 py-2 text-xs text-muted-foreground">No matches found</p>
         )}
