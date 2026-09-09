@@ -21,7 +21,11 @@ object UserSessionRepository {
             paidApplications = emptyList(),
             boostedTrials = listOf("t-3", "t-7"),
             sportsCVUnlocked = false,
-            role = UserRole.ATHLETE
+            role = UserRole.ATHLETE,
+            referralCode = "ARJUN100",
+            successfulReferrals = 2,
+            referralRewards = 200,
+            referralInvitesSent = 4
         )
     )
     val userState: StateFlow<UserAuthState> = _userState.asStateFlow()
@@ -112,6 +116,10 @@ object UserSessionRepository {
 
     fun setRole(role: UserRole) {
         _userState.update { it.copy(role = role) }
+    }
+
+    fun recordReferralInvite() {
+        _userState.update { it.copy(referralInvitesSent = it.referralInvitesSent + 1) }
     }
 
     fun bookVenue(venueId: String): Boolean {
