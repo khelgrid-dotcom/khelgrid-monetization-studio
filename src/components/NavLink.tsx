@@ -31,8 +31,9 @@ export function NavLink({ item, active, source, showLabel = true, className }: N
       onClick={onClick}
       className={cn(
         "flex items-center gap-3 rounded-lg px-3 py-3.5 text-sm transition-colors sm:py-2.5",
+        "outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
         active
-          ? "bg-secondary text-foreground"
+          ? "bg-secondary text-foreground hover:bg-secondary"
           : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground",
         className,
       )}
