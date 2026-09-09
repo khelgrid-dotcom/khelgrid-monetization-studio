@@ -103,14 +103,22 @@ export function NavDrawer() {
         <div className="flex-1 overflow-y-auto px-2 py-3">
           {filteredPrimary.length > 0 && (
             <Section title="Navigate">
-              {filteredPrimary.map((i) => (
-                <NavLink
-                  key={i.to}
-                  item={i}
-                  active={isActivePath(path, i.to)}
-                  source="sidebar_mobile"
-                />
-              ))}
+              {filteredPrimary.map((i) =>
+                i.to === "/play" ? (
+                  <PlayNavLink
+                    key={i.to}
+                    active={isActivePath(path, i.to)}
+                    source="sidebar_mobile"
+                  />
+                ) : (
+                  <NavLink
+                    key={i.to}
+                    item={i}
+                    active={isActivePath(path, i.to)}
+                    source="sidebar_mobile"
+                  />
+                )
+              )}
             </Section>
           )}
 
