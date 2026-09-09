@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { renderToString } from "react-dom/server";
+import { useRouterState } from "@tanstack/react-router";
 import { FeaturesSidebar } from "./FeaturesSidebar";
 import { NavDrawer } from "./NavDrawer";
 
