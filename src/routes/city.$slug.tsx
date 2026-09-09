@@ -37,7 +37,7 @@ function CityPage() {
       <Link to="/cities" className="text-xs text-muted-foreground hover:text-foreground">← All cities</Link>
       <Badge variant="outline" className="mt-3 border-primary/40 bg-primary/5 text-primary">{city.state}</Badge>
       <h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-5xl">Sports trials in {city.name}</h1>
-      <p className="mt-2 max-w-2xl text-muted-foreground">{city.tagline} · {city.venues}+ tracked venues.</p>
+      <p className="mt-2 max-w-2xl text-muted-foreground">{city.tagline}. {city.venueNote}.</p>
 
       <div className="mt-8 flex flex-wrap gap-3">
         <Button asChild className="bg-gradient-hero text-primary-foreground hover:opacity-95">
@@ -48,7 +48,15 @@ function CityPage() {
         <Button asChild variant="outline"><Link to="/book">Book a venue</Link></Button>
       </div>
 
-      <section className="mt-10 grid gap-3 sm:grid-cols-3">
+      <section className="mt-10 rounded-2xl border border-border bg-card/50 p-5">
+        <h2 className="font-semibold">Planning sports in {city.name}</h2>
+        <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+          Use the city page to compare current listings, then confirm the exact venue and reporting instructions with
+          the organizer. The hubs below are starting points for research, not a claim that every venue hosts trials.
+        </p>
+      </section>
+
+      <section className="mt-6 grid gap-3 sm:grid-cols-3">
         {city.hubs.map((h: string) => (
           <div key={h} className="rounded-2xl border border-border bg-gradient-card p-5 text-sm">
             <Building2 className="mb-2 h-4 w-4 text-primary" />{h}

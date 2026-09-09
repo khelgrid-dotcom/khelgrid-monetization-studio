@@ -28,63 +28,69 @@ const SECTIONS: Array<{ heading: string; body: string[] }> = [
   {
     heading: "1. Accepting these terms",
     body: [
-      "By using khelgrid.com you agree to these terms. If you are under 18, a parent or guardian must accept them on your behalf and manage your account.",
+      "By using khelgrid.com, creating an account, or submitting content, you agree to these terms. If you are under 18, a parent or guardian must accept them on your behalf, supervise your use, and manage your account. If you do not agree, do not use the service.",
     ],
   },
   {
-    heading: "2. Your account",
+    heading: "2. Beta service and availability",
+    body: [
+      "KhelGrid is an evolving beta service. Some listings, availability results, recommendations, notifications, social features and payment flows may be demonstrations, locally stored beta data, or dependent on third-party information. We may change, pause, or remove features without guaranteeing uninterrupted access.",
+    ],
+  },
+  {
+    heading: "3. Your account",
     body: [
       "Keep your login details private and your profile information accurate. You are responsible for activity on your account. We may suspend accounts that submit false performance data, impersonate others, or abuse the platform.",
     ],
   },
   {
-    heading: "3. Trials, opportunities and listings",
+    heading: "4. Trials, opportunities and listings",
     body: [
-      "KhelGrid lists trials, venues, coaching and events from third parties. We verify academies before a listing goes live, but we are not the organiser and do not guarantee selection, attendance, scheduling or outcomes.",
+      "KhelGrid lists trials, venues, coaching and events from third parties. We may review an organizer, source, or listing, but a verification label describes the checks completed by KhelGrid and is not a guarantee that an event will happen or that a participant will be selected. We are not the organiser and do not guarantee selection, attendance, scheduling or outcomes.",
       "Never pay a selector, scout or coach in cash for guaranteed selection. Report any such request to khelgrid@gmail.com and we will remove the listing.",
     ],
   },
   {
-    heading: "4. Payments, Pro and boosts",
+    heading: "5. Payments, Pro and boosts",
     body: [
       "Paid features include per-trial unlocks, the Verified Sports CV, Pro subscriptions and academy listing boosts. Prices are shown in INR and include applicable taxes.",
       "Subscriptions renew until cancelled; cancel any time and access runs to the end of the paid period.",
     ],
   },
   {
-    heading: "5. Refunds",
+    heading: "6. Refunds",
     body: [
-      "Digital unlocks and boosts are non-refundable once delivered, except where a listing turns out to be fraudulent or is removed by us — in that case we refund in full. Email khelgrid@gmail.com within 14 days.",
+      "Digital unlocks and boosts are non-refundable once delivered, except where a listing turns out to be fraudulent or is removed by us — in that case we refund in full. Email support@khelgrid.com within 14 days.",
     ],
   },
   {
-    heading: "6. Acceptable use",
+    heading: "7. Acceptable use",
     body: [
       "Do not scrape the platform, resell listings, upload unlawful or abusive content, or attempt to bypass paywalls, verification or security controls.",
     ],
   },
   {
-    heading: "7. Your content",
+    heading: "8. Your content",
     body: [
-      "You keep ownership of everything you upload. You grant us a licence to host and display it so we can run the service and show your profile to academies you apply to.",
+      "You keep ownership of everything you upload. You grant us a limited, non-exclusive licence to host, display, and process it so we can run the service and show your profile to academies or communities you choose. Do not upload another person's private information, copyrighted material you cannot share, or claims you cannot support. We may remove content that violates these terms or our safety rules.",
     ],
   },
   {
-    heading: "8. Advertising",
+    heading: "9. Advertising",
     body: [
       "KhelGrid is funded partly by advertising. Ads are labelled and separated from editorial and listing content. See our Privacy Policy for how advertising cookies work and how to change your choice.",
     ],
   },
   {
-    heading: "9. Liability",
+    heading: "10. Liability",
     body: [
-      "The service is provided on an \"as is\" basis. To the extent permitted by law, we are not liable for indirect losses, or for injury, travel costs or missed opportunities arising from third-party trials and venues.",
+      "The service is provided on an \"as is\" and \"as available\" basis. To the extent permitted by law, we are not liable for indirect losses, injury, travel costs, payment disputes, data loss, or missed opportunities arising from third-party trials, venues, organizers, coaches, community users, or unavailable features.",
     ],
   },
   {
-    heading: "10. Changes and contact",
+    heading: "11. Changes and contact",
     body: [
-      "We may update these terms; material changes will be posted here. Questions go to khelgrid@gmail.com. These terms are governed by the laws of India.",
+      "We may update these terms; material changes will be posted here. Questions go to support@khelgrid.com. These terms are governed by the laws of India, subject to any mandatory consumer protections that apply to you.",
     ],
   },
 ];
@@ -114,8 +120,8 @@ function TermsPage() {
 
       <p className="mt-10 text-sm text-muted-foreground">
         Contact us at{" "}
-        <a className="underline hover:text-foreground" href="mailto:khelgrid@gmail.com">
-          khelgrid@gmail.com
+        <a className="underline hover:text-foreground" href="mailto:support@khelgrid.com">
+          support@khelgrid.com
         </a>
         .
       </p>

@@ -10,7 +10,7 @@ export interface AuthState {
   paidApplications: string[]; // trial IDs paid for individually
   boostedTrials: string[];
   sportsCVUnlocked: boolean;
-  role: "athlete" | "organizer";
+  role: "athlete" | "organizer" | "recruiter";
 }
 
 interface AuthContextValue extends AuthState {
@@ -24,7 +24,7 @@ interface AuthContextValue extends AuthState {
   payForApplication: (trialId: string, method: "wallet" | "upi") => boolean;
   boostTrial: (trialId: string, method: "wallet" | "upi") => boolean;
   unlockSportsCV: (method: "wallet" | "upi") => boolean;
-  setRole: (r: "athlete" | "organizer") => void;
+  setRole: (r: "athlete" | "organizer" | "recruiter") => void;
   reset: () => void;
 }
 
@@ -60,7 +60,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (hydrated) localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   }, [state, hydrated]);
 
-  const remainingFree = Math.max(0, FREE_LIMIT - state.applications.filter(id => !state.paidApplications.includes(id)).length);
+  const remainingFree = Math.max(
+    0,
+    FREE_LIMIT - state.applications.filter((id) => !state.paidApplications.includes(id)).length,
+  );
 
   const canApply = (trialId: string) => {
     if (state.applications.includes(trialId)) return true;
@@ -69,34 +72,44 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const applyToTrial = (trialId: string) => {
-    setState(s => s.applications.includes(trialId) ? s : { ...s, applications: [...s.applications, trialId] });
+    setState((s) =>
+      s.applications.includes(trialId) ? s : { ...s, applications: [...s.applications, trialId] },
+    );
   };
 
   const deductWallet = (amount: number, _description: string) => {
     if (state.wallet < amount) return false;
-    setState(s => ({ ...s, wallet: s.wallet - amount }));
+    setState((s) => ({ ...s, wallet: s.wallet - amount }));
     return true;
   };
 
-  const topUpWallet = (amount: number) => setState(s => ({ ...s, wallet: s.wallet + amount }));
+  const topUpWallet = (amount: number) => setState((s) => ({ ...s, wallet: s.wallet + amount }));
 
-  const upgradeToPro = () => setState(s => ({ ...s, plan: "pro" }));
+  const upgradeToPro = () => setState((s) => ({ ...s, plan: "pro" }));
 
   const payForApplication = (trialId: string, method: "wallet" | "upi") => {
     if (method === "wallet") {
       if (state.wallet < 49) return false;
-      setState(s => ({
+      setState((s) => ({
         ...s,
         wallet: s.wallet - 49,
-        applications: s.applications.includes(trialId) ? s.applications : [...s.applications, trialId],
-        paidApplications: s.paidApplications.includes(trialId) ? s.paidApplications : [...s.paidApplications, trialId],
+        applications: s.applications.includes(trialId)
+          ? s.applications
+          : [...s.applications, trialId],
+        paidApplications: s.paidApplications.includes(trialId)
+          ? s.paidApplications
+          : [...s.paidApplications, trialId],
       }));
       return true;
     }
-    setState(s => ({
+    setState((s) => ({
       ...s,
-      applications: s.applications.includes(trialId) ? s.applications : [...s.applications, trialId],
-      paidApplications: s.paidApplications.includes(trialId) ? s.paidApplications : [...s.paidApplications, trialId],
+      applications: s.applications.includes(trialId)
+        ? s.applications
+        : [...s.applications, trialId],
+      paidApplications: s.paidApplications.includes(trialId)
+        ? s.paidApplications
+        : [...s.paidApplications, trialId],
     }));
     return true;
   };
@@ -104,16 +117,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const boostTrial = (trialId: string, method: "wallet" | "upi") => {
     if (method === "wallet") {
       if (state.wallet < 1500) return false;
-      setState(s => ({
+      setState((s) => ({
         ...s,
         wallet: s.wallet - 1500,
-        boostedTrials: s.boostedTrials.includes(trialId) ? s.boostedTrials : [...s.boostedTrials, trialId],
+        boostedTrials: s.boostedTrials.includes(trialId)
+          ? s.boostedTrials
+          : [...s.boostedTrials, trialId],
       }));
       return true;
     }
-    setState(s => ({
+    setState((s) => ({
       ...s,
-      boostedTrials: s.boostedTrials.includes(trialId) ? s.boostedTrials : [...s.boostedTrials, trialId],
+      boostedTrials: s.boostedTrials.includes(trialId)
+        ? s.boostedTrials
+        : [...s.boostedTrials, trialId],
     }));
     return true;
   };
@@ -121,14 +138,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const unlockSportsCV = (method: "wallet" | "upi") => {
     if (method === "wallet") {
       if (state.wallet < 199) return false;
-      setState(s => ({ ...s, wallet: s.wallet - 199, sportsCVUnlocked: true }));
+      setState((s) => ({ ...s, wallet: s.wallet - 199, sportsCVUnlocked: true }));
       return true;
     }
-    setState(s => ({ ...s, sportsCVUnlocked: true }));
+    setState((s) => ({ ...s, sportsCVUnlocked: true }));
     return true;
   };
 
-  const setRole = (r: "athlete" | "organizer") => setState(s => ({ ...s, role: r }));
+  const setRole = (r: "athlete" | "organizer") => setState((s) => ({ ...s, role: r }));
   const reset = () => setState(defaultState);
 
   return (

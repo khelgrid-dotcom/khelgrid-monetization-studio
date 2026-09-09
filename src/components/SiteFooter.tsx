@@ -47,7 +47,15 @@ function pick(paths: string[]) {
 const COLUMNS: Array<{ title: string; items: ReturnType<typeof pick> }> = [
   {
     title: "Compete",
-    items: pick(["/search", "/trials", "/opportunities", "/events", "/verify", "/talent-scanner"]),
+    items: pick([
+      "/search",
+      "/trials",
+      "/opportunities",
+      "/events",
+      "/verify",
+      "/talent-scanner",
+      "/scout-portal",
+    ]),
   },
   {
     title: "Play & train",
@@ -55,7 +63,15 @@ const COLUMNS: Array<{ title: string; items: ReturnType<typeof pick> }> = [
   },
   {
     title: "Learn",
-    items: pick(["/start-from-zero", "/ai-guide", "/guides", "/learning-hub", "/tools", "/resources"]),
+    items: pick([
+      "/start-from-zero",
+      "/ai-guide",
+      "/guides",
+      "/blog",
+      "/learning-hub",
+      "/tools",
+      "/resources",
+    ]),
   },
   {
     title: "Grow",
@@ -73,7 +89,6 @@ const SOCIALS = [
   { label: "X", href: "https://x.com/Khelgrid", icon: Twitter },
 ];
 
-
 export function SiteFooter() {
   const year = new Date().getFullYear();
 
@@ -86,8 +101,8 @@ export function SiteFooter() {
             Your talent isn&apos;t the problem. Access is.
           </h2>
           <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
-            KhelGrid kills the four things that quietly end Indian sporting careers — share it with the one
-            player who deserves to be seen.
+            KhelGrid kills the four things that quietly end Indian sporting careers — share it with
+            the one player who deserves to be seen.
           </p>
 
           <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -115,7 +130,7 @@ export function SiteFooter() {
               India&apos;s grid for sports trials, venues, coaching and verified athlete profiles.
             </p>
             <p className="mt-4 flex items-center gap-2 text-sm text-muted-foreground">
-              <MapPin className="h-4 w-4 shrink-0" /> India · 20+ cities
+              <MapPin className="h-4 w-4 shrink-0" /> India · 16 cities in the current grid
             </p>
             <a
               href="mailto:khelgrid@gmail.com"
@@ -124,12 +139,11 @@ export function SiteFooter() {
               <Mail className="h-4 w-4 shrink-0" /> khelgrid@gmail.com
             </a>
 
-
             <Link
               to="/pricing"
               className="mt-5 inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90"
             >
-              <Zap className="h-4 w-4" /> Go Pro — ₹199/mo
+              <Zap className="h-4 w-4" /> Go Pro — ₹499/mo
             </Link>
 
             <div className="mt-5 flex gap-2">
@@ -179,16 +193,21 @@ export function SiteFooter() {
             <Link to="/contact" className="hover:text-foreground">
               Contact
             </Link>
-            <Link to="/editorial-policy" className="hover:text-foreground">
-              Editorial policy
-            </Link>
             <Link to="/privacy" className="hover:text-foreground">
               Privacy
             </Link>
             <Link to="/terms" className="hover:text-foreground">
               Terms
             </Link>
-
+            <Link to="/editorial-policy" className="hover:text-foreground">
+              Editorial
+            </Link>
+            <Link to="/verification-policy" className="hover:text-foreground">
+              Verification
+            </Link>
+            <Link to="/correction-policy" className="hover:text-foreground">
+              Corrections
+            </Link>
 
             <a href="/sitemap.xml" className="hover:text-foreground">
               Sitemap

@@ -30,7 +30,7 @@ const SECTIONS: Array<{ heading: string; body: string[] }> = [
   {
     heading: "1. Who we are",
     body: [
-      "KhelGrid (\"we\", \"us\") operates khelgrid.com, a platform that lists sports trials, venues, coaching and verified athlete profiles across India. You can reach us any time at khelgrid@gmail.com.",
+      "KhelGrid (\"we\", \"us\") operates khelgrid.com, an India-focused platform for discovering sports opportunities, venues, coaching resources and athlete guidance. KhelGrid is currently delivered as a beta product, so some features use browser storage or demonstration data rather than a live account database. For privacy questions, contact privacy@khelgrid.com.",
     ],
   },
   {
@@ -38,7 +38,8 @@ const SECTIONS: Array<{ heading: string; body: string[] }> = [
     body: [
       "Account details you give us: name, email, phone, city, sport, age group and the contents of your Sports CV.",
       "Usage data collected automatically: pages viewed, search terms, device and browser type, approximate location derived from your IP address, and referring website.",
-      "Payment data for Pro subscriptions, trial unlocks and academy boosts is processed by our payment partners. We never store your full card number.",
+      "Browser-only beta data: saved opportunities, participation check-ins, community beta posts, settings and advertising choices may be stored in local storage on your device. Clearing browser data removes this local copy.",
+      "Payment data for Pro subscriptions, trial unlocks and academy boosts is processed by our payment partners. We do not intentionally store your full card number.",
     ],
   },
   {
@@ -66,7 +67,7 @@ const SECTIONS: Array<{ heading: string; body: string[] }> = [
   {
     heading: "6. Analytics",
     body: [
-      "We use Google Analytics 4 to understand aggregate traffic and feature usage. Analytics data is pseudonymised and is never used to identify you personally.",
+      "We use Google Analytics 4 to understand traffic and feature usage. Depending on your consent and Google's configuration, analytics may use pseudonymous identifiers and device information. You can decline analytics or withdraw advertising consent through Cookie Settings; essential site functions may still use local storage.",
     ],
   },
   {
@@ -83,21 +84,35 @@ const SECTIONS: Array<{ heading: string; body: string[] }> = [
     ],
   },
   {
-    heading: "9. Your rights",
+    heading: "9. Retention and security",
     body: [
-      "You can request access to, correction of, or deletion of your personal data, and you can withdraw consent for advertising or marketing at any time. Email khelgrid@gmail.com and we will respond within 30 days.",
+      "We keep account and support data only for as long as it is needed to provide the service, resolve disputes, prevent abuse, or meet legal obligations. Browser-only beta data remains on your device until you remove it or clear site data.",
+      "We use reasonable administrative and technical safeguards, including encrypted connections in transit and access controls. No online service can promise absolute security, so do not send passwords, payment card numbers, or unnecessary identity documents by email.",
     ],
   },
   {
-    heading: "10. Children",
+    heading: "10. Your rights and choices",
     body: [
-      "Athletes under 18 must have a parent or guardian create and manage the account. We do not knowingly show personalised ads to users we know to be under 18.",
+      "Depending on where you live and applicable law, you may request access to, correction of, deletion of, or information about the personal data we hold about you. You may also withdraw consent for advertising or marketing. Email privacy@khelgrid.com from the address connected to your request; we may ask for reasonable verification and aim to respond within 30 days.",
+      "You can manage personalised advertising through Cookie Settings on this site and Google's Ads Settings. Declining optional cookies does not remove advertisements entirely; it changes how they are selected.",
     ],
   },
   {
-    heading: "11. Changes to this policy",
+    heading: "11. Children and young athletes",
     body: [
-      "We may update this policy as the product evolves. Material changes will be announced on this page with a new effective date.",
+      "KhelGrid is intended to be used with appropriate adult support. A parent or guardian should create and manage an account for anyone under 18, supervise travel and payments, and review organizer communications. Tell us if you believe a child has provided personal information without appropriate consent.",
+    ],
+  },
+  {
+    heading: "12. International services and providers",
+    body: [
+      "KhelGrid may use hosting, analytics, advertising, payment, email, and security providers that process information in India or other countries where those providers operate. We expect providers to protect information under their contracts and applicable law.",
+    ],
+  },
+  {
+    heading: "13. Changes to this policy",
+    body: [
+      "We may update this policy as the product evolves, including when new account, payment, community, or notification features launch. Material changes will be announced on this page with a new effective date.",
     ],
   },
 ];
@@ -139,8 +154,8 @@ function PrivacyPage() {
         </div>
         <p className="mt-4 text-sm text-muted-foreground">
           Questions? Email{" "}
-          <a className="underline hover:text-foreground" href="mailto:khelgrid@gmail.com">
-            khelgrid@gmail.com
+          <a className="underline hover:text-foreground" href="mailto:privacy@khelgrid.com">
+            privacy@khelgrid.com
           </a>
           .
         </p>

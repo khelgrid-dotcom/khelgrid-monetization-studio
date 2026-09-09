@@ -20,9 +20,9 @@ function AcademyPage() {
       <div className="mt-10 grid gap-4 md:grid-cols-3">
         {[
           { icon: Zap, t: "List for free", d: "Post trials, camps and selections at zero cost. Pay only when you boost." },
-          { icon: Flame, t: "Boost for ₹1,500", d: "Pin to top for 7 days. Featured rows get 8.4× more views and 3.2× more applies." },
+          { icon: Flame, t: "Boost for ₹1,500", d: "Pin a listing to the featured area for 7 days with a clearly labelled sponsored placement." },
           { icon: TrendingUp, t: "Ranked applicants", d: "Applicants are auto-ranked by Talent Scanner score, verified status and proximity." },
-          { icon: Users, t: "240+ academies", d: "Trusted by NIS coaches, IPL franchise feeders and SAI-affiliated centres." },
+          { icon: Users, t: "Organizer workspace", d: "Keep listing details, applicant information, and review notes in one place." },
           { icon: Zap, t: "Analytics included", d: "Live dashboards on views, applies, conversion and applicant quality." },
           { icon: Flame, t: "Bulk export", d: "Export applicant data + CVs as CSV or PDF for selection committees." },
         ].map(x => (

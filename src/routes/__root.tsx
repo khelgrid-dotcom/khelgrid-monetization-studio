@@ -12,17 +12,24 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { AuthProvider } from "@/context/AuthContext";
+import { BlogProvider } from "@/context/BlogContext";
+import { FollowedAcademyProvider } from "@/context/FollowedAcademyContext";
+import { NotificationProvider } from "@/context/NotificationContext";
+import { SavedOpportunityProvider } from "@/context/SavedOpportunityContext";
 import { Navbar } from "@/components/Navbar";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { BottomTabBar } from "@/components/BottomTabBar";
 import { Toaster } from "@/components/ui/sonner";
-import { AdConsentProvider, AdConsentBanner, AdSenseLoader, StickyMobileAdSlot } from "@/components/ads";
+import {
+  AdConsentProvider,
+  AdConsentBanner,
+  AdSenseLoader,
+  StickyMobileAdSlot,
+} from "@/components/ads";
 import { adsConfig, hasValidPublisherId } from "@/config/ads";
 import { GoogleTagLoader } from "@/components/GoogleTagLoader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { HydrationDiagnostics } from "@/components/HydrationDiagnostics";
-
-
 
 function NotFoundComponent() {
   return (
@@ -32,7 +39,10 @@ function NotFoundComponent() {
         <h2 className="mt-4 text-xl font-semibold">Page not found</h2>
         <p className="mt-2 text-sm text-muted-foreground">This trial doesn't exist on the grid.</p>
         <div className="mt-6">
-          <Link to="/" className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90">
+          <Link
+            to="/"
+            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+          >
             Go home
           </Link>
         </div>
@@ -55,12 +65,18 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
         <p className="mt-2 text-sm text-muted-foreground">Something went wrong. Try again.</p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
-            onClick={() => { router.invalidate(); reset(); }}
+            onClick={() => {
+              router.invalidate();
+              reset();
+            }}
             className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
           >
             Try again
           </button>
-          <a href="/" className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium hover:bg-accent">
+          <a
+            href="/"
+            className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium hover:bg-accent"
+          >
             Go home
           </a>
         </div>
@@ -79,7 +95,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "apple-mobile-web-app-capable", content: "yes" },
       { name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" },
       { title: "KhelGrid · India's sports trials, scouted & monetized" },
-      { name: "description", content: "Apply to elite sports trials, get a Verified Sports CV, and let academies boost their listings — all on KhelGrid." },
+      {
+        name: "description",
+        content:
+          "Apply to elite sports trials, get a Verified Sports CV, and let academies boost their listings — all on KhelGrid.",
+      },
       { name: "author", content: "KhelGrid" },
       { property: "og:title", content: "KhelGrid" },
       { property: "og:description", content: "India's premium grid for sports trials." },
@@ -94,13 +114,20 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       { rel: "preconnect", href: "https://www.googletagmanager.com" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap" },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap",
+      },
 
       { rel: "stylesheet", href: appCss },
       // Ads: warm up Google's ad hosts so the first unit paints faster.
       ...(hasValidPublisherId()
         ? ([
-            { rel: "preconnect", href: "https://pagead2.googlesyndication.com", crossOrigin: "anonymous" },
+            {
+              rel: "preconnect",
+              href: "https://pagead2.googlesyndication.com",
+              crossOrigin: "anonymous",
+            },
             { rel: "dns-prefetch", href: "https://googleads.g.doubleclick.net" },
             { rel: "dns-prefetch", href: "https://tpc.googlesyndication.com" },
           ] as const)
@@ -120,8 +147,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 function RootShell({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
-      <head><HeadContent /></head>
-      <body>
+      <head>
+        <HeadContent />
+      </head>
+      <body className="overflow-x-hidden">
         {children}
         <Scripts />
       </body>
@@ -134,25 +163,32 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <AdConsentProvider requireConsent>
-          <GoogleTagLoader />
-          <AdSenseLoader />
+        <BlogProvider>
+          <SavedOpportunityProvider>
+            <FollowedAcademyProvider>
+              <NotificationProvider>
+                <AdConsentProvider requireConsent>
+                  <GoogleTagLoader />
+                  <AdSenseLoader />
 
-          <Navbar />
-          <Breadcrumbs />
-          <div className="pb-20 md:pb-0">
-            <Outlet />
-            <SiteFooter />
-          </div>
-          <BottomTabBar />
+                  <Navbar />
+                  <Breadcrumbs />
+                  <div className="pb-20 xl:pb-0">
+                    <Outlet />
+                    <SiteFooter />
+                  </div>
+                  <BottomTabBar />
 
-          <StickyMobileAdSlot />
-          <AdConsentBanner />
-          <Toaster theme="dark" position="top-right" />
-          <HydrationDiagnostics />
-        </AdConsentProvider>
+                  <StickyMobileAdSlot />
+                  <AdConsentBanner />
+                  <Toaster theme="dark" position="top-right" />
+                  <HydrationDiagnostics />
+                </AdConsentProvider>
+              </NotificationProvider>
+            </FollowedAcademyProvider>
+          </SavedOpportunityProvider>
+        </BlogProvider>
       </AuthProvider>
     </QueryClientProvider>
-
   );
 }

@@ -3,3 +3,5 @@ Allow: /
 
 Disallow: /dashboard
 Disallow: /login
+
+Sitemap: https://khelgrid.com/sitemap.xml

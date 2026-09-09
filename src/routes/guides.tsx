@@ -12,6 +12,7 @@ export const Route = createFileRoute("/guides")({
       { title: "Guides & playbooks · KhelGrid" },
       { name: "description", content: "India-specific guides on trial prep, Sports CVs, scholarships, nutrition and parenting young athletes." },
     ],
+    links: [{ rel: "canonical", href: "https://khelgrid.com/guides" }],
   }),
   component: GuidesIndex,
 });

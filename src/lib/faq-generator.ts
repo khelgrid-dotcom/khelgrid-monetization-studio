@@ -51,7 +51,7 @@ function buildFaqBank(ctx: FaqContext): Faq[] {
   return [
     {
       q: `What is the best ${c} ${noun} on ${brand} right now?`,
-      a: `Our editors currently rank "${featured}" as the top ${c} ${noun} on ${brand}. It is reviewed against ${totalCount} other ${c} ${nounPlural} every month and updated whenever Indian trial cycles, federation rules or athlete feedback change.`,
+      a: `"${featured}" is one of the ${totalCount} ${c} ${nounPlural} currently listed on ${brand}. Use the details, sources and your own situation to decide whether it is a good fit; KhelGrid does not guarantee that one item is best for every athlete.`,
     },
     {
       q: `How many ${c} ${nounPlural} does ${brand} publish?`,
@@ -59,19 +59,19 @@ function buildFaqBank(ctx: FaqContext): Faq[] {
     },
     {
       q: `Are the ${c} ${nounPlural} free to use?`,
-      a: `Yes — every ${c} ${noun} listed here is free. You only pay if you choose to apply to a paid trial, unlock a premium ${noun}, or upgrade to ${brand} Pro for coach-shared dashboards.`,
+      a: `The guide or listing can be read without paying. Any separate application, venue, organizer, subscription, or other fee should be shown clearly before a user commits, and should be confirmed with the relevant provider.`,
     },
     {
       q: `Who creates the ${c} ${nounPlural} on ${brand}?`,
-      a: `${cN} ${nounPlural} are produced by ex-athletes, certified coaches and selectors, then fact-checked by the ${brand} editorial team before publishing. Each ${noun} lists its author and last-reviewed date.`,
+      a: `${brand} publishes these pages as practical editorial guidance and opportunity context. We identify the source used when one is available, distinguish organizer information from our own explanation, and welcome corrections when details change.`,
     },
     {
       q: `How often is each ${c} ${noun} updated?`,
-      a: `Every ${c} ${noun} is reviewed at least once per quarter. High-traffic pieces like "${featured}" are revisited monthly to reflect new trial windows, scholarship deadlines and federation announcements.`,
+      a: `Dates, fees, eligibility and event rules can change. Check the page's source status and confirm time-sensitive details with the organizer or official body before acting.`,
     },
     {
       q: `Can I use these ${c} ${nounPlural} on a mobile phone or 2G network?`,
-      a: `Yes. Every ${c} ${noun} on ${brand} is mobile-first, loads on slow networks and stays usable offline once opened in the ${brand} app — built for tier-2 and tier-3 India.`,
+      a: `The pages are designed to be readable on mobile. Availability depends on your connection and browser; do not assume that a page is available offline or that an app feature is live.`,
     },
     {
       q: `Which Indian sports do the ${c} ${nounPlural} cover?`,
@@ -79,15 +79,15 @@ function buildFaqBank(ctx: FaqContext): Faq[] {
     },
     {
       q: `Is "${featured}" suitable for first-time trialists?`,
-      a: `Yes — "${featured}" is written so a first-time trialist with no academy background can apply it in the same week. It pairs naturally with "${secondary}" if you want a deeper run-up.`,
+      a: `It may be useful for a first-time athlete, but eligibility and preparation needs vary. Read the requirements, ask a qualified coach where appropriate, and use "${secondary}" as additional background rather than a promise of readiness.`,
     },
     {
       q: `How is the ${c} ${noun} ranking decided?`,
-      a: `Ranking blends real athlete outcomes (selections, scholarships, callbacks), expert review scores from our coach panel, and freshness. Pay-to-rank is not allowed inside the ${c} ${noun} list.`,
+      a: `${brand} does not present these pages as a universal ranking. Compare relevance, source status, date, eligibility and practical fit instead of treating placement on a page as an endorsement.`,
     },
     {
       q: `Can parents and coaches use these ${c} ${nounPlural} with their athletes?`,
-      a: `Yes. Parents get plain-language summaries and checklists; coaches on ${brand} Pro can share any ${c} ${noun} with their squad, track who completed it and export PDF reports for selectors.`,
+      a: `Yes. Parents and coaches can use the plain-language explanations as a starting point, but they should adapt advice to the athlete and confirm specialist, medical or federation requirements independently.`,
     },
     {
       q: `Do ${c} ${nounPlural} include scholarship and funding information?`,
@@ -99,19 +99,19 @@ function buildFaqBank(ctx: FaqContext): Faq[] {
     },
     {
       q: `Are ${c} ${nounPlural} available in Indian languages other than English?`,
-      a: `Hindi versions are live for the most-read ${c} ${nounPlural}, with Tamil, Marathi and Bengali rolling out next. Toggle the language switcher on any ${noun} page to see what is available.`,
+      a: `The current page is written in English. If you need help understanding an eligibility or safety detail, ask the organizer or a trusted adult or coach rather than relying on an automated translation for an important decision.`,
     },
     {
       q: `What if I cannot find the ${c} ${noun} I need?`,
-      a: `Request it. ${brand}'s editorial desk publishes 20+ new ${nounPlural} every month based on athlete requests, and a missing-${noun} report is the single biggest input we use for what to build next.`,
+      a: `Use the contact page to suggest a topic or report a missing detail. We prioritize requests that can be supported by reliable sources and that help athletes make a practical decision.`,
     },
     {
       q: `How do ${c} ${nounPlural} on ${brand} compare to YouTube tutorials?`,
-      a: `Where YouTube optimises for watch-time, ${brand} ${c} ${nounPlural} optimise for selection rate. Each ${noun} ends with a checklist or measurable benchmark, not just a video — so you know exactly what to do before your next trial.`,
+      a: `These pages provide written context and checklists that can complement coaching, official notices and demonstrations. They are not a substitute for qualified instruction or the organizer's rules.`,
     },
     {
       q: `Can I save and revisit a ${c} ${noun} later?`,
-      a: `Yes — sign in once and any ${c} ${noun} you open is auto-saved to your profile, synced across devices, and resurfaced two days before the trial it relates to.`,
+      a: `Some KhelGrid experiences let you save an opportunity in the browser during beta. Check the page or your account for the available save and reminder controls; do not rely on them as the only reminder for a deadline.`,
     },
   ];
 }

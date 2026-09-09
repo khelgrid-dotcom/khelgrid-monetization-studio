@@ -8,6 +8,14 @@ export interface Trial {
   fee: number;
   spots: number;
   tag: string;
+  sourceUrl?: string;
+  sourceLabel?: string;
+  lastVerified?: string;
+  eligibility?: string;
+  requiredDocuments?: string[];
+  selectionProcess?: string;
+  registrationDeadline?: string;
+  venue?: string;
 }
 
 export const TRIALS: Trial[] = [

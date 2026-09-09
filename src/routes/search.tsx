@@ -50,6 +50,7 @@ export const Route = createFileRoute("/search")({
     meta: [
       { title: "Search · KhelGrid" },
       { name: "description", content: "Search trials, tournaments, academies and events across India by sport and city." },
+      { name: "robots", content: "noindex,follow" },
     ],
   }),
   component: SearchPage,
@@ -146,6 +147,9 @@ function SearchPage() {
           <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">Search the Grid</h1>
           <p className="text-xs text-muted-foreground sm:text-sm">
             Trials, academies & events across India.
+          </p>
+          <p className="mt-2 max-w-xl text-xs leading-relaxed text-muted-foreground">
+            Details can change. Confirm the organizer&apos;s latest notice, eligibility, venue, fee, and registration deadline before applying.
           </p>
         </div>
         <Badge variant="outline" className="shrink-0 border-border">

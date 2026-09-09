@@ -1,0 +1,17 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Blue vertical bar (left) -->
+  <polygon points="50,80 70,60 70,140 50,160" fill="#1F4FE6"/>
+  
+  <!-- Black horizontal bar (top) -->
+  <polygon points="70,60 130,40 130,80 70,100" fill="#1A1A1A"/>
+  
+  <!-- Red horizontal bar (upper right) -->
+  <polygon points="130,80 160,60 180,100 150,120" fill="#DC143C"/>
+  
+  <!-- Yellow horizontal bar (bottom left) -->
+  <polygon points="50,160 90,140 110,160 70,180" fill="#FFD700"/>
+  
+  <!-- Green arrow (right) -->
+  <polygon points="150,120 180,100 160,140 130,160" fill="#1B8C3A"/>
+  <polygon points="180,100 190,110 170,145 160,140" fill="#1B8C3A"/>
+</svg>

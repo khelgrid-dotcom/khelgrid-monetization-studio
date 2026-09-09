@@ -1,8 +1,12 @@
-import { Calendar, MapPin, Users, Flame, Check, Zap } from "lucide-react";
+import { Calendar, MapPin, Users, Flame, Check, Zap, Bookmark, Bell } from "lucide-react";
 import type { Trial } from "@/data/trials";
+import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/context/AuthContext";
+import { useSavedOpportunities } from "@/context/SavedOpportunityContext";
+import { useFollowedAcademies } from "@/context/FollowedAcademyContext";
+import { toast } from "sonner";
 
 interface Props {
   trial: Trial;
@@ -14,7 +18,11 @@ interface Props {
 
 export function TrialCard({ trial, boosted, onApply, onBoost, showBoostAction }: Props) {
   const { applications } = useAuth();
+  const { isSaved, toggleSaved } = useSavedOpportunities();
+  const { isFollowingAcademy, toggleFollowAcademy } = useFollowedAcademies();
   const applied = applications.includes(trial.id);
+  const saved = isSaved(trial.id);
+  const followingAcademy = isFollowingAcademy(trial.academy);
 
   return (
     <div
@@ -31,28 +39,89 @@ export function TrialCard({ trial, boosted, onApply, onBoost, showBoostAction }:
       )}
 
       <div className="flex items-center gap-2 text-xs text-muted-foreground">
-        <Badge variant="outline" className="border-border text-[10px]">{trial.sport}</Badge>
+        <Badge variant="outline" className="border-border text-[10px]">
+          {trial.sport}
+        </Badge>
         <span className="text-foreground/60">·</span>
         <span>{trial.tag}</span>
       </div>
 
-      <h3 className="mt-3 text-lg font-semibold leading-snug">{trial.title}</h3>
+      <h3 className="mt-3 text-lg font-semibold leading-snug">
+        <Link to="/trial/$id" params={{ id: trial.id }} className="hover:text-primary">
+          {trial.title}
+        </Link>
+      </h3>
       <p className="text-sm text-muted-foreground">{trial.academy}</p>
+      <Link
+        to="/trial/$id"
+        params={{ id: trial.id }}
+        className="mt-1 inline-flex text-xs font-medium text-primary hover:underline"
+      >
+        View full opportunity details →
+      </Link>
 
-      <div className="mt-4 grid grid-cols-3 gap-2 text-xs text-muted-foreground">
-        <div className="flex items-center gap-1.5"><MapPin className="h-3.5 w-3.5" />{trial.city}</div>
-        <div className="flex items-center gap-1.5"><Calendar className="h-3.5 w-3.5" />{trial.date}</div>
-        <div className="flex items-center gap-1.5"><Users className="h-3.5 w-3.5" />{trial.spots} spots</div>
+      <div className="mt-4 grid grid-cols-2 gap-2 text-xs text-muted-foreground sm:grid-cols-3">
+        <div className="flex min-w-0 items-center gap-1.5">
+          <MapPin className="h-3.5 w-3.5 shrink-0" />
+          <span className="truncate">{trial.city}</span>
+        </div>
+        <div className="flex min-w-0 items-center gap-1.5">
+          <Calendar className="h-3.5 w-3.5 shrink-0" />
+          <span className="truncate">{trial.date}</span>
+        </div>
+        <div className="flex min-w-0 items-center gap-1.5">
+          <Users className="h-3.5 w-3.5 shrink-0" />
+          <span className="truncate">{trial.spots} spots</span>
+        </div>
       </div>
 
       <div className="mt-5 flex items-center gap-2">
+        <Button
+          type="button"
+          variant="outline"
+          size="icon"
+          onClick={() => toggleSaved(trial.id)}
+          aria-label={
+            saved ? `Remove ${trial.title} from saved opportunities` : `Save ${trial.title}`
+          }
+          title={saved ? "Saved opportunity" : "Save opportunity"}
+          className={saved ? "border-primary bg-primary/10 text-primary" : ""}
+        >
+          <Bookmark className={`h-4 w-4 ${saved ? "fill-current" : ""}`} />
+        </Button>
+        <Button
+          type="button"
+          variant="outline"
+          size="icon"
+          onClick={() => {
+            toggleFollowAcademy(trial.academy);
+            toast.success(
+              followingAcademy ? `Unfollowed ${trial.academy}` : `Following ${trial.academy}`,
+            );
+          }}
+          aria-label={
+            followingAcademy
+              ? `Stop following ${trial.academy}`
+              : `Follow ${trial.academy} for schedule updates`
+          }
+          title={followingAcademy ? "Following academy" : "Follow academy schedule"}
+          className={followingAcademy ? "border-primary bg-primary/10 text-primary" : ""}
+        >
+          <Bell className={`h-4 w-4 ${followingAcademy ? "fill-current" : ""}`} />
+        </Button>
         <Button
           onClick={onApply}
           disabled={applied}
           className="flex-1"
           variant={applied ? "secondary" : "default"}
         >
-          {applied ? (<><Check className="mr-1 h-4 w-4" /> Applied</>) : "Apply now"}
+          {applied ? (
+            <>
+              <Check className="mr-1 h-4 w-4" /> Applied
+            </>
+          ) : (
+            "Apply now"
+          )}
         </Button>
         {showBoostAction && !boosted && (
           <Button onClick={onBoost} variant="outline" size="icon" title="Boost listing">
