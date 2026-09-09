@@ -5,6 +5,7 @@ import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Menu, Trophy, Search, User, Wallet, LogIn, Zap } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
+import { PlayNavLink } from "@/components/PlayNavLink";
 import { PRIMARY_ITEMS, FEATURE_ITEMS, isActivePath, type NavItem } from "@/config/nav";
 
 // Re-exported for tests and any callers that imported the array directly.
