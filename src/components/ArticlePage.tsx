@@ -8,7 +8,9 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { ArrowRight, CalendarDays, Clock, ListTree } from "lucide-react";
+import { InArticleAd } from "@/components/ads";
 import type { Block, ContentPage } from "@/content/types";
+
 
 function slugify(s: string) {
   return s
@@ -165,14 +167,25 @@ export function ArticlePage({ page }: { page: ContentPage }) {
         </ol>
       </nav>
 
-      {sections.map((s) => (
-        <section key={s.id} id={s.id} className="mt-10 scroll-mt-24">
-          <h2 className="font-heading text-xl font-semibold sm:text-2xl">{s.heading}</h2>
-          {s.blocks.map((b, i) => (
-            <BlockView key={i} block={b} />
-          ))}
-        </section>
+      {/* Ads only run on substantive, indexable articles (3+ sections), never
+          above the fold, and never more than one per screenful — AdSense
+          placement policy. */}
+      {showAds && <InArticleAd adSlot="inArticleTop" className="mt-8" />}
+
+      {sections.map((s, si) => (
+        <div key={s.id}>
+          <section id={s.id} className="mt-10 scroll-mt-24">
+            <h2 className="font-heading text-xl font-semibold sm:text-2xl">{s.heading}</h2>
+            {s.blocks.map((b, i) => (
+              <BlockView key={i} block={b} />
+            ))}
+          </section>
+          {showAds && si === Math.floor(sections.length / 2) && (
+            <InArticleAd adSlot="inArticleMid" className="mt-10" />
+          )}
+        </div>
       ))}
+
 
       {page.faqs.length > 0 && (
         <section className="mt-12">
@@ -192,7 +205,10 @@ export function ArticlePage({ page }: { page: ContentPage }) {
         </section>
       )}
 
+      {showAds && <InArticleAd adSlot="inArticleEnd" className="mt-12" />}
+
       <div className="mt-12 flex flex-wrap gap-3">
+
         <Button asChild size="lg" className="bg-gradient-hero text-primary-foreground hover:opacity-95">
           <Link to={page.cta?.to ?? "/search"}>
             {page.cta?.label ?? "Find a trial near you"} <ArrowRight className="ml-1 h-4 w-4" />
