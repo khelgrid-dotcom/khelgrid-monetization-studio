@@ -90,8 +90,12 @@ function BlockView({ block }: { block: Block }) {
  * Renders a long-form editorial page from structured content: headings,
  * paragraphs, tables, FAQ and Article + FAQPage structured data.
  */
-export function ArticlePage({ page }: { page: ContentPage }) {
+export function ArticlePage({ page, ads = true }: { page: ContentPage; ads?: boolean }) {
   const sections = page.sections.map((s) => ({ ...s, id: slugify(s.heading) }));
+  // Never monetise thin pages: an article needs real depth before it carries ads.
+  const totalBlocks = page.sections.reduce((n, s) => n + s.blocks.length, 0);
+  const showAds = ads && sections.length >= 3 && totalBlocks >= 8;
+
 
   const jsonLd = {
     "@context": "https://schema.org",
