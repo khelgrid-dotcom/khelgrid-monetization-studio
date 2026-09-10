@@ -12,6 +12,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.khelgrid.app.ads.KhelGridBannerAd
+import com.khelgrid.app.ads.initialiseAdsWithConsent
 import com.khelgrid.app.data.repository.UserSessionRepository
 import com.khelgrid.app.ui.components.KhelGridTopBar
 import com.khelgrid.app.ui.components.WalletTopUpDialog
@@ -25,6 +27,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        initialiseAdsWithConsent(this)
 
         setContent {
             KhelGridTheme {
@@ -61,7 +64,9 @@ class MainActivity : ComponentActivity() {
                         )
                     },
                     bottomBar = {
-                        NavigationBar(
+                        Column {
+                            KhelGridBannerAd()
+                            NavigationBar(
                             containerColor = KhelGridSurface,
                             tonalElevation = 8.dp,
                             modifier = Modifier.windowInsetsPadding(WindowInsets.navigationBars)
