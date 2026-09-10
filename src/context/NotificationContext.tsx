@@ -122,7 +122,7 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
   }, []);
 
   const addNotification = useCallback((notification: Omit<Notification, "id">) => {
-    const newNotification: Notification = { ...notification, id: `notif-${Date.now()}` };
+    const newNotification = { ...notification, id: `notif-${Date.now()}` } as Notification;
     setNotifications((prev) => [newNotification, ...prev]);
   }, []);
 

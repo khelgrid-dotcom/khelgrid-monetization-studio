@@ -26,7 +26,7 @@ function CitiesIndex() {
             <div className="flex items-center gap-2 text-xs text-muted-foreground"><MapPin className="h-3 w-3" />{c.state}</div>
             <div className="mt-2 text-lg font-semibold group-hover:text-primary">{c.name}</div>
             <p className="mt-1 text-sm text-muted-foreground">{c.tagline}</p>
-            <div className="mt-3 text-xs text-muted-foreground">{c.venues}+ venues</div>
+            <div className="mt-3 text-xs text-muted-foreground">{c.venueNote}</div>
           </Link>
         ))}
       </div>
