@@ -94,3 +94,14 @@ disabled to avoid stacking with Google's own anchor ad.
 - Every unit is labelled "Advertisement"
 - The mobile sticky ad is dismissible
 - No ads on auth, checkout, or error screens
+
+## Android app (AdMob)
+
+AdSense units only serve on the website. The Android app in `app/` uses AdMob:
+
+- `app/src/main/java/com/khelgrid/app/ads/AdMob.kt` — consent (Google UMP) is
+  resolved before the SDK starts and before any banner requests an ad.
+- `AndroidManifest.xml` carries `com.google.android.gms.ads.APPLICATION_ID`.
+- The IDs currently in the code are Google's public **test** IDs. Replace
+  `AdIds.BOTTOM_BANNER` and the manifest `APPLICATION_ID` with the real KhelGrid
+  AdMob values after AdMob approval.
