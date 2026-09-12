@@ -4,6 +4,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.CircleShape
@@ -22,6 +24,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.khelgrid.app.data.model.AthleteProfile
+import com.khelgrid.app.data.model.MatchupAthlete
+import com.khelgrid.app.data.model.MatchupPost
 import com.khelgrid.app.data.model.SportSkillLog
 import com.khelgrid.app.data.model.Trial
 import com.khelgrid.app.data.model.UserAuthState
@@ -1137,6 +1141,279 @@ private fun CareerAdviceAction(title: String, detail: String) {
         Column {
             Text(title, fontWeight = FontWeight.SemiBold, fontSize = 13.sp, color = TextPrimary)
             Text(detail, fontSize = 12.sp, color = TextSecondary)
+        }
+    }
+}
+
+@Composable
+fun MatchupPostAgentDialog(
+    initialSport: String,
+    initialCity: String,
+    athletes: List<MatchupAthlete>,
+    onInvite: (MatchupAthlete) -> Unit,
+    onPublish: (MatchupPost) -> Unit,
+    onDismiss: () -> Unit
+) {
+    val sports = athletes.map { it.sport }.distinct().sorted()
+    val steps = listOf("Game details", "Find athletes", "Publish")
+    var currentStep by remember { mutableStateOf(0) }
+    var selectedSport by remember { mutableStateOf(initialSport.ifBlank { sports.firstOrNull() ?: "Cricket" }) }
+    var selectedSkill by remember { mutableStateOf("Intermediate") }
+    var selectedCity by remember { mutableStateOf(initialCity) }
+    var date by remember { mutableStateOf("This Saturday") }
+    var time by remember { mutableStateOf("7:00 PM") }
+    var venue by remember { mutableStateOf("") }
+    var format by remember { mutableStateOf("Casual game") }
+    var spotsNeeded by remember { mutableStateOf(2) }
+    var message by remember { mutableStateOf("") }
+    val invitedAthletes = remember { mutableStateListOf<String>() }
+    val matchingAthletes = athletes.filter { athlete ->
+        athlete.sport == selectedSport &&
+            athlete.city.equals(selectedCity, ignoreCase = true) &&
+            (athlete.skillLevel == selectedSkill || selectedSkill == "Any level")
+    }
+    val defaultMessage = "Looking for $spotsNeeded ${selectedSport.lowercase()} player${if (spotsNeeded == 1) "" else "s"} for a ${format.lowercase()} at $venue."
+
+    Dialog(onDismissRequest = onDismiss) {
+        Surface(
+            shape = RoundedCornerShape(24.dp),
+            color = KhelGridCard,
+            border = androidx.compose.foundation.BorderStroke(1.dp, KhelGridCardBorder),
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(max = 740.dp)
+        ) {
+            Column(
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+                    .padding(20.dp),
+                verticalArrangement = Arrangement.spacedBy(14.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.Top
+                ) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            Icon(Icons.Default.GroupAdd, contentDescription = null, tint = KhelGridSecondary)
+                            Text("Create a MatchupPost", fontWeight = FontWeight.Bold, fontSize = 18.sp, color = TextPrimary)
+                        }
+                        Text("Find the right players for one good game", fontSize = 12.sp, color = TextSecondary)
+                    }
+                    IconButton(onClick = onDismiss) {
+                        Icon(Icons.Default.Close, contentDescription = "Close matchup post", tint = TextSecondary)
+                    }
+                }
+
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                    steps.forEachIndexed { index, label ->
+                        Surface(
+                            shape = RoundedCornerShape(8.dp),
+                            color = if (index <= currentStep) KhelGridSecondary.copy(alpha = 0.2f) else KhelGridSurface,
+                            border = androidx.compose.foundation.BorderStroke(1.dp, if (index <= currentStep) KhelGridSecondary else KhelGridCardBorder),
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Text(
+                                text = "${index + 1}. $label",
+                                fontSize = 10.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = if (index <= currentStep) KhelGridSecondary else TextMuted,
+                                modifier = Modifier.padding(horizontal = 7.dp, vertical = 7.dp)
+                            )
+                        }
+                    }
+                }
+
+                when (currentStep) {
+                    0 -> {
+                        Text("What are you organising?", fontWeight = FontWeight.Bold, fontSize = 15.sp, color = TextPrimary)
+                        Text("Set the basics so suggested athletes know exactly what they are joining.", fontSize = 12.sp, color = TextSecondary)
+                        Text("Sport", fontSize = 12.sp, fontWeight = FontWeight.SemiBold, color = TextSecondary)
+                        LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            items(sports) { sport ->
+                                FilterChip(
+                                    selected = selectedSport == sport,
+                                    onClick = { selectedSport = sport },
+                                    label = { Text(sport, fontSize = 12.sp) },
+                                    colors = FilterChipDefaults.filterChipColors(
+                                        selectedContainerColor = KhelGridSecondary,
+                                        selectedLabelColor = Color.White,
+                                        containerColor = KhelGridSurface,
+                                        labelColor = TextSecondary
+                                    )
+                                )
+                            }
+                        }
+                        Text("Skill level", fontSize = 12.sp, fontWeight = FontWeight.SemiBold, color = TextSecondary)
+                        LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            items(listOf("Any level", "Beginner", "Intermediate", "Advanced")) { level ->
+                                FilterChip(
+                                    selected = selectedSkill == level,
+                                    onClick = { selectedSkill = level },
+                                    label = { Text(level, fontSize = 12.sp) },
+                                    colors = FilterChipDefaults.filterChipColors(
+                                        selectedContainerColor = KhelGridPrimary,
+                                        selectedLabelColor = Color.White,
+                                        containerColor = KhelGridSurface,
+                                        labelColor = TextSecondary
+                                    )
+                                )
+                            }
+                        }
+                        OutlinedTextField(
+                            value = selectedCity,
+                            onValueChange = { selectedCity = it },
+                            label = { Text("City") },
+                            modifier = Modifier.fillMaxWidth(),
+                            singleLine = true,
+                            colors = OutlinedTextFieldDefaults.colors(focusedTextColor = TextPrimary, unfocusedTextColor = TextPrimary, focusedLabelColor = KhelGridSecondary, unfocusedLabelColor = TextSecondary)
+                        )
+                        OutlinedTextField(
+                            value = venue,
+                            onValueChange = { venue = it },
+                            label = { Text("Venue or court") },
+                            placeholder = { Text("e.g. FerroHub Sports") },
+                            modifier = Modifier.fillMaxWidth(),
+                            singleLine = true,
+                            colors = OutlinedTextFieldDefaults.colors(focusedTextColor = TextPrimary, unfocusedTextColor = TextPrimary, focusedLabelColor = KhelGridSecondary, unfocusedLabelColor = TextSecondary)
+                        )
+                        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                            OutlinedTextField(
+                                value = date,
+                                onValueChange = { date = it },
+                                label = { Text("Date") },
+                                modifier = Modifier.weight(1f),
+                                singleLine = true,
+                                colors = OutlinedTextFieldDefaults.colors(focusedTextColor = TextPrimary, unfocusedTextColor = TextPrimary, focusedLabelColor = KhelGridSecondary, unfocusedLabelColor = TextSecondary)
+                            )
+                            OutlinedTextField(
+                                value = time,
+                                onValueChange = { time = it },
+                                label = { Text("Time") },
+                                modifier = Modifier.weight(1f),
+                                singleLine = true,
+                                colors = OutlinedTextFieldDefaults.colors(focusedTextColor = TextPrimary, unfocusedTextColor = TextPrimary, focusedLabelColor = KhelGridSecondary, unfocusedLabelColor = TextSecondary)
+                            )
+                        }
+                        Text("Game format", fontSize = 12.sp, fontWeight = FontWeight.SemiBold, color = TextSecondary)
+                        LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            items(listOf("Casual game", "Competitive", "Practice session")) { option ->
+                                FilterChip(
+                                    selected = format == option,
+                                    onClick = { format = option },
+                                    label = { Text(option, fontSize = 12.sp) },
+                                    colors = FilterChipDefaults.filterChipColors(
+                                        selectedContainerColor = KhelGridGold,
+                                        selectedLabelColor = Color.Black,
+                                        containerColor = KhelGridSurface,
+                                        labelColor = TextSecondary
+                                    )
+                                )
+                            }
+                        }
+                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                            Text("Players needed", fontSize = 12.sp, fontWeight = FontWeight.SemiBold, color = TextSecondary, modifier = Modifier.weight(1f))
+                            IconButton(onClick = { spotsNeeded = (spotsNeeded - 1).coerceAtLeast(1) }) { Icon(Icons.Default.Remove, contentDescription = "Fewer players", tint = TextSecondary) }
+                            Text(spotsNeeded.toString(), fontWeight = FontWeight.Bold, color = TextPrimary)
+                            IconButton(onClick = { spotsNeeded = (spotsNeeded + 1).coerceAtMost(8) }) { Icon(Icons.Default.Add, contentDescription = "More players", tint = TextSecondary) }
+                        }
+                    }
+                    1 -> {
+                        Text("Suggested athletes", fontWeight = FontWeight.Bold, fontSize = 15.sp, color = TextPrimary)
+                        Text("Suggestions match $selectedSport, $selectedSkill, and $selectedCity.", fontSize = 12.sp, color = TextSecondary)
+                        if (matchingAthletes.isEmpty()) {
+                            Surface(shape = RoundedCornerShape(14.dp), color = KhelGridSurface, border = androidx.compose.foundation.BorderStroke(1.dp, KhelGridCardBorder)) {
+                                Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                                    Icon(Icons.Default.PersonSearch, contentDescription = null, tint = TextMuted)
+                                    Text("No exact matches yet", fontWeight = FontWeight.SemiBold, color = TextPrimary)
+                                    Text("You can publish the post anyway and let the community find it.", fontSize = 12.sp, color = TextSecondary)
+                                }
+                            }
+                        } else {
+                            matchingAthletes.forEach { athlete ->
+                                Surface(
+                                    shape = RoundedCornerShape(14.dp),
+                                    color = if (athlete.id in invitedAthletes) KhelGridSecondary.copy(alpha = 0.12f) else KhelGridSurface,
+                                    border = androidx.compose.foundation.BorderStroke(1.dp, if (athlete.id in invitedAthletes) KhelGridSecondary else KhelGridCardBorder)
+                                ) {
+                                    Row(modifier = Modifier.padding(12.dp), horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.Top) {
+                                        Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
+                                            Text(athlete.name, fontWeight = FontWeight.Bold, fontSize = 14.sp, color = TextPrimary)
+                                            Text("${athlete.skillLevel} · ${athlete.city} · ${athlete.reliability}% reliability", fontSize = 11.sp, color = KhelGridSecondary)
+                                            Text(athlete.availability, fontSize = 11.sp, color = TextSecondary)
+                                            Text(athlete.bio, fontSize = 12.sp, color = TextMuted)
+                                        }
+                                        OutlinedButton(
+                                            onClick = {
+                                                if (athlete.id in invitedAthletes) {
+                                                    invitedAthletes.remove(athlete.id)
+                                                } else {
+                                                    invitedAthletes.add(athlete.id)
+                                                    onInvite(athlete)
+                                                }
+                                            },
+                                            contentPadding = PaddingValues(horizontal = 9.dp, vertical = 5.dp),
+                                            colors = ButtonDefaults.outlinedButtonColors(contentColor = if (athlete.id in invitedAthletes) KhelGridGreen else KhelGridSecondary),
+                                            border = androidx.compose.foundation.BorderStroke(1.dp, if (athlete.id in invitedAthletes) KhelGridGreen else KhelGridSecondary)
+                                        ) {
+                                            Text(if (athlete.id in invitedAthletes) "Invited" else "Invite", fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        Text("${invitedAthletes.size} invite${if (invitedAthletes.size == 1) "" else "s"} selected", fontSize = 12.sp, color = KhelGridPrimaryLight)
+                    }
+                    2 -> {
+                        Text("Preview your MatchupPost", fontWeight = FontWeight.Bold, fontSize = 15.sp, color = TextPrimary)
+                        Surface(shape = RoundedCornerShape(16.dp), color = KhelGridSurface, border = androidx.compose.foundation.BorderStroke(1.dp, KhelGridSecondary.copy(alpha = 0.55f))) {
+                            Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                                Text("$selectedSport · $format", fontWeight = FontWeight.Bold, fontSize = 16.sp, color = TextPrimary)
+                                Text("$date · $time", fontSize = 12.sp, color = KhelGridSecondary)
+                                Text("$venue · $selectedCity", fontSize = 12.sp, color = TextSecondary)
+                                Text("Looking for $spotsNeeded player${if (spotsNeeded == 1) "" else "s"} · $selectedSkill", fontSize = 12.sp, color = TextSecondary)
+                                Text("${invitedAthletes.size} direct invite${if (invitedAthletes.size == 1) "" else "s"} ready", fontSize = 12.sp, color = KhelGridGold)
+                            }
+                        }
+                        OutlinedTextField(
+                            value = message,
+                            onValueChange = { message = it },
+                            label = { Text("Message to the community") },
+                            placeholder = { Text(defaultMessage) },
+                            modifier = Modifier.fillMaxWidth(),
+                            minLines = 3,
+                            colors = OutlinedTextFieldDefaults.colors(focusedTextColor = TextPrimary, unfocusedTextColor = TextPrimary, focusedLabelColor = KhelGridSecondary, unfocusedLabelColor = TextSecondary)
+                        )
+                    }
+                }
+
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                    if (currentStep > 0) {
+                        OutlinedButton(
+                            onClick = { currentStep-- },
+                            modifier = Modifier.weight(1f),
+                            colors = ButtonDefaults.outlinedButtonColors(contentColor = TextSecondary),
+                            border = androidx.compose.foundation.BorderStroke(1.dp, KhelGridCardBorder)
+                        ) { Text("Back") }
+                    }
+                    Button(
+                        onClick = {
+                            if (currentStep < steps.lastIndex) {
+                                currentStep++
+                            } else {
+                                onPublish(MatchupPost(sport = selectedSport, skillLevel = selectedSkill, city = selectedCity, date = date, time = time, venue = venue, format = format, spotsNeeded = spotsNeeded, message = message.ifBlank { defaultMessage }))
+                                onDismiss()
+                            }
+                        },
+                        enabled = currentStep != 0 || venue.isNotBlank(),
+                        modifier = Modifier.weight(1f),
+                        colors = ButtonDefaults.buttonColors(containerColor = KhelGridSecondary)
+                    ) {
+                        Text(if (currentStep == steps.lastIndex) "Publish MatchupPost" else "Continue", fontWeight = FontWeight.Bold, color = if (currentStep == steps.lastIndex) Color.Black else Color.White)
+                    }
+                }
+            }
         }
     }
 }
