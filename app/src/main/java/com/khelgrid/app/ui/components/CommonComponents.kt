@@ -21,6 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.khelgrid.app.data.model.SportSkillLog
 import com.khelgrid.app.data.model.Trial
 import com.khelgrid.app.data.model.UserAuthState
 import com.khelgrid.app.data.model.Venue
@@ -723,6 +724,212 @@ private fun VerificationStepCard(
                 Checkbox(checked = checked, onCheckedChange = onCheckedChange)
                 Text("I checked this", fontSize = 12.sp, color = TextPrimary)
             }
+        }
+    }
+}
+
+@Composable
+fun PerformanceReviewAgentDialog(
+    logs: List<SportSkillLog>,
+    onDismiss: () -> Unit
+) {
+    if (logs.isEmpty()) {
+        Dialog(onDismissRequest = onDismiss) {
+            Surface(
+                shape = RoundedCornerShape(24.dp),
+                color = KhelGridCard,
+                border = androidx.compose.foundation.BorderStroke(1.dp, KhelGridCardBorder),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column(
+                    modifier = Modifier.padding(22.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    Icon(Icons.Default.Insights, contentDescription = null, tint = KhelGridSecondary, modifier = Modifier.size(28.dp))
+                    Text("Your coach needs a first session", fontWeight = FontWeight.Bold, fontSize = 18.sp, color = TextPrimary)
+                    Text("Add a SportSkillLog entry after your next workout with a focus area, score, duration, intensity, and one honest note. Then come back for personalized feedback.", fontSize = 13.sp, color = TextSecondary)
+                    Button(
+                        onClick = onDismiss,
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonDefaults.buttonColors(containerColor = KhelGridPrimary),
+                        shape = RoundedCornerShape(10.dp)
+                    ) {
+                        Text("Close", fontWeight = FontWeight.Bold)
+                    }
+                }
+            }
+        }
+        return
+    }
+
+    val recentLogs = logs.sortedByDescending { it.date }
+    val averageScore = recentLogs.map { it.score }.average().toInt()
+    val averageMinutes = recentLogs.map { it.minutes }.average().toInt()
+    val strongestLog = recentLogs.maxByOrNull { it.score } ?: recentLogs.first()
+    val growthLog = recentLogs.minByOrNull { it.score } ?: recentLogs.first()
+    val hardSessions = recentLogs.count { it.intensity.equals("Hard", ignoreCase = true) }
+
+    Dialog(onDismissRequest = onDismiss) {
+        Surface(
+            shape = RoundedCornerShape(24.dp),
+            color = KhelGridCard,
+            border = androidx.compose.foundation.BorderStroke(1.dp, KhelGridCardBorder),
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(max = 720.dp)
+        ) {
+            Column(
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+                    .padding(20.dp),
+                verticalArrangement = Arrangement.spacedBy(14.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.Top
+                ) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            Icon(Icons.Default.Insights, contentDescription = null, tint = KhelGridPrimaryLight)
+                            Text("SportSkillLog coach", fontWeight = FontWeight.Bold, fontSize = 18.sp, color = TextPrimary)
+                        }
+                        Text("Constructive feedback from your recent training logs", fontSize = 12.sp, color = TextSecondary)
+                    }
+                    IconButton(onClick = onDismiss) {
+                        Icon(Icons.Default.Close, contentDescription = "Close performance coach", tint = TextSecondary)
+                    }
+                }
+
+                Surface(
+                    shape = RoundedCornerShape(16.dp),
+                    color = KhelGridSurface,
+                    border = androidx.compose.foundation.BorderStroke(1.dp, KhelGridCardBorder)
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(14.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        PerformanceMetric(value = "$averageScore/100", label = "Average score", color = KhelGridPrimaryLight)
+                        PerformanceMetric(value = "${recentLogs.size}", label = "Sessions logged", color = KhelGridSecondary)
+                        PerformanceMetric(value = "${averageMinutes}m", label = "Avg. duration", color = KhelGridGold)
+                    }
+                }
+
+                PerformanceInsight(
+                    icon = Icons.Default.EmojiEvents,
+                    label = "Your strength",
+                    title = strongestLog.focus,
+                    detail = "You scored ${strongestLog.score}/100 here. ${strongestLog.athleteNote} Keep this as a reliable part of your weekly routine.",
+                    accent = KhelGridGreen
+                )
+
+                PerformanceInsight(
+                    icon = Icons.Default.TrendingUp,
+                    label = "Best growth opportunity",
+                    title = growthLog.focus,
+                    detail = "This is your lowest logged score at ${growthLog.score}/100. Start with one focused adjustment instead of changing everything at once.",
+                    accent = KhelGridGold
+                )
+
+                Surface(
+                    shape = RoundedCornerShape(16.dp),
+                    color = KhelGridPrimary.copy(alpha = 0.12f),
+                    border = androidx.compose.foundation.BorderStroke(1.dp, KhelGridPrimary.copy(alpha = 0.5f))
+                ) {
+                    Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            Icon(Icons.Default.AutoAwesome, contentDescription = null, tint = KhelGridPrimaryLight)
+                            Text("Your 7-day focus", fontWeight = FontWeight.Bold, fontSize = 15.sp, color = TextPrimary)
+                        }
+                        PerformancePlanRow("2 focused ${growthLog.focus} sessions", "Keep them to 30–45 minutes and record one specific cue you worked on.")
+                        PerformancePlanRow("1 easy recovery day", "Your log shows $hardSessions hard session${if (hardSessions == 1) "" else "s"}; protect quality by giving your body room to adapt.")
+                        PerformancePlanRow("Re-log the same metric", "Compare like with like next week so your progress is easier to see.")
+                    }
+                }
+
+                Surface(
+                    shape = RoundedCornerShape(14.dp),
+                    color = KhelGridSurface,
+                    border = androidx.compose.foundation.BorderStroke(1.dp, KhelGridCardBorder)
+                ) {
+                    Row(
+                        modifier = Modifier.padding(14.dp),
+                        horizontalArrangement = Arrangement.spacedBy(10.dp),
+                        verticalAlignment = Alignment.Top
+                    ) {
+                        Icon(Icons.Default.EditNote, contentDescription = null, tint = KhelGridSecondary, modifier = Modifier.size(20.dp))
+                        Column {
+                            Text("Make your next log more useful", fontWeight = FontWeight.SemiBold, fontSize = 14.sp, color = TextPrimary)
+                            Text("Note what felt difficult, what cue helped, and how recovered you felt the next morning. That context makes the next review more precise.", fontSize = 12.sp, color = TextSecondary)
+                        }
+                    }
+                }
+
+                Text(
+                    "Scores are directional coaching feedback, not a medical assessment. Stop and seek qualified help if training causes pain or unusual symptoms.",
+                    fontSize = 11.sp,
+                    color = TextMuted
+                )
+
+                Button(
+                    onClick = onDismiss,
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(containerColor = KhelGridPrimary),
+                    shape = RoundedCornerShape(10.dp)
+                ) {
+                    Text("Got it", fontWeight = FontWeight.Bold)
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun PerformanceMetric(value: String, label: String, color: Color) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Text(value, fontWeight = FontWeight.Bold, fontSize = 18.sp, color = color)
+        Text(label, fontSize = 10.sp, color = TextSecondary)
+    }
+}
+
+@Composable
+private fun PerformanceInsight(
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    label: String,
+    title: String,
+    detail: String,
+    accent: Color
+) {
+    Surface(
+        shape = RoundedCornerShape(14.dp),
+        color = KhelGridSurface,
+        border = androidx.compose.foundation.BorderStroke(1.dp, accent.copy(alpha = 0.55f))
+    ) {
+        Row(
+            modifier = Modifier.padding(14.dp),
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
+            verticalAlignment = Alignment.Top
+        ) {
+            Icon(icon, contentDescription = null, tint = accent, modifier = Modifier.size(21.dp))
+            Column {
+                Text(label.uppercase(), fontSize = 10.sp, fontWeight = FontWeight.Bold, color = accent)
+                Text(title, fontWeight = FontWeight.Bold, fontSize = 15.sp, color = TextPrimary)
+                Text(detail, fontSize = 12.sp, color = TextSecondary)
+            }
+        }
+    }
+}
+
+@Composable
+private fun PerformancePlanRow(title: String, detail: String) {
+    Row(horizontalArrangement = Arrangement.spacedBy(9.dp), verticalAlignment = Alignment.Top) {
+        Icon(Icons.Default.CheckCircle, contentDescription = null, tint = KhelGridSecondary, modifier = Modifier.size(17.dp))
+        Column {
+            Text(title, fontWeight = FontWeight.SemiBold, fontSize = 13.sp, color = TextPrimary)
+            Text(detail, fontSize = 12.sp, color = TextSecondary)
         }
     }
 }

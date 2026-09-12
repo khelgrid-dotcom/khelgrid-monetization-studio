@@ -8,6 +8,16 @@ enum class UserRole {
     ATHLETE, ORGANIZER
 }
 
+data class SportSkillLog(
+    val id: String,
+    val date: String,
+    val focus: String,
+    val score: Int,
+    val minutes: Int,
+    val intensity: String,
+    val athleteNote: String
+)
+
 data class UserAuthState(
     val name: String = "Arjun Mehta",
     val sport: String = "Cricket",
@@ -22,7 +32,14 @@ data class UserAuthState(
     val referralCode: String = "ARJUN100",
     val successfulReferrals: Int = 2,
     val referralRewards: Int = 200,
-    val referralInvitesSent: Int = 4
+    val referralInvitesSent: Int = 4,
+    val sportSkillLogs: List<SportSkillLog> = listOf(
+        SportSkillLog("ssl-1", "2026-03-06", "Bowling accuracy", 74, 45, "Moderate", "Line and length felt inconsistent after the second spell."),
+        SportSkillLog("ssl-2", "2026-03-09", "Batting footwork", 82, 50, "Hard", "Front-foot movement felt sharper against pace."),
+        SportSkillLog("ssl-3", "2026-03-12", "Bowling accuracy", 78, 40, "Hard", "Target practice helped me hit a fuller length more often."),
+        SportSkillLog("ssl-4", "2026-03-14", "Mobility and recovery", 88, 25, "Easy", "Hips and ankles felt looser after the session."),
+        SportSkillLog("ssl-5", "2026-03-16", "Batting footwork", 85, 48, "Hard", "Balanced well through most of the drill set.")
+    )
 ) {
     val freeLimit: Int = 2
 
