@@ -17,29 +17,52 @@ import {
   Sparkles,
   Phone,
   CheckCircle2,
+  Trophy,
+  X,
+  Filter,
 } from "lucide-react";
 import { VENUES } from "@/data/playo";
 
+import { VenueSearchBar } from "@/components/VenueSearchBar";
+import { VenueDetails } from "@/components/VenueDetails";
+
 export type VenueRow = Database["public"]["Tables"]["venues"]["Row"];
+
+export { VenueSearchBar, VenueDetails };
+
+export interface SportCategory {
+  id: string;
+  name: string;
+  emoji: string;
+}
+
+export const SPORT_CATEGORIES: SportCategory[] = [
+  { id: "all", name: "All Sports", emoji: "🏆" },
+  { id: "football", name: "Football", emoji: "⚽" },
+  { id: "cricket", name: "Cricket", emoji: "🏏" },
+  { id: "badminton", name: "Badminton", emoji: "🏸" },
+  { id: "tennis", name: "Tennis", emoji: "🎾" },
+  { id: "pickleball", name: "Pickleball", emoji: "🏓" },
+  { id: "basketball", name: "Basketball", emoji: "🏀" },
+  { id: "box-cricket", name: "Box Cricket", emoji: "🏟️" },
+  { id: "swimming", name: "Swimming", emoji: "🏊" },
+  { id: "table-tennis", name: "Table Tennis", emoji: "🏓" },
+  { id: "volleyball", name: "Volleyball", emoji: "🏐" },
+];
 
 interface VenueListProps {
   onSelectVenue?: (venue: VenueRow) => void;
   className?: string;
   limit?: number;
   initialSport?: string;
+  initialCategory?: string;
+  selectedCategory?: string;
+  onCategoryChange?: (category: string) => void;
   initialCity?: string;
+  searchQuery?: string;
+  onSearchChange?: (query: string) => void;
+  showSearchBar?: boolean;
 }
-
-const COMMON_SPORTS = [
-  "All",
-  "Cricket",
-  "Football",
-  "Badminton",
-  "Tennis",
-  "Pickleball",
-  "Basketball",
-  "Box Cricket",
-];
 
 const COMMON_CITIES = [
   "All Cities",
@@ -56,8 +79,14 @@ export function VenueList({
   onSelectVenue,
   className = "",
   limit,
-  initialSport = "All",
+  initialSport,
+  initialCategory,
+  selectedCategory,
+  onCategoryChange,
   initialCity = "All Cities",
+  searchQuery: externalSearchQuery,
+  onSearchChange,
+  showSearchBar = true,
 }: VenueListProps) {
   const { supabase, isConfigured } = useSupabase();
 
@@ -66,9 +95,37 @@ export function VenueList({
   const [seeding, setSeeding] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Filters
-  const [searchQuery, setSearchQuery] = useState<string>("");
-  const [selectedSport, setSelectedSport] = useState<string>(initialSport);
+  // Filters (supports controlled or internal search state)
+  const [internalSearchQuery, setInternalSearchQuery] = useState<string>("");
+  const activeSearchQuery =
+    externalSearchQuery !== undefined ? externalSearchQuery : internalSearchQuery;
+
+  const handleSearchChange = useCallback(
+    (newVal: string) => {
+      setInternalSearchQuery(newVal);
+      if (onSearchChange) {
+        onSearchChange(newVal);
+      }
+    },
+    [onSearchChange],
+  );
+
+  // Category state (supports controlled or internal category state)
+  const [internalCategory, setInternalCategory] = useState<string>(
+    initialCategory || initialSport || "All Sports",
+  );
+  const activeCategory = selectedCategory !== undefined ? selectedCategory : internalCategory;
+
+  const handleCategoryChange = useCallback(
+    (category: string) => {
+      setInternalCategory(category);
+      if (onCategoryChange) {
+        onCategoryChange(category);
+      }
+    },
+    [onCategoryChange],
+  );
+
   const [selectedCity, setSelectedCity] = useState<string>(initialCity);
   const [sortBy, setSortBy] = useState<"featured" | "rating" | "price_asc" | "price_desc">(
     "featured",
@@ -145,33 +202,53 @@ export function VenueList({
     }
   };
 
-  // Filter and sort client-side
+  // Dynamic category counts computed from fetched venues
+  const categoryCounts = useMemo(() => {
+    const counts: Record<string, number> = {
+      "All Sports": venues.length,
+      All: venues.length,
+    };
+    venues.forEach((v) => {
+      v.sports?.forEach((sport) => {
+        const norm = sport.trim();
+        counts[norm] = (counts[norm] || 0) + 1;
+        counts[norm.toLowerCase()] = (counts[norm.toLowerCase()] || 0) + 1;
+      });
+    });
+    return counts;
+  }, [venues]);
+
+  // Filter and sort client-side in real-time across name, location, and category
   const filteredVenues = useMemo(() => {
     return venues
       .filter((venue) => {
-        // Search filter
-        if (searchQuery.trim()) {
-          const q = searchQuery.toLowerCase();
-          const matchesName = venue.name.toLowerCase().includes(q);
-          const matchesArea = venue.area.toLowerCase().includes(q);
-          const matchesCity = venue.city.toLowerCase().includes(q);
-          const matchesSport = venue.sports.some((s) => s.toLowerCase().includes(q));
-          if (!matchesName && !matchesArea && !matchesCity && !matchesSport) {
+        // Real-time search filter: matches venue name or location (area, city, address) or sport
+        if (activeSearchQuery.trim()) {
+          const q = activeSearchQuery.toLowerCase().trim();
+          const matchesName = venue.name?.toLowerCase().includes(q) ?? false;
+          const matchesArea = venue.area?.toLowerCase().includes(q) ?? false;
+          const matchesCity = venue.city?.toLowerCase().includes(q) ?? false;
+          const matchesAddress = venue.address?.toLowerCase().includes(q) ?? false;
+          const matchesSport = venue.sports?.some((s) => s.toLowerCase().includes(q)) ?? false;
+
+          if (!matchesName && !matchesArea && !matchesCity && !matchesAddress && !matchesSport) {
             return false;
           }
         }
 
-        // Sport filter
-        if (selectedSport !== "All") {
-          const hasSport = venue.sports.some(
-            (s) => s.toLowerCase() === selectedSport.toLowerCase(),
-          );
-          if (!hasSport) return false;
+        // Category filter (e.g., Football, Cricket, Badminton)
+        if (activeCategory !== "All" && activeCategory !== "All Sports") {
+          const target = activeCategory.toLowerCase().trim();
+          const hasCategory = venue.sports?.some((s) => {
+            const lower = s.toLowerCase().trim();
+            return lower === target || lower.includes(target) || target.includes(lower);
+          });
+          if (!hasCategory) return false;
         }
 
         // City filter
         if (selectedCity !== "All Cities") {
-          if (venue.city.toLowerCase() !== selectedCity.toLowerCase()) {
+          if (venue.city?.toLowerCase() !== selectedCity.toLowerCase()) {
             return false;
           }
         }
@@ -195,34 +272,55 @@ export function VenueList({
         }
         return 0;
       });
-  }, [venues, searchQuery, selectedSport, selectedCity, sortBy]);
+  }, [venues, activeSearchQuery, activeCategory, selectedCity, sortBy]);
 
   return (
-    <div id="venues-list-container" className={`w-full space-y-6 ${className}`}>
-      {/* Search and Filters Bar */}
+    <div id="venues-list-container" className={`w-full space-y-4 ${className}`}>
+      {/* Search Input Bar above VenueList for real-time name & location search */}
+      {showSearchBar && (
+        <VenueSearchBar
+          value={activeSearchQuery}
+          onChange={handleSearchChange}
+          totalResults={filteredVenues.length}
+          isLoading={loading}
+          placeholder="Filter venues by name or location (e.g. Indiranagar, Bengaluru, Turf)..."
+        />
+      )}
+
+      {/* Filter and Controls Toolbar */}
       <div
         id="venues-filter-panel"
-        className="rounded-xl border border-border/80 bg-card/60 p-4 backdrop-blur-xs shadow-xs space-y-4"
+        className="rounded-xl border border-border/80 bg-card/60 p-3.5 backdrop-blur-xs shadow-xs space-y-3"
       >
-        <div className="flex flex-col md:flex-row gap-3 items-center justify-between">
-          <div className="relative w-full md:max-w-md">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              id="venues-search-input"
-              type="text"
-              placeholder="Search by venue name, area, or sport..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-9 h-10 w-full bg-background"
-            />
-          </div>
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+          {/* Quick category, city, and sort controls */}
+          <div className="flex flex-wrap items-center gap-2">
+            {/* Category Dropdown */}
+            <select
+              id="venues-category-dropdown"
+              value={activeCategory}
+              onChange={(e) => handleCategoryChange(e.target.value)}
+              className="h-9 rounded-md border border-input bg-background px-3 py-1 text-sm font-medium focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary shadow-2xs"
+            >
+              {SPORT_CATEGORIES.map((cat) => {
+                const count =
+                  cat.id === "all"
+                    ? venues.length
+                    : categoryCounts[cat.name] || categoryCounts[cat.name.toLowerCase()] || 0;
+                return (
+                  <option key={cat.id} value={cat.name}>
+                    {cat.emoji} {cat.name} ({count})
+                  </option>
+                );
+              })}
+            </select>
 
-          <div className="flex flex-wrap items-center gap-2 w-full md:w-auto justify-between md:justify-end">
+            {/* City Dropdown */}
             <select
               id="venues-city-select"
               value={selectedCity}
               onChange={(e) => setSelectedCity(e.target.value)}
-              className="h-10 rounded-md border border-input bg-background px-3 py-1 text-sm font-medium focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
+              className="h-9 rounded-md border border-input bg-background px-3 py-1 text-sm font-medium focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary shadow-2xs"
             >
               {COMMON_CITIES.map((city) => (
                 <option key={city} value={city}>
@@ -231,19 +329,26 @@ export function VenueList({
               ))}
             </select>
 
+            {/* Sort Dropdown */}
             <select
               id="venues-sort-select"
               value={sortBy}
               onChange={(e) =>
                 setSortBy(e.target.value as "featured" | "rating" | "price_asc" | "price_desc")
               }
-              className="h-10 rounded-md border border-input bg-background px-3 py-1 text-sm font-medium focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
+              className="h-9 rounded-md border border-input bg-background px-3 py-1 text-sm font-medium focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary shadow-2xs"
             >
               <option value="featured">Featured First</option>
               <option value="rating">Top Rated</option>
               <option value="price_asc">Price: Low to High</option>
               <option value="price_desc">Price: High to Low</option>
             </select>
+          </div>
+
+          <div className="flex items-center justify-between sm:justify-end gap-3">
+            <span className="text-xs text-muted-foreground font-medium">
+              {filteredVenues.length} {filteredVenues.length === 1 ? "venue" : "venues"} available
+            </span>
 
             <Button
               id="venues-refresh-button"
@@ -252,37 +357,80 @@ export function VenueList({
               onClick={fetchVenues}
               disabled={loading}
               title="Refresh Venues from Supabase"
-              className="h-10 w-10 shrink-0"
+              className="h-9 w-9 shrink-0 rounded-md"
             >
-              <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin text-primary" : ""}`} />
+              <RefreshCw className={`h-3.5 w-3.5 ${loading ? "animate-spin text-primary" : ""}`} />
             </Button>
           </div>
         </div>
 
-        {/* Sport Filter Chips */}
+        {/* Category Filter Chips Bar (e.g. Football, Cricket, Badminton) */}
         <div
-          id="venues-sport-chips"
-          className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs no-scrollbar"
+          id="venues-category-filter-section"
+          className="space-y-1.5 pt-1 border-t border-border/50"
         >
-          <SlidersHorizontal className="h-3.5 w-3.5 mr-1 text-muted-foreground shrink-0" />
-          {COMMON_SPORTS.map((sport) => {
-            const isSelected = selectedSport === sport;
-            return (
+          <div className="flex items-center justify-between text-xs">
+            <div className="flex items-center gap-1.5 font-semibold text-muted-foreground">
+              <Trophy className="h-3.5 w-3.5 text-primary" />
+              <span>Category Filter</span>
+            </div>
+            {activeCategory !== "All" && activeCategory !== "All Sports" && (
               <button
-                key={sport}
-                id={`sport-chip-${sport.toLowerCase().replace(/\s+/g, "-")}`}
+                id="venues-clear-category-btn"
                 type="button"
-                onClick={() => setSelectedSport(sport)}
-                className={`px-3 py-1.5 rounded-full font-medium transition-colors whitespace-nowrap cursor-pointer ${
-                  isSelected
-                    ? "bg-primary text-primary-foreground shadow-xs"
-                    : "bg-muted/70 hover:bg-muted text-muted-foreground hover:text-foreground"
-                }`}
+                onClick={() => handleCategoryChange("All Sports")}
+                className="inline-flex items-center gap-1 text-[11px] font-medium text-primary hover:underline cursor-pointer"
               >
-                {sport}
+                <span>{`Reset Category (${activeCategory})`}</span>
+                <X className="h-3 w-3" />
               </button>
-            );
-          })}
+            )}
+          </div>
+
+          <div
+            id="venues-category-chips"
+            className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs no-scrollbar"
+            role="tablist"
+            aria-label="Filter venues by sports category"
+          >
+            {SPORT_CATEGORIES.map((cat) => {
+              const isSelected =
+                activeCategory === cat.name ||
+                (cat.id === "all" && (activeCategory === "All" || activeCategory === "All Sports"));
+              const count =
+                cat.id === "all"
+                  ? venues.length
+                  : categoryCounts[cat.name] || categoryCounts[cat.name.toLowerCase()] || 0;
+
+              return (
+                <button
+                  key={cat.id}
+                  id={`venue-category-btn-${cat.id}`}
+                  type="button"
+                  role="tab"
+                  aria-selected={isSelected}
+                  onClick={() => handleCategoryChange(cat.name)}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full font-medium transition-all whitespace-nowrap cursor-pointer text-xs ${
+                    isSelected
+                      ? "bg-primary text-primary-foreground shadow-xs font-semibold"
+                      : "bg-muted/70 hover:bg-muted text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  <span>{cat.emoji}</span>
+                  <span>{cat.name}</span>
+                  <span
+                    className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${
+                      isSelected
+                        ? "bg-primary-foreground/20 text-primary-foreground"
+                        : "bg-background/80 text-muted-foreground"
+                    }`}
+                  >
+                    {count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
 
@@ -401,8 +549,8 @@ export function VenueList({
             variant="outline"
             size="sm"
             onClick={() => {
-              setSearchQuery("");
-              setSelectedSport("All");
+              handleSearchChange("");
+              handleCategoryChange("All Sports");
               setSelectedCity("All Cities");
             }}
           >
