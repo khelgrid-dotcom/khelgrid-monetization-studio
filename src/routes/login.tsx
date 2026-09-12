@@ -8,7 +8,16 @@ import { Trophy, Smartphone } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/login")({
-  head: () => ({ meta: [{ title: "Log In · KhelGrid" }, { name: "description", content: "Log in to KhelGrid to apply to trials and manage your Sports CV." }, { name: "robots", content: "noindex,follow" }] }),
+  head: () => ({
+    meta: [
+      { title: "Log In · KhelGrid" },
+      {
+        name: "description",
+        content: "Log in to KhelGrid to apply to trials and manage your Sports CV.",
+      },
+      { name: "robots", content: "noindex,follow" },
+    ],
+  }),
   component: Login,
 });
 
@@ -40,17 +49,37 @@ function Login() {
             <Label htmlFor="phone">Mobile number</Label>
             <div className="relative mt-1">
               <Smartphone className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input id="phone" value={phone} onChange={e => setPhone(e.target.value)} placeholder="+91 98xxxxxx00" className="pl-9" required />
+              <Input
+                id="phone"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder="+91 98xxxxxx00"
+                className="pl-9"
+                required
+              />
             </div>
           </div>
-          <Button type="submit" className="w-full bg-gradient-hero text-primary-foreground hover:opacity-95">Send OTP</Button>
+          <Button
+            type="submit"
+            className="w-full bg-gradient-hero text-primary-foreground hover:opacity-95"
+          >
+            Send OTP
+          </Button>
         </form>
 
         <div className="mt-6 text-center text-xs text-muted-foreground">
-          New here? <Link to="/start-from-zero" className="text-primary hover:underline">Start from zero →</Link>
+          New here?{" "}
+          <Link to="/start-from-zero" className="text-primary hover:underline">
+            Start from zero →
+          </Link>
         </div>
 
-        <Badge variant="outline" className="mt-6 w-full justify-center border-border text-xs text-muted-foreground">Demo · no real OTP sent</Badge>
+        <Badge
+          variant="outline"
+          className="mt-6 w-full justify-center border-border text-xs text-muted-foreground"
+        >
+          Demo · no real OTP sent
+        </Badge>
       </div>
     </main>
   );

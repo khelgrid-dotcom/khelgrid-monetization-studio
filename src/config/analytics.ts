@@ -15,10 +15,12 @@ const GA_ID_RE = /^(G|GT|AW|DC|UA)-[A-Z0-9-]+$/i;
 export const analyticsConfig = {
   /** GA4 measurement ID. */
   measurementId:
-    ((import.meta.env["VITE_GA_MEASUREMENT_ID"] as string | undefined) ?? "").trim() || DEFAULT_GA_ID,
+    ((import.meta.env["VITE_GA_MEASUREMENT_ID"] as string | undefined) ?? "").trim() ||
+    DEFAULT_GA_ID,
   /** Google tag ID (loaded alongside the GA4 ID). */
   googleTagId:
-    ((import.meta.env["VITE_GOOGLE_TAG_ID"] as string | undefined) ?? "").trim() || DEFAULT_GOOGLE_TAG_ID,
+    ((import.meta.env["VITE_GOOGLE_TAG_ID"] as string | undefined) ?? "").trim() ||
+    DEFAULT_GOOGLE_TAG_ID,
   /** Don't send hits from the dev preview. */
   enabled: !import.meta.env.DEV,
 } as const;

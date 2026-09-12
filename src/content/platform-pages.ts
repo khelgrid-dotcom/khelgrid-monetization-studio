@@ -35,10 +35,16 @@ export const aboutPage: ContentPage = {
           type: "table",
           head: ["Section", "What it gives you"],
           rows: [
-            ["Search & trials", "Trials, camps and academy intakes filtered by sport, city and date"],
+            [
+              "Search & trials",
+              "Trials, camps and academy intakes filtered by sport, city and date",
+            ],
             ["Book & play", "Venue booking and open games near you"],
             ["Train & coaches", "Coaching programmes and coach profiles with fees stated up front"],
-            ["Guides", "Written explainers on trials, documents, nutrition, recovery and parenting an athlete"],
+            [
+              "Guides",
+              "Written explainers on trials, documents, nutrition, recovery and parenting an athlete",
+            ],
             ["Tools", "Simple calculators and checklists for readiness, load and eligibility"],
             ["Trust & safety", "The checks to run before paying or travelling for any trial"],
           ],
@@ -145,11 +151,17 @@ export const communityPage: ContentPage = {
           type: "table",
           head: ["Green flag", "Red flag"],
           rows: [
-            ["Someone slightly better than you attends regularly", "You are always the best player present"],
+            [
+              "Someone slightly better than you attends regularly",
+              "You are always the best player present",
+            ],
             ["Sessions start on time and have a purpose", "Sessions are unstructured social meets"],
             ["Warm-ups happen before intensity", "Straight into full-intensity play"],
             ["Mistakes are corrected plainly", "Only praise, or only mockery"],
-            ["Competition entries are shared and encouraged", "Nobody in the group ever enters events"],
+            [
+              "Competition entries are shared and encouraged",
+              "Nobody in the group ever enters events",
+            ],
           ],
         },
       ],
@@ -348,10 +360,22 @@ export const coachesPage: ContentPage = {
           type: "table",
           head: ["Format", "Best for", "What to expect"],
           rows: [
-            ["One-to-one", "Fixing a specific technical fault", "Highest cost per hour, fastest correction"],
-            ["Small group (up to 12)", "Regular development training", "Individual feedback still possible"],
+            [
+              "One-to-one",
+              "Fixing a specific technical fault",
+              "Highest cost per hour, fastest correction",
+            ],
+            [
+              "Small group (up to 12)",
+              "Regular development training",
+              "Individual feedback still possible",
+            ],
             ["Large group (20+)", "Volume, fitness, match play", "Supervision more than coaching"],
-            ["Online video review", "Athletes far from good coaching", "Useful for technique, useless for load management"],
+            [
+              "Online video review",
+              "Athletes far from good coaching",
+              "Useful for technique, useless for load management",
+            ],
           ],
         },
       ],

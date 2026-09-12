@@ -15,17 +15,15 @@ function labelFor(match: { routeId: string; pathname: string }) {
   if (ROUTE_LABELS[match.routeId]) return ROUTE_LABELS[match.routeId];
   // Fallback: use the last path segment, prettified.
   const segment = match.pathname.split("/").filter(Boolean).pop() ?? "";
-  return segment
-    .replace(/-/g, " ")
-    .replace(/\b\w/g, c => c.toUpperCase());
+  return segment.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
 export function Breadcrumbs() {
   const matches = useRouterState({
-    select: s => s.matches.map(m => ({ routeId: m.routeId, pathname: m.pathname })),
+    select: (s) => s.matches.map((m) => ({ routeId: m.routeId, pathname: m.pathname })),
   });
 
-  const crumbs = matches.filter(m => m.routeId !== "__root__");
+  const crumbs = matches.filter((m) => m.routeId !== "__root__");
   if (crumbs.length <= 1 && crumbs[0]?.routeId === "/") return null;
 
   return (

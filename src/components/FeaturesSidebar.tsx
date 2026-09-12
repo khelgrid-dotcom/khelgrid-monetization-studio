@@ -76,7 +76,7 @@ export function FeaturesSidebar() {
               source="sidebar_desktop"
               showLabel={!collapsed}
             />
-          )
+          ),
         )}
         {filtered.length === 0 && !collapsed && (
           <p className="px-3 py-2 text-xs text-muted-foreground">No matches found</p>
@@ -89,7 +89,6 @@ export function FeaturesSidebar() {
           </div>
         )}
       </nav>
-
     </aside>
   );
 }

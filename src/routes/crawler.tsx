@@ -10,7 +10,10 @@ export const Route = createFileRoute("/crawler")({
   head: () => ({
     meta: [
       { title: "Sports Crawler · KhelGrid" },
-      { name: "description", content: "Internal sports organization notification collection controls." },
+      {
+        name: "description",
+        content: "Internal sports organization notification collection controls.",
+      },
       { name: "robots", content: "noindex,nofollow" },
     ],
   }),
@@ -55,7 +58,7 @@ function CrawlerPage() {
   const handleRunCrawler = async () => {
     setIsRunning(true);
     setStats((prev) => ({ ...prev, status: "running" }));
-    
+
     // Simulate crawler run
     setTimeout(() => {
       setIsRunning(false);
@@ -78,7 +81,9 @@ function CrawlerPage() {
             <Bot className="h-8 w-8 text-primary" />
             <h1 className="text-4xl font-bold text-slate-900">Sports Crawler</h1>
           </div>
-          <p className="text-slate-600">Automatically collect notifications from sports organizations</p>
+          <p className="text-slate-600">
+            Automatically collect notifications from sports organizations
+          </p>
         </div>
 
         {/* Status Card */}
@@ -103,16 +108,12 @@ function CrawlerPage() {
 
               <div>
                 <p className="text-sm text-slate-600 mb-1">Last Run</p>
-                <p className="font-semibold text-slate-900">
-                  {stats.lastRun.toLocaleTimeString()}
-                </p>
+                <p className="font-semibold text-slate-900">{stats.lastRun.toLocaleTimeString()}</p>
               </div>
 
               <div>
                 <p className="text-sm text-slate-600 mb-1">Next Run</p>
-                <p className="font-semibold text-slate-900">
-                  {stats.nextRun.toLocaleTimeString()}
-                </p>
+                <p className="font-semibold text-slate-900">{stats.nextRun.toLocaleTimeString()}</p>
               </div>
 
               <div>
@@ -132,12 +133,7 @@ function CrawlerPage() {
           <CardContent className="space-y-6">
             {/* Run Button */}
             <div className="flex gap-3">
-              <Button
-                onClick={handleRunCrawler}
-                disabled={isRunning}
-                className="gap-2"
-                size="lg"
-              >
+              <Button onClick={handleRunCrawler} disabled={isRunning} className="gap-2" size="lg">
                 <Play className="h-4 w-4" />
                 {isRunning ? "Running..." : "Run Crawler Now"}
               </Button>
@@ -165,9 +161,7 @@ function CrawlerPage() {
                   </button>
                 ))}
               </div>
-              <p className="text-xs text-slate-600 mt-2">
-                Current: Every {interval} minutes
-              </p>
+              <p className="text-xs text-slate-600 mt-2">Current: Every {interval} minutes</p>
             </div>
           </CardContent>
         </Card>
@@ -182,13 +176,13 @@ function CrawlerPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="font-medium text-slate-900">RSS Feeds</p>
-                <p className="text-sm text-slate-600">BCCI, IPL, ISL, and other official RSS feeds</p>
+                <p className="text-sm text-slate-600">
+                  BCCI, IPL, ISL, and other official RSS feeds
+                </p>
               </div>
               <Switch
                 checked={crawlerConfig.rss}
-                onCheckedChange={(checked) =>
-                  setCrawlerConfig({ ...crawlerConfig, rss: checked })
-                }
+                onCheckedChange={(checked) => setCrawlerConfig({ ...crawlerConfig, rss: checked })}
               />
             </div>
 
@@ -252,9 +246,7 @@ function CrawlerPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-slate-600 mb-1">Total Collected</p>
-                  <p className="text-3xl font-bold text-slate-900">
-                    {stats.totalNotifications}
-                  </p>
+                  <p className="text-3xl font-bold text-slate-900">{stats.totalNotifications}</p>
                 </div>
                 <TrendingUp className="h-12 w-12 text-green-500 opacity-30" />
               </div>
@@ -266,14 +258,15 @@ function CrawlerPage() {
               <div>
                 <p className="text-sm text-slate-600 mb-3">Notifications by Source</p>
                 <div className="space-y-2">
-                  {Object.entries(stats.sourceStats).map(([source, count]) => (
-                    count > 0 && (
-                      <div key={source} className="flex justify-between items-center text-sm">
-                        <span className="text-slate-600 capitalize">{source}</span>
-                        <Badge variant="secondary">{count}</Badge>
-                      </div>
-                    )
-                  ))}
+                  {Object.entries(stats.sourceStats).map(
+                    ([source, count]) =>
+                      count > 0 && (
+                        <div key={source} className="flex justify-between items-center text-sm">
+                          <span className="text-slate-600 capitalize">{source}</span>
+                          <Badge variant="secondary">{count}</Badge>
+                        </div>
+                      ),
+                  )}
                 </div>
               </div>
             </CardContent>
@@ -317,11 +310,36 @@ function CrawlerPage() {
           <CardContent>
             <div className="space-y-4">
               {[
-                { org: "IPL", title: "IPL 2026 Mega Auction Dates Announced", source: "Official API", time: "5 min ago" },
-                { org: "BCCI", title: "U-19 Cricket Selection Trials - Mumbai", source: "RSS Feed", time: "32 min ago" },
-                { org: "ISL", title: "ISL Cup Final Match Update", source: "Twitter", time: "1 hour ago" },
-                { org: "Hockey India", title: "National Camp Trials Open", source: "Instagram", time: "2 hours ago" },
-                { org: "AIFF", title: "Football I-League Schedule Released", source: "RSS Feed", time: "3 hours ago" },
+                {
+                  org: "IPL",
+                  title: "IPL 2026 Mega Auction Dates Announced",
+                  source: "Official API",
+                  time: "5 min ago",
+                },
+                {
+                  org: "BCCI",
+                  title: "U-19 Cricket Selection Trials - Mumbai",
+                  source: "RSS Feed",
+                  time: "32 min ago",
+                },
+                {
+                  org: "ISL",
+                  title: "ISL Cup Final Match Update",
+                  source: "Twitter",
+                  time: "1 hour ago",
+                },
+                {
+                  org: "Hockey India",
+                  title: "National Camp Trials Open",
+                  source: "Instagram",
+                  time: "2 hours ago",
+                },
+                {
+                  org: "AIFF",
+                  title: "Football I-League Schedule Released",
+                  source: "RSS Feed",
+                  time: "3 hours ago",
+                },
               ].map((notification, i) => (
                 <div key={i} className="border-b last:border-b-0 pb-4 last:pb-0">
                   <div className="flex items-start justify-between">

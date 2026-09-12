@@ -1,9 +1,5 @@
 export type BlogCategory =
-  | "Training"
-  | "Trial preparation"
-  | "Sports career"
-  | "Recovery"
-  | "Mindset";
+  "Training" | "Trial preparation" | "Sports career" | "Recovery" | "Mindset";
 
 export interface BlogSection {
   heading: string;

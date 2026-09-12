@@ -117,7 +117,7 @@ export function NavDrawer() {
                     active={isActivePath(path, i.to)}
                     source="sidebar_mobile"
                   />
-                )
+                ),
               )}
             </Section>
           )}
@@ -138,7 +138,7 @@ export function NavDrawer() {
                     active={isActivePath(path, i.to)}
                     source="sidebar_mobile"
                   />
-                )
+                ),
               )}
             </Section>
           )}

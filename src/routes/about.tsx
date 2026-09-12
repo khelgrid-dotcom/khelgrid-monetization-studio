@@ -13,7 +13,8 @@ export const Route = createFileRoute("/about")({
       { property: "og:title", content: "About KhelGrid" },
       {
         property: "og:description",
-        content: "KhelGrid helps athletes discover sports opportunities with clearer information and verification context.",
+        content:
+          "KhelGrid helps athletes discover sports opportunities with clearer information and verification context.",
       },
     ],
     links: [{ rel: "canonical", href: "https://khelgrid.com/about" }],
@@ -33,10 +34,13 @@ function AboutPage() {
     <main className="mx-auto max-w-4xl px-4 py-10 md:px-6 md:py-14">
       <div className="max-w-3xl">
         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">Our mission</p>
-        <h1 className="mt-3 text-4xl font-bold tracking-tight sm:text-5xl">Sports access should be easier to trust.</h1>
+        <h1 className="mt-3 text-4xl font-bold tracking-tight sm:text-5xl">
+          Sports access should be easier to trust.
+        </h1>
         <p className="mt-5 text-lg leading-relaxed text-muted-foreground">
-          KhelGrid is a sports opportunity discovery platform for athletes, parents, coaches, and academies in India.
-          We organize trials, camps, tournaments, scholarships, training, and learning resources in one place.
+          KhelGrid is a sports opportunity discovery platform for athletes, parents, coaches, and
+          academies in India. We organize trials, camps, tournaments, scholarships, training, and
+          learning resources in one place.
         </p>
       </div>
 
@@ -47,9 +51,9 @@ function AboutPage() {
             <h2 className="text-xl font-semibold">What we do</h2>
           </div>
           <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-            We help people compare opportunity details, understand eligibility, find preparation resources, and reach
-            the organizer&apos;s official registration channel. KhelGrid is not the organizer of every listed event and
-            does not guarantee selection.
+            We help people compare opportunity details, understand eligibility, find preparation
+            resources, and reach the organizer&apos;s official registration channel. KhelGrid is not
+            the organizer of every listed event and does not guarantee selection.
           </p>
         </section>
 
@@ -59,11 +63,15 @@ function AboutPage() {
             <h2 className="text-xl font-semibold">What verified means</h2>
           </div>
           <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-            A verified label means our team has recorded a source or organizer check for the information shown. It does
-            not mean KhelGrid guarantees a result, endorses a payment, or replaces the organizer&apos;s latest notice.
-            Always confirm dates, fees, eligibility, and venue details before travelling or paying.
+            A verified label means our team has recorded a source or organizer check for the
+            information shown. It does not mean KhelGrid guarantees a result, endorses a payment, or
+            replaces the organizer&apos;s latest notice. Always confirm dates, fees, eligibility,
+            and venue details before travelling or paying.
           </p>
-          <Link to="/trust-center" className="mt-4 inline-flex text-sm font-semibold text-primary hover:underline">
+          <Link
+            to="/trust-center"
+            className="mt-4 inline-flex text-sm font-semibold text-primary hover:underline"
+          >
             Read our verification process →
           </Link>
         </section>
@@ -87,10 +95,14 @@ function AboutPage() {
           <h2 className="text-xl font-semibold">Contact and corrections</h2>
         </div>
         <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-          Found an incorrect date, suspicious organizer, or expired opportunity? Tell us what needs checking and include
-          the listing title and official source if available. We review correction requests through our support channel.
+          Found an incorrect date, suspicious organizer, or expired opportunity? Tell us what needs
+          checking and include the listing title and official source if available. We review
+          correction requests through our support channel.
         </p>
-        <Link to="/contact" className="mt-4 inline-flex rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90">
+        <Link
+          to="/contact"
+          className="mt-4 inline-flex rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90"
+        >
           Contact KhelGrid
         </Link>
       </section>

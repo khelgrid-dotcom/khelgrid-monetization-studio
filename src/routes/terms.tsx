@@ -13,7 +13,8 @@ export const Route = createFileRoute("/terms")({
       { property: "og:title", content: "Terms of Service · KhelGrid" },
       {
         property: "og:description",
-        content: "Accounts, applications, academy listings, payments, refunds and acceptable use on KhelGrid.",
+        content:
+          "Accounts, applications, academy listings, payments, refunds and acceptable use on KhelGrid.",
       },
       { property: "og:type", content: "article" },
       { property: "og:url", content: "/terms" },
@@ -84,7 +85,7 @@ const SECTIONS: Array<{ heading: string; body: string[] }> = [
   {
     heading: "10. Liability",
     body: [
-      "The service is provided on an \"as is\" and \"as available\" basis. To the extent permitted by law, we are not liable for indirect losses, injury, travel costs, payment disputes, data loss, or missed opportunities arising from third-party trials, venues, organizers, coaches, community users, or unavailable features.",
+      'The service is provided on an "as is" and "as available" basis. To the extent permitted by law, we are not liable for indirect losses, injury, travel costs, payment disputes, data loss, or missed opportunities arising from third-party trials, venues, organizers, coaches, community users, or unavailable features.',
     ],
   },
   {
@@ -100,7 +101,9 @@ function TermsPage() {
     <main className="mx-auto max-w-3xl px-4 py-10 md:px-6 md:py-14">
       <div className="flex items-center gap-3">
         <Scale className="h-6 w-6 text-primary" aria-hidden="true" />
-        <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Legal</p>
+        <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+          Legal
+        </p>
       </div>
       <h1 className="mt-3 font-heading text-3xl font-extrabold md:text-4xl">Terms of Service</h1>
       <p className="mt-2 text-sm text-muted-foreground">Last updated: 5 August 2026</p>

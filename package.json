@@ -92,11 +92,5 @@
     "seroval-plugins": "1.6.2",
     "@tanstack/react-router": "1.170.18",
     "@tanstack/router-core": "1.171.15"
-  },
-  "resolutions": {
-    "seroval": "1.6.2",
-    "seroval-plugins": "1.6.2",
-    "@tanstack/react-router": "1.170.18",
-    "@tanstack/router-core": "1.171.15"
   }
 }

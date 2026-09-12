@@ -27,10 +27,14 @@ export const Route = createFileRoute("/community")({
       { title: "Community · KhelGrid" },
       {
         name: "description",
-        content: "Connect with athletes, coaches, and academies through sport and city communities on KhelGrid.",
+        content:
+          "Connect with athletes, coaches, and academies through sport and city communities on KhelGrid.",
       },
       { property: "og:title", content: "KhelGrid Community" },
-      { property: "og:description", content: "Share progress, find practice partners, and learn with athletes in your sport." },
+      {
+        property: "og:description",
+        content: "Share progress, find practice partners, and learn with athletes in your sport.",
+      },
     ],
     links: [{ rel: "canonical", href: "https://khelgrid.com/community" }],
   }),
@@ -130,11 +134,17 @@ function CommunityPage() {
   }, []);
 
   useEffect(() => {
-    if (hydrated) localStorage.setItem(STORAGE_KEY, JSON.stringify({ posts, liked, following, reported }));
+    if (hydrated)
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ posts, liked, following, reported }));
   }, [hydrated, posts, liked, following, reported]);
 
   const filteredPosts = useMemo(
-    () => posts.filter((post) => (sport === "All sports" || post.sport === sport) && (city === "All cities" || post.city === city)),
+    () =>
+      posts.filter(
+        (post) =>
+          (sport === "All sports" || post.sport === sport) &&
+          (city === "All cities" || post.city === city),
+      ),
     [posts, sport, city],
   );
 
@@ -164,22 +174,32 @@ function CommunityPage() {
   const toggleLike = (id: string) => {
     const nextLiked = !liked[id];
     setLiked((current) => ({ ...current, [id]: nextLiked }));
-    setPosts((current) => current.map((post) => post.id === id ? { ...post, likes: Math.max(0, post.likes + (nextLiked ? 1 : -1)) } : post));
+    setPosts((current) =>
+      current.map((post) =>
+        post.id === id ? { ...post, likes: Math.max(0, post.likes + (nextLiked ? 1 : -1)) } : post,
+      ),
+    );
   };
 
   const addComment = (postId: string) => {
     const text = commentDrafts[postId]?.trim();
     if (!text) return;
-    setPosts((current) => current.map((post) => post.id === postId ? { ...post, comments: [...post.comments, `${name}: ${text}`] } : post));
+    setPosts((current) =>
+      current.map((post) =>
+        post.id === postId ? { ...post, comments: [...post.comments, `${name}: ${text}`] } : post,
+      ),
+    );
     setCommentDrafts((current) => ({ ...current, [postId]: "" }));
   };
 
   const toggleFollow = (author: string) => {
-    setFollowing((current) => current.includes(author) ? current.filter((item) => item !== author) : [...current, author]);
+    setFollowing((current) =>
+      current.includes(author) ? current.filter((item) => item !== author) : [...current, author],
+    );
   };
 
   const reportPost = (id: string) => {
-    setReported((current) => current.includes(id) ? current : [...current, id]);
+    setReported((current) => (current.includes(id) ? current : [...current, id]));
     toast.success("Thanks. We will review this post.");
   };
 
@@ -189,10 +209,15 @@ function CommunityPage() {
         <section>
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <Badge variant="outline" className="border-primary/40 bg-primary/5 text-primary">Community beta</Badge>
-              <h1 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">Your sports circle</h1>
+              <Badge variant="outline" className="border-primary/40 bg-primary/5 text-primary">
+                Community beta
+              </Badge>
+              <h1 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
+                Your sports circle
+              </h1>
               <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-                Share progress, find practice partners, and learn from athletes and coaches in your sport and city.
+                Share progress, find practice partners, and learn from athletes and coaches in your
+                sport and city.
               </p>
             </div>
             <Button onClick={() => setComposerOpen((open) => !open)} className="gap-2">
@@ -202,12 +227,22 @@ function CommunityPage() {
 
           <div className="mt-6 rounded-2xl border border-border bg-card/50 p-4">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="mr-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Filter</span>
-              {SPORTS.map((item) => <FilterButton key={item} active={sport === item} onClick={() => setSport(item)}>{item}</FilterButton>)}
+              <span className="mr-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                Filter
+              </span>
+              {SPORTS.map((item) => (
+                <FilterButton key={item} active={sport === item} onClick={() => setSport(item)}>
+                  {item}
+                </FilterButton>
+              ))}
             </div>
             <div className="mt-3 flex flex-wrap items-center gap-2">
               <MapPin className="h-4 w-4 text-primary" />
-              {CITIES.map((item) => <FilterButton key={item} active={city === item} onClick={() => setCity(item)}>{item}</FilterButton>)}
+              {CITIES.map((item) => (
+                <FilterButton key={item} active={city === item} onClick={() => setCity(item)}>
+                  {item}
+                </FilterButton>
+              ))}
             </div>
           </div>
 
@@ -216,22 +251,44 @@ function CommunityPage() {
               <CardHeader className="flex-row items-center justify-between space-y-0 pb-3">
                 <div>
                   <h2 className="font-semibold">Share with your community</h2>
-                  <p className="text-xs text-muted-foreground">Be specific, helpful, and protect private information.</p>
+                  <p className="text-xs text-muted-foreground">
+                    Be specific, helpful, and protect private information.
+                  </p>
                 </div>
                 <Badge variant="secondary">{name}</Badge>
               </CardHeader>
               <CardContent>
-                <Textarea value={draft} onChange={(event) => setDraft(event.target.value)} maxLength={500} placeholder="Share a training win, ask for advice, or find a practice partner…" className="min-h-28 resize-none" />
+                <Textarea
+                  value={draft}
+                  onChange={(event) => setDraft(event.target.value)}
+                  maxLength={500}
+                  placeholder="Share a training win, ask for advice, or find a practice partner…"
+                  className="min-h-28 resize-none"
+                />
                 <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <div className="flex gap-2">
-                    <select value={draftSport} onChange={(event) => setDraftSport(event.target.value)} className="rounded-lg border border-border bg-background px-3 py-2 text-xs">
-                      {SPORTS.slice(1).map((item) => <option key={item}>{item}</option>)}
+                    <select
+                      value={draftSport}
+                      onChange={(event) => setDraftSport(event.target.value)}
+                      className="rounded-lg border border-border bg-background px-3 py-2 text-xs"
+                    >
+                      {SPORTS.slice(1).map((item) => (
+                        <option key={item}>{item}</option>
+                      ))}
                     </select>
-                    <select value={draftCity} onChange={(event) => setDraftCity(event.target.value)} className="rounded-lg border border-border bg-background px-3 py-2 text-xs">
-                      {CITIES.slice(1).map((item) => <option key={item}>{item}</option>)}
+                    <select
+                      value={draftCity}
+                      onChange={(event) => setDraftCity(event.target.value)}
+                      className="rounded-lg border border-border bg-background px-3 py-2 text-xs"
+                    >
+                      {CITIES.slice(1).map((item) => (
+                        <option key={item}>{item}</option>
+                      ))}
                     </select>
                   </div>
-                  <Button onClick={publish} disabled={!draft.trim()} className="gap-2"><Send className="h-4 w-4" /> Publish</Button>
+                  <Button onClick={publish} disabled={!draft.trim()} className="gap-2">
+                    <Send className="h-4 w-4" /> Publish
+                  </Button>
                 </div>
               </CardContent>
             </Card>
@@ -239,48 +296,89 @@ function CommunityPage() {
 
           <div className="mt-6 space-y-5">
             {filteredPosts.length === 0 ? (
-              <Card className="p-10 text-center"><Users className="mx-auto h-8 w-8 text-muted-foreground" /><p className="mt-3 text-sm text-muted-foreground">No posts match these filters yet.</p></Card>
-            ) : filteredPosts.map((post) => (
-              <PostCard
-                key={post.id}
-                post={post}
-                liked={Boolean(liked[post.id])}
-                following={following.includes(post.author)}
-                reported={reported.includes(post.id)}
-                comment={commentDrafts[post.id] ?? ""}
-                onLike={() => toggleLike(post.id)}
-                onFollow={() => toggleFollow(post.author)}
-                onReport={() => reportPost(post.id)}
-                onCommentChange={(value) => setCommentDrafts((current) => ({ ...current, [post.id]: value }))}
-                onComment={() => addComment(post.id)}
-              />
-            ))}
+              <Card className="p-10 text-center">
+                <Users className="mx-auto h-8 w-8 text-muted-foreground" />
+                <p className="mt-3 text-sm text-muted-foreground">
+                  No posts match these filters yet.
+                </p>
+              </Card>
+            ) : (
+              filteredPosts.map((post) => (
+                <PostCard
+                  key={post.id}
+                  post={post}
+                  liked={Boolean(liked[post.id])}
+                  following={following.includes(post.author)}
+                  reported={reported.includes(post.id)}
+                  comment={commentDrafts[post.id] ?? ""}
+                  onLike={() => toggleLike(post.id)}
+                  onFollow={() => toggleFollow(post.author)}
+                  onReport={() => reportPost(post.id)}
+                  onCommentChange={(value) =>
+                    setCommentDrafts((current) => ({ ...current, [post.id]: value }))
+                  }
+                  onComment={() => addComment(post.id)}
+                />
+              ))
+            )}
           </div>
         </section>
 
         <aside className="space-y-5">
           <Card>
-            <CardHeader><h2 className="font-semibold">Find your circles</h2><p className="text-sm text-muted-foreground">Join conversations that help you take the next step.</p></CardHeader>
+            <CardHeader>
+              <h2 className="font-semibold">Find your circles</h2>
+              <p className="text-sm text-muted-foreground">
+                Join conversations that help you take the next step.
+              </p>
+            </CardHeader>
             <CardContent className="space-y-3">
-              {["Athletes in Delhi", "Football trial prep", "Parents and young athletes", "Coaches and academies"].map((circle) => (
-                <button key={circle} className="flex w-full items-center justify-between rounded-xl border border-border p-3 text-left text-sm transition hover:border-primary/40 hover:bg-primary/5">
-                  <span className="flex items-center gap-2"><Users className="h-4 w-4 text-primary" />{circle}</span><Plus className="h-4 w-4 text-muted-foreground" />
+              {[
+                "Athletes in Delhi",
+                "Football trial prep",
+                "Parents and young athletes",
+                "Coaches and academies",
+              ].map((circle) => (
+                <button
+                  key={circle}
+                  className="flex w-full items-center justify-between rounded-xl border border-border p-3 text-left text-sm transition hover:border-primary/40 hover:bg-primary/5"
+                >
+                  <span className="flex items-center gap-2">
+                    <Users className="h-4 w-4 text-primary" />
+                    {circle}
+                  </span>
+                  <Plus className="h-4 w-4 text-muted-foreground" />
                 </button>
               ))}
             </CardContent>
           </Card>
 
           <Card className="border-primary/25 bg-primary/5">
-            <CardHeader><div className="flex items-center gap-2"><ShieldCheck className="h-5 w-5 text-primary" /><h2 className="font-semibold">Community safety</h2></div></CardHeader>
+            <CardHeader>
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="h-5 w-5 text-primary" />
+                <h2 className="font-semibold">Community safety</h2>
+              </div>
+            </CardHeader>
             <CardContent className="space-y-2 text-sm text-muted-foreground">
-              <p>Never share Aadhaar numbers, passwords, payment PINs, or private contact details in a post.</p>
-              <p>Report guaranteed-selection claims, harassment, scams, or suspicious payment requests.</p>
-              <p className="flex items-center gap-2 pt-1 text-xs font-medium text-primary"><Bell className="h-3.5 w-3.5" /> Moderation tools are active in this beta.</p>
+              <p>
+                Never share Aadhaar numbers, passwords, payment PINs, or private contact details in
+                a post.
+              </p>
+              <p>
+                Report guaranteed-selection claims, harassment, scams, or suspicious payment
+                requests.
+              </p>
+              <p className="flex items-center gap-2 pt-1 text-xs font-medium text-primary">
+                <Bell className="h-3.5 w-3.5" /> Moderation tools are active in this beta.
+              </p>
             </CardContent>
           </Card>
 
           <div className="rounded-2xl border border-dashed border-border p-4 text-xs leading-relaxed text-muted-foreground">
-            Community posts are currently saved in this browser for the beta experience. Account sync, real-time messaging, and moderation review queues should be connected to a database before public launch.
+            Community posts are currently saved in this browser for the beta experience. Account
+            sync, real-time messaging, and moderation review queues should be connected to a
+            database before public launch.
           </div>
         </aside>
       </div>
@@ -288,11 +386,37 @@ function CommunityPage() {
   );
 }
 
-function FilterButton({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
-  return <button onClick={onClick} className={`rounded-full border px-3 py-1.5 text-xs transition ${active ? "border-primary bg-primary/10 text-primary" : "border-border text-muted-foreground hover:border-primary/40"}`}>{children}</button>;
+function FilterButton({
+  active,
+  onClick,
+  children,
+}: {
+  active: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className={`rounded-full border px-3 py-1.5 text-xs transition ${active ? "border-primary bg-primary/10 text-primary" : "border-border text-muted-foreground hover:border-primary/40"}`}
+    >
+      {children}
+    </button>
+  );
 }
 
-function PostCard({ post, liked, following, reported, comment, onLike, onFollow, onReport, onCommentChange, onComment }: {
+function PostCard({
+  post,
+  liked,
+  following,
+  reported,
+  comment,
+  onLike,
+  onFollow,
+  onReport,
+  onCommentChange,
+  onComment,
+}: {
   post: Post;
   liked: boolean;
   following: boolean;
@@ -309,29 +433,98 @@ function PostCard({ post, liked, following, reported, comment, onLike, onFollow,
       <CardContent className="p-5 sm:p-6">
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-center gap-3">
-            <div className="grid h-10 w-10 place-items-center rounded-full bg-gradient-hero font-semibold text-primary-foreground">{post.author.slice(0, 1).toUpperCase()}</div>
+            <div className="grid h-10 w-10 place-items-center rounded-full bg-gradient-hero font-semibold text-primary-foreground">
+              {post.author.slice(0, 1).toUpperCase()}
+            </div>
             <div>
-              <div className="flex items-center gap-1.5 text-sm font-semibold">{post.author}{post.verified && <CheckCircle2 className="h-3.5 w-3.5 text-primary" />}</div>
-              <div className="flex flex-wrap items-center gap-1.5 text-xs text-muted-foreground"><span>{post.role}</span><span>·</span><span>{post.createdAt}</span><span>·</span><span>{post.city}</span></div>
+              <div className="flex items-center gap-1.5 text-sm font-semibold">
+                {post.author}
+                {post.verified && <CheckCircle2 className="h-3.5 w-3.5 text-primary" />}
+              </div>
+              <div className="flex flex-wrap items-center gap-1.5 text-xs text-muted-foreground">
+                <span>{post.role}</span>
+                <span>·</span>
+                <span>{post.createdAt}</span>
+                <span>·</span>
+                <span>{post.city}</span>
+              </div>
             </div>
           </div>
           <div className="flex items-center gap-1">
-            <button onClick={onFollow} className="rounded-full px-2.5 py-1 text-xs font-medium text-primary hover:bg-primary/10">{following ? "Following" : "Follow"}</button>
-            <button onClick={onReport} disabled={reported} aria-label="Report post" className="rounded-full p-2 text-muted-foreground hover:bg-secondary hover:text-foreground"><MoreHorizontal className="h-4 w-4" /></button>
+            <button
+              onClick={onFollow}
+              className="rounded-full px-2.5 py-1 text-xs font-medium text-primary hover:bg-primary/10"
+            >
+              {following ? "Following" : "Follow"}
+            </button>
+            <button
+              onClick={onReport}
+              disabled={reported}
+              aria-label="Report post"
+              className="rounded-full p-2 text-muted-foreground hover:bg-secondary hover:text-foreground"
+            >
+              <MoreHorizontal className="h-4 w-4" />
+            </button>
           </div>
         </div>
 
-        <div className="mt-4 flex items-center gap-2"><Badge variant="outline" className="border-primary/30 text-primary">{post.sport}</Badge>{reported && <span className="text-xs text-muted-foreground">Reported for review</span>}</div>
+        <div className="mt-4 flex items-center gap-2">
+          <Badge variant="outline" className="border-primary/30 text-primary">
+            {post.sport}
+          </Badge>
+          {reported && <span className="text-xs text-muted-foreground">Reported for review</span>}
+        </div>
         <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed">{post.body}</p>
 
         <div className="mt-5 flex items-center gap-1 border-t border-border pt-3">
-          <button onClick={onLike} className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium transition ${liked ? "bg-rose-500/10 text-rose-500" : "text-muted-foreground hover:bg-secondary hover:text-foreground"}`}><Heart className={`h-4 w-4 ${liked ? "fill-current" : ""}`} /> {post.likes}</button>
-          <span className="inline-flex items-center gap-1.5 px-3 py-2 text-xs text-muted-foreground"><MessageCircle className="h-4 w-4" /> {post.comments.length}</span>
-          <button onClick={onReport} disabled={reported} className="ml-auto inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs text-muted-foreground hover:bg-secondary hover:text-foreground"><Flag className="h-3.5 w-3.5" /> {reported ? "Reported" : "Report"}</button>
+          <button
+            onClick={onLike}
+            className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium transition ${liked ? "bg-rose-500/10 text-rose-500" : "text-muted-foreground hover:bg-secondary hover:text-foreground"}`}
+          >
+            <Heart className={`h-4 w-4 ${liked ? "fill-current" : ""}`} /> {post.likes}
+          </button>
+          <span className="inline-flex items-center gap-1.5 px-3 py-2 text-xs text-muted-foreground">
+            <MessageCircle className="h-4 w-4" /> {post.comments.length}
+          </span>
+          <button
+            onClick={onReport}
+            disabled={reported}
+            className="ml-auto inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs text-muted-foreground hover:bg-secondary hover:text-foreground"
+          >
+            <Flag className="h-3.5 w-3.5" /> {reported ? "Reported" : "Report"}
+          </button>
         </div>
 
-        {post.comments.length > 0 && <div className="mt-3 space-y-2">{post.comments.map((item, index) => <div key={`${item}-${index}`} className="rounded-lg bg-secondary/50 px-3 py-2 text-xs text-muted-foreground">{item}</div>)}</div>}
-        <div className="mt-3 flex gap-2"><input value={comment} onChange={(event) => onCommentChange(event.target.value)} onKeyDown={(event) => event.key === "Enter" && onComment()} placeholder="Add a helpful comment…" className="min-w-0 flex-1 rounded-lg border border-border bg-background px-3 py-2 text-xs outline-none focus:border-primary/50" /><Button onClick={onComment} disabled={!comment.trim()} size="sm" variant="outline" aria-label="Post comment"><Send className="h-3.5 w-3.5" /></Button></div>
+        {post.comments.length > 0 && (
+          <div className="mt-3 space-y-2">
+            {post.comments.map((item, index) => (
+              <div
+                key={`${item}-${index}`}
+                className="rounded-lg bg-secondary/50 px-3 py-2 text-xs text-muted-foreground"
+              >
+                {item}
+              </div>
+            ))}
+          </div>
+        )}
+        <div className="mt-3 flex gap-2">
+          <input
+            value={comment}
+            onChange={(event) => onCommentChange(event.target.value)}
+            onKeyDown={(event) => event.key === "Enter" && onComment()}
+            placeholder="Add a helpful comment…"
+            className="min-w-0 flex-1 rounded-lg border border-border bg-background px-3 py-2 text-xs outline-none focus:border-primary/50"
+          />
+          <Button
+            onClick={onComment}
+            disabled={!comment.trim()}
+            size="sm"
+            variant="outline"
+            aria-label="Post comment"
+          >
+            <Send className="h-3.5 w-3.5" />
+          </Button>
+        </div>
       </CardContent>
     </Card>
   );

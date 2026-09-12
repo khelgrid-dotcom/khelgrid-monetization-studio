@@ -19,6 +19,5 @@ export function trackAdEvent(evt: AdEvent) {
   } catch {
     // no-op
   }
-  // eslint-disable-next-line no-console
   console.debug("[ads]", evt);
 }

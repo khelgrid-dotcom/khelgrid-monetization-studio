@@ -10,7 +10,7 @@ export interface Notification {
   description: string;
   read: boolean;
   createdAt: Date;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 interface NotificationContextType {

@@ -1,6 +1,21 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
-import { Settings, Bell, Lock, Eye, Palette, Sun, Moon, Monitor, Save, RotateCcw, ChevronRight, Mail, MessageSquare, Smartphone } from "lucide-react";
+import {
+  Settings,
+  Bell,
+  Lock,
+  Eye,
+  Palette,
+  Sun,
+  Moon,
+  Monitor,
+  Save,
+  RotateCcw,
+  ChevronRight,
+  Mail,
+  MessageSquare,
+  Smartphone,
+} from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
@@ -10,7 +25,11 @@ export const Route = createFileRoute("/settings")({
   head: () => ({
     meta: [
       { title: "Settings · KhelGrid" },
-      { name: "description", content: "Manage your KhelGrid account, notifications, privacy, advertising and appearance preferences." },
+      {
+        name: "description",
+        content:
+          "Manage your KhelGrid account, notifications, privacy, advertising and appearance preferences.",
+      },
       { name: "robots", content: "noindex,follow" },
     ],
   }),
@@ -26,7 +45,9 @@ interface SettingsState {
 
 function SettingsPage() {
   const [theme, setTheme] = useState<"light" | "dark" | "auto">("auto");
-  const [activeTab, setActiveTab] = useState<"account" | "notifications" | "privacy" | "appearance">("account");
+  const [activeTab, setActiveTab] = useState<
+    "account" | "notifications" | "privacy" | "appearance"
+  >("account");
   const [saved, setSaved] = useState(false);
 
   const [settings, setSettings] = useState<SettingsState>({
@@ -118,7 +139,9 @@ function SettingsPage() {
             </div>
             <div>
               <h1 className="text-4xl font-bold text-slate-900 dark:text-white">Settings</h1>
-              <p className="text-slate-600 dark:text-slate-400">Manage your account, notifications & preferences</p>
+              <p className="text-slate-600 dark:text-slate-400">
+                Manage your account, notifications & preferences
+              </p>
             </div>
           </div>
         </div>
@@ -161,7 +184,9 @@ function SettingsPage() {
                   </CardHeader>
                   <CardContent className="space-y-6">
                     <div>
-                      <label className="block font-semibold text-slate-900 dark:text-white mb-3">Language</label>
+                      <label className="block font-semibold text-slate-900 dark:text-white mb-3">
+                        Language
+                      </label>
                       <select
                         value={settings.preferences.language}
                         onChange={(e) => {
@@ -181,13 +206,18 @@ function SettingsPage() {
 
                     <div className="border-t pt-6" />
                     <div>
-                      <label className="block font-semibold text-slate-900 dark:text-white mb-3">Email Frequency</label>
+                      <label className="block font-semibold text-slate-900 dark:text-white mb-3">
+                        Email Frequency
+                      </label>
                       <select
                         value={settings.preferences.emailFrequency}
                         onChange={(e) => {
                           setSettings({
                             ...settings,
-                            preferences: { ...settings.preferences, emailFrequency: e.target.value },
+                            preferences: {
+                              ...settings.preferences,
+                              emailFrequency: e.target.value,
+                            },
                           });
                         }}
                         className="w-full px-4 py-2 border border-border rounded-lg bg-background dark:bg-slate-700"
@@ -208,8 +238,12 @@ function SettingsPage() {
                   <CardContent className="space-y-4">
                     <div className="flex items-center justify-between p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
                       <div>
-                        <p className="font-semibold text-green-900 dark:text-green-100">Account Active</p>
-                        <p className="text-sm text-green-700 dark:text-green-300">Your account is in good standing</p>
+                        <p className="font-semibold text-green-900 dark:text-green-100">
+                          Account Active
+                        </p>
+                        <p className="text-sm text-green-700 dark:text-green-300">
+                          Your account is in good standing
+                        </p>
                       </div>
                       <Badge className="bg-green-600">Active</Badge>
                     </div>
@@ -230,8 +264,12 @@ function SettingsPage() {
                     <div className="flex gap-3">
                       <Mail className="h-5 w-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
                       <div>
-                        <p className="font-semibold text-blue-900 dark:text-blue-100">Email Notifications</p>
-                        <p className="text-sm text-blue-700 dark:text-blue-300">Receive trial updates and recommendations</p>
+                        <p className="font-semibold text-blue-900 dark:text-blue-100">
+                          Email Notifications
+                        </p>
+                        <p className="text-sm text-blue-700 dark:text-blue-300">
+                          Receive trial updates and recommendations
+                        </p>
                       </div>
                     </div>
                     <Switch
@@ -244,8 +282,12 @@ function SettingsPage() {
                     <div className="flex gap-3">
                       <Smartphone className="h-5 w-5 text-purple-600 dark:text-purple-400 flex-shrink-0 mt-0.5" />
                       <div>
-                        <p className="font-semibold text-purple-900 dark:text-purple-100">Push Notifications</p>
-                        <p className="text-sm text-purple-700 dark:text-purple-300">Get real-time alerts on your device</p>
+                        <p className="font-semibold text-purple-900 dark:text-purple-100">
+                          Push Notifications
+                        </p>
+                        <p className="text-sm text-purple-700 dark:text-purple-300">
+                          Get real-time alerts on your device
+                        </p>
                       </div>
                     </div>
                     <Switch
@@ -258,8 +300,12 @@ function SettingsPage() {
                     <div className="flex gap-3">
                       <MessageSquare className="h-5 w-5 text-orange-600 dark:text-orange-400 flex-shrink-0 mt-0.5" />
                       <div>
-                        <p className="font-semibold text-orange-900 dark:text-orange-100">SMS Notifications</p>
-                        <p className="text-sm text-orange-700 dark:text-orange-300">Get important updates via text message</p>
+                        <p className="font-semibold text-orange-900 dark:text-orange-100">
+                          SMS Notifications
+                        </p>
+                        <p className="text-sm text-orange-700 dark:text-orange-300">
+                          Get important updates via text message
+                        </p>
                       </div>
                     </div>
                     <Switch
@@ -282,8 +328,12 @@ function SettingsPage() {
                   <CardContent className="space-y-6">
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="font-semibold text-slate-900 dark:text-white">Public Profile</p>
-                        <p className="text-sm text-slate-600 dark:text-slate-400">Allow others to view your profile and achievements</p>
+                        <p className="font-semibold text-slate-900 dark:text-white">
+                          Public Profile
+                        </p>
+                        <p className="text-sm text-slate-600 dark:text-slate-400">
+                          Allow others to view your profile and achievements
+                        </p>
                       </div>
                       <Switch
                         checked={settings.privacy.profilePublic}
@@ -294,8 +344,12 @@ function SettingsPage() {
                     <div className="border-t pt-6" />
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="font-semibold text-slate-900 dark:text-white">Show Activity</p>
-                        <p className="text-sm text-slate-600 dark:text-slate-400">Let others see your recent trial applications</p>
+                        <p className="font-semibold text-slate-900 dark:text-white">
+                          Show Activity
+                        </p>
+                        <p className="text-sm text-slate-600 dark:text-slate-400">
+                          Let others see your recent trial applications
+                        </p>
                       </div>
                       <Switch
                         checked={settings.privacy.showActivity}
@@ -306,8 +360,12 @@ function SettingsPage() {
                     <div className="border-t pt-6" />
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="font-semibold text-slate-900 dark:text-white">Allow Direct Messages</p>
-                        <p className="text-sm text-slate-600 dark:text-slate-400">Receive messages from coaches and organizers</p>
+                        <p className="font-semibold text-slate-900 dark:text-white">
+                          Allow Direct Messages
+                        </p>
+                        <p className="text-sm text-slate-600 dark:text-slate-400">
+                          Receive messages from coaches and organizers
+                        </p>
                       </div>
                       <Switch
                         checked={settings.privacy.allowMessages}
@@ -417,7 +475,8 @@ function SettingsPage() {
                     </button>
                   </div>
                   <p className="text-sm text-slate-600 dark:text-slate-400 p-4 bg-slate-50 dark:bg-slate-800 rounded-lg">
-                    💡 <strong>Tip:</strong> Auto mode will match your device's theme setting, automatically switching between light and dark based on your system preferences.
+                    💡 <strong>Tip:</strong> Auto mode will match your device's theme setting,
+                    automatically switching between light and dark based on your system preferences.
                   </p>
                 </CardContent>
               </Card>
@@ -425,20 +484,11 @@ function SettingsPage() {
 
             {/* Action Buttons */}
             <div className="flex gap-3 sticky bottom-4">
-              <Button
-                onClick={handleSave}
-                className="flex-1 gap-2"
-                size="lg"
-              >
+              <Button onClick={handleSave} className="flex-1 gap-2" size="lg">
                 <Save className="h-4 w-4" />
                 {saved ? "Saved!" : "Save Changes"}
               </Button>
-              <Button
-                onClick={handleReset}
-                variant="outline"
-                size="lg"
-                className="gap-2"
-              >
+              <Button onClick={handleReset} variant="outline" size="lg" className="gap-2">
                 <RotateCcw className="h-4 w-4" />
                 Reset
               </Button>

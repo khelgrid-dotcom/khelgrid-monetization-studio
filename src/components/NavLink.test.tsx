@@ -10,9 +10,7 @@ vi.mock("@tanstack/react-router", () => ({
   ),
 }));
 
-const MockIcon = ({ className }: { className?: string }) => (
-  <svg className={className} />
-);
+const MockIcon = ({ className }: { className?: string }) => <svg className={className} />;
 
 const playItem = {
   to: "/play",
@@ -23,9 +21,7 @@ const playItem = {
 
 describe("NavLink aria-current", () => {
   it("renders aria-current=page for the active /play link", () => {
-    const html = renderToString(
-      <NavLink item={playItem} active source="sidebar_desktop" />,
-    );
+    const html = renderToString(<NavLink item={playItem} active source="sidebar_desktop" />);
     expect(html).toContain('aria-current="page"');
   });
 
@@ -43,9 +39,7 @@ function hasToken(className: string, token: string) {
 
 describe("NavLink tap target", () => {
   it("uses mobile padding that yields at least a 48px tap target for /play", () => {
-    const html = renderToString(
-      <NavLink item={playItem} active={false} source="sidebar_mobile" />,
-    );
+    const html = renderToString(<NavLink item={playItem} active={false} source="sidebar_mobile" />);
     const classMatch = html.match(/class="([^"]+)"/);
     expect(classMatch).toBeTruthy();
     const className = classMatch?.[1] ?? "";

@@ -7,10 +7,14 @@ export const Route = createFileRoute("/contact")({
       { title: "Contact KhelGrid · Corrections and support" },
       {
         name: "description",
-        content: "Contact KhelGrid for support, listing corrections, verification questions, and privacy requests.",
+        content:
+          "Contact KhelGrid for support, listing corrections, verification questions, and privacy requests.",
       },
       { property: "og:title", content: "Contact KhelGrid" },
-      { property: "og:description", content: "Reach KhelGrid about support, corrections, verification, and privacy." },
+      {
+        property: "og:description",
+        content: "Reach KhelGrid about support, corrections, verification, and privacy.",
+      },
     ],
     links: [{ rel: "canonical", href: "https://khelgrid.com/contact" }],
   }),
@@ -30,14 +34,24 @@ function ContactPage() {
       </p>
 
       <div className="mt-8 grid gap-4 sm:grid-cols-2">
-        <a href="mailto:support@khelgrid.com" className="rounded-2xl border border-border bg-gradient-card p-5 transition hover:border-primary/40">
+        <a
+          href="mailto:support@khelgrid.com"
+          className="rounded-2xl border border-border bg-gradient-card p-5 transition hover:border-primary/40"
+        >
           <h2 className="font-semibold">Support and corrections</h2>
-          <p className="mt-2 text-sm text-muted-foreground">Report an expired opportunity, incorrect detail, suspicious listing, or account issue.</p>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Report an expired opportunity, incorrect detail, suspicious listing, or account issue.
+          </p>
           <p className="mt-4 text-sm font-semibold text-primary">support@khelgrid.com</p>
         </a>
-        <a href="mailto:privacy@khelgrid.com" className="rounded-2xl border border-border bg-gradient-card p-5 transition hover:border-primary/40">
+        <a
+          href="mailto:privacy@khelgrid.com"
+          className="rounded-2xl border border-border bg-gradient-card p-5 transition hover:border-primary/40"
+        >
           <h2 className="font-semibold">Privacy requests</h2>
-          <p className="mt-2 text-sm text-muted-foreground">Request access, correction, deletion, or advertising preference support.</p>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Request access, correction, deletion, or advertising preference support.
+          </p>
           <p className="mt-4 text-sm font-semibold text-primary">privacy@khelgrid.com</p>
         </a>
       </div>

@@ -62,7 +62,12 @@
   --neon-glow: oklch(0.62 0.24 275 / 0.55);
   --gold: oklch(0.83 0.15 85);
 
-  --gradient-hero: linear-gradient(135deg, oklch(0.62 0.21 275) 0%, oklch(0.6 0.22 295) 55%, oklch(0.72 0.18 320) 100%);
+  --gradient-hero: linear-gradient(
+    135deg,
+    oklch(0.62 0.21 275) 0%,
+    oklch(0.6 0.22 295) 55%,
+    oklch(0.72 0.18 320) 100%
+  );
   --gradient-card: linear-gradient(160deg, oklch(0.2 0.06 275) 0%, oklch(0.16 0.05 275) 100%);
   --gradient-gold: linear-gradient(135deg, oklch(0.83 0.15 85) 0%, oklch(0.7 0.18 50) 100%);
   --shadow-neon: 0 0 0 1px var(--neon-glow), 0 10px 40px -8px var(--neon-glow);
@@ -70,17 +75,23 @@
 }
 
 @layer base {
-  * { border-color: var(--color-border); }
+  * {
+    border-color: var(--color-border);
+  }
   body {
-    background: radial-gradient(1200px 600px at 10% -10%, oklch(0.62 0.24 275 / 0.18), transparent 60%),
-                radial-gradient(900px 500px at 110% 10%, oklch(0.7 0.22 320 / 0.14), transparent 60%),
-                var(--color-background);
+    background:
+      radial-gradient(1200px 600px at 10% -10%, oklch(0.62 0.24 275 / 0.18), transparent 60%),
+      radial-gradient(900px 500px at 110% 10%, oklch(0.7 0.22 320 / 0.14), transparent 60%),
+      var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
   }
-  h1, h2, h3, h4 {
+  h1,
+  h2,
+  h3,
+  h4 {
     font-family: var(--font-display);
     letter-spacing: -0.02em;
   }
@@ -88,7 +99,10 @@
 
 @layer utilities {
   .glow-neon {
-    box-shadow: 0 0 0 1px var(--neon), 0 0 30px var(--neon-glow), inset 0 0 20px oklch(0.78 0.22 155 / 0.1);
+    box-shadow:
+      0 0 0 1px var(--neon),
+      0 0 30px var(--neon-glow),
+      inset 0 0 20px oklch(0.78 0.22 155 / 0.1);
   }
   .text-gradient {
     background: var(--gradient-hero);
@@ -96,14 +110,29 @@
     background-clip: text;
     color: transparent;
   }
-  .bg-gradient-hero { background: var(--gradient-hero); }
-  .bg-gradient-card { background: var(--gradient-card); }
-  .bg-gradient-gold { background: var(--gradient-gold); }
+  .bg-gradient-hero {
+    background: var(--gradient-hero);
+  }
+  .bg-gradient-card {
+    background: var(--gradient-card);
+  }
+  .bg-gradient-gold {
+    background: var(--gradient-gold);
+  }
   .animate-pulse-glow {
     animation: pulse-glow 2.4s ease-in-out infinite;
   }
   @keyframes pulse-glow {
-    0%, 100% { box-shadow: 0 0 0 1px var(--neon), 0 0 20px var(--neon-glow); }
-    50% { box-shadow: 0 0 0 1px var(--neon), 0 0 45px var(--neon-glow); }
+    0%,
+    100% {
+      box-shadow:
+        0 0 0 1px var(--neon),
+        0 0 20px var(--neon-glow);
+    }
+    50% {
+      box-shadow:
+        0 0 0 1px var(--neon),
+        0 0 45px var(--neon-glow);
+    }
   }
 }

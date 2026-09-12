@@ -1,6 +1,11 @@
 import { useEffect } from "react";
 import { useRouterState } from "@tanstack/react-router";
-import { analyticsConfig, googleTagIds, gtagScriptSrc, hasValidGoogleTag } from "@/config/analytics";
+import {
+  analyticsConfig,
+  googleTagIds,
+  gtagScriptSrc,
+  hasValidGoogleTag,
+} from "@/config/analytics";
 
 const SCRIPT_ID = "google-tag-loader";
 

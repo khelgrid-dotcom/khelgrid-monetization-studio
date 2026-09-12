@@ -13,7 +13,8 @@ export const Route = createFileRoute("/trust-center")({
       { property: "og:title", content: "How KhelGrid verification works" },
       {
         property: "og:description",
-        content: "Our source-checking, organizer-review, correction, and expiry process for sports opportunities.",
+        content:
+          "Our source-checking, organizer-review, correction, and expiry process for sports opportunities.",
       },
     ],
     links: [{ rel: "canonical", href: "https://khelgrid.com/trust-center" }],
@@ -47,11 +48,16 @@ const STEPS = [
 function TrustCenterPage() {
   return (
     <main className="mx-auto max-w-4xl px-4 py-10 md:px-6 md:py-14">
-      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">Trust and transparency</p>
-      <h1 className="mt-3 text-4xl font-bold tracking-tight sm:text-5xl">How KhelGrid verification works</h1>
+      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">
+        Trust and transparency
+      </p>
+      <h1 className="mt-3 text-4xl font-bold tracking-tight sm:text-5xl">
+        How KhelGrid verification works
+      </h1>
       <p className="mt-5 max-w-3xl text-lg leading-relaxed text-muted-foreground">
-        KhelGrid is a discovery and information service. We make the checking process visible so athletes can decide
-        what to confirm with an organizer before they travel, submit documents, or pay a fee.
+        KhelGrid is a discovery and information service. We make the checking process visible so
+        athletes can decide what to confirm with an organizer before they travel, submit documents,
+        or pay a fee.
       </p>
 
       <div className="mt-10 grid gap-4 md:grid-cols-2">
@@ -72,8 +78,9 @@ function TrustCenterPage() {
       <section className="mt-8 rounded-2xl border border-amber-200 bg-amber-50 p-6 text-amber-950 dark:border-amber-900 dark:bg-amber-950/30 dark:text-amber-100">
         <h2 className="font-semibold">What a verification label does not mean</h2>
         <p className="mt-2 text-sm leading-relaxed opacity-85">
-          It is not a promise that an organizer will select an athlete, that an event will happen as planned, or that a
-          payment is risk-free. Confirm the latest official notice, keep receipts, and never pay for guaranteed selection.
+          It is not a promise that an organizer will select an athlete, that an event will happen as
+          planned, or that a payment is risk-free. Confirm the latest official notice, keep
+          receipts, and never pay for guaranteed selection.
         </p>
       </section>
 
@@ -83,14 +90,19 @@ function TrustCenterPage() {
           <h2 className="font-semibold">Report an issue or request a correction</h2>
         </div>
         <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-          Email the listing title, the problem, and an official source or screenshot when possible. We review reports and
-          mark information that can no longer be confirmed.
+          Email the listing title, the problem, and an official source or screenshot when possible.
+          We review reports and mark information that can no longer be confirmed.
         </p>
-        <a className="mt-4 inline-flex text-sm font-semibold text-primary hover:underline" href="mailto:support@khelgrid.com">
+        <a
+          className="mt-4 inline-flex text-sm font-semibold text-primary hover:underline"
+          href="mailto:support@khelgrid.com"
+        >
           support@khelgrid.com
         </a>
         <div className="mt-4">
-          <Link to="/about" className="text-sm font-semibold text-primary hover:underline">About KhelGrid →</Link>
+          <Link to="/about" className="text-sm font-semibold text-primary hover:underline">
+            About KhelGrid →
+          </Link>
         </div>
       </section>
     </main>

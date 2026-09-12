@@ -13,7 +13,11 @@ export function Footer() {
           {/* Brand Section */}
           <div className="space-y-4">
             <div className="flex items-center gap-2">
-              <img src="https://cdn.builder.io/api/v1/image/assets%2Fbb0e1ceb11294a31a719df6ba93a7331%2Fc8513d4ae3bd4939b4defe6841f88dd7?format=webp&width=800&height=1200" alt="KhelGrid" className="h-8 w-8" />
+              <img
+                src="https://cdn.builder.io/api/v1/image/assets%2Fbb0e1ceb11294a31a719df6ba93a7331%2Fc8513d4ae3bd4939b4defe6841f88dd7?format=webp&width=800&height=1200"
+                alt="KhelGrid"
+                className="h-8 w-8"
+              />
               <span className="text-lg font-bold">
                 Khel<span className="text-primary">Grid</span>
               </span>
@@ -95,21 +99,25 @@ export function Footer() {
               <ul className="space-y-3">
                 <li className="flex gap-2 text-sm">
                   <Mail className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
-                  <a href="mailto:support@khelgrid.com" className="text-muted-foreground hover:text-primary transition">
+                  <a
+                    href="mailto:support@khelgrid.com"
+                    className="text-muted-foreground hover:text-primary transition"
+                  >
                     support@khelgrid.com
                   </a>
                 </li>
                 <li className="flex gap-2 text-sm">
                   <Phone className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
-                  <a href="tel:+919876543210" className="text-muted-foreground hover:text-primary transition">
+                  <a
+                    href="tel:+919876543210"
+                    className="text-muted-foreground hover:text-primary transition"
+                  >
                     +91 98765 43210
                   </a>
                 </li>
                 <li className="flex gap-2 text-sm">
                   <MapPin className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
-                  <span className="text-muted-foreground">
-                    Mumbai, India
-                  </span>
+                  <span className="text-muted-foreground">Mumbai, India</span>
                 </li>
               </ul>
             </div>
@@ -118,17 +126,26 @@ export function Footer() {
               <h4 className="font-semibold text-foreground mb-4">Legal</h4>
               <ul className="space-y-2">
                 <li>
-                  <Link to="/privacy" className="text-sm text-muted-foreground hover:text-primary transition">
+                  <Link
+                    to="/privacy"
+                    className="text-sm text-muted-foreground hover:text-primary transition"
+                  >
                     Privacy Policy
                   </Link>
                 </li>
                 <li>
-                  <Link to="/terms" className="text-sm text-muted-foreground hover:text-primary transition">
+                  <Link
+                    to="/terms"
+                    className="text-sm text-muted-foreground hover:text-primary transition"
+                  >
                     Terms of Service
                   </Link>
                 </li>
                 <li>
-                  <Link to="/settings" className="text-sm text-muted-foreground hover:text-primary transition">
+                  <Link
+                    to="/settings"
+                    className="text-sm text-muted-foreground hover:text-primary transition"
+                  >
                     Settings
                   </Link>
                 </li>

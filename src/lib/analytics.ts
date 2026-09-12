@@ -28,7 +28,6 @@ export function trackEvent(evt: AnalyticsEvent) {
   } catch {
     // no-op
   }
-  // eslint-disable-next-line no-console
   console.debug("[analytics]", evt);
 }
 

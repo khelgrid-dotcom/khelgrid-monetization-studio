@@ -49,7 +49,10 @@ export const Route = createFileRoute("/search")({
   head: () => ({
     meta: [
       { title: "Search · KhelGrid" },
-      { name: "description", content: "Search trials, tournaments, academies and events across India by sport and city." },
+      {
+        name: "description",
+        content: "Search trials, tournaments, academies and events across India by sport and city.",
+      },
       { name: "robots", content: "noindex,follow" },
     ],
   }),
@@ -69,11 +72,12 @@ function SearchPage() {
 
   const results = useMemo(() => {
     const q = params.q.trim().toLowerCase();
-    let list = TRIALS.filter(t => {
+    let list = TRIALS.filter((t) => {
       if (params.sport !== ALL_SPORT && t.sport !== params.sport) return false;
       if (params.city !== ALL_CITY && t.city !== params.city) return false;
       if (params.free && t.fee > 0) return false;
-      if (q && !`${t.title} ${t.academy} ${t.sport} ${t.city} ${t.tag}`.toLowerCase().includes(q)) return false;
+      if (q && !`${t.title} ${t.academy} ${t.sport} ${t.city} ${t.tag}`.toLowerCase().includes(q))
+        return false;
       return true;
     });
 
@@ -82,8 +86,8 @@ function SearchPage() {
     else if (params.sort === "Most spots") list = [...list].sort((a, b) => b.spots - a.spots);
     else if (params.sort === "Lowest fee") list = [...list].sort((a, b) => a.fee - b.fee);
 
-    const boosted = list.filter(t => auth.boostedTrials.includes(t.id));
-    const regular = list.filter(t => !auth.boostedTrials.includes(t.id));
+    const boosted = list.filter((t) => auth.boostedTrials.includes(t.id));
+    const regular = list.filter((t) => !auth.boostedTrials.includes(t.id));
     return { boosted, regular, total: list.length };
   }, [params, auth.boostedTrials]);
 
@@ -99,7 +103,8 @@ function SearchPage() {
 
   const showBoostAction = auth.role === "organizer";
 
-  const activePills: { key: string; label: string; icon: React.ReactNode; onClear: () => void }[] = [];
+  const activePills: { key: string; label: string; icon: React.ReactNode; onClear: () => void }[] =
+    [];
   if (params.q)
     activePills.push({
       key: "q",
@@ -137,7 +142,10 @@ function SearchPage() {
     });
 
   const clearAll = () =>
-    navigate({ search: { q: "", sport: ALL_SPORT, city: ALL_CITY, sort: "Soonest", free: false }, replace: true });
+    navigate({
+      search: { q: "", sport: ALL_SPORT, city: ALL_CITY, sort: "Soonest", free: false },
+      replace: true,
+    });
 
   return (
     <main className="mx-auto max-w-7xl px-4 py-6 sm:py-10">
@@ -149,7 +157,8 @@ function SearchPage() {
             Trials, academies & events across India.
           </p>
           <p className="mt-2 max-w-xl text-xs leading-relaxed text-muted-foreground">
-            Details can change. Confirm the organizer&apos;s latest notice, eligibility, venue, fee, and registration deadline before applying.
+            Details can change. Confirm the organizer&apos;s latest notice, eligibility, venue, fee,
+            and registration deadline before applying.
           </p>
         </div>
         <Badge variant="outline" className="shrink-0 border-border">
@@ -163,7 +172,7 @@ function SearchPage() {
           <SearchIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <input
             value={params.q}
-            onChange={e => update({ q: e.target.value })}
+            onChange={(e) => update({ q: e.target.value })}
             placeholder="Search sport, organizer, venue…"
             className="h-11 w-full rounded-xl border border-border bg-card/60 pl-9 pr-9 text-sm outline-none ring-primary/40 placeholder:text-muted-foreground focus:ring-2"
           />
@@ -204,7 +213,7 @@ function SearchPage() {
                 <ChipRow
                   options={[ALL_SPORT, ...SPORTS]}
                   active={params.sport}
-                  onSelect={v => update({ sport: v })}
+                  onSelect={(v) => update({ sport: v })}
                 />
               </FilterGroup>
 
@@ -212,7 +221,7 @@ function SearchPage() {
                 <ChipRow
                   options={[ALL_CITY, ...CITIES]}
                   active={params.city}
-                  onSelect={v => update({ city: v })}
+                  onSelect={(v) => update({ city: v })}
                 />
               </FilterGroup>
 
@@ -220,7 +229,7 @@ function SearchPage() {
                 <ChipRow
                   options={[...SORTS]}
                   active={params.sort}
-                  onSelect={v => update({ sort: v as SortKey })}
+                  onSelect={(v) => update({ sort: v as SortKey })}
                 />
               </FilterGroup>
 
@@ -228,7 +237,7 @@ function SearchPage() {
                 <ChipRow
                   options={["Any", "Free entry only"]}
                   active={params.free ? "Free entry only" : "Any"}
-                  onSelect={v => update({ free: v === "Free entry only" })}
+                  onSelect={(v) => update({ free: v === "Free entry only" })}
                 />
               </FilterGroup>
             </div>
@@ -254,7 +263,7 @@ function SearchPage() {
           </span>
         ) : (
           <>
-            {activePills.map(p => (
+            {activePills.map((p) => (
               <button
                 key={p.key}
                 onClick={p.onClear}
@@ -282,7 +291,7 @@ function SearchPage() {
             <Flame className="h-3.5 w-3.5" /> Featured · sponsored
           </div>
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {results.boosted.map(t => (
+            {results.boosted.map((t) => (
               <TrialCard
                 key={t.id}
                 trial={t}
@@ -320,9 +329,7 @@ function SearchPage() {
                   showBoostAction={showBoostAction}
                 />
                 {/* One inline ad per 6 results — keeps content:ad ratio policy-safe */}
-                {i > 0 && (i + 1) % 6 === 0 && (
-                  <InFeedAd adSlot="searchInline" minHeight={250} />
-                )}
+                {i > 0 && (i + 1) % 6 === 0 && <InFeedAd adSlot="searchInline" minHeight={250} />}
               </Fragment>
             ))}
           </div>
@@ -332,11 +339,10 @@ function SearchPage() {
       {/* Ad · end of results */}
       <BannerAd adSlot="listingInline" minHeight={100} />
 
-
       {checkout && (
         <CheckoutModal
           open={!!checkout}
-          onOpenChange={o => !o && setCheckout(null)}
+          onOpenChange={(o) => !o && setCheckout(null)}
           trialId={checkout.id}
           trialTitle={checkout.title}
           onPaid={() => auth.applyToTrial(checkout.id)}
@@ -345,7 +351,7 @@ function SearchPage() {
       {boost && (
         <BoostModal
           open={!!boost}
-          onOpenChange={o => !o && setBoost(null)}
+          onOpenChange={(o) => !o && setBoost(null)}
           trialId={boost.id}
           trialTitle={boost.title}
         />
@@ -385,7 +391,7 @@ function ChipRow({
 }) {
   return (
     <div className="flex flex-wrap gap-2">
-      {options.map(o => {
+      {options.map((o) => {
         const isActive = active === o;
         return (
           <button

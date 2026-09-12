@@ -47,8 +47,16 @@ export const startFromZeroPage: ContentPage = {
             ["School / club", "School, SGFI affiliate or local club", "Enrolment, age proof"],
             ["District", "District sports association", "Club or school nomination, age proof"],
             ["State", "State association for your sport", "District result or district nomination"],
-            ["National age-group", "National federation for your sport", "State selection or state entry"],
-            ["Senior national camp", "Federation with SAI support", "National-level result or camp invite"],
+            [
+              "National age-group",
+              "National federation for your sport",
+              "State selection or state entry",
+            ],
+            [
+              "Senior national camp",
+              "Federation with SAI support",
+              "National-level result or camp invite",
+            ],
           ],
         },
         {
@@ -182,7 +190,10 @@ export const verifyPage: ContentPage = {
             ["Payment to a personal account or UPI ID", "No institutional accountability."],
             ["Pressure to decide within hours", "Designed to prevent verification."],
             ["No written schedule, selector name or age bands", "Nothing to be held to."],
-            ["Asks for original documents to be handed over", "Never surrender originals — carry copies."],
+            [
+              "Asks for original documents to be handed over",
+              "Never surrender originals — carry copies.",
+            ],
             ["Contact only through a single phone number", "No organisation behind it."],
           ],
         },
@@ -281,11 +292,31 @@ export const talentScannerPage: ContentPage = {
           type: "table",
           head: ["Test", "What it measures", "How to run it"],
           rows: [
-            ["30m sprint", "Acceleration", "Flat surface, standing start, film from the side with a visible timer"],
-            ["Standing broad jump", "Lower-body power", "Two-foot take-off and landing, measure to the nearest heel mark"],
-            ["Vertical jump", "Explosive power", "Reach mark against a wall, then jump mark; record the difference"],
-            ["Medicine ball or shot throw", "Upper-body power", "Same implement weight each time, seated or standing consistently"],
-            ["Beep or shuttle run", "Endurance", "20m markers, standard audio, record the level reached"],
+            [
+              "30m sprint",
+              "Acceleration",
+              "Flat surface, standing start, film from the side with a visible timer",
+            ],
+            [
+              "Standing broad jump",
+              "Lower-body power",
+              "Two-foot take-off and landing, measure to the nearest heel mark",
+            ],
+            [
+              "Vertical jump",
+              "Explosive power",
+              "Reach mark against a wall, then jump mark; record the difference",
+            ],
+            [
+              "Medicine ball or shot throw",
+              "Upper-body power",
+              "Same implement weight each time, seated or standing consistently",
+            ],
+            [
+              "Beep or shuttle run",
+              "Endurance",
+              "20m markers, standard audio, record the level reached",
+            ],
             ["Sit-and-reach", "Flexibility", "Fixed box or step, three attempts, record the best"],
           ],
         },

@@ -52,7 +52,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (raw) setState({ ...defaultState, ...JSON.parse(raw) });
-    } catch {}
+    } catch {
+      // Ignore localStorage parse errors
+    }
     setHydrated(true);
   }, []);
 
@@ -145,7 +147,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return true;
   };
 
-  const setRole = (r: "athlete" | "organizer" | "recruiter") => setState((s) => ({ ...s, role: r }));
+  const setRole = (r: "athlete" | "organizer" | "recruiter") =>
+    setState((s) => ({ ...s, role: r }));
   const reset = () => setState(defaultState);
 
   return (

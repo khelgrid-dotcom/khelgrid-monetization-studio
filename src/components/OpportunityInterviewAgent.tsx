@@ -37,7 +37,10 @@ export function OpportunityInterviewAgent({ opportunities }: Props) {
   };
 
   return (
-    <section className="mt-6 rounded-2xl border border-primary/30 bg-primary/5 p-4 sm:p-5" aria-labelledby="opportunity-agent-heading">
+    <section
+      className="mt-6 rounded-2xl border border-primary/30 bg-primary/5 p-4 sm:p-5"
+      aria-labelledby="opportunity-agent-heading"
+    >
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <Badge variant="outline" className="border-primary/40 bg-primary/10 text-primary">
@@ -139,7 +142,10 @@ export function OpportunityInterviewAgent({ opportunities }: Props) {
           {step === 3 && (
             <div>
               <h4 className="font-medium">Where can you realistically attend?</h4>
-              <label className="mt-3 block text-sm text-muted-foreground" htmlFor="opportunity-city">
+              <label
+                className="mt-3 block text-sm text-muted-foreground"
+                htmlFor="opportunity-city"
+              >
                 Preferred location
               </label>
               <select
@@ -169,12 +175,16 @@ export function OpportunityInterviewAgent({ opportunities }: Props) {
           <div className="rounded-xl border border-primary/25 bg-background/50 p-3 text-sm">
             <p className="font-medium">Your best matches for {sport}</p>
             <p className="mt-1 text-xs text-muted-foreground">
-              Ranked using your goal, preferred location, and the listing details currently available.
+              Ranked using your goal, preferred location, and the listing details currently
+              available.
             </p>
           </div>
           <div className="mt-3 grid gap-3">
             {recommendations?.map(({ trial, reasons }) => (
-              <article key={trial.id} className="rounded-xl border border-border bg-background/40 p-4">
+              <article
+                key={trial.id}
+                className="rounded-xl border border-border bg-background/40 p-4"
+              >
                 <div className="flex flex-wrap items-start justify-between gap-2">
                   <div>
                     <Badge variant="secondary" className="text-[10px]">
@@ -200,14 +210,18 @@ export function OpportunityInterviewAgent({ opportunities }: Props) {
               </article>
             ))}
           </div>
-          <Link to="/trials" className="mt-4 inline-flex text-sm font-semibold text-primary hover:underline">
+          <Link
+            to="/trials"
+            className="mt-4 inline-flex text-sm font-semibold text-primary hover:underline"
+          >
             Browse all live opportunities →
           </Link>
         </div>
       )}
 
       <p className="mt-4 text-[11px] leading-relaxed text-muted-foreground">
-        Recommendations are based on the information you provide and the current listing metadata. Check the organizer details before applying.
+        Recommendations are based on the information you provide and the current listing metadata.
+        Check the organizer details before applying.
       </p>
     </section>
   );

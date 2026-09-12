@@ -10,7 +10,7 @@ const TABS = [
 ] as const;
 
 export function BottomTabBar() {
-  const path = useRouterState({ select: s => s.location.pathname });
+  const path = useRouterState({ select: (s) => s.location.pathname });
 
   return (
     <nav
@@ -18,7 +18,7 @@ export function BottomTabBar() {
       className="fixed inset-x-0 bottom-0 z-40 border-t border-border/60 bg-background/85 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl xl:hidden"
     >
       <ul className="grid grid-cols-5">
-        {TABS.map(t => {
+        {TABS.map((t) => {
           const active = t.exact ? path === t.to : path === t.to || path.startsWith(t.to + "/");
           return (
             <li key={t.to}>
