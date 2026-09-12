@@ -23,6 +23,8 @@ import coil.compose.AsyncImage
 import com.khelgrid.app.data.model.UserAuthState
 import com.khelgrid.app.data.repository.SportsRepository
 import com.khelgrid.app.data.repository.UserSessionRepository
+import com.khelgrid.app.ui.components.VerificationAgentDialog
+import com.khelgrid.app.ui.components.VerificationTarget
 import com.khelgrid.app.ui.theme.*
 
 @Composable
@@ -33,6 +35,7 @@ fun PlayBookScreen(
     var selectedTab by remember { mutableStateOf(0) }
     val bookedVenues by UserSessionRepository.bookedVenues.collectAsState()
     val joinedGames by UserSessionRepository.joinedGames.collectAsState()
+    var verificationTarget by remember { mutableStateOf<VerificationTarget?>(null) }
 
     Column(
         modifier = Modifier
@@ -177,6 +180,18 @@ fun PlayBookScreen(
                                             )
                                         }
                                     }
+                                }
+
+                                OutlinedButton(
+                                    onClick = { verificationTarget = VerificationTarget.venue(venue) },
+                                    modifier = Modifier.fillMaxWidth(),
+                                    shape = RoundedCornerShape(10.dp),
+                                    colors = ButtonDefaults.outlinedButtonColors(contentColor = KhelGridSecondary),
+                                    border = androidx.compose.foundation.BorderStroke(1.dp, KhelGridSecondary.copy(alpha = 0.7f))
+                                ) {
+                                    Icon(Icons.Default.VerifiedUser, contentDescription = null, modifier = Modifier.size(16.dp))
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                    Text("Verify with community agent", fontWeight = FontWeight.Bold, fontSize = 12.sp)
                                 }
 
                                 Spacer(modifier = Modifier.height(12.dp))
@@ -338,5 +353,12 @@ fun PlayBookScreen(
                 }
             }
         }
+    }
+
+    verificationTarget?.let { target ->
+        VerificationAgentDialog(
+            target = target,
+            onDismiss = { verificationTarget = null }
+        )
     }
 }

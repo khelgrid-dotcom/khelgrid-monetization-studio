@@ -4,6 +4,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -18,8 +20,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import com.khelgrid.app.data.model.Trial
 import com.khelgrid.app.data.model.UserAuthState
+import com.khelgrid.app.data.model.Venue
 import com.khelgrid.app.data.model.UserPlan
 import com.khelgrid.app.data.model.UserRole
 import com.khelgrid.app.data.repository.UserSessionRepository
@@ -479,4 +483,246 @@ fun WalletTopUpDialog(
         },
         containerColor = KhelGridCard
     )
+}
+
+enum class VerificationKind {
+    OPPORTUNITY,
+    VENUE
+}
+
+data class VerificationTarget(
+    val kind: VerificationKind,
+    val title: String,
+    val provider: String,
+    val category: String,
+    val location: String,
+    val communitySignals: List<String>,
+    val officialCheck: String
+) {
+    companion object {
+        fun opportunity(trial: Trial) = VerificationTarget(
+            kind = VerificationKind.OPPORTUNITY,
+            title = trial.title,
+            provider = trial.academy,
+            category = "${trial.sport} · ${trial.tag}",
+            location = "${trial.city} · ${trial.date}",
+            communitySignals = listOf(
+                "No community reports are attached to this opportunity in the current directory.",
+                "The listing exposes ${trial.spots} spots and ${if (trial.fee == 0) "free entry" else "a ₹${trial.fee} entry fee"} for an independent comparison.",
+                "Match the ${trial.tag.lowercase()} label against the academy's own announcement before applying."
+            ),
+            officialCheck = "Check the academy's official page or contact its listed organizer. Match the title, date, city, fee, and application link before paying or sharing documents."
+        )
+
+        fun venue(venue: Venue) = VerificationTarget(
+            kind = VerificationKind.VENUE,
+            title = venue.name,
+            provider = "Community venue listing",
+            category = venue.sports.joinToString(" · "),
+            location = "${venue.area}, ${venue.city} · ${venue.distanceKm} km away",
+            communitySignals = listOf(
+                "Community rating is ${venue.rating}/5 across ${venue.reviews} reviews.",
+                "Community members list ${venue.sports.joinToString(", ")} as available sports.",
+                "The directory shows a ₹${venue.pricePerHour}/hour rate for comparison with the venue's current quote."
+            ),
+            officialCheck = "Confirm the court or turf is open for your time slot through the venue's official number or booking channel. Ask them to confirm the sport, hourly rate, and cancellation terms."
+        )
+    }
+}
+
+@Composable
+fun VerificationAgentDialog(
+    target: VerificationTarget,
+    onDismiss: () -> Unit
+) {
+    val steps = listOf("Match details", "Review community data", "Confirm officially")
+    var currentStep by remember { mutableStateOf(0) }
+    val completedSteps = remember { mutableStateListOf(false, false, false) }
+    val isComplete = currentStep == steps.size
+
+    Dialog(onDismissRequest = onDismiss) {
+        Surface(
+            shape = RoundedCornerShape(24.dp),
+            color = KhelGridCard,
+            border = androidx.compose.foundation.BorderStroke(1.dp, KhelGridCardBorder),
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(max = 680.dp)
+        ) {
+            Column(
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+                    .padding(20.dp),
+                verticalArrangement = Arrangement.spacedBy(14.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.Top
+                ) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Icon(Icons.Default.VerifiedUser, contentDescription = null, tint = KhelGridSecondary)
+                            Text("Community verification agent", fontWeight = FontWeight.Bold, fontSize = 18.sp, color = TextPrimary)
+                        }
+                        Text(
+                            text = if (isComplete) "Verification checklist complete" else "Step ${currentStep + 1} of ${steps.size}: ${steps[currentStep]}",
+                            fontSize = 12.sp,
+                            color = TextSecondary
+                        )
+                    }
+                    IconButton(onClick = onDismiss) {
+                        Icon(Icons.Default.Close, contentDescription = "Close verification agent", tint = TextSecondary)
+                    }
+                }
+
+                Surface(
+                    shape = RoundedCornerShape(14.dp),
+                    color = KhelGridSurface,
+                    border = androidx.compose.foundation.BorderStroke(1.dp, KhelGridCardBorder)
+                ) {
+                    Column(modifier = Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                        Text(target.title, fontWeight = FontWeight.Bold, fontSize = 15.sp, color = TextPrimary)
+                        Text(target.provider, fontSize = 12.sp, color = TextSecondary)
+                        Text("${target.category} · ${target.location}", fontSize = 12.sp, color = KhelGridPrimaryLight)
+                    }
+                }
+
+                if (!isComplete) {
+                    LinearProgressIndicator(
+                        progress = { (currentStep + 1).toFloat() / steps.size },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(6.dp),
+                        color = KhelGridSecondary,
+                        trackColor = KhelGridSurface
+                    )
+
+                    when (currentStep) {
+                        0 -> VerificationStepCard(
+                            icon = Icons.Default.FactCheck,
+                            title = "Match the listing details",
+                            detail = "Compare the details below with the opportunity or venue page you opened. Stop if the name, location, date, or price differs.",
+                            checked = completedSteps[0],
+                            onCheckedChange = { completedSteps[0] = it }
+                        )
+                        1 -> {
+                            Text("Community signals", fontWeight = FontWeight.Bold, fontSize = 15.sp, color = TextPrimary)
+                            target.communitySignals.forEach { signal ->
+                                Surface(
+                                    shape = RoundedCornerShape(10.dp),
+                                    color = KhelGridSurface,
+                                    border = androidx.compose.foundation.BorderStroke(1.dp, KhelGridCardBorder)
+                                ) {
+                                    Row(
+                                        modifier = Modifier.padding(12.dp),
+                                        horizontalArrangement = Arrangement.spacedBy(10.dp),
+                                        verticalAlignment = Alignment.Top
+                                    ) {
+                                        Icon(Icons.Default.Groups, contentDescription = null, tint = KhelGridSecondary, modifier = Modifier.size(18.dp))
+                                        Text(signal, fontSize = 12.sp, color = TextSecondary)
+                                    }
+                                }
+                            }
+                            VerificationStepCard(
+                                icon = Icons.Default.Groups,
+                                title = "Review the community evidence",
+                                detail = "Use these signals as a confidence check, not as a substitute for the official source.",
+                                checked = completedSteps[1],
+                                onCheckedChange = { completedSteps[1] = it }
+                            )
+                        }
+                        2 -> VerificationStepCard(
+                            icon = Icons.Default.PhoneInTalk,
+                            title = "Confirm through an official channel",
+                            detail = target.officialCheck,
+                            checked = completedSteps[2],
+                            onCheckedChange = { completedSteps[2] = it }
+                        )
+                    }
+                } else {
+                    Surface(
+                        shape = RoundedCornerShape(14.dp),
+                        color = KhelGridGreen.copy(alpha = 0.12f),
+                        border = androidx.compose.foundation.BorderStroke(1.dp, KhelGridGreen.copy(alpha = 0.5f))
+                    ) {
+                        Column(modifier = Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                Icon(Icons.Default.CheckCircle, contentDescription = null, tint = KhelGridGreen)
+                                Text("Ready to proceed", fontWeight = FontWeight.Bold, color = KhelGridGreen)
+                            }
+                            Text(
+                                text = "You matched the listing, reviewed community data, and completed an official check. Keep a screenshot or confirmation message for your records.",
+                                fontSize = 12.sp,
+                                color = TextSecondary
+                            )
+                        }
+                    }
+                    Text(
+                        text = "Community data can change. Re-run this check if the price, schedule, or organizer changes.",
+                        fontSize = 12.sp,
+                        color = KhelGridGoldLight
+                    )
+                }
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    if (currentStep > 0 && !isComplete) {
+                        OutlinedButton(
+                            onClick = { currentStep-- },
+                            modifier = Modifier.weight(1f),
+                            colors = ButtonDefaults.outlinedButtonColors(contentColor = TextSecondary),
+                            border = androidx.compose.foundation.BorderStroke(1.dp, KhelGridCardBorder)
+                        ) {
+                            Text("Back")
+                        }
+                    }
+                    Button(
+                        onClick = {
+                            if (isComplete) onDismiss() else currentStep++
+                        },
+                        enabled = isComplete || completedSteps[currentStep],
+                        modifier = Modifier.weight(1f),
+                        colors = ButtonDefaults.buttonColors(containerColor = KhelGridPrimary)
+                    ) {
+                        Text(if (isComplete) "Done" else if (currentStep == steps.lastIndex) "Finish check" else "Continue", fontWeight = FontWeight.Bold)
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun VerificationStepCard(
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    title: String,
+    detail: String,
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit
+) {
+    Surface(
+        shape = RoundedCornerShape(14.dp),
+        color = if (checked) KhelGridSecondary.copy(alpha = 0.12f) else KhelGridSurface,
+        border = androidx.compose.foundation.BorderStroke(1.dp, if (checked) KhelGridSecondary else KhelGridCardBorder)
+    ) {
+        Column(modifier = Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            Row(horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.Top) {
+                Icon(icon, contentDescription = null, tint = KhelGridSecondary, modifier = Modifier.size(20.dp))
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(title, fontWeight = FontWeight.SemiBold, fontSize = 14.sp, color = TextPrimary)
+                    Text(detail, fontSize = 12.sp, color = TextSecondary)
+                }
+            }
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Checkbox(checked = checked, onCheckedChange = onCheckedChange)
+                Text("I checked this", fontSize = 12.sp, color = TextPrimary)
+            }
+        }
+    }
 }
