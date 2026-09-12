@@ -67,6 +67,16 @@ object SportsRepository {
         Game("g6", "Box Cricket", "Bengaluru", "Smashers Arena", "Fri, Jun 13", "9:00 PM", "Beginner", "Karan D.", 6, 10, 300)
     )
 
+    val matchupAthletes = listOf(
+        MatchupAthlete("ma-1", "Sana Kapoor", "Cricket", "Intermediate", "Bengaluru", "Weeknights after 7 PM", 96, "Top-order batter looking for regular nets and weekend games."),
+        MatchupAthlete("ma-2", "Rohan Das", "Cricket", "Intermediate", "Bengaluru", "Saturday mornings", 91, "All-rounder who prefers competitive but friendly matches."),
+        MatchupAthlete("ma-3", "Meera Shah", "Cricket", "Beginner", "Bengaluru", "Sunday mornings", 88, "New to organised games and keen to build consistency."),
+        MatchupAthlete("ma-4", "Kabir Malhotra", "Football", "Intermediate", "Mumbai", "Friday evenings", 94, "Box-to-box midfielder looking for a reliable five-a-side group."),
+        MatchupAthlete("ma-5", "Ishita Menon", "Badminton", "Advanced", "Hyderabad", "Tuesday and Thursday evenings", 97, "Singles player open to doubles rotation and skill-balanced games."),
+        MatchupAthlete("ma-6", "Nikhil Jain", "Tennis", "Intermediate", "Pune", "Weekend mornings", 93, "Baseline player who enjoys structured sets and post-game practice."),
+        MatchupAthlete("ma-7", "Aarav Singh", "Cricket", "Advanced", "Delhi", "Sunday afternoons", 90, "Fast bowler looking for a regular competitive circle.")
+    )
+
     val sportsCategories = listOf(
         SportCategory("cricket", "Cricket", "Ranji, IPL pathways & U-19 trials", "Elite", "U-12 to Pro", "🏏", listOf("BCCI scouted trials", "Ranji Trophy net sessions", "IPL franchise feeder camps")),
         SportCategory("football", "Football", "ISL & I-League scout days", "Elite", "U-13 to U-23", "⚽", listOf("ISL combine pathways", "AIFF-licensed academies", "Goa & Kerala showcase weeks")),

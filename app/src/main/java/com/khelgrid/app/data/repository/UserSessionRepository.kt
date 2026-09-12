@@ -1,5 +1,6 @@
 package com.khelgrid.app.data.repository
 
+import com.khelgrid.app.data.model.MatchupPost
 import com.khelgrid.app.data.model.UserAuthState
 import com.khelgrid.app.data.model.UserPlan
 import com.khelgrid.app.data.model.UserRole
@@ -35,6 +36,12 @@ object UserSessionRepository {
 
     private val _joinedGames = MutableStateFlow<List<String>>(listOf("g-1"))
     val joinedGames: StateFlow<List<String>> = _joinedGames.asStateFlow()
+
+    private val _matchupPosts = MutableStateFlow<List<MatchupPost>>(emptyList())
+    val matchupPosts: StateFlow<List<MatchupPost>> = _matchupPosts.asStateFlow()
+
+    private val _matchupInvites = MutableStateFlow<List<String>>(emptyList())
+    val matchupInvites: StateFlow<List<String>> = _matchupInvites.asStateFlow()
 
     private val _enrolledEvents = MutableStateFlow<List<String>>(emptyList())
     val enrolledEvents: StateFlow<List<String>> = _enrolledEvents.asStateFlow()
@@ -135,5 +142,13 @@ object UserSessionRepository {
     fun registerEvent(eventId: String): Boolean {
         _enrolledEvents.update { if (eventId in it) it else it + eventId }
         return true
+    }
+
+    fun publishMatchupPost(post: MatchupPost) {
+        _matchupPosts.update { posts -> posts + post.copy(id = "mp-${posts.size + 1}") }
+    }
+
+    fun sendMatchupInvite(athleteId: String) {
+        _matchupInvites.update { invites -> if (athleteId in invites) invites else invites + athleteId }
     }
 }
