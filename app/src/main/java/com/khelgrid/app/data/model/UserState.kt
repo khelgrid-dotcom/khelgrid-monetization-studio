@@ -18,6 +18,15 @@ data class SportSkillLog(
     val athleteNote: String
 )
 
+data class AthleteProfile(
+    val name: String,
+    val sport: String,
+    val location: String,
+    val headline: String,
+    val competitionLevel: String,
+    val verifiedHighlights: List<String>
+)
+
 data class UserAuthState(
     val name: String = "Arjun Mehta",
     val sport: String = "Cricket",
@@ -41,6 +50,20 @@ data class UserAuthState(
         SportSkillLog("ssl-5", "2026-03-16", "Batting footwork", 85, 48, "Hard", "Balanced well through most of the drill set.")
     )
 ) {
+    val athleteProfile: AthleteProfile
+        get() = AthleteProfile(
+            name = name,
+            sport = sport,
+            location = location,
+            headline = "Right-arm Fast Bowler & Middle-order Batter",
+            competitionLevel = "U-19 State Squad",
+            verifiedHighlights = listOf(
+                "5/24 vs Capital Cricket Academy · Inter-District Trophy 2025",
+                "Yo-Yo IR1 Fitness Benchmark: 18.2",
+                "Coach reference: Arjun Mehta · Level 2 BCCI Certified"
+            )
+        )
+
     val freeLimit: Int = 2
 
     val remainingFree: Int

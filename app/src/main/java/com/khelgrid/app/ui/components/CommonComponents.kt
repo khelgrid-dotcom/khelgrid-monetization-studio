@@ -21,6 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.khelgrid.app.data.model.AthleteProfile
 import com.khelgrid.app.data.model.SportSkillLog
 import com.khelgrid.app.data.model.Trial
 import com.khelgrid.app.data.model.UserAuthState
@@ -927,6 +928,212 @@ private fun PerformanceInsight(
 private fun PerformancePlanRow(title: String, detail: String) {
     Row(horizontalArrangement = Arrangement.spacedBy(9.dp), verticalAlignment = Alignment.Top) {
         Icon(Icons.Default.CheckCircle, contentDescription = null, tint = KhelGridSecondary, modifier = Modifier.size(17.dp))
+        Column {
+            Text(title, fontWeight = FontWeight.SemiBold, fontSize = 13.sp, color = TextPrimary)
+            Text(detail, fontSize = 12.sp, color = TextSecondary)
+        }
+    }
+}
+
+@Composable
+fun CareerAdviceAgentDialog(
+    profile: AthleteProfile,
+    fitnessMetrics: List<SportSkillLog>,
+    onDismiss: () -> Unit
+) {
+    if (fitnessMetrics.isEmpty()) {
+        Dialog(onDismissRequest = onDismiss) {
+            Surface(
+                shape = RoundedCornerShape(24.dp),
+                color = KhelGridCard,
+                border = androidx.compose.foundation.BorderStroke(1.dp, KhelGridCardBorder),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column(modifier = Modifier.padding(22.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Icon(Icons.Default.Explore, contentDescription = null, tint = KhelGridGold, modifier = Modifier.size(28.dp))
+                    Text("Build your first career signal", fontWeight = FontWeight.Bold, fontSize = 18.sp, color = TextPrimary)
+                    Text("Log one training session before asking for strategic advice. Your coach will use the result alongside your ${profile.sport} profile to suggest realistic next steps.", fontSize = 13.sp, color = TextSecondary)
+                    Button(
+                        onClick = onDismiss,
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonDefaults.buttonColors(containerColor = KhelGridPrimary),
+                        shape = RoundedCornerShape(10.dp)
+                    ) {
+                        Text("Close", fontWeight = FontWeight.Bold)
+                    }
+                }
+            }
+        }
+        return
+    }
+
+    val orderedMetrics = fitnessMetrics.sortedByDescending { it.date }
+    val averageScore = orderedMetrics.map { it.score }.average().toInt()
+    val latestMetric = orderedMetrics.first()
+    val priorMetric = orderedMetrics.getOrNull(1) ?: latestMetric
+    val scoreDelta = latestMetric.score - priorMetric.score
+    val strongestMetric = orderedMetrics.maxByOrNull { it.score } ?: latestMetric
+    val growthMetric = orderedMetrics.minByOrNull { it.score } ?: latestMetric
+    val consistency = orderedMetrics.count { it.score >= averageScore }
+    val readiness = when {
+        averageScore >= 85 -> "Ready to target selective opportunities"
+        averageScore >= 75 -> "Build evidence while targeting development opportunities"
+        else -> "Strengthen fundamentals before prioritising selection events"
+    }
+    val pathway = when {
+        averageScore >= 85 && scoreDelta >= 0 -> "Selection trials and academy showcases"
+        averageScore >= 75 -> "Regional academy pathway with measured trial exposure"
+        else -> "Structured academy development before high-stakes trials"
+    }
+
+    Dialog(onDismissRequest = onDismiss) {
+        Surface(
+            shape = RoundedCornerShape(24.dp),
+            color = KhelGridCard,
+            border = androidx.compose.foundation.BorderStroke(1.dp, KhelGridCardBorder),
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(max = 740.dp)
+        ) {
+            Column(
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+                    .padding(20.dp),
+                verticalArrangement = Arrangement.spacedBy(14.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.Top
+                ) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            Icon(Icons.Default.Explore, contentDescription = null, tint = KhelGridGold)
+                            Text("Career strategy agent", fontWeight = FontWeight.Bold, fontSize = 18.sp, color = TextPrimary)
+                        }
+                        Text("A practical next-step view of your athlete profile", fontSize = 12.sp, color = TextSecondary)
+                    }
+                    IconButton(onClick = onDismiss) {
+                        Icon(Icons.Default.Close, contentDescription = "Close career strategy", tint = TextSecondary)
+                    }
+                }
+
+                Surface(
+                    shape = RoundedCornerShape(16.dp),
+                    color = KhelGridSurface,
+                    border = androidx.compose.foundation.BorderStroke(1.dp, KhelGridGold.copy(alpha = 0.5f))
+                ) {
+                    Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                        Text(profile.name, fontWeight = FontWeight.Bold, fontSize = 17.sp, color = TextPrimary)
+                        Text(profile.headline, fontSize = 13.sp, color = TextSecondary)
+                        Text("${profile.sport} · ${profile.competitionLevel} · ${profile.location}", fontSize = 12.sp, color = KhelGridGoldLight)
+                    }
+                }
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    PerformanceMetric(value = "$averageScore/100", label = "Fitness signal", color = KhelGridPrimaryLight)
+                    PerformanceMetric(value = if (scoreDelta >= 0) "+$scoreDelta" else "$scoreDelta", label = "Latest trend", color = if (scoreDelta >= 0) KhelGridGreen else KhelGridGold)
+                    PerformanceMetric(value = "$consistency/${orderedMetrics.size}", label = "Consistent logs", color = KhelGridSecondary)
+                }
+
+                CareerAdviceSection(
+                    icon = Icons.Default.Flag,
+                    label = "Strategic direction",
+                    title = pathway,
+                    detail = "$readiness. Your strongest signal is ${strongestMetric.focus} at ${strongestMetric.score}/100, so use it to support your next application story.",
+                    accent = KhelGridGold
+                )
+
+                CareerAdviceSection(
+                    icon = Icons.Default.Tune,
+                    label = "Priority gap",
+                    title = growthMetric.focus,
+                    detail = "Your lowest logged signal is ${growthMetric.score}/100. Improve this before relying on it in a trial, profile headline, or coach conversation.",
+                    accent = KhelGridSecondary
+                )
+
+                Surface(
+                    shape = RoundedCornerShape(16.dp),
+                    color = KhelGridPrimary.copy(alpha = 0.12f),
+                    border = androidx.compose.foundation.BorderStroke(1.dp, KhelGridPrimary.copy(alpha = 0.5f))
+                ) {
+                    Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            Icon(Icons.Default.AutoAwesome, contentDescription = null, tint = KhelGridPrimaryLight)
+                            Text("Your next three moves", fontWeight = FontWeight.Bold, fontSize = 15.sp, color = TextPrimary)
+                        }
+                        CareerAdviceAction("Close the gap", "Schedule two targeted ${growthMetric.focus} sessions in the next seven days.")
+                        CareerAdviceAction("Package your proof", "Lead with your ${profile.verifiedHighlights.firstOrNull() ?: "strongest verified result"} when speaking to an academy or scout.")
+                        CareerAdviceAction("Choose the right exposure", "Prioritise ${profile.location} opportunities that match your ${profile.sport} level, then review your metrics again before moving up.")
+                    }
+                }
+
+                Surface(
+                    shape = RoundedCornerShape(14.dp),
+                    color = KhelGridSurface,
+                    border = androidx.compose.foundation.BorderStroke(1.dp, KhelGridCardBorder)
+                ) {
+                    Column(modifier = Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                        Text("Profile evidence to keep current", fontWeight = FontWeight.SemiBold, fontSize = 14.sp, color = TextPrimary)
+                        profile.verifiedHighlights.forEach { highlight ->
+                            Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.Top) {
+                                Icon(Icons.Default.CheckCircle, contentDescription = null, tint = KhelGridGreen, modifier = Modifier.size(16.dp))
+                                Text(highlight, fontSize = 12.sp, color = TextSecondary)
+                            }
+                        }
+                    }
+                }
+
+                Text(
+                    "This is strategic guidance from your saved profile and fitness logs, not a selection guarantee or medical assessment. Revisit it as your evidence changes.",
+                    fontSize = 11.sp,
+                    color = TextMuted
+                )
+
+                Button(
+                    onClick = onDismiss,
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(containerColor = KhelGridPrimary),
+                    shape = RoundedCornerShape(10.dp)
+                ) {
+                    Text("Save the plan", fontWeight = FontWeight.Bold)
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun CareerAdviceSection(
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    label: String,
+    title: String,
+    detail: String,
+    accent: Color
+) {
+    Surface(
+        shape = RoundedCornerShape(14.dp),
+        color = KhelGridSurface,
+        border = androidx.compose.foundation.BorderStroke(1.dp, accent.copy(alpha = 0.55f))
+    ) {
+        Row(modifier = Modifier.padding(14.dp), horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.Top) {
+            Icon(icon, contentDescription = null, tint = accent, modifier = Modifier.size(21.dp))
+            Column {
+                Text(label.uppercase(), fontSize = 10.sp, fontWeight = FontWeight.Bold, color = accent)
+                Text(title, fontWeight = FontWeight.Bold, fontSize = 15.sp, color = TextPrimary)
+                Text(detail, fontSize = 12.sp, color = TextSecondary)
+            }
+        }
+    }
+}
+
+@Composable
+private fun CareerAdviceAction(title: String, detail: String) {
+    Row(horizontalArrangement = Arrangement.spacedBy(9.dp), verticalAlignment = Alignment.Top) {
+        Icon(Icons.Default.ArrowForward, contentDescription = null, tint = KhelGridSecondary, modifier = Modifier.size(17.dp))
         Column {
             Text(title, fontWeight = FontWeight.SemiBold, fontSize = 13.sp, color = TextPrimary)
             Text(detail, fontSize = 12.sp, color = TextSecondary)

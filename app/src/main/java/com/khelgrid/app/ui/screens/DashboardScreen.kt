@@ -28,6 +28,7 @@ import com.khelgrid.app.data.model.UserPlan
 import com.khelgrid.app.data.model.UserRole
 import com.khelgrid.app.data.repository.SportsRepository
 import com.khelgrid.app.data.repository.UserSessionRepository
+import com.khelgrid.app.ui.components.CareerAdviceAgentDialog
 import com.khelgrid.app.ui.components.PerformanceReviewAgentDialog
 import com.khelgrid.app.ui.components.WalletTopUpDialog
 import com.khelgrid.app.ui.theme.*
@@ -39,6 +40,7 @@ fun DashboardScreen(
 ) {
     var showTopUpDialog by remember { mutableStateOf(false) }
     var showPerformanceAgent by remember { mutableStateOf(false) }
+    var showCareerAgent by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
     LazyColumn(
@@ -517,6 +519,46 @@ fun DashboardScreen(
             }
         }
 
+        item {
+            Surface(
+                shape = RoundedCornerShape(18.dp),
+                color = KhelGridCard,
+                border = androidx.compose.foundation.BorderStroke(1.dp, KhelGridGold.copy(alpha = 0.6f)),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            Icon(Icons.Default.Explore, contentDescription = null, tint = KhelGridGold)
+                            Text("Career Strategy Agent", fontWeight = FontWeight.Bold, fontSize = 16.sp, color = TextPrimary)
+                        }
+                        Surface(shape = RoundedCornerShape(6.dp), color = KhelGridGold.copy(alpha = 0.16f)) {
+                            Text("PROFILE + FITNESS", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = KhelGridGold, modifier = Modifier.padding(horizontal = 7.dp, vertical = 4.dp))
+                        }
+                    }
+                    Text(
+                        "Turn your ${userState.sport} profile, verified proof, and fitness trends into a focused career pathway.",
+                        fontSize = 12.sp,
+                        color = TextSecondary
+                    )
+                    Button(
+                        onClick = { showCareerAgent = true },
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(10.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = KhelGridGold)
+                    ) {
+                        Icon(Icons.Default.AutoAwesome, contentDescription = null, tint = Color.Black, modifier = Modifier.size(17.dp))
+                        Spacer(modifier = Modifier.width(7.dp))
+                        Text("Plan my next move", fontWeight = FontWeight.Bold, color = Color.Black)
+                    }
+                }
+            }
+        }
+
         // Applied Trials List
         item {
             Column {
@@ -603,6 +645,14 @@ fun DashboardScreen(
         PerformanceReviewAgentDialog(
             logs = userState.sportSkillLogs,
             onDismiss = { showPerformanceAgent = false }
+        )
+    }
+
+    if (showCareerAgent) {
+        CareerAdviceAgentDialog(
+            profile = userState.athleteProfile,
+            fitnessMetrics = userState.sportSkillLogs,
+            onDismiss = { showCareerAgent = false }
         )
     }
 }
