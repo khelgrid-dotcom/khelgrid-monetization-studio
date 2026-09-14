@@ -21,6 +21,8 @@ import {
   DollarSign,
   AlertCircle,
   ChevronDown,
+  MessageCircle,
+  Send,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -160,18 +162,50 @@ export function VenueDetails({
     setTimeout(() => setCopiedField(null), 2000);
   };
 
-  const handleShare = () => {
-    if (navigator.share) {
-      navigator
-        .share({
-          title: venue.name,
-          text: `Check out ${venue.name} in ${venue.city} on KhelGrid!`,
-          url: window.location.href,
-        })
-        .catch(() => {});
-    } else {
-      copyToClipboard(window.location.href, "venue link");
+  const getShareUrl = () => {
+    if (typeof window === "undefined") return "";
+    try {
+      const url = new URL(window.location.href);
+      url.searchParams.set("venueId", venue.id);
+      return url.toString();
+    } catch {
+      return window.location.href;
     }
+  };
+
+  const sportsSummary = venue.sports?.slice(0, 2).join(" & ") || "Sports";
+  const shareText = `Check out ${venue.name} in ${venue.city}! Book ${sportsSummary} courts & turfs starting at ₹${venue.price_per_hour.toLocaleString("en-IN")}/hr on KhelGrid.`;
+
+  const handleShare = async () => {
+    const shareUrl = getShareUrl();
+    const shareData = {
+      title: `${venue.name} · Sports Venue on KhelGrid`,
+      text: shareText,
+      url: shareUrl,
+    };
+
+    // Use Web Share API if supported
+    if (typeof navigator !== "undefined" && typeof navigator.share === "function") {
+      try {
+        await navigator.share(shareData);
+        toast.success("Venue shared successfully!", {
+          description: "Sent to your friends via messaging app.",
+        });
+        return;
+      } catch (err: unknown) {
+        // Silently ignore if user dismissed/cancelled the native share sheet
+        if (err instanceof Error && err.name === "AbortError") {
+          return;
+        }
+        // Fallback to clipboard if share threw an unexpected error
+      }
+    }
+
+    // Fallback: Copy direct venue link to clipboard
+    copyToClipboard(shareUrl, "venue link");
+    toast.info("Link copied! Paste into WhatsApp, Telegram, or SMS to invite friends.", {
+      duration: 3500,
+    });
   };
 
   const handleBookClick = () => {
@@ -236,9 +270,11 @@ export function VenueDetails({
             variant="outline"
             size="sm"
             onClick={handleShare}
-            className="gap-1.5 h-8 text-xs font-medium"
+            title="Share venue with friends via messaging apps"
+            aria-label="Share venue with friends via messaging apps"
+            className="gap-1.5 h-8 text-xs font-medium hover:text-primary hover:border-primary/50 transition-colors"
           >
-            <Share2 className="h-3.5 w-3.5" />
+            <Share2 className="h-3.5 w-3.5 text-primary" />
             <span>Share</span>
           </Button>
           <a
@@ -546,6 +582,66 @@ export function VenueDetails({
                 <ShieldCheck className="h-3 w-3 text-emerald-500" />
                 Instant confirmation & secure reservation
               </p>
+
+              {/* Share Venue with Friends for Match Coordination */}
+              <div
+                id="venue-booking-share-section"
+                className="pt-3 border-t border-border/60 space-y-2"
+              >
+                <Button
+                  id="venue-booking-share-btn"
+                  variant="outline"
+                  size="sm"
+                  onClick={handleShare}
+                  className="w-full h-9 text-xs font-semibold gap-2 border-dashed hover:border-primary hover:bg-primary/5 transition-all text-foreground"
+                  title="Send venue link to friends via messaging apps using Web Share API"
+                >
+                  <Share2 className="h-3.5 w-3.5 text-primary" />
+                  <span>Share Venue with Friends</span>
+                </Button>
+
+                {/* Direct Messaging Apps Quick Actions */}
+                <div className="flex items-center justify-between text-[11px] text-muted-foreground px-1">
+                  <span className="font-medium">Send link:</span>
+                  <div className="flex items-center gap-2">
+                    <a
+                      id="venue-share-whatsapp-link"
+                      href={`https://api.whatsapp.com/send?text=${encodeURIComponent(
+                        `${shareText} ${getShareUrl()}`,
+                      )}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-400 hover:underline font-medium"
+                      title="Share directly via WhatsApp"
+                    >
+                      <MessageCircle className="h-3 w-3" /> WhatsApp
+                    </a>
+                    <span>•</span>
+                    <a
+                      id="venue-share-telegram-link"
+                      href={`https://t.me/share/url?url=${encodeURIComponent(
+                        getShareUrl(),
+                      )}&text=${encodeURIComponent(shareText)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-sky-600 dark:text-sky-400 hover:underline font-medium"
+                      title="Share directly via Telegram"
+                    >
+                      <Send className="h-3 w-3" /> Telegram
+                    </a>
+                    <span>•</span>
+                    <button
+                      id="venue-share-copy-link-btn"
+                      type="button"
+                      onClick={() => copyToClipboard(getShareUrl(), "venue link")}
+                      className="inline-flex items-center gap-1 text-muted-foreground hover:text-foreground font-medium hover:underline cursor-pointer"
+                      title="Copy link to clipboard"
+                    >
+                      <Copy className="h-3 w-3" /> Copy
+                    </button>
+                  </div>
+                </div>
+              </div>
             </CardContent>
           </Card>
         </div>

@@ -107,4 +107,14 @@ describe("VenueDetails", () => {
     expect(html).toContain('id="venue-customer-testimonials-container"');
     expect(html).toContain("Write a Review");
   });
+
+  it("renders share buttons and messaging app links for friends coordination", () => {
+    const html = renderToString(<VenueDetails venue={mockVenue} />);
+    expect(html).toContain('id="venue-details-share-btn"');
+    expect(html).toContain('id="venue-booking-share-btn"');
+    expect(html).toContain("Share Venue with Friends");
+    expect(html).toContain('id="venue-share-whatsapp-link"');
+    expect(html).toContain('id="venue-share-telegram-link"');
+    expect(html).toContain('id="venue-share-copy-link-btn"');
+  });
 });
