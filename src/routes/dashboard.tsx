@@ -4,6 +4,7 @@ import { TRIALS } from "@/data/trials";
 import { SportsCV } from "@/components/SportsCV";
 import { DashboardCommunityWall } from "@/components/DashboardCommunityWall";
 import { DashboardProgressShare } from "@/components/DashboardProgressShare";
+import { DashboardReminder } from "@/components/DashboardReminder";
 import { OpportunityInterviewAgent } from "@/components/OpportunityInterviewAgent";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -34,10 +35,24 @@ function Dashboard() {
     topUpWallet,
     freeLimit,
     remainingFree,
+    scheduledSessions,
     reset,
     upgradeToPro,
   } = useAuth();
   const applied = TRIALS.filter((t) => applications.includes(t.id));
+  const scheduledTrials = applied.map((trial) => {
+    const scheduledAt = new Date(trial.date);
+    scheduledAt.setHours(9, 0, 0, 0);
+
+    return {
+      id: `trial-${trial.id}`,
+      type: "trial" as const,
+      title: trial.title,
+      provider: trial.academy,
+      location: trial.city,
+      scheduledAt: scheduledAt.toISOString(),
+    };
+  });
 
   return (
     <main className="mx-auto max-w-7xl px-4 py-10">
@@ -117,6 +132,8 @@ function Dashboard() {
           )}
         </div>
       </div>
+
+      <DashboardReminder sessions={[...scheduledSessions, ...scheduledTrials]} />
 
       <div className="mt-8 grid gap-6 lg:grid-cols-[1.2fr_1fr]">
         <div>

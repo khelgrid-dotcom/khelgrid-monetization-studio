@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useAuth } from "@/context/AuthContext";
 import { Search, MapPin, Star, GraduationCap, Trophy } from "lucide-react";
 import { toast } from "sonner";
 
@@ -23,6 +24,7 @@ function TrainPage() {
   const [sport, setSport] = useState("All");
   const [city, setCity] = useState("Bengaluru");
   const [level, setLevel] = useState("All");
+  const { scheduleSession } = useAuth();
 
   const list = useMemo(() => COACHING.filter(c =>
     (city === "All" || c.city === city) &&
@@ -92,8 +94,25 @@ function TrainPage() {
                   <span className="font-semibold">₹{c.pricePerMonth.toLocaleString("en-IN")}</span>
                   <span className="text-muted-foreground"> / mo</span>
                 </div>
-                <Button size="sm" className="rounded-full" onClick={() => toast.success(`Enquiry sent to ${c.coach}`)}>
-                  Enquire
+                <Button
+                  size="sm"
+                  className="rounded-full"
+                  onClick={() => {
+                    const scheduledAt = new Date();
+                    scheduledAt.setDate(scheduledAt.getDate() + 1);
+                    scheduledAt.setHours(18, 0, 0, 0);
+                    scheduleSession({
+                      id: `coaching-${c.id}`,
+                      type: "coaching",
+                      title: c.title,
+                      provider: c.coach,
+                      location: `${c.area}, ${c.city}`,
+                      scheduledAt: scheduledAt.toISOString(),
+                    });
+                    toast.success(`Coaching session scheduled with ${c.coach}`);
+                  }}
+                >
+                  Schedule session
                 </Button>
               </div>
             </div>

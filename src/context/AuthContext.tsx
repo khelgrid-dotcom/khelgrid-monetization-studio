@@ -2,6 +2,15 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from "
 
 export type Plan = "free" | "pro";
 
+export interface ScheduledSession {
+  id: string;
+  type: "trial" | "coaching";
+  title: string;
+  provider: string;
+  location: string;
+  scheduledAt: string;
+}
+
 export interface AuthState {
   name: string;
   plan: Plan;
@@ -11,6 +20,7 @@ export interface AuthState {
   boostedTrials: string[];
   sportsCVUnlocked: boolean;
   role: "athlete" | "organizer" | "recruiter";
+  scheduledSessions: ScheduledSession[];
 }
 
 interface AuthContextValue extends AuthState {
@@ -25,22 +35,41 @@ interface AuthContextValue extends AuthState {
   boostTrial: (trialId: string, method: "wallet" | "upi") => boolean;
   unlockSportsCV: (method: "wallet" | "upi") => boolean;
   setRole: (r: "athlete" | "organizer" | "recruiter") => void;
+  scheduleSession: (session: ScheduledSession) => void;
   reset: () => void;
 }
 
 const FREE_LIMIT = 2;
 const STORAGE_KEY = "khelgrid-auth-v1";
 
-const defaultState: AuthState = {
-  name: "Arjun Mehta",
-  plan: "free",
-  wallet: 150,
-  applications: [],
-  paidApplications: [],
-  boostedTrials: ["t-3"],
-  sportsCVUnlocked: false,
-  role: "athlete",
-};
+function createDefaultState(): AuthState {
+  const scheduledAt = new Date();
+  scheduledAt.setDate(scheduledAt.getDate() + 2);
+  scheduledAt.setHours(18, 0, 0, 0);
+
+  return {
+    name: "Arjun Mehta",
+    plan: "free",
+    wallet: 150,
+    applications: [],
+    paidApplications: [],
+    boostedTrials: ["t-3"],
+    sportsCVUnlocked: false,
+    role: "athlete",
+    scheduledSessions: [
+      {
+        id: "coaching-c4",
+        type: "coaching",
+        title: "Football Skills Lab",
+        provider: "Coach Vikram Singh",
+        location: "Dwarka, Delhi",
+        scheduledAt: scheduledAt.toISOString(),
+      },
+    ],
+  };
+}
+
+const defaultState = createDefaultState();
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
@@ -146,7 +175,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const setRole = (r: "athlete" | "organizer" | "recruiter") => setState((s) => ({ ...s, role: r }));
-  const reset = () => setState(defaultState);
+  const scheduleSession = (session: ScheduledSession) =>
+    setState((s) => ({
+      ...s,
+      scheduledSessions: [...s.scheduledSessions.filter((item) => item.id !== session.id), session],
+    }));
+  const reset = () => setState(createDefaultState());
 
   return (
     <AuthContext.Provider
@@ -163,6 +197,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         boostTrial,
         unlockSportsCV,
         setRole,
+        scheduleSession,
         reset,
       }}
     >
