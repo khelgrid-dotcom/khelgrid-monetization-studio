@@ -35,6 +35,8 @@ import {
   type FacilityPhoto,
 } from "@/components/VenueImageCarousel";
 import { VenueReviews, type VenueReview } from "@/components/VenueReviews";
+import { VenueFAQ, type FAQItem } from "@/components/VenueFAQ";
+import { VenueAmenitiesList, type AmenityConfig } from "@/components/VenueAmenitiesList";
 import type { Database } from "@/types/database";
 import type { Venue as PlayoVenue } from "@/data/playo";
 
@@ -302,6 +304,13 @@ export function VenueDetails({
         reviewsCount={venue.reviews_count}
       />
 
+      {/* Available Amenities List under image carousel with icons */}
+      <VenueAmenitiesList
+        amenities={venue.amenities}
+        venueName={venue.name}
+        variant="carousel-bar"
+      />
+
       {/* Customer Feedback & User Reviews Spotlight Bar (under image carousel) */}
       <div
         id="venue-carousel-reviews-spotlight-bar"
@@ -448,34 +457,7 @@ export function VenueDetails({
           </div>
 
           {/* Amenities & Facilities */}
-          <div className="space-y-3">
-            <h3 className="text-xs uppercase tracking-wider font-semibold text-muted-foreground">
-              Amenities & Venue Highlights
-            </h3>
-            <div
-              id="venue-details-amenities-grid"
-              className="grid grid-cols-2 sm:grid-cols-3 gap-2.5"
-            >
-              {(
-                venue.amenities || [
-                  "Parking Available",
-                  "Changing Rooms",
-                  "Drinking Water",
-                  "Floodlights",
-                  "Locker Room",
-                  "First Aid On-site",
-                ]
-              ).map((amenity) => (
-                <div
-                  key={amenity}
-                  className="flex items-center gap-2 p-2.5 rounded-lg bg-muted/30 border border-border/50 text-xs font-medium text-foreground"
-                >
-                  {getAmenityIcon(amenity)}
-                  <span>{amenity}</span>
-                </div>
-              ))}
-            </div>
-          </div>
+          <VenueAmenitiesList amenities={venue.amenities} venueName={venue.name} variant="grid" />
 
           {/* Operating Hours Note */}
           <div className="flex items-center gap-2 p-3 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-700 dark:text-blue-400 text-xs">
@@ -646,10 +628,26 @@ export function VenueDetails({
           </Card>
         </div>
       </div>
+
+      {/* Frequently Asked Questions (FAQ) Section at the bottom of VenueDetails */}
+      <div className="px-6 pb-6 pt-2 border-t border-border/60">
+        <VenueFAQ
+          venueName={venue.name}
+          sports={venue.sports}
+          pricePerHour={venue.price_per_hour}
+        />
+      </div>
     </div>
   );
 }
 
-export { VenueDatePicker, VenueImageCarousel, resolveFacilityPhotos, VenueReviews };
-export type { FacilityPhoto, VenueReview };
+export {
+  VenueDatePicker,
+  VenueImageCarousel,
+  resolveFacilityPhotos,
+  VenueReviews,
+  VenueFAQ,
+  VenueAmenitiesList,
+};
+export type { FacilityPhoto, VenueReview, FAQItem, AmenityConfig };
 export default VenueDetails;

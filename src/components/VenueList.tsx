@@ -29,12 +29,22 @@ import {
   VenueDatePicker,
   VenueImageCarousel,
   VenueReviews,
+  VenueFAQ,
+  VenueAmenitiesList,
 } from "@/components/VenueDetails";
 import { toast } from "sonner";
 
 export type VenueRow = Database["public"]["Tables"]["venues"]["Row"];
 
-export { VenueSearchBar, VenueDetails, VenueDatePicker, VenueImageCarousel, VenueReviews };
+export {
+  VenueSearchBar,
+  VenueDetails,
+  VenueDatePicker,
+  VenueImageCarousel,
+  VenueReviews,
+  VenueFAQ,
+  VenueAmenitiesList,
+};
 
 export interface SportCategory {
   id: string;

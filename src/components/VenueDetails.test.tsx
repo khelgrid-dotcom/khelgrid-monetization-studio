@@ -117,4 +117,26 @@ describe("VenueDetails", () => {
     expect(html).toContain('id="venue-share-telegram-link"');
     expect(html).toContain('id="venue-share-copy-link-btn"');
   });
+
+  it("renders Frequently Asked Questions accordion section at the bottom of the venue details view", () => {
+    const html = renderToString(<VenueDetails venue={mockVenue} />);
+    expect(html).toContain('id="venue-faq-section"');
+    expect(html).toContain('id="venue-faq-heading"');
+    expect(html).toContain("Frequently Asked Questions");
+    expect(html).toContain('id="venue-faq-accordion"');
+    expect(html).toContain('id="venue-faq-item-faq-cancellation"');
+    expect(html).toContain("Cancellation Policy");
+    expect(html).toContain("Booking Hours");
+    expect(html).toContain("Age Restrictions");
+  });
+
+  it("renders available amenities list under the image carousel with visual icons", () => {
+    const html = renderToString(<VenueDetails venue={mockVenue} />);
+    expect(html).toContain('id="venue-carousel-amenities-bar"');
+    expect(html).toContain('id="venue-carousel-amenities-label"');
+    expect(html).toContain("Available Amenities &amp; Facilities");
+    expect(html).toContain('id="venue-amenities-pills-list"');
+    expect(html).toContain("Parking");
+    expect(html).toContain("Floodlights");
+  });
 });
