@@ -24,12 +24,17 @@ import {
 import { VENUES } from "@/data/playo";
 
 import { VenueSearchBar } from "@/components/VenueSearchBar";
-import { VenueDetails, VenueDatePicker, VenueImageCarousel } from "@/components/VenueDetails";
+import {
+  VenueDetails,
+  VenueDatePicker,
+  VenueImageCarousel,
+  VenueReviews,
+} from "@/components/VenueDetails";
 import { toast } from "sonner";
 
 export type VenueRow = Database["public"]["Tables"]["venues"]["Row"];
 
-export { VenueSearchBar, VenueDetails, VenueDatePicker, VenueImageCarousel };
+export { VenueSearchBar, VenueDetails, VenueDatePicker, VenueImageCarousel, VenueReviews };
 
 export interface SportCategory {
   id: string;

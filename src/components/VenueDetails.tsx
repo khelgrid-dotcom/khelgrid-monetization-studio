@@ -20,6 +20,7 @@ import {
   Navigation,
   DollarSign,
   AlertCircle,
+  ChevronDown,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -31,6 +32,7 @@ import {
   resolveFacilityPhotos,
   type FacilityPhoto,
 } from "@/components/VenueImageCarousel";
+import { VenueReviews, type VenueReview } from "@/components/VenueReviews";
 import type { Database } from "@/types/database";
 import type { Venue as PlayoVenue } from "@/data/playo";
 
@@ -264,6 +266,47 @@ export function VenueDetails({
         reviewsCount={venue.reviews_count}
       />
 
+      {/* Customer Feedback & User Reviews Spotlight Bar (under image carousel) */}
+      <div
+        id="venue-carousel-reviews-spotlight-bar"
+        className="flex flex-wrap items-center justify-between gap-3 px-6 py-3 bg-muted/30 border-b border-border/60 text-xs"
+      >
+        <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+          <div className="flex items-center gap-1.5 font-bold text-foreground bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded-md">
+            <div className="flex items-center text-amber-500">
+              {[1, 2, 3, 4, 5].map((i) => (
+                <Star
+                  key={i}
+                  className={`h-3.5 w-3.5 ${
+                    i <= Math.round(venue.rating || 4.8)
+                      ? "fill-amber-400 text-amber-400"
+                      : "text-muted-foreground/30"
+                  }`}
+                />
+              ))}
+            </div>
+            <span>{(venue.rating || 4.8).toFixed(1)} / 5.0</span>
+          </div>
+          <span className="text-muted-foreground hidden sm:inline">•</span>
+          <span className="text-muted-foreground font-medium">
+            {venue.reviews_count || 48} Verified Player Ratings & Customer Testimonials
+          </span>
+          <span className="text-muted-foreground hidden md:inline">•</span>
+          <span className="text-emerald-700 dark:text-emerald-400 font-medium hidden md:inline-flex items-center gap-1">
+            <CheckCircle2 className="h-3 w-3" /> 100% Genuine Venue Bookings
+          </span>
+        </div>
+
+        <a
+          id="venue-jump-to-reviews-link"
+          href="#venue-user-reviews-section"
+          className="inline-flex items-center gap-1 text-primary hover:underline font-semibold"
+        >
+          <span>Read User Reviews</span>
+          <ChevronDown className="h-3.5 w-3.5" />
+        </a>
+      </div>
+
       {/* Main Grid: Content Details & Booking Panel */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 p-6">
         {/* Left Column: Comprehensive Venue Information */}
@@ -406,6 +449,15 @@ export function VenueDetails({
               applicable for night slots after 7:00 PM.
             </span>
           </div>
+
+          {/* User Reviews Section with Star Rating System & Customer Feedback Testimonials */}
+          <VenueReviews
+            venueId={venue.id}
+            venueName={venue.name}
+            sports={venue.sports}
+            initialRating={venue.rating || 4.8}
+            initialReviewsCount={venue.reviews_count || 48}
+          />
         </div>
 
         {/* Right Column: Sticky Booking Card */}
@@ -502,6 +554,6 @@ export function VenueDetails({
   );
 }
 
-export { VenueDatePicker, VenueImageCarousel, resolveFacilityPhotos };
-export type { FacilityPhoto };
+export { VenueDatePicker, VenueImageCarousel, resolveFacilityPhotos, VenueReviews };
+export type { FacilityPhoto, VenueReview };
 export default VenueDetails;

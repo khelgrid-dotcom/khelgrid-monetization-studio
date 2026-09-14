@@ -96,4 +96,15 @@ describe("VenueDetails", () => {
     expect(html).toContain('id="venue-carousel-thumbnails-strip"');
     expect(html).toContain("Sports Facilities &amp; Amenities");
   });
+
+  it("renders user reviews spotlight bar and full user reviews section under the image carousel", () => {
+    const html = renderToString(<VenueDetails venue={mockVenue} />);
+    expect(html).toContain('id="venue-carousel-reviews-spotlight-bar"');
+    expect(html).toContain('id="venue-jump-to-reviews-link"');
+    expect(html).toContain("Verified Player Ratings &amp; Customer Testimonials");
+    expect(html).toContain('id="venue-user-reviews-section"');
+    expect(html).toContain('id="venue-star-rating-summary-card"');
+    expect(html).toContain('id="venue-customer-testimonials-container"');
+    expect(html).toContain("Write a Review");
+  });
 });
