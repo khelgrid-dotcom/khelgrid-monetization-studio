@@ -25,6 +25,12 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "sonner";
+import { VenueDatePicker } from "@/components/VenueDatePicker";
+import {
+  VenueImageCarousel,
+  resolveFacilityPhotos,
+  type FacilityPhoto,
+} from "@/components/VenueImageCarousel";
 import type { Database } from "@/types/database";
 import type { Venue as PlayoVenue } from "@/data/playo";
 
@@ -47,6 +53,7 @@ export interface VenueDetailData {
   featured?: boolean;
   bookable?: boolean;
   image_url?: string | null;
+  images?: (string | FacilityPhoto)[];
   contact_phone?: string | null;
   contact_email?: string | null;
 }
@@ -56,6 +63,11 @@ export interface VenueDetailData {
  * into the standard VenueDetailData interface.
  */
 export function normalizeVenueData(v: VenueRow | PlayoVenue | VenueDetailData): VenueDetailData {
+  // Normalize either a Supabase VenueRow or a Playo Venue object
+  const rawImages =
+    (v as { images?: (string | FacilityPhoto)[]; photos?: (string | FacilityPhoto)[] }).images ||
+    (v as { photos?: (string | FacilityPhoto)[] }).photos;
+
   if ("price_per_hour" in v) {
     return {
       id: v.id,
@@ -74,6 +86,7 @@ export function normalizeVenueData(v: VenueRow | PlayoVenue | VenueDetailData): 
       featured: v.featured ?? false,
       bookable: v.bookable ?? true,
       image_url: v.image_url ?? null,
+      images: rawImages,
       contact_phone: v.contact_phone || "+91 98765 43210",
       contact_email: v.contact_email || "support@khelgrid.com",
     };
@@ -95,6 +108,7 @@ export function normalizeVenueData(v: VenueRow | PlayoVenue | VenueDetailData): 
     featured: v.featured ?? false,
     bookable: v.bookable ?? true,
     image_url: v.image,
+    images: rawImages,
     contact_phone: "+91 98765 43210",
     contact_email: "support@khelgrid.com",
   };
@@ -159,11 +173,22 @@ export function VenueDetails({
   };
 
   const handleBookClick = () => {
+    toast.success(`Booking reserved at ${venue.name}!`, {
+      description: `Date: ${selectedDate} | Time: ${selectedTime} | Rate: ₹${venue.price_per_hour.toLocaleString("en-IN")}/hr`,
+    });
     if (onBook) {
       onBook(venue, selectedDate, selectedTime);
-    } else {
-      toast.success(`Booking initiated for ${venue.name} on ${selectedDate} at ${selectedTime}!`);
     }
+  };
+
+  const handleDateChange = (newDate: string) => {
+    setSelectedDate(newDate);
+    toast.info(`Booking date set to ${newDate}`, { duration: 2500 });
+  };
+
+  const handleTimeChange = (newTime: string) => {
+    setSelectedTime(newTime);
+    toast.info(`Booking time slot set to ${newTime}`, { duration: 2000 });
   };
 
   // Amenities icon helper
@@ -228,54 +253,16 @@ export function VenueDetails({
         </div>
       </div>
 
-      {/* Hero Media Banner */}
-      <div className="relative w-full aspect-21/9 sm:aspect-3/1 max-h-72 bg-muted overflow-hidden">
-        {venue.image_url ? (
-          <img
-            src={venue.image_url}
-            alt={venue.name}
-            referrerPolicy="no-referrer"
-            className="w-full h-full object-cover"
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center bg-linear-to-br from-primary/15 via-primary/5 to-background">
-            <span className="text-2xl font-bold text-primary/40 tracking-tight">{venue.name}</span>
-          </div>
-        )}
-
-        {/* Status badges over hero banner */}
-        <div className="absolute top-4 left-4 flex flex-wrap gap-2">
-          {venue.featured && (
-            <Badge className="bg-amber-500 text-white border-none shadow-md font-medium text-xs px-2.5 py-0.5">
-              ★ Featured Venue
-            </Badge>
-          )}
-          {venue.bookable ? (
-            <Badge className="bg-emerald-500 text-white border-none shadow-md font-medium text-xs px-2.5 py-0.5 flex items-center gap-1">
-              <CheckCircle2 className="h-3.5 w-3.5" /> Instant Booking
-            </Badge>
-          ) : (
-            <Badge variant="secondary" className="text-xs">
-              Enquiry Only
-            </Badge>
-          )}
-        </div>
-
-        {/* Rating Pill */}
-        {venue.rating !== undefined && venue.rating > 0 && (
-          <div className="absolute bottom-4 left-4 bg-background/90 backdrop-blur-md px-3 py-1.5 rounded-xl border border-border/60 shadow-md flex items-center gap-2 text-sm font-semibold">
-            <div className="flex items-center gap-1 text-amber-500">
-              <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
-              <span>{venue.rating.toFixed(1)}</span>
-            </div>
-            {venue.reviews_count !== undefined && venue.reviews_count > 0 && (
-              <span className="text-xs font-normal text-muted-foreground">
-                ({venue.reviews_count} verified reviews)
-              </span>
-            )}
-          </div>
-        )}
-      </div>
+      {/* Horizontally Scrollable Facilities Image Carousel */}
+      <VenueImageCarousel
+        images={venue.images || (venue.image_url ? [venue.image_url] : undefined)}
+        venueName={venue.name}
+        sports={venue.sports}
+        featured={venue.featured}
+        bookable={venue.bookable}
+        rating={venue.rating}
+        reviewsCount={venue.reviews_count}
+      />
 
       {/* Main Grid: Content Details & Booking Panel */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 p-6">
@@ -441,22 +428,15 @@ export function VenueDetails({
                 </div>
               </div>
 
-              {/* Slot Date Picker */}
+              {/* Calendar Date Picker */}
               <div className="space-y-1.5">
                 <label
-                  htmlFor="venue-booking-date-input"
+                  htmlFor="venue-date-picker-trigger"
                   className="text-xs font-semibold text-muted-foreground flex items-center gap-1.5"
                 >
-                  <Calendar className="h-3.5 w-3.5 text-primary" /> Select Date
+                  <Calendar className="h-3.5 w-3.5 text-primary" /> Select Booking Date
                 </label>
-                <input
-                  id="venue-booking-date-input"
-                  type="date"
-                  min={new Date().toISOString().slice(0, 10)}
-                  value={selectedDate}
-                  onChange={(e) => setSelectedDate(e.target.value)}
-                  className="w-full h-10 px-3 rounded-lg border border-input bg-background text-sm font-medium focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary shadow-2xs"
-                />
+                <VenueDatePicker date={selectedDate} onDateChange={handleDateChange} />
               </div>
 
               {/* Slot Time Picker */}
@@ -470,7 +450,7 @@ export function VenueDetails({
                 <select
                   id="venue-booking-time-select"
                   value={selectedTime}
-                  onChange={(e) => setSelectedTime(e.target.value)}
+                  onChange={(e) => handleTimeChange(e.target.value)}
                   className="w-full h-10 px-3 rounded-lg border border-input bg-background text-sm font-medium focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary shadow-2xs"
                 >
                   {AVAILABLE_TIMES.map((time) => (
@@ -522,4 +502,6 @@ export function VenueDetails({
   );
 }
 
+export { VenueDatePicker, VenueImageCarousel, resolveFacilityPhotos };
+export type { FacilityPhoto };
 export default VenueDetails;

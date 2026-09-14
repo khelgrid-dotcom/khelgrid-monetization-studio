@@ -77,4 +77,23 @@ describe("VenueDetails", () => {
     expect(normalized.price_per_hour).toBe(1500);
     expect(normalized.sports).toContain("Football");
   });
+
+  it("renders the interactive calendar date-picker component in booking card", () => {
+    const html = renderToString(<VenueDetails venue={mockVenue} />);
+    expect(html).toContain('id="venue-date-picker-trigger"');
+    expect(html).toContain('id="venue-date-picker-wrapper"');
+    expect(html).toContain("Select Booking Date");
+    expect(html).toContain("Click to change booking date");
+  });
+
+  it("renders the horizontally scrollable sports facility image carousel", () => {
+    const html = renderToString(<VenueDetails venue={mockVenue} />);
+    expect(html).toContain('id="venue-facility-carousel-container"');
+    expect(html).toContain('id="venue-photos-horizontal-track"');
+    expect(html).toContain('id="venue-carousel-prev-btn"');
+    expect(html).toContain('id="venue-carousel-next-btn"');
+    expect(html).toContain('id="venue-carousel-counter"');
+    expect(html).toContain('id="venue-carousel-thumbnails-strip"');
+    expect(html).toContain("Sports Facilities &amp; Amenities");
+  });
 });

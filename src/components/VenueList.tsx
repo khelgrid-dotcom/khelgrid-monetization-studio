@@ -24,11 +24,12 @@ import {
 import { VENUES } from "@/data/playo";
 
 import { VenueSearchBar } from "@/components/VenueSearchBar";
-import { VenueDetails } from "@/components/VenueDetails";
+import { VenueDetails, VenueDatePicker, VenueImageCarousel } from "@/components/VenueDetails";
+import { toast } from "sonner";
 
 export type VenueRow = Database["public"]["Tables"]["venues"]["Row"];
 
-export { VenueSearchBar, VenueDetails };
+export { VenueSearchBar, VenueDetails, VenueDatePicker, VenueImageCarousel };
 
 export interface SportCategory {
   id: string;
@@ -122,6 +123,11 @@ export function VenueList({
       if (onCategoryChange) {
         onCategoryChange(category);
       }
+      if (category === "All Sports" || category === "All") {
+        toast.info("Showing all sports categories", { duration: 1800 });
+      } else {
+        toast.info(`Filtered by category: ${category}`, { duration: 1800 });
+      }
     },
     [onCategoryChange],
   );
@@ -129,6 +135,30 @@ export function VenueList({
   const [selectedCity, setSelectedCity] = useState<string>(initialCity);
   const [sortBy, setSortBy] = useState<"featured" | "rating" | "price_asc" | "price_desc">(
     "featured",
+  );
+
+  const handleCityChange = useCallback((city: string) => {
+    setSelectedCity(city);
+    toast.info(
+      city === "All Cities" ? "Showing venues in all cities" : `Showing venues in ${city}`,
+      {
+        duration: 1800,
+      },
+    );
+  }, []);
+
+  const handleSortChange = useCallback(
+    (newSort: "featured" | "rating" | "price_asc" | "price_desc") => {
+      setSortBy(newSort);
+      const sortLabels: Record<string, string> = {
+        featured: "Featured First",
+        rating: "Top Rated",
+        price_asc: "Price: Low to High",
+        price_desc: "Price: High to Low",
+      };
+      toast.info(`Sorted by ${sortLabels[newSort] || newSort}`, { duration: 1800 });
+    },
+    [],
   );
 
   const fetchVenues = useCallback(async () => {
@@ -319,7 +349,7 @@ export function VenueList({
             <select
               id="venues-city-select"
               value={selectedCity}
-              onChange={(e) => setSelectedCity(e.target.value)}
+              onChange={(e) => handleCityChange(e.target.value)}
               className="h-9 rounded-md border border-input bg-background px-3 py-1 text-sm font-medium focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary shadow-2xs"
             >
               {COMMON_CITIES.map((city) => (
@@ -334,7 +364,9 @@ export function VenueList({
               id="venues-sort-select"
               value={sortBy}
               onChange={(e) =>
-                setSortBy(e.target.value as "featured" | "rating" | "price_asc" | "price_desc")
+                handleSortChange(
+                  e.target.value as "featured" | "rating" | "price_asc" | "price_desc",
+                )
               }
               className="h-9 rounded-md border border-input bg-background px-3 py-1 text-sm font-medium focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary shadow-2xs"
             >
@@ -552,6 +584,7 @@ export function VenueList({
               handleSearchChange("");
               handleCategoryChange("All Sports");
               setSelectedCity("All Cities");
+              toast.success("Search filters reset to default", { duration: 2000 });
             }}
           >
             Reset Filters
