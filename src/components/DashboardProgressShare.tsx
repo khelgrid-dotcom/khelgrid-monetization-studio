@@ -1,4 +1,13 @@
-import { Award, Check, LineChart as LineChartIcon, Share2, Trophy } from "lucide-react";
+import {
+  Award,
+  Check,
+  Facebook,
+  LineChart as LineChartIcon,
+  Linkedin,
+  Share2,
+  Trophy,
+  Twitter,
+} from "lucide-react";
 import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { mockAthleteStats } from "@/data/analytics";
 import { Badge } from "@/components/ui/badge";
@@ -12,30 +21,62 @@ const GROWTH_DATA = [
   { month: "Apr", score: 81, sessions: 12 },
 ];
 
+function getShareContent(name: string) {
+  const achievementNames = mockAthleteStats.achievements
+    .map((achievement) => achievement.name)
+    .join(", ");
+  const text = `${name}'s KhelGrid progress: ${mockAthleteStats.successRate}% trial success rate, ${mockAthleteStats.totalEvents} events, and achievements including ${achievementNames}.`;
+
+  return {
+    title: `${name}'s KhelGrid progress`,
+    text,
+    url: `${window.location.origin}/dashboard`,
+  };
+}
+
+const SOCIAL_PLATFORMS = [
+  {
+    label: "LinkedIn",
+    icon: Linkedin,
+    getUrl: ({ url }: ReturnType<typeof getShareContent>) =>
+      `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`,
+  },
+  {
+    label: "X",
+    icon: Twitter,
+    getUrl: ({ text, url }: ReturnType<typeof getShareContent>) =>
+      `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`,
+  },
+  {
+    label: "Facebook",
+    icon: Facebook,
+    getUrl: ({ url }: ReturnType<typeof getShareContent>) =>
+      `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
+  },
+] as const;
+
 export function DashboardProgressShare({ name }: { name: string }) {
   const shareProgress = async () => {
-    const achievementNames = mockAthleteStats.achievements
-      .map((achievement) => achievement.name)
-      .join(", ");
-    const shareText = `${name}'s KhelGrid progress: ${mockAthleteStats.successRate}% trial success rate, ${mockAthleteStats.totalEvents} events, and achievements including ${achievementNames}.`;
-    const shareUrl = `${window.location.origin}/dashboard`;
+    const { title, text, url } = getShareContent(name);
 
     try {
       if (navigator.share) {
-        await navigator.share({
-          title: `${name}'s KhelGrid progress`,
-          text: shareText,
-          url: shareUrl,
-        });
+        await navigator.share({ title, text, url });
         return;
       }
 
-      await navigator.clipboard.writeText(`${shareText} ${shareUrl}`);
+      await navigator.clipboard.writeText(`${text} ${url}`);
       toast.success("Progress snapshot copied. You can paste it into any social app.");
     } catch (error) {
       if (error instanceof DOMException && error.name === "AbortError") return;
       toast.error("Sharing is unavailable in this browser. Try copying your dashboard link.");
     }
+  };
+
+  const shareToSocial = (platform: (typeof SOCIAL_PLATFORMS)[number]) => {
+    const content = getShareContent(name);
+    window.open(platform.getUrl(content), "_blank", "noopener,noreferrer,width=640,height=720");
+    toast.success(`Opening ${platform.label} to share your progress`);
   };
 
   return (
@@ -61,6 +102,37 @@ export function DashboardProgressShare({ name }: { name: string }) {
         <Button type="button" onClick={shareProgress} className="shrink-0 rounded-full">
           <Share2 className="mr-2 h-4 w-4" /> Share snapshot
         </Button>
+      </div>
+
+      <div className="mt-5 flex flex-col gap-3 rounded-xl border border-primary/20 bg-primary/5 p-3 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <p className="text-sm font-semibold">Share to your social profiles</p>
+          <p className="text-xs text-muted-foreground">
+            Post your verified growth and achievements.
+          </p>
+        </div>
+        <div
+          className="flex flex-wrap gap-2"
+          role="group"
+          aria-label="Share growth snapshot on social media"
+        >
+          {SOCIAL_PLATFORMS.map((platform) => {
+            const Icon = platform.icon;
+            return (
+              <Button
+                key={platform.label}
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => shareToSocial(platform)}
+                aria-label={`Share progress on ${platform.label}`}
+                className="rounded-full bg-background/40"
+              >
+                <Icon className="h-3.5 w-3.5" /> {platform.label}
+              </Button>
+            );
+          })}
+        </div>
       </div>
 
       <div className="mt-5 grid gap-5 lg:grid-cols-[1.25fr_1fr]">
