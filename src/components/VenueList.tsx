@@ -31,6 +31,7 @@ import {
   VenueReviews,
   VenueFAQ,
   VenueAmenitiesList,
+  BookingConfirmationModal,
 } from "@/components/VenueDetails";
 import { toast } from "sonner";
 
@@ -44,6 +45,7 @@ export {
   VenueReviews,
   VenueFAQ,
   VenueAmenitiesList,
+  BookingConfirmationModal,
 };
 
 export interface SportCategory {

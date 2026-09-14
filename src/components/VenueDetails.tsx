@@ -37,6 +37,10 @@ import {
 import { VenueReviews, type VenueReview } from "@/components/VenueReviews";
 import { VenueFAQ, type FAQItem } from "@/components/VenueFAQ";
 import { VenueAmenitiesList, type AmenityConfig } from "@/components/VenueAmenitiesList";
+import {
+  BookingConfirmationModal,
+  type BookingConfirmationModalProps,
+} from "@/components/BookingConfirmationModal";
 import type { Database } from "@/types/database";
 import type { Venue as PlayoVenue } from "@/data/playo";
 
@@ -125,6 +129,8 @@ export interface VenueDetailsProps {
   onBook?: (venue: VenueDetailData, selectedDate?: string, selectedTime?: string) => void;
   onClose?: () => void;
   className?: string;
+  defaultConfirmModalOpen?: boolean;
+  confirmModalInline?: boolean;
 }
 
 const AVAILABLE_TIMES = [
@@ -143,6 +149,8 @@ export function VenueDetails({
   onBook,
   onClose,
   className = "",
+  defaultConfirmModalOpen = false,
+  confirmModalInline = false,
 }: VenueDetailsProps) {
   const venue = normalizeVenueData(rawVenue);
 
@@ -151,6 +159,8 @@ export function VenueDetails({
     new Date().toISOString().slice(0, 10),
   );
   const [selectedTime, setSelectedTime] = useState<string>("6:00 PM");
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState<boolean>(defaultConfirmModalOpen);
+  const [isConfirming, setIsConfirming] = useState<boolean>(false);
 
   const fullAddress = venue.address || `${venue.area}, ${venue.city}`;
   const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
@@ -211,12 +221,22 @@ export function VenueDetails({
   };
 
   const handleBookClick = () => {
-    toast.success(`Booking reserved at ${venue.name}!`, {
-      description: `Date: ${selectedDate} | Time: ${selectedTime} | Rate: ₹${venue.price_per_hour.toLocaleString("en-IN")}/hr`,
-    });
-    if (onBook) {
-      onBook(venue, selectedDate, selectedTime);
-    }
+    // Open confirmation modal summarizing venue, selected date, and total price to prevent accidental bookings
+    setIsConfirmModalOpen(true);
+  };
+
+  const handleFinalizeBooking = () => {
+    setIsConfirming(true);
+    setTimeout(() => {
+      setIsConfirming(false);
+      setIsConfirmModalOpen(false);
+      toast.success(`Booking confirmed at ${venue.name}!`, {
+        description: `Date: ${selectedDate} | Time: ${selectedTime} | Total: ₹${venue.price_per_hour.toLocaleString("en-IN")}`,
+      });
+      if (onBook) {
+        onBook(venue, selectedDate, selectedTime);
+      }
+    }, 250);
   };
 
   const handleDateChange = (newDate: string) => {
@@ -637,6 +657,24 @@ export function VenueDetails({
           pricePerHour={venue.price_per_hour}
         />
       </div>
+
+      {/* Confirmation Modal to prevent accidental bookings */}
+      <BookingConfirmationModal
+        open={isConfirmModalOpen}
+        onOpenChange={setIsConfirmModalOpen}
+        venueName={venue.name}
+        venueArea={venue.area}
+        venueCity={venue.city}
+        selectedDate={selectedDate}
+        selectedTime={selectedTime}
+        durationHours={1}
+        pricePerHour={venue.price_per_hour}
+        totalPrice={venue.price_per_hour}
+        sports={venue.sports}
+        onConfirm={handleFinalizeBooking}
+        isConfirming={isConfirming}
+        inline={confirmModalInline}
+      />
     </div>
   );
 }
@@ -648,6 +686,7 @@ export {
   VenueReviews,
   VenueFAQ,
   VenueAmenitiesList,
+  BookingConfirmationModal,
 };
-export type { FacilityPhoto, VenueReview, FAQItem, AmenityConfig };
+export type { FacilityPhoto, VenueReview, FAQItem, AmenityConfig, BookingConfirmationModalProps };
 export default VenueDetails;

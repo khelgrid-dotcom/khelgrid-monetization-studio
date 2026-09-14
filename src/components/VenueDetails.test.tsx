@@ -139,4 +139,22 @@ describe("VenueDetails", () => {
     expect(html).toContain("Parking");
     expect(html).toContain("Floodlights");
   });
+
+  it("renders confirmation modal summarizing venue name, selected date, and total price before finalizing", () => {
+    const html = renderToString(
+      <VenueDetails venue={mockVenue} defaultConfirmModalOpen={true} confirmModalInline={true} />,
+    );
+    expect(html).toContain('id="venue-primary-book-btn"');
+    expect(html).toContain('id="booking-confirmation-title"');
+    expect(html).toContain("Confirm Your Booking");
+    expect(html).toContain('id="booking-confirmation-venue-name"');
+    expect(html).toContain(mockVenue.name);
+    expect(html).toContain('id="booking-confirmation-selected-date"');
+    expect(html).toContain('id="booking-confirmation-total-price-box"');
+    expect(html).toContain('id="booking-confirmation-total-amount"');
+    expect(html).toContain("1,200");
+    expect(html).toContain('id="booking-confirmation-cancel-btn"');
+    expect(html).toContain('id="booking-confirmation-finalize-btn"');
+    expect(html).toContain("Confirm &amp; Finalize Booking");
+  });
 });

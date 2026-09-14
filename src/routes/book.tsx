@@ -30,6 +30,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
+import { BookingConfirmationModal } from "@/components/BookingConfirmationModal";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/book")({
@@ -382,6 +383,7 @@ function BookingDialog({
   const [sport, setSport] = useState(venue.sports[0]);
   const [date, setDate] = useState(initialDate);
   const [time, setTime] = useState<string | null>(initialTime);
+  const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
   const availableSlots = getAvailableSlots(venue, date);
 
   const selectDate = (nextDate: string) => {
@@ -389,9 +391,17 @@ function BookingDialog({
     if (time && !getAvailableSlots(venue, nextDate).includes(time)) setTime(null);
   };
 
-  const confirm = () => {
+  const handleOpenConfirmation = () => {
     if (!time) return;
-    toast.success(`Booking request sent for ${venue.name} · ${date} · ${time}`);
+    setShowConfirmModal(true);
+  };
+
+  const handleFinalConfirm = () => {
+    if (!time) return;
+    setShowConfirmModal(false);
+    toast.success(`Booking request sent for ${venue.name}!`, {
+      description: `Date: ${date} | Time: ${time} | Total: ₹${venue.pricePerHour}`,
+    });
     onOpenChange(false);
   };
 
@@ -463,11 +473,32 @@ function BookingDialog({
               <span className="text-lg font-bold">₹{venue.pricePerHour}</span>
             </div>
           </div>
-          <Button onClick={confirm} disabled={!time} className="w-full" size="lg">
-            {time ? `Send booking request · ${time}` : "Select an available slot"}
+          <Button
+            id="book-dialog-open-confirmation-btn"
+            onClick={handleOpenConfirmation}
+            disabled={!time}
+            className="w-full"
+            size="lg"
+          >
+            {time ? `Review & Confirm Booking · ${time}` : "Select an available slot"}
           </Button>
         </div>
       </DialogContent>
+
+      <BookingConfirmationModal
+        open={showConfirmModal}
+        onOpenChange={setShowConfirmModal}
+        venueName={venue.name}
+        venueArea={venue.area}
+        venueCity={venue.city}
+        selectedDate={date}
+        selectedTime={time || undefined}
+        durationHours={1}
+        pricePerHour={venue.pricePerHour}
+        totalPrice={venue.pricePerHour}
+        sports={venue.sports}
+        onConfirm={handleFinalConfirm}
+      />
     </Dialog>
   );
 }
