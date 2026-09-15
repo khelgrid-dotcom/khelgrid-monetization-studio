@@ -5,6 +5,7 @@ import { SportsCV } from "@/components/SportsCV";
 import { DashboardCommunityWall } from "@/components/DashboardCommunityWall";
 import { DashboardProgressShare } from "@/components/DashboardProgressShare";
 import { DashboardReminder } from "@/components/DashboardReminder";
+import { DashboardReferral } from "@/components/DashboardReferral";
 import { OpportunityInterviewAgent } from "@/components/OpportunityInterviewAgent";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -36,6 +37,9 @@ function Dashboard() {
     freeLimit,
     remainingFree,
     scheduledSessions,
+    referralCode,
+    referralInvitesSent,
+    recordReferralInvite,
     reset,
     upgradeToPro,
   } = useAuth();
@@ -134,6 +138,11 @@ function Dashboard() {
       </div>
 
       <DashboardReminder sessions={[...scheduledSessions, ...scheduledTrials]} />
+      <DashboardReferral
+        code={referralCode}
+        invitesSent={referralInvitesSent}
+        onInviteSent={recordReferralInvite}
+      />
 
       <div className="mt-8 grid gap-6 lg:grid-cols-[1.2fr_1fr]">
         <div>

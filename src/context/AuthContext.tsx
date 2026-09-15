@@ -21,6 +21,8 @@ export interface AuthState {
   sportsCVUnlocked: boolean;
   role: "athlete" | "organizer" | "recruiter";
   scheduledSessions: ScheduledSession[];
+  referralCode: string;
+  referralInvitesSent: number;
 }
 
 interface AuthContextValue extends AuthState {
@@ -36,6 +38,7 @@ interface AuthContextValue extends AuthState {
   unlockSportsCV: (method: "wallet" | "upi") => boolean;
   setRole: (r: "athlete" | "organizer" | "recruiter") => void;
   scheduleSession: (session: ScheduledSession) => void;
+  recordReferralInvite: () => boolean;
   reset: () => void;
 }
 
@@ -66,6 +69,8 @@ function createDefaultState(): AuthState {
         scheduledAt: scheduledAt.toISOString(),
       },
     ],
+    referralCode: "ARJUN50",
+    referralInvitesSent: 0,
   };
 }
 
@@ -180,6 +185,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       ...s,
       scheduledSessions: [...s.scheduledSessions.filter((item) => item.id !== session.id), session],
     }));
+  const recordReferralInvite = () => {
+    const nextInviteCount = state.referralInvitesSent + 1;
+    const unlockedReward = nextInviteCount % 3 === 0;
+    setState((s) => ({
+      ...s,
+      referralInvitesSent: nextInviteCount,
+      wallet: unlockedReward ? s.wallet + 150 : s.wallet,
+    }));
+    return unlockedReward;
+  };
   const reset = () => setState(createDefaultState());
 
   return (
@@ -198,6 +213,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         unlockSportsCV,
         setRole,
         scheduleSession,
+        recordReferralInvite,
         reset,
       }}
     >
