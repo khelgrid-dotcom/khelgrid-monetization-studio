@@ -11,16 +11,15 @@ import {
   Wallet,
   Bell,
   Settings,
-  Sun,
-  Moon,
   Newspaper,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useNotifications } from "@/context/NotificationContext";
 import { Button } from "@/components/ui/button";
 import { NavDrawer } from "@/components/NavDrawer";
 import { SportsLauncher } from "@/components/SportsLauncher";
+import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import { isActivePath } from "@/config/nav";
 
 const NAV = [
@@ -37,24 +36,7 @@ export function Navbar() {
   const { plan, wallet } = useAuth();
   const { unreadCount } = useNotifications();
   const [sportsLauncherOpen, setSportsLauncherOpen] = useState(false);
-  const [isDark, setIsDark] = useState(false);
   const path = useRouterState({ select: (s) => s.location.pathname });
-
-  useEffect(() => {
-    const storedTheme = localStorage.getItem("theme");
-    const nextIsDark =
-      storedTheme === "dark" ||
-      (storedTheme !== "light" && window.matchMedia("(prefers-color-scheme: dark)").matches);
-    setIsDark(nextIsDark);
-    document.documentElement.classList.toggle("dark", nextIsDark);
-  }, []);
-
-  const toggleTheme = () => {
-    const nextIsDark = !isDark;
-    setIsDark(nextIsDark);
-    localStorage.setItem("theme", nextIsDark ? "dark" : "light");
-    document.documentElement.classList.toggle("dark", nextIsDark);
-  };
 
   return (
     <header className="sticky top-0 z-40 border-b border-border/60 bg-background/85 backdrop-blur-xl">
@@ -126,16 +108,8 @@ export function Navbar() {
             <Wallet className="h-3.5 w-3.5 text-primary" />₹{wallet}
           </Link>
 
-          {/* Desktop only */}
-          <button
-            type="button"
-            onClick={toggleTheme}
-            aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
-            title={isDark ? "Switch to light mode" : "Switch to dark mode"}
-            className="rounded-full border border-border bg-card p-2 text-muted-foreground hover:text-foreground"
-          >
-            {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-          </button>
+          {/* Theme switcher */}
+          <ThemeSwitcher id="navbar-theme-switcher" />
           <button className="hidden items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground xl:inline-flex">
             <Globe className="h-4 w-4" /> English
           </button>

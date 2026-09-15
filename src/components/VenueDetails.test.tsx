@@ -157,4 +157,23 @@ describe("VenueDetails", () => {
     expect(html).toContain('id="booking-confirmation-finalize-btn"');
     expect(html).toContain("Confirm &amp; Finalize Booking");
   });
+
+  it("renders structured venue policies, operating hours and restrictions accordion component at the bottom", () => {
+    const html = renderToString(<VenueDetails venue={mockVenue} />);
+    expect(html).toContain('id="venue-policies-section"');
+    expect(html).toContain('id="venue-policies-heading"');
+    expect(html).toContain("Venue Policies, Hours &amp; Rules");
+    expect(html).toContain('id="venue-policies-accordion"');
+    expect(html).toContain('id="venue-policy-item-booking"');
+    expect(html).toContain('id="venue-policy-item-hours"');
+    expect(html).toContain('id="venue-policy-item-restrictions"');
+    expect(html).toContain('id="venue-policy-item-safety"');
+    expect(html).toContain("Booking &amp; Cancellation Policies");
+    expect(html).toContain("Operating Hours &amp; Lighting Schedule");
+    expect(html).toContain("Footwear, Attire &amp; Equipment Rules");
+    expect(html).toContain("Safety, Age Guidelines &amp; Prohibited Items");
+    expect(html).toContain("100% Refund");
+    expect(html).toContain("Advance Booking Window");
+    expect(html).toContain("Inclement Weather Policy");
+  });
 });

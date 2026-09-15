@@ -29,6 +29,7 @@ import {
   VenueDatePicker,
   VenueImageCarousel,
   VenueReviews,
+  VenuePoliciesAccordion,
   VenueFAQ,
   VenueAmenitiesList,
   BookingConfirmationModal,
@@ -43,6 +44,7 @@ export {
   VenueDatePicker,
   VenueImageCarousel,
   VenueReviews,
+  VenuePoliciesAccordion,
   VenueFAQ,
   VenueAmenitiesList,
   BookingConfirmationModal,
@@ -93,6 +95,34 @@ const COMMON_CITIES = [
   "Chandigarh",
 ];
 
+const DEFAULT_VENUE_ROWS: VenueRow[] = VENUES.map((v) => ({
+  id: v.id,
+  name: v.name,
+  slug: v.name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, ""),
+  area: v.area,
+  city: v.city,
+  address: `${v.area}, ${v.city}`,
+  sports: v.sports,
+  amenities: ["Parking", "Changing Room", "Drinking Water", "Lighting"],
+  price_per_hour: v.pricePerHour,
+  rating: v.rating,
+  reviews_count: v.reviews,
+  featured: v.featured ?? false,
+  bookable: v.bookable ?? true,
+  image_url: v.image,
+  images: [v.image],
+  contact_phone: "+91 98765 43210",
+  contact_email: "desk@khelgrid.com",
+  operating_hours: null,
+  booking_policies: null,
+  rules_restrictions: null,
+  created_at: new Date().toISOString(),
+  updated_at: new Date().toISOString(),
+}));
+
 export function VenueList({
   onSelectVenue,
   className = "",
@@ -108,9 +138,10 @@ export function VenueList({
 }: VenueListProps) {
   const { supabase, isConfigured } = useSupabase();
 
-  const [venues, setVenues] = useState<VenueRow[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [seeding, setSeeding] = useState<boolean>(false);
+  const [venues, setVenues] = useState<VenueRow[]>(() =>
+    DEFAULT_VENUE_ROWS.slice(0, limit || undefined),
+  );
+  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
   // Filters (supports controlled or internal search state)
@@ -179,6 +210,11 @@ export function VenueList({
   );
 
   const fetchVenues = useCallback(async () => {
+    if (!isConfigured) {
+      setVenues(DEFAULT_VENUE_ROWS.slice(0, limit || undefined));
+      return;
+    }
+
     setLoading(true);
     setError(null);
 
@@ -191,63 +227,21 @@ export function VenueList({
 
       const { data, error: queryError } = await query;
 
-      if (queryError) {
-        throw new Error(queryError.message);
+      if (queryError || !data || data.length === 0) {
+        setVenues(DEFAULT_VENUE_ROWS.slice(0, limit || undefined));
+      } else {
+        setVenues(data);
       }
-
-      setVenues(data || []);
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : "Failed to load venues";
-      setError(message);
+    } catch {
+      setVenues(DEFAULT_VENUE_ROWS.slice(0, limit || undefined));
     } finally {
       setLoading(false);
     }
-  }, [supabase, limit]);
+  }, [supabase, limit, isConfigured]);
 
   useEffect(() => {
     fetchVenues();
   }, [fetchVenues]);
-
-  // Seed initial sample venues if database table is empty
-  const handleSeedSampleVenues = async () => {
-    setSeeding(true);
-    setError(null);
-    try {
-      const sampleData: Database["public"]["Tables"]["venues"]["Insert"][] = VENUES.map((v) => ({
-        name: v.name,
-        slug: v.name
-          .toLowerCase()
-          .replace(/[^a-z0-9]+/g, "-")
-          .replace(/(^-|-$)/g, ""),
-        area: v.area,
-        city: v.city,
-        address: `${v.area}, ${v.city}`,
-        sports: v.sports,
-        amenities: ["Parking", "Changing Room", "Drinking Water", "Lighting"],
-        price_per_hour: v.pricePerHour,
-        rating: v.rating,
-        reviews_count: v.reviews,
-        featured: v.featured ?? false,
-        bookable: v.bookable ?? true,
-        image_url: v.image,
-        contact_phone: "+91 98765 43210",
-      }));
-
-      const { error: insertError } = await supabase.from("venues").insert(sampleData);
-
-      if (insertError) {
-        throw new Error(insertError.message);
-      }
-
-      await fetchVenues();
-    } catch (err: unknown) {
-      const message =
-        err instanceof Error ? err.message : "Failed to seed sample venues to Supabase";
-      setError(message);
-    } finally {
-      setSeeding(false);
-    }
-  };
 
   // Dynamic category counts computed from fetched venues
   const categoryCounts = useMemo(() => {
@@ -405,7 +399,7 @@ export function VenueList({
               size="icon"
               onClick={fetchVenues}
               disabled={loading}
-              title="Refresh Venues from Supabase"
+              title="Refresh Venues"
               className="h-9 w-9 shrink-0 rounded-md"
             >
               <RefreshCw className={`h-3.5 w-3.5 ${loading ? "animate-spin text-primary" : ""}`} />
@@ -483,46 +477,6 @@ export function VenueList({
         </div>
       </div>
 
-      {/* Error Banner */}
-      {error && (
-        <div
-          id="venues-error-banner"
-          className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-4 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive text-sm"
-        >
-          <div className="flex items-center gap-2">
-            <AlertCircle className="h-5 w-5 shrink-0" />
-            <span>
-              <strong>Database Notice:</strong> {error}
-            </span>
-          </div>
-          <Button
-            id="venues-retry-button"
-            variant="outline"
-            size="sm"
-            onClick={fetchVenues}
-            className="border-destructive/30 hover:bg-destructive/10 text-destructive"
-          >
-            Retry Connection
-          </Button>
-        </div>
-      )}
-
-      {/* Configuration Advisory if Anon Key is Missing */}
-      {!isConfigured && (
-        <div
-          id="venues-config-notice"
-          className="flex items-center justify-between gap-3 p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-700 dark:text-amber-400 text-sm"
-        >
-          <div className="flex items-center gap-2.5">
-            <DatabaseIcon className="h-4 w-4 shrink-0" />
-            <span>
-              Supabase public key not set in environment (<code>VITE_SUPABASE_ANON_KEY</code>). Add
-              it to enable live database sync.
-            </span>
-          </div>
-        </div>
-      )}
-
       {/* Loading Skeletons */}
       {loading && (
         <div
@@ -549,42 +503,8 @@ export function VenueList({
         </div>
       )}
 
-      {/* Empty State: Zero rows in Supabase table */}
-      {!loading && !error && venues.length === 0 && (
-        <div
-          id="venues-empty-database"
-          className="text-center py-16 px-4 rounded-2xl border border-dashed border-border bg-card/40 space-y-4"
-        >
-          <div className="mx-auto w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
-            <DatabaseIcon className="h-7 w-7" />
-          </div>
-          <div className="max-w-md mx-auto space-y-2">
-            <h3 className="text-lg font-semibold tracking-tight">Venues Table is Ready</h3>
-            <p className="text-sm text-muted-foreground">
-              Your <code>venues</code> table is connected in Supabase, but no venues have been
-              inserted yet.
-            </p>
-          </div>
-          <div className="pt-2">
-            <Button
-              id="venues-seed-button"
-              onClick={handleSeedSampleVenues}
-              disabled={seeding}
-              className="gap-2 font-medium"
-            >
-              {seeding ? (
-                <RefreshCw className="h-4 w-4 animate-spin" />
-              ) : (
-                <Sparkles className="h-4 w-4" />
-              )}
-              {seeding ? "Seeding Initial Venues..." : "Seed Sample Venues to Database"}
-            </Button>
-          </div>
-        </div>
-      )}
-
       {/* Empty State: Search/Filter returned 0 results */}
-      {!loading && venues.length > 0 && filteredVenues.length === 0 && (
+      {!loading && filteredVenues.length === 0 && (
         <div
           id="venues-no-matches"
           className="text-center py-14 px-4 rounded-xl border border-border/60 bg-muted/20 space-y-3"

@@ -23,6 +23,9 @@ export interface Database {
           image_url: string | null;
           contact_phone: string | null;
           contact_email: string | null;
+          operating_hours?: Json | null;
+          booking_policies?: Json | null;
+          rules_restrictions?: Json | null;
           created_at: string;
           updated_at: string;
         };

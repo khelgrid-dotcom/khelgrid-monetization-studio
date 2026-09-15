@@ -36,7 +36,15 @@ import {
 } from "@/components/VenueImageCarousel";
 import { VenueReviews, type VenueReview } from "@/components/VenueReviews";
 import { VenueFAQ, type FAQItem } from "@/components/VenueFAQ";
+import {
+  VenuePoliciesAccordion,
+  type VenueOperatingHoursData,
+  type VenueBookingPoliciesData,
+  type VenueRulesRestrictionsData,
+} from "@/components/VenuePoliciesAccordion";
 import { VenueAmenitiesList, type AmenityConfig } from "@/components/VenueAmenitiesList";
+import { ThemeSwitcher } from "@/components/ThemeSwitcher";
+import { createVenueBooking } from "@/lib/booking-service";
 import {
   BookingConfirmationModal,
   type BookingConfirmationModalProps,
@@ -66,6 +74,9 @@ export interface VenueDetailData {
   images?: (string | FacilityPhoto)[];
   contact_phone?: string | null;
   contact_email?: string | null;
+  operating_hours?: VenueOperatingHoursData | null;
+  booking_policies?: VenueBookingPoliciesData | null;
+  rules_restrictions?: VenueRulesRestrictionsData | null;
 }
 
 /**
@@ -77,6 +88,11 @@ export function normalizeVenueData(v: VenueRow | PlayoVenue | VenueDetailData): 
   const rawImages =
     (v as { images?: (string | FacilityPhoto)[]; photos?: (string | FacilityPhoto)[] }).images ||
     (v as { photos?: (string | FacilityPhoto)[] }).photos;
+
+  const rawAny = v as unknown as Record<string, unknown>;
+  const operatingHours = (rawAny.operating_hours as VenueOperatingHoursData) || null;
+  const bookingPolicies = (rawAny.booking_policies as VenueBookingPoliciesData) || null;
+  const rulesRestrictions = (rawAny.rules_restrictions as VenueRulesRestrictionsData) || null;
 
   if ("price_per_hour" in v) {
     return {
@@ -99,6 +115,9 @@ export function normalizeVenueData(v: VenueRow | PlayoVenue | VenueDetailData): 
       images: rawImages,
       contact_phone: v.contact_phone || "+91 98765 43210",
       contact_email: v.contact_email || "support@khelgrid.com",
+      operating_hours: operatingHours,
+      booking_policies: bookingPolicies,
+      rules_restrictions: rulesRestrictions,
     };
   }
 
@@ -121,6 +140,9 @@ export function normalizeVenueData(v: VenueRow | PlayoVenue | VenueDetailData): 
     images: rawImages,
     contact_phone: "+91 98765 43210",
     contact_email: "support@khelgrid.com",
+    operating_hours: operatingHours,
+    booking_policies: bookingPolicies,
+    rules_restrictions: rulesRestrictions,
   };
 }
 
@@ -225,10 +247,24 @@ export function VenueDetails({
     setIsConfirmModalOpen(true);
   };
 
-  const handleFinalizeBooking = () => {
+  const handleFinalizeBooking = async () => {
     setIsConfirming(true);
-    setTimeout(() => {
-      setIsConfirming(false);
+    try {
+      const result = await createVenueBooking({
+        venue: {
+          id: venue.id,
+          name: venue.name,
+          area: venue.area,
+          city: venue.city,
+          price_per_hour: venue.price_per_hour,
+          sports: venue.sports || [],
+          image_url: venue.image_url,
+        },
+        booking_date: selectedDate,
+        start_time: selectedTime,
+        duration_hours: 1,
+      });
+
       setIsConfirmModalOpen(false);
       toast.success(`Booking confirmed at ${venue.name}!`, {
         description: `Date: ${selectedDate} | Time: ${selectedTime} | Total: ₹${venue.price_per_hour.toLocaleString("en-IN")}`,
@@ -236,7 +272,11 @@ export function VenueDetails({
       if (onBook) {
         onBook(venue, selectedDate, selectedTime);
       }
-    }, 250);
+    } catch (err) {
+      toast.error("Failed to save booking. Please try again.");
+    } finally {
+      setIsConfirming(false);
+    }
   };
 
   const handleDateChange = (newDate: string) => {
@@ -287,6 +327,8 @@ export function VenueDetails({
         </div>
 
         <div className="flex items-center gap-2">
+          {/* Theme switcher toggle button */}
+          <ThemeSwitcher id="venue-details-theme-switcher" variant="icon" className="h-8 w-8" />
           <Button
             id="venue-details-share-btn"
             variant="outline"
@@ -299,6 +341,15 @@ export function VenueDetails({
             <Share2 className="h-3.5 w-3.5 text-primary" />
             <span>Share</span>
           </Button>
+          <a
+            id="venue-details-page-link"
+            href={`/venue/${venue.id}`}
+            className="inline-flex items-center gap-1.5 h-8 px-3 rounded-md text-xs font-medium border border-border bg-background hover:bg-muted text-foreground transition-colors"
+            title="Open dedicated venue page"
+          >
+            <ExternalLink className="h-3.5 w-3.5 text-primary" />
+            <span>Full Page</span>
+          </a>
           <a
             id="venue-details-maps-external-link"
             href={mapsUrl}
@@ -649,6 +700,18 @@ export function VenueDetails({
         </div>
       </div>
 
+      {/* Venue Policies, Operating Hours & Restrictions Accordion at the bottom of VenueDetails */}
+      <div className="px-6 pb-6 pt-2 border-t border-border/60">
+        <VenuePoliciesAccordion
+          venueName={venue.name}
+          sports={venue.sports}
+          pricePerHour={venue.price_per_hour}
+          operatingHours={venue.operating_hours}
+          bookingPolicies={venue.booking_policies}
+          rulesRestrictions={venue.rules_restrictions}
+        />
+      </div>
+
       {/* Frequently Asked Questions (FAQ) Section at the bottom of VenueDetails */}
       <div className="px-6 pb-6 pt-2 border-t border-border/60">
         <VenueFAQ
@@ -684,9 +747,19 @@ export {
   VenueImageCarousel,
   resolveFacilityPhotos,
   VenueReviews,
+  VenuePoliciesAccordion,
   VenueFAQ,
   VenueAmenitiesList,
   BookingConfirmationModal,
 };
-export type { FacilityPhoto, VenueReview, FAQItem, AmenityConfig, BookingConfirmationModalProps };
+export type {
+  FacilityPhoto,
+  VenueReview,
+  FAQItem,
+  AmenityConfig,
+  BookingConfirmationModalProps,
+  VenueOperatingHoursData,
+  VenueBookingPoliciesData,
+  VenueRulesRestrictionsData,
+};
 export default VenueDetails;

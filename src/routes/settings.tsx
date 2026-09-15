@@ -20,6 +20,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
+import { useTheme } from "@/context/ThemeContext";
 
 export const Route = createFileRoute("/settings")({
   head: () => ({
@@ -44,7 +45,7 @@ interface SettingsState {
 }
 
 function SettingsPage() {
-  const [theme, setTheme] = useState<"light" | "dark" | "auto">("auto");
+  const { theme, setTheme } = useTheme();
   const [activeTab, setActiveTab] = useState<
     "account" | "notifications" | "privacy" | "appearance"
   >("account");
@@ -67,40 +68,11 @@ function SettingsPage() {
       targetedAds: true,
     },
     preferences: {
-      theme: "auto",
+      theme: "system",
       language: "en",
       emailFrequency: "weekly",
     },
   });
-
-  // Apply theme on mount and when theme changes
-  useEffect(() => {
-    const html = document.documentElement;
-
-    if (theme === "dark") {
-      html.classList.add("dark");
-      localStorage.setItem("theme", "dark");
-    } else if (theme === "light") {
-      html.classList.remove("dark");
-      localStorage.setItem("theme", "light");
-    } else {
-      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-      if (prefersDark) {
-        html.classList.add("dark");
-      } else {
-        html.classList.remove("dark");
-      }
-      localStorage.setItem("theme", "auto");
-    }
-  }, [theme]);
-
-  // Load saved theme on mount
-  useEffect(() => {
-    const savedTheme = localStorage.getItem("theme") as "light" | "dark" | "auto" | null;
-    if (savedTheme) {
-      setTheme(savedTheme);
-    }
-  }, []);
 
   const toggleSetting = (category: keyof SettingsState, key: string) => {
     setSettings((prev) => ({
@@ -434,47 +406,50 @@ function SettingsPage() {
                   <div className="grid grid-cols-3 gap-4">
                     {/* Light Theme */}
                     <button
+                      type="button"
                       onClick={() => setTheme("light")}
-                      className={`flex flex-col items-center justify-center p-6 rounded-lg border-2 transition ${
+                      className={`flex flex-col items-center justify-center p-6 rounded-xl border-2 transition cursor-pointer ${
                         theme === "light"
-                          ? "border-primary bg-primary/10"
-                          : "border-border/60 bg-card/60 hover:border-border"
+                          ? "border-primary bg-primary/10 shadow-xs"
+                          : "border-border/60 bg-card hover:border-border"
                       }`}
                     >
-                      <Sun className="h-8 w-8 text-yellow-500 mb-3" />
-                      <span className="font-semibold text-slate-900">Light</span>
-                      <span className="text-xs text-slate-600 mt-1">Bright and clear</span>
+                      <Sun className="h-8 w-8 text-amber-500 mb-3" />
+                      <span className="font-semibold text-foreground">Light</span>
+                      <span className="text-xs text-muted-foreground mt-1">Bright and clear</span>
                     </button>
 
                     {/* Dark Theme */}
                     <button
+                      type="button"
                       onClick={() => setTheme("dark")}
-                      className={`flex flex-col items-center justify-center p-6 rounded-lg border-2 transition ${
+                      className={`flex flex-col items-center justify-center p-6 rounded-xl border-2 transition cursor-pointer ${
                         theme === "dark"
-                          ? "border-primary bg-primary/10"
-                          : "border-border/60 bg-card/60 hover:border-border"
+                          ? "border-primary bg-primary/10 shadow-xs"
+                          : "border-border/60 bg-card hover:border-border"
                       }`}
                     >
-                      <Moon className="h-8 w-8 text-slate-700 mb-3" />
-                      <span className="font-semibold text-slate-900">Dark</span>
-                      <span className="text-xs text-slate-600 mt-1">Easy on eyes</span>
+                      <Moon className="h-8 w-8 text-sky-400 mb-3" />
+                      <span className="font-semibold text-foreground">Dark</span>
+                      <span className="text-xs text-muted-foreground mt-1">Midnight Indigo</span>
                     </button>
 
-                    {/* Auto Theme */}
+                    {/* Auto / System Theme */}
                     <button
-                      onClick={() => setTheme("auto")}
-                      className={`flex flex-col items-center justify-center p-6 rounded-lg border-2 transition ${
-                        theme === "auto"
-                          ? "border-primary bg-primary/10"
-                          : "border-border/60 bg-card/60 hover:border-border"
+                      type="button"
+                      onClick={() => setTheme("system")}
+                      className={`flex flex-col items-center justify-center p-6 rounded-xl border-2 transition cursor-pointer ${
+                        theme === "system"
+                          ? "border-primary bg-primary/10 shadow-xs"
+                          : "border-border/60 bg-card hover:border-border"
                       }`}
                     >
-                      <Monitor className="h-8 w-8 text-slate-500 mb-3" />
-                      <span className="font-semibold text-slate-900">Auto</span>
-                      <span className="text-xs text-slate-600 mt-1">System preference</span>
+                      <Monitor className="h-8 w-8 text-muted-foreground mb-3" />
+                      <span className="font-semibold text-foreground">Auto</span>
+                      <span className="text-xs text-muted-foreground mt-1">System preference</span>
                     </button>
                   </div>
-                  <p className="text-sm text-slate-600 dark:text-slate-400 p-4 bg-slate-50 dark:bg-slate-800 rounded-lg">
+                  <p className="text-sm text-muted-foreground p-4 bg-muted/40 border border-border/60 rounded-xl">
                     💡 <strong>Tip:</strong> Auto mode will match your device's theme setting,
                     automatically switching between light and dark based on your system preferences.
                   </p>

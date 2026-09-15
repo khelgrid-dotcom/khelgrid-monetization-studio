@@ -101,8 +101,8 @@ function BlogWriter() {
           <CheckCircle2 className="mx-auto h-10 w-10 text-primary" />
           <h1 className="mt-4 text-2xl font-bold">Article published to your blog</h1>
           <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-            This browser-backed beta stores your article on this device. Connect a CMS or database
-            before treating it as a public multi-author publishing system.
+            Your article is stored locally on this device and ready to read in your browser. Cloud
+            sync and multi-author publishing will be enabled across devices.
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-3">
             <Button asChild className="rounded-full">

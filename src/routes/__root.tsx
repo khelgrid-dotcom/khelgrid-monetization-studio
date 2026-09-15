@@ -16,6 +16,7 @@ import { BlogProvider } from "@/context/BlogContext";
 import { FollowedAcademyProvider } from "@/context/FollowedAcademyContext";
 import { NotificationProvider } from "@/context/NotificationContext";
 import { SavedOpportunityProvider } from "@/context/SavedOpportunityContext";
+import { ThemeProvider, useTheme } from "@/context/ThemeContext";
 import { Navbar } from "@/components/Navbar";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { BottomTabBar } from "@/components/BottomTabBar";
@@ -158,37 +159,44 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
+function ThemedToaster() {
+  const { resolvedTheme } = useTheme();
+  return <Toaster theme={resolvedTheme} position="top-right" />;
+}
+
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <BlogProvider>
-          <SavedOpportunityProvider>
-            <FollowedAcademyProvider>
-              <NotificationProvider>
-                <AdConsentProvider requireConsent>
-                  <GoogleTagLoader />
-                  <AdSenseLoader />
+      <ThemeProvider>
+        <AuthProvider>
+          <BlogProvider>
+            <SavedOpportunityProvider>
+              <FollowedAcademyProvider>
+                <NotificationProvider>
+                  <AdConsentProvider requireConsent>
+                    <GoogleTagLoader />
+                    <AdSenseLoader />
 
-                  <Navbar />
-                  <Breadcrumbs />
-                  <div className="pb-20 xl:pb-0">
-                    <Outlet />
-                    <SiteFooter />
-                  </div>
-                  <BottomTabBar />
+                    <Navbar />
+                    <Breadcrumbs />
+                    <div className="pb-20 xl:pb-0">
+                      <Outlet />
+                      <SiteFooter />
+                    </div>
+                    <BottomTabBar />
 
-                  <StickyMobileAdSlot />
-                  <AdConsentBanner />
-                  <Toaster theme="dark" position="top-right" />
-                  <HydrationDiagnostics />
-                </AdConsentProvider>
-              </NotificationProvider>
-            </FollowedAcademyProvider>
-          </SavedOpportunityProvider>
-        </BlogProvider>
-      </AuthProvider>
+                    <StickyMobileAdSlot />
+                    <AdConsentBanner />
+                    <ThemedToaster />
+                    <HydrationDiagnostics />
+                  </AdConsentProvider>
+                </NotificationProvider>
+              </FollowedAcademyProvider>
+            </SavedOpportunityProvider>
+          </BlogProvider>
+        </AuthProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }

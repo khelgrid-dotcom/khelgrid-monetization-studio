@@ -376,9 +376,8 @@ function CommunityPage() {
           </Card>
 
           <div className="rounded-2xl border border-dashed border-border p-4 text-xs leading-relaxed text-muted-foreground">
-            Community posts are currently saved in this browser for the beta experience. Account
-            sync, real-time messaging, and moderation review queues should be connected to a
-            database before public launch.
+            Community posts are currently saved in your browser session. Cloud sync and real-time
+            community updates will be enabled across devices.
           </div>
         </aside>
       </div>

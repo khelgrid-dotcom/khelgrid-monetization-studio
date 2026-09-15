@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { TRIALS } from "@/data/trials";
 import { SportsCV } from "@/components/SportsCV";
@@ -7,7 +8,8 @@ import { DashboardProgressShare } from "@/components/DashboardProgressShare";
 import { OpportunityInterviewAgent } from "@/components/OpportunityInterviewAgent";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Wallet, Plus, Crown, Trophy, RotateCcw } from "lucide-react";
+import { Wallet, Plus, Crown, Trophy, RotateCcw, Calendar, CheckCircle2 } from "lucide-react";
+import { getVenueBookings, type BookingRecord } from "@/lib/booking-service";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/dashboard")({
@@ -38,6 +40,20 @@ function Dashboard() {
     upgradeToPro,
   } = useAuth();
   const applied = TRIALS.filter((t) => applications.includes(t.id));
+  const [venueBookings, setVenueBookings] = useState<BookingRecord[]>([]);
+
+  useEffect(() => {
+    getVenueBookings()
+      .then(setVenueBookings)
+      .catch(() => {});
+    const handler = () => {
+      getVenueBookings()
+        .then(setVenueBookings)
+        .catch(() => {});
+    };
+    window.addEventListener("khelgrid_booking_created", handler);
+    return () => window.removeEventListener("khelgrid_booking_created", handler);
+  }, []);
 
   return (
     <main className="mx-auto max-w-7xl px-4 py-10">
@@ -159,6 +175,74 @@ function Dashboard() {
           <h2 className="mb-3 text-lg font-semibold">Verified Sports CV</h2>
           <SportsCV />
         </div>
+      </div>
+
+      {/* My Venue Bookings Section */}
+      <div className="mt-8 rounded-2xl border border-border bg-gradient-card p-6">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h2 className="text-lg font-semibold flex items-center gap-2">
+              <Calendar className="h-5 w-5 text-primary" /> My Venue Bookings
+            </h2>
+            <p className="text-xs text-muted-foreground">Turfs, courts and grounds booked by you</p>
+          </div>
+          <Link to="/book" className="text-xs font-semibold text-primary hover:underline">
+            Book another venue →
+          </Link>
+        </div>
+
+        {venueBookings.length === 0 ? (
+          <div className="rounded-xl border border-dashed border-border/80 p-6 text-center text-xs text-muted-foreground">
+            No venue bookings recorded yet.{" "}
+            <Link to="/book" className="text-primary underline font-medium">
+              Explore available turfs and courts
+            </Link>
+          </div>
+        ) : (
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {venueBookings.map((b) => (
+              <div
+                key={b.id}
+                className="rounded-xl border border-border/70 bg-background/60 p-4 space-y-2 text-xs"
+              >
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <span className="font-mono text-[10px] text-muted-foreground">
+                      Ref: {b.id.slice(-8)}
+                    </span>
+                    <div className="font-bold text-sm text-foreground">{b.venue_name}</div>
+                    <div className="text-muted-foreground">
+                      {b.venue_area}, {b.venue_city}
+                    </div>
+                  </div>
+                  <Badge
+                    variant={b.status === "cancelled" ? "outline" : "default"}
+                    className={
+                      b.status === "confirmed"
+                        ? "bg-emerald-500/90 text-white"
+                        : b.status === "cancelled"
+                          ? "border-destructive text-destructive"
+                          : ""
+                    }
+                  >
+                    {b.status.toUpperCase()}
+                  </Badge>
+                </div>
+                <div className="flex items-center justify-between pt-2 border-t border-border/40">
+                  <span>
+                    {b.booking_date} · {b.start_time}
+                  </span>
+                  <span className="font-bold text-primary">₹{b.total_price}</span>
+                </div>
+                {b.synced_to_db && (
+                  <div className="text-[10px] text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                    <CheckCircle2 className="h-3 w-3" /> Verified Booking
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       <DashboardProgressShare name={name} />

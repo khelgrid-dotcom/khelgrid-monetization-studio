@@ -1,21 +1,30 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/types/database";
 
-export const supabaseUrl =
+/**
+ * Supabase client configuration read from Vite client-side environment variables.
+ * - VITE_SUPABASE_URL: The unique project URL provided by Supabase.
+ * - VITE_SUPABASE_ANON_KEY: The public anonymous API key for browser client access.
+ */
+export const supabaseUrl: string =
   (import.meta.env.VITE_SUPABASE_URL as string | undefined) ||
   "https://kzklkkminrhjlmzupanl.supabase.co";
 
-export const supabaseAnonKey = (import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined) || "";
+export const supabaseAnonKey: string =
+  (import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined) || "";
 
-export const isSupabaseConfigured = Boolean(
+export const isSupabaseConfigured: boolean = Boolean(
   supabaseUrl && supabaseAnonKey && supabaseAnonKey.trim() !== "",
 );
 
 let clientInstance: SupabaseClient<Database> | null = null;
 
+/**
+ * Returns a typed Supabase client singleton configured with database types and browser session persistence.
+ */
 export function getSupabaseClient(): SupabaseClient<Database> {
   if (!clientInstance) {
-    // If the anon key is not set yet, use a fallback token so module loading doesn't crash the app
+    // If anon key is not yet set in environment, use a dummy key to prevent client instantiation crashes
     const key = supabaseAnonKey.trim() || "unconfigured-anon-key";
     clientInstance = createClient<Database>(supabaseUrl, key, {
       auth: {
@@ -28,4 +37,9 @@ export function getSupabaseClient(): SupabaseClient<Database> {
   return clientInstance;
 }
 
+/**
+ * Global typed Supabase client instance for database queries and real-time connectivity.
+ */
 export const supabase = getSupabaseClient();
+
+export default supabase;
