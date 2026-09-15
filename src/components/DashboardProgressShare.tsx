@@ -14,23 +14,25 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
-const GROWTH_DATA = [
-  { month: "Jan", score: 58, sessions: 6 },
-  { month: "Feb", score: 66, sessions: 8 },
-  { month: "Mar", score: 72, sessions: 10 },
-  { month: "Apr", score: 81, sessions: 12 },
+const XP_GROWTH_DATA = [
+  { month: "Jan", xp: 580 },
+  { month: "Feb", xp: 660 },
+  { month: "Mar", xp: 720 },
+  { month: "Apr", xp: 810 },
 ];
 
 function getShareContent(name: string) {
-  const achievementNames = mockAthleteStats.achievements
+  const badgeNames = mockAthleteStats.achievements
     .map((achievement) => achievement.name)
     .join(", ");
-  const text = `${name}'s KhelGrid progress: ${mockAthleteStats.successRate}% trial success rate, ${mockAthleteStats.totalEvents} events, and achievements including ${achievementNames}.`;
+  const profileUrl = `${window.location.origin}/dashboard`;
+  const latestXp = XP_GROWTH_DATA[XP_GROWTH_DATA.length - 1].xp;
+  const text = `${name}'s KhelGrid athlete profile: ${latestXp} XP, ${mockAthleteStats.successRate}% trial success rate, and earned badges including ${badgeNames}. View profile: ${profileUrl}`;
 
   return {
-    title: `${name}'s KhelGrid progress`,
+    title: `${name}'s KhelGrid athlete profile`,
     text,
-    url: `${window.location.origin}/dashboard`,
+    url: profileUrl,
   };
 }
 
@@ -76,7 +78,7 @@ export function DashboardProgressShare({ name }: { name: string }) {
   const shareToSocial = (platform: (typeof SOCIAL_PLATFORMS)[number]) => {
     const content = getShareContent(name);
     window.open(platform.getUrl(content), "_blank", "noopener,noreferrer,width=640,height=720");
-    toast.success(`Opening ${platform.label} to share your progress`);
+    toast.success(`Opening ${platform.label} to share your athlete profile`);
   };
 
   return (
@@ -87,16 +89,16 @@ export function DashboardProgressShare({ name }: { name: string }) {
       <div className="flex flex-col gap-4 border-b border-border/60 pb-5 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <Badge variant="outline" className="border-primary/40 bg-primary/10 text-primary">
-            <LineChartIcon className="mr-1.5 h-3.5 w-3.5" /> Shareable progress
+            <LineChartIcon className="mr-1.5 h-3.5 w-3.5" /> Shareable athlete profile
           </Badge>
           <h2
             id="progress-share-heading"
             className="mt-2 text-xl font-bold tracking-tight sm:text-2xl"
           >
-            Your growth snapshot
+            Share your athlete growth
           </h2>
           <p className="mt-1 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-            Show your training progress and earned achievements in one simple update.
+            Post your XP growth chart, earned badges, and profile link in one simple update.
           </p>
         </div>
         <Button type="button" onClick={shareProgress} className="shrink-0 rounded-full">
@@ -108,13 +110,13 @@ export function DashboardProgressShare({ name }: { name: string }) {
         <div>
           <p className="text-sm font-semibold">Share to your social profiles</p>
           <p className="text-xs text-muted-foreground">
-            Post your verified growth and achievements.
+            Share your XP growth, badges, and profile link.
           </p>
         </div>
         <div
           className="flex flex-wrap gap-2"
           role="group"
-          aria-label="Share growth snapshot on social media"
+          aria-label="Share athlete profile on social media"
         >
           {SOCIAL_PLATFORMS.map((platform) => {
             const Icon = platform.icon;
@@ -125,7 +127,7 @@ export function DashboardProgressShare({ name }: { name: string }) {
                 variant="outline"
                 size="sm"
                 onClick={() => shareToSocial(platform)}
-                aria-label={`Share progress on ${platform.label}`}
+                aria-label={`Share athlete profile on ${platform.label}`}
                 className="rounded-full bg-background/40"
               >
                 <Icon className="h-3.5 w-3.5" /> {platform.label}
@@ -139,26 +141,26 @@ export function DashboardProgressShare({ name }: { name: string }) {
         <div className="min-w-0 rounded-xl border border-border bg-background/40 p-4">
           <div className="flex items-center justify-between gap-3">
             <div>
-              <h3 className="font-semibold">Performance growth</h3>
+              <h3 className="font-semibold">XP growth</h3>
               <p className="mt-1 text-xs text-muted-foreground">
-                Progress score across recent training reviews
+                XP earned across recent training reviews
               </p>
             </div>
-            <span className="text-2xl font-bold text-primary">81%</span>
+            <span className="text-2xl font-bold text-primary">810 XP</span>
           </div>
           <div className="mt-4 h-56 w-full min-w-0">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={GROWTH_DATA} margin={{ top: 8, right: 8, left: -18, bottom: 0 }}>
+              <LineChart data={XP_GROWTH_DATA} margin={{ top: 8, right: 8, left: -18, bottom: 0 }}>
                 <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fontSize: 11 }} />
                 <YAxis
-                  domain={[0, 100]}
+                  domain={[0, 1000]}
                   axisLine={false}
                   tickLine={false}
                   tick={{ fontSize: 11 }}
                   width={32}
                 />
                 <Tooltip
-                  formatter={(value) => [`${value}%`, "Progress"]}
+                  formatter={(value) => [`${value} XP`, "XP earned"]}
                   contentStyle={{
                     borderRadius: 12,
                     border: "1px solid var(--border)",
@@ -167,7 +169,7 @@ export function DashboardProgressShare({ name }: { name: string }) {
                 />
                 <Line
                   type="monotone"
-                  dataKey="score"
+                  dataKey="xp"
                   stroke="#10b981"
                   strokeWidth={3}
                   dot={{ r: 4, fill: "#10b981" }}
@@ -186,7 +188,7 @@ export function DashboardProgressShare({ name }: { name: string }) {
         <div className="rounded-xl border border-border bg-background/40 p-4">
           <div className="flex items-center gap-2">
             <Trophy className="h-4 w-4 text-primary" />
-            <h3 className="font-semibold">Earned achievements</h3>
+            <h3 className="font-semibold">Earned badges</h3>
           </div>
           <div className="mt-3 space-y-3">
             {mockAthleteStats.achievements.map((achievement) => (
@@ -216,8 +218,8 @@ export function DashboardProgressShare({ name }: { name: string }) {
             ))}
           </div>
           <p className="mt-4 flex items-center gap-2 text-xs text-muted-foreground">
-            <Award className="h-3.5 w-3.5 text-primary" /> Share only the achievements and results
-            you can verify.
+            <Award className="h-3.5 w-3.5 text-primary" /> Share only the badges and results you can
+            verify.
           </p>
         </div>
       </div>
