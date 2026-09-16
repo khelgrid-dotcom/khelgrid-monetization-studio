@@ -4,18 +4,33 @@ import { InArticleAd } from "@/components/ads";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useBlog } from "@/context/BlogContext";
+import { BLOG_POSTS } from "@/data/blog";
+import { buildSeoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/blog/$slug")({
-  head: ({ params }) => ({
-    meta: [
-      { title: `Sports training and career advice · KhelGrid` },
-      {
-        name: "description",
-        content: "Original sports training and career advice from the KhelGrid editorial team.",
-      },
-    ],
-    links: [{ rel: "canonical", href: `https://khelgrid.com/blog/${params.slug}` }],
-  }),
+  loader: ({ params }) => {
+    const post = BLOG_POSTS.find((p) => p.slug === params.slug);
+    return { post, slug: params.slug };
+  },
+  head: ({ loaderData, params }) => {
+    const post = loaderData?.post;
+    const title = post ? post.title : "Sports Training & Career Advice · KhelGrid Blog";
+    const description = post
+      ? post.excerpt
+      : "Original sports training tips, trial preparation checklists, recovery guidance and athlete development advice.";
+
+    return buildSeoHead({
+      title,
+      description,
+      canonicalPath: `/blog/${params.slug}`,
+      type: "article",
+      image: post?.coverImage,
+      author: post?.author || "KhelGrid Editorial Team",
+      publishedTime: post?.publishedAt ? `${post.publishedAt}T00:00:00Z` : undefined,
+      modifiedTime: post?.updatedAt ? `${post.updatedAt}T00:00:00Z` : undefined,
+      section: post?.category,
+    });
+  },
   component: BlogArticle,
 });
 

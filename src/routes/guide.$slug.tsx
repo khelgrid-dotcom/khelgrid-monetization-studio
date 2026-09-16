@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { BookOpen, Clock, CheckCircle2 } from "lucide-react";
 import { GUIDE_BODIES } from "@/content/guide-bodies";
 import { ArticlePage } from "@/components/ArticlePage";
-import { noindexMeta } from "@/lib/seo";
+import { buildSeoHead } from "@/lib/seo";
 import type { ContentPage } from "@/content/types";
 
 /** Guides with a full editorial body render as long-form articles. */
@@ -32,20 +32,28 @@ export const Route = createFileRoute("/guide/$slug")({
     if (!guide) throw notFound();
     return { guide };
   },
-  head: ({ loaderData }) => ({
-    meta: loaderData
-      ? [
-          ...(GUIDE_BODIES[loaderData.guide.slug] ? [] : [noindexMeta()]),
-          { title: `${loaderData.guide.title} · KhelGrid` },
-          { name: "description", content: loaderData.guide.excerpt },
-          { property: "og:title", content: loaderData.guide.title },
-          { property: "og:description", content: loaderData.guide.excerpt },
-        ]
-      : [],
-    links: loaderData
-      ? [{ rel: "canonical", href: `https://khelgrid.com/guide/${loaderData.guide.slug}` }]
-      : [],
-  }),
+  head: ({ loaderData, params }) => {
+    const guide = loaderData?.guide;
+    if (!guide) {
+      return buildSeoHead({
+        title: "Athlete Guide · KhelGrid",
+        description: "Sports career guidance, trial preparation, and player playbooks.",
+        canonicalPath: `/guide/${params.slug}`,
+      });
+    }
+
+    const hasBody = Boolean(GUIDE_BODIES[guide.slug]);
+
+    return buildSeoHead({
+      title: `${guide.title} · KhelGrid Guide`,
+      description: guide.excerpt,
+      canonicalPath: `/guide/${guide.slug}`,
+      type: "article",
+      keywords: `${guide.title}, ${guide.category}, athlete guide, sports trials India`,
+      noindex: !hasBody,
+      section: guide.category,
+    });
+  },
   notFoundComponent: () => (
     <div className="mx-auto max-w-2xl px-4 py-20 text-center">
       <h1 className="text-3xl font-bold">Guide not found</h1>

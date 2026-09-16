@@ -1,28 +1,17 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { ShieldCheck } from "lucide-react";
 import { CookieSettingsButton } from "@/components/ads";
+import { buildSeoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/privacy")({
-  head: () => ({
-    meta: [
-      { title: "Privacy Policy · KhelGrid" },
-      {
-        name: "description",
-        content:
-          "How KhelGrid collects, uses and protects athlete data, including cookies, Google Analytics and Google AdSense advertising.",
-      },
-      { property: "og:title", content: "Privacy Policy · KhelGrid" },
-      {
-        property: "og:description",
-        content:
-          "Our full privacy policy: data we collect, cookies, third-party advertising partners and your choices.",
-      },
-      { property: "og:type", content: "article" },
-      { property: "og:url", content: "/privacy" },
-      { name: "twitter:card", content: "summary" },
-    ],
-    links: [{ rel: "canonical", href: "/privacy" }],
-  }),
+  head: () =>
+    buildSeoHead({
+      title: "Privacy Policy, Cookies & Data Protection · KhelGrid",
+      description:
+        "How KhelGrid collects, uses, and safeguards athlete data, parent consent, cookies, analytics, and Google AdSense privacy choices.",
+      canonicalPath: "/privacy",
+      type: "website",
+    }),
   component: PrivacyPage,
 });
 

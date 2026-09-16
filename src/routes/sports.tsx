@@ -1,17 +1,19 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SPORTS_CATALOG } from "@/data/catalog";
 import { Badge } from "@/components/ui/badge";
+import { buildSeoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/sports")({
-  head: () => ({
-    meta: [
-      { title: "All sports · KhelGrid" },
-      {
-        name: "description",
-        content: "Explore trials, academies and scholarships across 16 sports in India.",
-      },
-    ],
-  }),
+  head: () =>
+    buildSeoHead({
+      title: "Explore 16+ Sports Pathways, Trials & Academies · KhelGrid",
+      description:
+        "Comprehensive directory of sports disciplines in India. Discover cricket, football, badminton, athletics, hockey, basketball, tennis, and kabaddi trial feeds and training programs.",
+      canonicalPath: "/sports",
+      keywords:
+        "sports disciplines India, cricket trials, football academies, badminton coaching, athletics scholarships, tennis training",
+      type: "website",
+    }),
   component: SportsIndex,
 });
 

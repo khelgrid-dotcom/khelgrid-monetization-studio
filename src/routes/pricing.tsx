@@ -4,15 +4,18 @@ import { Badge } from "@/components/ui/badge";
 import { Check, Crown, Zap, Flame } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "sonner";
+import { buildSeoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/pricing")({
-  head: () => ({
-    meta: [
-      { title: "Pricing · KhelGrid" },
-      { name: "description", content: "Free, Pro and Academy plans for athletes and organizers." },
-    ],
-    links: [{ rel: "canonical", href: "https://khelgrid.com/pricing" }],
-  }),
+  head: () =>
+    buildSeoHead({
+      title: "Membership Plans & Pricing for Athletes & Academies · KhelGrid",
+      description:
+        "Transparent pricing for aspiring athletes, verified coaches, and sports academies. Explore Free, Pro Athlete, and Academy Listing Boost tiers.",
+      canonicalPath: "/pricing",
+      keywords: "KhelGrid pricing, sports academy subscription, athlete pro plan, trial boost",
+      type: "website",
+    }),
   component: Pricing,
 });
 

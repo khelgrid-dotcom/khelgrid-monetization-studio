@@ -15,6 +15,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { useBlog } from "@/context/BlogContext";
 import type { BlogCategory, BlogSection } from "@/data/blog";
+import { buildSeoHead } from "@/lib/seo";
 
 const CATEGORIES: BlogCategory[] = [
   "Training",
@@ -27,16 +28,14 @@ const DEFAULT_COVER =
   "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=1200&q=78";
 
 export const Route = createFileRoute("/blog/write")({
-  head: () => ({
-    meta: [
-      { title: "Write a Sports Article · KhelGrid" },
-      {
-        name: "description",
-        content: "Create an original KhelGrid sports training or career advice article.",
-      },
-      { name: "robots", content: "noindex,follow" },
-    ],
-  }),
+  head: () =>
+    buildSeoHead({
+      title: "Write a Sports Article · KhelGrid Editorial",
+      description: "Create an original KhelGrid sports training or career advice article.",
+      canonicalPath: "/blog/write",
+      noindex: true,
+      type: "website",
+    }),
   component: BlogWriter,
 });
 

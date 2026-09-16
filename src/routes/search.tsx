@@ -30,6 +30,7 @@ import {
   Check,
 } from "lucide-react";
 import { toast } from "sonner";
+import { buildSeoHead } from "@/lib/seo";
 
 const ALL_SPORT = "All Sports";
 const ALL_CITY = "All Locations";
@@ -46,16 +47,15 @@ const searchSchema = z.object({
 
 export const Route = createFileRoute("/search")({
   validateSearch: zodValidator(searchSchema),
-  head: () => ({
-    meta: [
-      { title: "Search · KhelGrid" },
-      {
-        name: "description",
-        content: "Search trials, tournaments, academies and events across India by sport and city.",
-      },
-      { name: "robots", content: "noindex,follow" },
-    ],
-  }),
+  head: () =>
+    buildSeoHead({
+      title: "Find Sports Trials, Tournaments & Academies · KhelGrid",
+      description:
+        "Filter and discover open sports trials, tournaments, coaching camps, and academy opportunities across India by sport, age group, and city.",
+      canonicalPath: "/search",
+      noindex: true,
+      type: "website",
+    }),
   component: SearchPage,
 });
 

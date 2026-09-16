@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useBlog } from "@/context/BlogContext";
 import type { BlogCategory, BlogPost } from "@/data/blog";
+import { buildSeoHead } from "@/lib/seo";
 
 const CATEGORIES: Array<"All" | BlogCategory> = [
   "All",
@@ -18,17 +19,16 @@ const CATEGORIES: Array<"All" | BlogCategory> = [
 ];
 
 export const Route = createFileRoute("/blog")({
-  head: () => ({
-    meta: [
-      { title: "Sports Training & Career Advice · KhelGrid Blog" },
-      {
-        name: "description",
-        content:
-          "Original athletic training tips, trial preparation checklists, recovery guidance and sports career advice for athletes and families.",
-      },
-    ],
-    links: [{ rel: "canonical", href: "https://khelgrid.com/blog" }],
-  }),
+  head: () =>
+    buildSeoHead({
+      title: "Sports Training, Trial Checklists & Athlete Insights · KhelGrid Blog",
+      description:
+        "Original athletic training tips, trial preparation checklists, recovery guidance and sports career advice for Indian athletes, coaches, and sports families.",
+      canonicalPath: "/blog",
+      keywords:
+        "sports training blog, trial prep checklist, athlete recovery, youth sports development, sports career India",
+      type: "website",
+    }),
   component: BlogIndex,
 });
 

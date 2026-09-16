@@ -1,25 +1,19 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
 import { AlertTriangle, CheckCircle2, FileCheck2, ShieldCheck } from "lucide-react";
+import { buildSeoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/verification-policy")({
-  head: () => ({
-    meta: [
-      { title: "Opportunity Verification Policy · KhelGrid" },
-      {
-        name: "description",
-        content:
-          "What KhelGrid checks before showing source and verification context for a sports opportunity.",
-      },
-      { property: "og:title", content: "KhelGrid Opportunity Verification Policy" },
-      {
-        property: "og:description",
-        content:
-          "Our process for source checks, organizer context, listing review and corrections.",
-      },
-    ],
-    links: [{ rel: "canonical", href: "https://khelgrid.com/verification-policy" }],
-  }),
+  head: () =>
+    buildSeoHead({
+      title: "Opportunity Verification Policy & Review Criteria · KhelGrid",
+      description:
+        "Detailed criteria and protocols used by KhelGrid to authenticate sports organizers, confirm trial venues, verify fee transparency, and protect athletes.",
+      canonicalPath: "/verification-policy",
+      keywords:
+        "opportunity verification policy, sports trial validation, verified academy criteria",
+      type: "website",
+    }),
   component: VerificationPolicyPage,
 });
 

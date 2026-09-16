@@ -4,6 +4,7 @@ import { TRIALS } from "@/data/trials";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight, MapPin, Trophy, Users } from "lucide-react";
+import { buildSeoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/sport/$slug")({
   loader: ({ params }) => {
@@ -11,19 +12,24 @@ export const Route = createFileRoute("/sport/$slug")({
     if (!sport) throw notFound();
     return { sport };
   },
-  head: ({ loaderData }) => ({
-    meta: loaderData
-      ? [
-          { title: `${loaderData.sport.name} trials in India · KhelGrid` },
-          {
-            name: "description",
-            content: `${loaderData.sport.tagline}. Live ${loaderData.sport.name} trials, academies & scholarships across India.`,
-          },
-          { property: "og:title", content: `${loaderData.sport.name} on KhelGrid` },
-          { property: "og:description", content: loaderData.sport.tagline },
-        ]
-      : [],
-  }),
+  head: ({ loaderData, params }) => {
+    const sport = loaderData?.sport;
+    if (!sport) {
+      return buildSeoHead({
+        title: "Sport Directory · KhelGrid",
+        description: "Explore sports trials, training, and tournaments across India.",
+        canonicalPath: `/sport/${params.slug}`,
+      });
+    }
+
+    return buildSeoHead({
+      title: `${sport.name} Trials, Academies & Scholarships in India · KhelGrid`,
+      description: `${sport.tagline}. Access verified ${sport.name} selection trials, NIS-certified coaches, and scholarship opportunities across Indian states.`,
+      canonicalPath: `/sport/${sport.slug}`,
+      keywords: `${sport.name} trials India, ${sport.name} academy, ${sport.name} selection, ${sport.name} scholarship, junior ${sport.name} tournament`,
+      type: "website",
+    });
+  },
   notFoundComponent: () => (
     <div className="mx-auto max-w-2xl px-4 py-20 text-center">
       <h1 className="text-3xl font-bold">Sport not found</h1>

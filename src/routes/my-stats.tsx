@@ -15,15 +15,18 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { mockAthleteStats, mockLeaderboard } from "@/data/analytics";
+import { buildSeoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/my-stats")({
-  head: () => ({
-    meta: [
-      { title: "My Performance · KhelGrid" },
-      { name: "description", content: "Review your KhelGrid performance history and progress." },
-      { name: "robots", content: "noindex,follow" },
-    ],
-  }),
+  head: () =>
+    buildSeoHead({
+      title: "Athlete Performance Metrics & Progress Tracker · KhelGrid",
+      description:
+        "Review personal athletic analytics, trial selection history, and fitness benchmarks.",
+      canonicalPath: "/my-stats",
+      noindex: true,
+      type: "website",
+    }),
   component: MyStatsPage,
 });
 

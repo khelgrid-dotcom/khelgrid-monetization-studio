@@ -1,23 +1,18 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Mail, ShieldCheck } from "lucide-react";
+import { buildSeoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/contact")({
-  head: () => ({
-    meta: [
-      { title: "Contact KhelGrid · Corrections and support" },
-      {
-        name: "description",
-        content:
-          "Contact KhelGrid for support, listing corrections, verification questions, and privacy requests.",
-      },
-      { property: "og:title", content: "Contact KhelGrid" },
-      {
-        property: "og:description",
-        content: "Reach KhelGrid about support, corrections, verification, and privacy.",
-      },
-    ],
-    links: [{ rel: "canonical", href: "https://khelgrid.com/contact" }],
-  }),
+  head: () =>
+    buildSeoHead({
+      title: "Contact KhelGrid · Support, Academy Onboarding & Listing Corrections",
+      description:
+        "Get in touch with the KhelGrid support and editorial team for listing corrections, academy partnerships, scout verification, or user assistance.",
+      canonicalPath: "/contact",
+      keywords:
+        "contact KhelGrid, sports support India, sports academy onboarding, trial corrections",
+      type: "website",
+    }),
   component: ContactPage,
 });
 

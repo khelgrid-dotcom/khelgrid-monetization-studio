@@ -95,17 +95,25 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "mobile-web-app-capable", content: "yes" },
       { name: "apple-mobile-web-app-capable", content: "yes" },
       { name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" },
-      { title: "KhelGrid · India's sports trials, scouted & monetized" },
+      { title: "KhelGrid · India's Sports Opportunity Network" },
       {
         name: "description",
         content:
-          "Apply to elite sports trials, get a Verified Sports CV, and let academies boost their listings — all on KhelGrid.",
+          "India's premier sports platform for discovery and development. Find trials, tournaments, verified academies, sports turf venues, and amateur pickup games across 16+ sports.",
       },
       { name: "author", content: "KhelGrid" },
-      { property: "og:title", content: "KhelGrid" },
-      { property: "og:description", content: "India's premium grid for sports trials." },
+      { property: "og:site_name", content: "KhelGrid" },
+      { property: "og:title", content: "KhelGrid · India's Sports Opportunity Network" },
+      {
+        property: "og:description",
+        content:
+          "India's premier sports platform for discovery and development. Find trials, tournaments, verified academies, sports turf venues, and amateur pickup games across 16+ sports.",
+      },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
+      { property: "og:image", content: "https://khelgrid.com/og-image.svg" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:site", content: "@khelgrid" },
+      { name: "twitter:image", content: "https://khelgrid.com/og-image.svg" },
       // AdSense site ownership verification
       ...(hasValidPublisherId()
         ? ([{ name: "google-adsense-account", content: adsConfig.publisherId }] as const)

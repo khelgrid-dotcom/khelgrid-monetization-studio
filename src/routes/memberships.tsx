@@ -12,17 +12,19 @@ import {
 } from "@/components/ui/select";
 import { MapPin, Check, Crown } from "lucide-react";
 import { toast } from "sonner";
+import { buildSeoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/memberships")({
-  head: () => ({
-    meta: [
-      { title: "Sports Memberships · KhelGrid" },
-      {
-        name: "description",
-        content: "Venue and academy memberships with priority booking, perks and discounts.",
-      },
-    ],
-  }),
+  head: () =>
+    buildSeoHead({
+      title: "Sports Memberships, Turf Passes & Academy Subscriptions · KhelGrid",
+      description:
+        "Exclusive monthly and annual sports memberships for turfs, swimming pools, fitness centers, and cricket academies with unlimited access and priority booking perks.",
+      canonicalPath: "/memberships",
+      keywords:
+        "sports memberships India, monthly turf pass, gym and badminton membership, cricket academy pass",
+      type: "website",
+    }),
   component: MembershipsPage,
 });
 

@@ -4,6 +4,7 @@ import { ArrowLeft, Building2 } from "lucide-react";
 import { VENUES, type Venue } from "@/data/playo";
 import { VenueDetails } from "@/components/VenueDetails";
 import { toast } from "sonner";
+import { buildSeoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/venue/$id")({
   loader: ({ params }) => {
@@ -22,25 +23,25 @@ export const Route = createFileRoute("/venue/$id")({
     }
     return { venue, notExact: false };
   },
-  head: ({ loaderData }) => ({
-    meta: loaderData?.venue
-      ? [
-          { title: `${loaderData.venue.name} · Venue Booking & Policies | KhelGrid` },
-          {
-            name: "description",
-            content: `Book sports turf & courts at ${loaderData.venue.name} in ${loaderData.venue.area}, ${loaderData.venue.city}. View booking policies, floodlight hours, and playing rules.`,
-          },
-          {
-            property: "og:title",
-            content: `${loaderData.venue.name} · Sports Ground & Turf Booking | KhelGrid`,
-          },
-          {
-            property: "og:description",
-            content: `Explore slots, amenities, operating hours, and structured booking policies for ${loaderData.venue.name}.`,
-          },
-        ]
-      : [],
-  }),
+  head: ({ loaderData, params }) => {
+    const venue = loaderData?.venue;
+    if (!venue) {
+      return buildSeoHead({
+        title: "Venue Booking · KhelGrid",
+        description: "Book sports turf, courts, and grounds across India.",
+        canonicalPath: `/venue/${params.id}`,
+      });
+    }
+
+    return buildSeoHead({
+      title: `${venue.name} · ${venue.sport} Turf Booking in ${venue.city}`,
+      description: `Book sports turf & courts at ${venue.name} in ${venue.area}, ${venue.city}. View available slots, pricing starting at ₹${venue.pricePerHour}/hr, amenities, cancellation policies, and player rules.`,
+      canonicalPath: `/venue/${venue.id}`,
+      keywords: `${venue.name}, ${venue.sport} in ${venue.city}, turf booking ${venue.area}, book sports ground ${venue.city}`,
+      image: venue.images?.[0] || venue.image,
+      type: "website",
+    });
+  },
   notFoundComponent: () => (
     <main className="mx-auto max-w-2xl px-4 py-20 text-center">
       <Building2 className="h-12 w-12 text-muted-foreground mx-auto mb-4" />

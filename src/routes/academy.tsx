@@ -2,17 +2,19 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Flame, TrendingUp, Users, Zap, ArrowRight } from "lucide-react";
+import { buildSeoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/academy")({
-  head: () => ({
-    meta: [
-      { title: "For Academies · KhelGrid" },
-      {
-        name: "description",
-        content: "List trials, boost listings and recruit India's next-gen athletes on KhelGrid.",
-      },
-    ],
-  }),
+  head: () =>
+    buildSeoHead({
+      title: "List Sports Trials & Recruit Athletes · KhelGrid for Academies",
+      description:
+        "Post sports trials, camps, and team selections for free. Reach thousands of verified youth athletes and parents across India on KhelGrid.",
+      canonicalPath: "/academy",
+      keywords:
+        "post sports trial, list sports academy, sports talent recruitment, athlete scouting India",
+      type: "website",
+    }),
   component: AcademyPage,
 });
 

@@ -13,18 +13,19 @@ import {
 } from "@/components/ui/select";
 import { Search, MapPin, Star, GraduationCap, Trophy } from "lucide-react";
 import { toast } from "sonner";
+import { buildSeoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/train")({
-  head: () => ({
-    meta: [
-      { title: "Coaching & Academies · KhelGrid Train" },
-      {
-        name: "description",
-        content:
-          "Find coaches, academies and training programs across India. Beginner to elite, every sport.",
-      },
-    ],
-  }),
+  head: () =>
+    buildSeoHead({
+      title: "Sports Coaching & Certified Academies in India · KhelGrid",
+      description:
+        "Find certified coaches, NIS-accredited trainers, and elite sports academies across India. Programs for beginners, grassroots youth, and professional athletes.",
+      canonicalPath: "/train",
+      keywords:
+        "sports coaching, cricket academy near me, football coach, badminton training classes, athlete development, sports training camps",
+      type: "website",
+    }),
   component: TrainPage,
 });
 

@@ -3,6 +3,7 @@ import { GUIDES_CATALOG } from "@/data/catalog";
 import { Badge } from "@/components/ui/badge";
 import { useMemo, useState } from "react";
 import { Clock, Search } from "lucide-react";
+import { buildSeoHead } from "@/lib/seo";
 
 const CATEGORIES = [
   "All",
@@ -17,17 +18,16 @@ const CATEGORIES = [
 ] as const;
 
 export const Route = createFileRoute("/guides")({
-  head: () => ({
-    meta: [
-      { title: "Guides & playbooks · KhelGrid" },
-      {
-        name: "description",
-        content:
-          "India-specific guides on trial prep, Sports CVs, scholarships, nutrition and parenting young athletes.",
-      },
-    ],
-    links: [{ rel: "canonical", href: "https://khelgrid.com/guides" }],
-  }),
+  head: () =>
+    buildSeoHead({
+      title: "Athlete Playbooks, Guides & Career Blueprints · KhelGrid",
+      description:
+        "Actionable guides for Indian athletes and sports parents. Master trial preparation, build verified sports CVs, earn athletic scholarships, and optimize nutrition.",
+      canonicalPath: "/guides",
+      keywords:
+        "sports trial preparation, sports CV guide, athletic scholarship India, sports nutrition, youth sports parenting, athlete recovery protocols",
+      type: "website",
+    }),
   component: GuidesIndex,
 });
 

@@ -4,6 +4,7 @@ import { TRIALS } from "@/data/trials";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight, MapPin, Building2 } from "lucide-react";
+import { buildSeoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/city/$slug")({
   loader: ({ params }) => {
@@ -11,19 +12,24 @@ export const Route = createFileRoute("/city/$slug")({
     if (!city) throw notFound();
     return { city };
   },
-  head: ({ loaderData }) => ({
-    meta: loaderData
-      ? [
-          { title: `Sports trials & academies in ${loaderData.city.name} · KhelGrid` },
-          {
-            name: "description",
-            content: `${loaderData.city.tagline}. Cricket, football, badminton & more — open trials across ${loaderData.city.name}.`,
-          },
-          { property: "og:title", content: `${loaderData.city.name} on KhelGrid` },
-          { property: "og:description", content: loaderData.city.tagline },
-        ]
-      : [],
-  }),
+  head: ({ loaderData, params }) => {
+    const city = loaderData?.city;
+    if (!city) {
+      return buildSeoHead({
+        title: "City Sports Hub · KhelGrid",
+        description: "Explore sports trials, venues, and academies in Indian cities.",
+        canonicalPath: `/city/${params.slug}`,
+      });
+    }
+
+    return buildSeoHead({
+      title: `Sports Trials, Venues & Academies in ${city.name} · KhelGrid`,
+      description: `${city.tagline}. Discover open sports trials, turf bookings, NIS certified coaches, and elite academies in ${city.name}, ${city.state}.`,
+      canonicalPath: `/city/${city.slug}`,
+      keywords: `sports trials in ${city.name}, turf booking ${city.name}, badminton court ${city.name}, sports coaching ${city.name}, football academy ${city.name}`,
+      type: "website",
+    });
+  },
   notFoundComponent: () => (
     <div className="mx-auto max-w-2xl px-4 py-20 text-center">
       <h1 className="text-3xl font-bold">City not found</h1>

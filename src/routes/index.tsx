@@ -28,19 +28,19 @@ import {
 import { BannerAd, ResponsiveAd } from "@/components/ads";
 import { GUIDES_CATALOG, SPORTS_CATALOG } from "@/data/catalog";
 import { TRIALS } from "@/data/trials";
+import { buildSeoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title: "KhelGrid · India's Sports Opportunity Network" },
-      {
-        name: "description",
-        content:
-          "Find trials, tournaments, leagues, camps, scholarships, fitness events, and online competitions across India.",
-      },
-    ],
-    links: [{ rel: "canonical", href: "https://khelgrid.com/" }],
-  }),
+  head: () =>
+    buildSeoHead({
+      title: "KhelGrid · India's Sports Opportunity Network",
+      description:
+        "India's premier sports platform for discovery and development. Find trials, tournaments, leagues, verified academies, sports turf venues, and amateur pickup games across 16+ sports.",
+      canonicalPath: "/",
+      keywords:
+        "sports trials India, sports academies near me, book turf, pickup sports games, badminton courts, cricket trials, football tournament, athletics scholarship",
+      type: "website",
+    }),
   component: Home,
 });
 

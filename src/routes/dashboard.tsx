@@ -11,18 +11,18 @@ import { Badge } from "@/components/ui/badge";
 import { Wallet, Plus, Crown, Trophy, RotateCcw, Calendar, CheckCircle2 } from "lucide-react";
 import { getVenueBookings, type BookingRecord } from "@/lib/booking-service";
 import { toast } from "sonner";
+import { buildSeoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/dashboard")({
-  head: () => ({
-    meta: [
-      { title: "Dashboard · KhelGrid" },
-      {
-        name: "description",
-        content: "Track your applications, wallet balance, and unlock your Verified Sports CV.",
-      },
-      { name: "robots", content: "noindex,follow" },
-    ],
-  }),
+  head: () =>
+    buildSeoHead({
+      title: "Athlete Dashboard & Application Tracker · KhelGrid",
+      description:
+        "Manage your sports trial applications, venue bookings, verified sports CV, and athletic profile on KhelGrid.",
+      canonicalPath: "/dashboard",
+      noindex: true,
+      type: "website",
+    }),
   component: Dashboard,
 });
 

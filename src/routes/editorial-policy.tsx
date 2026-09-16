@@ -1,25 +1,19 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
 import { BookOpenCheck, CheckCircle2, Link2, ShieldCheck } from "lucide-react";
+import { buildSeoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/editorial-policy")({
-  head: () => ({
-    meta: [
-      { title: "Editorial Policy · KhelGrid" },
-      {
-        name: "description",
-        content:
-          "How KhelGrid creates, sources, reviews, updates and labels sports information and opportunity guidance.",
-      },
-      { property: "og:title", content: "KhelGrid Editorial Policy" },
-      {
-        property: "og:description",
-        content:
-          "Our standards for original sports information, sourcing, updates and sponsored content.",
-      },
-    ],
-    links: [{ rel: "canonical", href: "https://khelgrid.com/editorial-policy" }],
-  }),
+  head: () =>
+    buildSeoHead({
+      title: "Editorial Policy & Quality Standards (E-E-A-T) · KhelGrid",
+      description:
+        "How KhelGrid researches, fact-checks, updates, and structures sports opportunities, trial guides, and athletic playbooks with editorial integrity.",
+      canonicalPath: "/editorial-policy",
+      keywords:
+        "KhelGrid editorial policy, fact checking sports news, sports reporting standards India",
+      type: "website",
+    }),
   component: EditorialPolicyPage,
 });
 

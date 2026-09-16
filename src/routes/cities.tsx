@@ -2,14 +2,19 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { CITIES_CATALOG } from "@/data/catalog";
 import { Badge } from "@/components/ui/badge";
 import { MapPin } from "lucide-react";
+import { buildSeoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/cities")({
-  head: () => ({
-    meta: [
-      { title: "All cities · KhelGrid" },
-      { name: "description", content: "Sports trials, venues and academies in 16 Indian cities." },
-    ],
-  }),
+  head: () =>
+    buildSeoHead({
+      title: "Sports Trials, Venues & Academies by City in India · KhelGrid",
+      description:
+        "Locate upcoming sports trials, turf bookings, certified coaches, and elite academies in 16+ Indian cities including Bengaluru, Mumbai, Delhi NCR, Hyderabad, Chennai, and Pune.",
+      canonicalPath: "/cities",
+      keywords:
+        "sports in Bengaluru, sports in Mumbai, Delhi sports trials, Hyderabad badminton courts, Pune football turfs, sports academies Chennai",
+      type: "website",
+    }),
   component: CitiesIndex,
 });
 

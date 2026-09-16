@@ -6,18 +6,18 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Trophy, Smartphone } from "lucide-react";
 import { toast } from "sonner";
+import { buildSeoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/login")({
-  head: () => ({
-    meta: [
-      { title: "Log In · KhelGrid" },
-      {
-        name: "description",
-        content: "Log in to KhelGrid to apply to trials and manage your Sports CV.",
-      },
-      { name: "robots", content: "noindex,follow" },
-    ],
-  }),
+  head: () =>
+    buildSeoHead({
+      title: "Log In to Your Athlete Account · KhelGrid",
+      description:
+        "Access your KhelGrid athlete dashboard, manage trial registrations, and track turf bookings.",
+      canonicalPath: "/login",
+      noindex: true,
+      type: "website",
+    }),
   component: Login,
 });
 

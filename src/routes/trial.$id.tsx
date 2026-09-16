@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar, CheckCircle2, FileText, MapPin, ShieldCheck, Users } from "lucide-react";
 import { TRIALS } from "@/data/trials";
+import { buildSeoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/trial/$id")({
   loader: ({ params }) => {
@@ -10,25 +11,25 @@ export const Route = createFileRoute("/trial/$id")({
     if (!trial) throw notFound();
     return { trial };
   },
-  head: ({ loaderData }) => ({
-    meta: loaderData
-      ? [
-          { title: `${loaderData.trial.title} · KhelGrid` },
-          {
-            name: "description",
-            content: `${loaderData.trial.title} in ${loaderData.trial.city}: eligibility, date, fee, organizer, and verification context.`,
-          },
-          { property: "og:title", content: `${loaderData.trial.title} · KhelGrid` },
-          {
-            property: "og:description",
-            content: `Review the available details for this ${loaderData.trial.sport} opportunity before applying.`,
-          },
-        ]
-      : [],
-    links: loaderData
-      ? [{ rel: "canonical", href: `https://khelgrid.com/trial/${loaderData.trial.id}` }]
-      : [],
-  }),
+  head: ({ loaderData, params }) => {
+    const trial = loaderData?.trial;
+    if (!trial) {
+      return buildSeoHead({
+        title: "Sports Opportunity · KhelGrid",
+        description:
+          "Explore sports trials, scouting camps, and scholarship opportunities in India.",
+        canonicalPath: `/trial/${params.id}`,
+      });
+    }
+
+    return buildSeoHead({
+      title: `${trial.title} · ${trial.sport} Trial in ${trial.city}`,
+      description: `${trial.title} hosted by ${trial.academy} in ${trial.city}. Eligibility age ${trial.age}, entry fee ${trial.fee === 0 ? "Free" : `₹${trial.fee}`}, reporting date ${trial.date}. Apply through KhelGrid.`,
+      canonicalPath: `/trial/${trial.id}`,
+      keywords: `${trial.title}, ${trial.sport} trial ${trial.city}, ${trial.academy}, youth sports selection, ${trial.sport} scholarship`,
+      type: "website",
+    });
+  },
   notFoundComponent: () => (
     <main className="mx-auto max-w-2xl px-4 py-20 text-center">
       <h1 className="text-3xl font-bold">Opportunity not found</h1>

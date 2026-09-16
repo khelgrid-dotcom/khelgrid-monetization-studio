@@ -45,18 +45,19 @@ import {
   type BookingRecord,
 } from "@/lib/booking-service";
 import { toast } from "sonner";
+import { buildSeoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/book")({
-  head: () => ({
-    meta: [
-      { title: "Book Sports Venues · KhelGrid" },
-      {
-        name: "description",
-        content: "Find and book sports venues, turfs, courts and arenas near you across India.",
-      },
-    ],
-    links: [{ rel: "canonical", href: "https://khelgrid.com/book" }],
-  }),
+  head: () =>
+    buildSeoHead({
+      title: "Book Sports Venues, Turfs & Courts Across India · KhelGrid",
+      description:
+        "Instantly discover, compare, and reserve verified sports turfs, badminton indoor courts, cricket nets, football grounds, and swimming pools across major Indian cities.",
+      canonicalPath: "/book",
+      keywords:
+        "book turf online, badminton court booking, football turf near me, cricket pitch rental, swimming pool hourly booking, sports arena reservations",
+      type: "website",
+    }),
   component: BookVenues,
 });
 

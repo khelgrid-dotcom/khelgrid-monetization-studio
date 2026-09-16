@@ -1,23 +1,17 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AlertTriangle, CheckCircle2, Mail, SearchCheck } from "lucide-react";
+import { buildSeoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/correction-policy")({
-  head: () => ({
-    meta: [
-      { title: "Correction Policy · KhelGrid" },
-      {
-        name: "description",
-        content:
-          "How to report inaccurate, expired or misleading sports opportunity information on KhelGrid.",
-      },
-      { property: "og:title", content: "KhelGrid Correction Policy" },
-      {
-        property: "og:description",
-        content: "How KhelGrid reviews reports and updates sports opportunity information.",
-      },
-    ],
-    links: [{ rel: "canonical", href: "https://khelgrid.com/correction-policy" }],
-  }),
+  head: () =>
+    buildSeoHead({
+      title: "Correction & Fact-Check Request Policy · KhelGrid",
+      description:
+        "How to report inaccurate dates, expired trials, modified venue information, or organizer disputes. Rapid fact-checking response protocols by KhelGrid.",
+      canonicalPath: "/correction-policy",
+      keywords: "KhelGrid correction policy, report listing error, fact checking request",
+      type: "website",
+    }),
   component: CorrectionPolicyPage,
 });
 

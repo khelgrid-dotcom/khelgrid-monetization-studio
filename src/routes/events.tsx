@@ -12,17 +12,19 @@ import {
 } from "@/components/ui/select";
 import { MapPin, Calendar, Clock, Trophy, Users } from "lucide-react";
 import { toast } from "sonner";
+import { buildSeoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/events")({
-  head: () => ({
-    meta: [
-      { title: "Sports Events & Tournaments · KhelGrid" },
-      {
-        name: "description",
-        content: "Join local tournaments, leagues and open sports events near you.",
-      },
-    ],
-  }),
+  head: () =>
+    buildSeoHead({
+      title: "Sports Tournaments, Leagues & Championships in India · KhelGrid",
+      description:
+        "Compete in amateur, corporate, and competitive sports tournaments across India. Register teams for football cups, cricket leagues, badminton opens, and marathon runs.",
+      canonicalPath: "/events",
+      keywords:
+        "sports tournaments India, corporate cricket league, badminton championship, open football tournament, weekend sports competitions",
+      type: "website",
+    }),
   component: EventsPage,
 });
 

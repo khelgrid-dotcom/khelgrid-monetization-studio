@@ -1,24 +1,18 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AlertTriangle, CheckCircle2, FileCheck2, Mail, ShieldCheck } from "lucide-react";
+import { buildSeoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/trust-center")({
-  head: () => ({
-    meta: [
-      { title: "KhelGrid Verification · How trust checks work" },
-      {
-        name: "description",
-        content:
-          "Understand how KhelGrid reviews organizer and opportunity information, reports corrections, and marks listings.",
-      },
-      { property: "og:title", content: "How KhelGrid verification works" },
-      {
-        property: "og:description",
-        content:
-          "Our source-checking, organizer-review, correction, and expiry process for sports opportunities.",
-      },
-    ],
-    links: [{ rel: "canonical", href: "https://khelgrid.com/trust-center" }],
-  }),
+  head: () =>
+    buildSeoHead({
+      title: "Trust Center & Verification Standards · KhelGrid",
+      description:
+        "Understand how KhelGrid audits sports trial listings, authenticates organizer credentials, flags scams, and protects young athletes and parents across India.",
+      canonicalPath: "/trust-center",
+      keywords:
+        "KhelGrid trust center, athlete safety, verified sports trials, sports fraud prevention",
+      type: "website",
+    }),
   component: TrustCenterPage,
 });
 

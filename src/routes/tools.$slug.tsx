@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 import { Wrench, Sparkles } from "lucide-react";
-import { noindexMeta } from "@/lib/seo";
+import { buildSeoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/tools/$slug")({
   loader: ({ params }) => {
@@ -12,15 +12,25 @@ export const Route = createFileRoute("/tools/$slug")({
     if (!tool) throw notFound();
     return { tool };
   },
-  head: ({ loaderData }) => ({
-    meta: loaderData
-      ? [
-          noindexMeta(),
-          { title: `${loaderData.tool.name} · KhelGrid Tools` },
-          { name: "description", content: loaderData.tool.blurb },
-        ]
-      : [],
-  }),
+  head: ({ loaderData, params }) => {
+    const tool = loaderData?.tool;
+    if (!tool) {
+      return buildSeoHead({
+        title: "Athlete Tool · KhelGrid",
+        description: "Interactive calculators and planners for athletes.",
+        canonicalPath: `/tools/${params.slug}`,
+      });
+    }
+
+    return buildSeoHead({
+      title: `${tool.name} · KhelGrid Athlete Tools`,
+      description: tool.blurb,
+      canonicalPath: `/tools/${tool.slug}`,
+      keywords: `${tool.name}, athlete calculator, sports tool, trial preparation`,
+      noindex: true,
+      type: "website",
+    });
+  },
   notFoundComponent: () => (
     <div className="mx-auto max-w-2xl px-4 py-20 text-center">
       <h1 className="text-3xl font-bold">Tool not found</h1>

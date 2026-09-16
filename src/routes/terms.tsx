@@ -1,27 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Scale } from "lucide-react";
+import { buildSeoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/terms")({
-  head: () => ({
-    meta: [
-      { title: "Terms of Service · KhelGrid" },
-      {
-        name: "description",
-        content:
-          "The rules for using KhelGrid: accounts, trial applications, academy listings, payments, refunds and acceptable use.",
-      },
-      { property: "og:title", content: "Terms of Service · KhelGrid" },
-      {
-        property: "og:description",
-        content:
-          "Accounts, applications, academy listings, payments, refunds and acceptable use on KhelGrid.",
-      },
-      { property: "og:type", content: "article" },
-      { property: "og:url", content: "/terms" },
-      { name: "twitter:card", content: "summary" },
-    ],
-    links: [{ rel: "canonical", href: "/terms" }],
-  }),
+  head: () =>
+    buildSeoHead({
+      title: "Terms of Service & User Agreement · KhelGrid",
+      description:
+        "Terms and legal conditions governing the use of KhelGrid: user accounts, sports trial applications, venue booking reservations, organizer listings, and payments.",
+      canonicalPath: "/terms",
+      type: "website",
+    }),
   component: TermsPage,
 });
 

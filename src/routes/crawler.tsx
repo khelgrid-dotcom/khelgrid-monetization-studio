@@ -5,18 +5,17 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
+import { buildSeoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/crawler")({
-  head: () => ({
-    meta: [
-      { title: "Sports Crawler · KhelGrid" },
-      {
-        name: "description",
-        content: "Internal sports organization notification collection controls.",
-      },
-      { name: "robots", content: "noindex,nofollow" },
-    ],
-  }),
+  head: () =>
+    buildSeoHead({
+      title: "Sports Crawler Engine · KhelGrid",
+      description: "Internal sports organization notification collection controls.",
+      canonicalPath: "/crawler",
+      noindex: true,
+      type: "website",
+    }),
   component: CrawlerPage,
 });
 

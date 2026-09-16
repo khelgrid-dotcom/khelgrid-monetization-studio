@@ -13,19 +13,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { buildSeoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/coaches")({
-  head: () => ({
-    meta: [
-      { title: "Find Sports Coaches · KhelGrid" },
-      {
-        name: "description",
-        content:
-          "Browse sports coaches by sport, coaching experience and overall rating across India.",
-      },
-    ],
-    links: [{ rel: "canonical", href: "https://khelgrid.com/coaches" }],
-  }),
+  head: () =>
+    buildSeoHead({
+      title: "Find Certified Sports Coaches & Trainers across India · KhelGrid",
+      description:
+        "Browse verified, NIS-certified sports coaches by sport, experience, and athlete ratings. Hire personal trainers for cricket, football, badminton, tennis, and fitness.",
+      canonicalPath: "/coaches",
+      keywords:
+        "sports coaches India, certified badminton coach, cricket bowling coach, football fitness trainer, NIS certified coaches",
+      type: "website",
+    }),
   component: CoachesPage,
 });
 

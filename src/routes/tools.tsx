@@ -2,17 +2,19 @@ import { createFileRoute, Link, Outlet, useMatches } from "@tanstack/react-route
 import { TOOLS_CATALOG } from "@/data/catalog";
 import { Badge } from "@/components/ui/badge";
 import { Wrench } from "lucide-react";
+import { buildSeoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/tools")({
-  head: () => ({
-    meta: [
-      { title: "Athlete tools & calculators · KhelGrid" },
-      {
-        name: "description",
-        content: "Calculators, checklists and planners for athletes, parents and organizers.",
-      },
-    ],
-  }),
+  head: () =>
+    buildSeoHead({
+      title: "Athlete Tools, Calculators & Trial Planners · KhelGrid",
+      description:
+        "Free sports calculators, age eligibility checkers, sprint pace estimators, hydration planners, and trial preparation checklists for Indian athletes and parents.",
+      canonicalPath: "/tools",
+      keywords:
+        "sports tools, athlete calculators, age cutoff checker, trial budget planner, sports cv builder",
+      type: "website",
+    }),
   component: ToolsLayout,
 });
 

@@ -21,19 +21,18 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { useTheme } from "@/context/ThemeContext";
+import { buildSeoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/settings")({
-  head: () => ({
-    meta: [
-      { title: "Settings · KhelGrid" },
-      {
-        name: "description",
-        content:
-          "Manage your KhelGrid account, notifications, privacy, advertising and appearance preferences.",
-      },
-      { name: "robots", content: "noindex,follow" },
-    ],
-  }),
+  head: () =>
+    buildSeoHead({
+      title: "Account & Application Settings · KhelGrid",
+      description:
+        "Manage your KhelGrid account, notification channels, privacy visibility, and theme preferences.",
+      canonicalPath: "/settings",
+      noindex: true,
+      type: "website",
+    }),
   component: SettingsPage,
 });
 

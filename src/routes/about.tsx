@@ -1,24 +1,18 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { CheckCircle2, Mail, ShieldCheck } from "lucide-react";
+import { buildSeoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/about")({
-  head: () => ({
-    meta: [
-      { title: "About KhelGrid · India's sports opportunity network" },
-      {
-        name: "description",
-        content:
-          "Learn what KhelGrid does, how opportunity information is reviewed, and how to contact the team.",
-      },
-      { property: "og:title", content: "About KhelGrid" },
-      {
-        property: "og:description",
-        content:
-          "KhelGrid helps athletes discover sports opportunities with clearer information and verification context.",
-      },
-    ],
-    links: [{ rel: "canonical", href: "https://khelgrid.com/about" }],
-  }),
+  head: () =>
+    buildSeoHead({
+      title: "About KhelGrid · Mission, Vision & Athlete Opportunity Network",
+      description:
+        "Learn about KhelGrid's mission to organize India's grassroots and professional sports ecosystem. How our editorial team reviews trials, verifies academies, and empowers youth athletes.",
+      canonicalPath: "/about",
+      keywords:
+        "about KhelGrid, sports platform India, grassroots sports, athlete scouting, sports transparency",
+      type: "website",
+    }),
   component: AboutPage,
 });
 
