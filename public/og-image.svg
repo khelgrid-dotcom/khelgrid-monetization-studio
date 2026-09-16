@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0a0c10"/>
+      <stop offset="50%" stop-color="#101522"/>
+      <stop offset="100%" stop-color="#080a0f"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#0066ff" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  
+  <!-- Ambient glow behind mark -->
+  <circle cx="280" cy="315" r="300" fill="url(#glow)"/>
+
+  <!-- Subtle grid lines -->
+  <g stroke="#ffffff" stroke-opacity="0.04" stroke-width="1">
+    <line x1="100" y1="0" x2="100" y2="630"/>
+    <line x1="300" y1="0" x2="300" y2="630"/>
+    <line x1="500" y1="0" x2="500" y2="630"/>
+    <line x1="700" y1="0" x2="700" y2="630"/>
+    <line x1="900" y1="0" x2="900" y2="630"/>
+    <line x1="1100" y1="0" x2="1100" y2="630"/>
+    <line x1="0" y1="150" x2="1200" y2="150"/>
+    <line x1="0" y1="315" x2="1200" y2="315"/>
+    <line x1="0" y1="480" x2="1200" y2="480"/>
+  </g>
+
+  <!-- KhelGrid Logo Icon -->
+  <g transform="translate(180, 205) scale(1.6)">
+    <!-- Blue vertical bar -->
+    <polygon points="50,80 70,60 70,140 50,160" fill="#0066FF"/>
+    
+    <!-- White top bar -->
+    <polygon points="70,60 130,40 130,80 70,100" fill="#FFFFFF"/>
+    
+    <!-- Red upper right -->
+    <polygon points="130,80 160,60 180,100 150,120" fill="#EF4444"/>
+    
+    <!-- Yellow bottom left -->
+    <polygon points="50,160 90,140 110,160 70,180" fill="#FBBF24"/>
+    
+    <!-- Green arrow right -->
+    <polygon points="150,120 180,100 160,140 130,160" fill="#10B981"/>
+    <polygon points="180,100 190,110 170,145 160,140" fill="#10B981"/>
+  </g>
+
+  <!-- Brand Typography -->
+  <text x="490" y="295" fill="#FFFFFF" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="76" font-weight="800" letter-spacing="-0.03em">
+    Khel<tspan fill="#3b82f6">Grid</tspan>
+  </text>
+  <text x="495" y="360" fill="#94A3B8" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="30" font-weight="500">
+    India's Sports Opportunity Network
+  </text>
+  <text x="495" y="415" fill="#64748B" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="22" font-weight="400">
+    Trials · Tournaments · Turf Venues · Academies · Pickup Games
+  </text>
+</svg>
