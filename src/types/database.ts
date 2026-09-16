@@ -176,6 +176,92 @@ export interface Database {
         };
         Update: Partial<Database["public"]["Tables"]["coaching_enrollments"]["Insert"]>;
       };
+      user_profiles: {
+        Row: {
+          id: string;
+          user_id: string | null;
+          full_name: string;
+          email: string | null;
+          phone: string | null;
+          avatar_url: string | null;
+          primary_sport: string;
+          secondary_sports: string[];
+          city: string;
+          age_category: string;
+          playing_position: string | null;
+          bio: string | null;
+          skill_level: string;
+          membership_tier: string;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: Omit<
+          Database["public"]["Tables"]["user_profiles"]["Row"],
+          "id" | "created_at" | "updated_at"
+        > & {
+          id?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["user_profiles"]["Insert"]>;
+      };
+      sports_achievements: {
+        Row: {
+          id: string;
+          user_id: string | null;
+          user_email: string | null;
+          title: string;
+          sport: string;
+          category: "tournament" | "selection" | "award" | "milestone" | "certification";
+          level: "Club" | "District" | "State" | "Zonal" | "National";
+          organization: string;
+          year: number;
+          position_rank: string | null;
+          description: string | null;
+          verified: boolean;
+          verification_badge: string | null;
+          certificate_url: string | null;
+          created_at: string;
+        };
+        Insert: Omit<
+          Database["public"]["Tables"]["sports_achievements"]["Row"],
+          "id" | "created_at"
+        > & {
+          id?: string;
+          created_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["sports_achievements"]["Insert"]>;
+      };
+      user_memberships: {
+        Row: {
+          id: string;
+          user_id: string | null;
+          user_email: string | null;
+          plan_name: string;
+          tier: "free" | "pro" | "elite" | "academy";
+          status: "active" | "renewed" | "expired" | "paused";
+          sport: string;
+          venue_name: string | null;
+          valid_from: string;
+          valid_until: string;
+          auto_renew: boolean;
+          perks: string[];
+          allocated_hours_per_month: number;
+          used_hours_this_month: number;
+          price_paid: number;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: Omit<
+          Database["public"]["Tables"]["user_memberships"]["Row"],
+          "id" | "created_at" | "updated_at"
+        > & {
+          id?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["user_memberships"]["Insert"]>;
+      };
     };
   };
 }

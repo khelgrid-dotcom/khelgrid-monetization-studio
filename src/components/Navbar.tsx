@@ -11,6 +11,7 @@ import {
   Wallet,
   Bell,
   Settings,
+  User,
   Newspaper,
 } from "lucide-react";
 import { useState } from "react";
@@ -95,8 +96,15 @@ export function Navbar() {
 
           {/* Settings */}
           <Button asChild variant="ghost" size="sm" className="rounded-full md:px-3">
-            <Link to="/settings">
+            <Link to="/settings" title="Settings">
               <Settings className="h-4 w-4" />
+            </Link>
+          </Button>
+
+          {/* User Profile */}
+          <Button asChild variant="ghost" size="sm" className="rounded-full md:px-3">
+            <Link to="/profile" title="Athlete Profile & Achievements">
+              <User className="h-4 w-4" />
             </Link>
           </Button>
 

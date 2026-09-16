@@ -8,8 +8,9 @@ import { DashboardProgressShare } from "@/components/DashboardProgressShare";
 import { OpportunityInterviewAgent } from "@/components/OpportunityInterviewAgent";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Wallet, Plus, Crown, Trophy, RotateCcw, Calendar, CheckCircle2 } from "lucide-react";
+import { Wallet, Plus, Crown, Trophy, RotateCcw, Calendar, CheckCircle2, User } from "lucide-react";
 import { getVenueBookings, type BookingRecord } from "@/lib/booking-service";
+import { UserProfile } from "@/components/UserProfile";
 import { toast } from "sonner";
 import { buildSeoHead } from "@/lib/seo";
 
@@ -62,16 +63,23 @@ function Dashboard() {
           <h1 className="text-3xl font-bold tracking-tight">Welcome back, {name.split(" ")[0]}</h1>
           <p className="text-sm text-muted-foreground">Your athlete control room.</p>
         </div>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => {
-            reset();
-            toast.success("Simulator reset");
-          }}
-        >
-          <RotateCcw className="mr-1 h-3.5 w-3.5" /> Reset simulator
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button asChild variant="outline" size="sm">
+            <Link to="/profile">
+              <User className="mr-1 h-3.5 w-3.5" /> Full Athlete Profile
+            </Link>
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => {
+              reset();
+              toast.success("Simulator reset");
+            }}
+          >
+            <RotateCcw className="mr-1 h-3.5 w-3.5" /> Reset simulator
+          </Button>
+        </div>
       </div>
 
       <div className="mt-6 grid gap-4 md:grid-cols-3">
@@ -243,6 +251,11 @@ function Dashboard() {
             ))}
           </div>
         )}
+      </div>
+
+      {/* Athlete Profile & Sports Achievements Section */}
+      <div className="mt-10">
+        <UserProfile />
       </div>
 
       <DashboardProgressShare name={name} />

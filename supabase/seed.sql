@@ -233,7 +233,125 @@ VALUES
   )
 ON CONFLICT (id) DO NOTHING;
 
--- 4. ENSURE ROW LEVEL SECURITY IS PERMISSIVE FOR INSERT & SELECT
+-- 4. SEED SAMPLE COACHING ENROLLMENTS
+INSERT INTO public.coaching_enrollments (id, program_id, student_name, student_age, contact_phone, status)
+VALUES
+  (
+    '55555555-5555-5555-5555-555555555555',
+    '33333333-3333-3333-3333-333333333333',
+    'Arjun Mehta',
+    18,
+    '+91 98765 43210',
+    'active'
+  ),
+  (
+    '66666666-6666-6666-6666-666666666666',
+    '44444444-4444-4444-4444-444444444444',
+    'Arjun Mehta',
+    18,
+    '+91 98765 43210',
+    'active'
+  )
+ON CONFLICT (id) DO NOTHING;
+
+-- 5. SEED SAMPLE USER PROFILE
+INSERT INTO public.user_profiles (id, full_name, email, phone, avatar_url, primary_sport, secondary_sports, city, age_category, playing_position, bio, skill_level, membership_tier)
+VALUES
+  (
+    '77777777-7777-7777-7777-777777777777',
+    'Arjun Mehta',
+    'arjun.mehta@khelgrid.com',
+    '+91 98765 43210',
+    'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
+    'Cricket',
+    ARRAY['Badminton', 'Football'],
+    'Bengaluru',
+    'U-19',
+    'Top-Order Batsman & Right-Arm Off-Break',
+    'Passionate top-order batsman & athletic fielder. Represented Karnataka Zonal U-17 team. Aiming for Ranji Trophy state trials and BCCI junior screening.',
+    'State Level',
+    'pro'
+  )
+ON CONFLICT (id) DO NOTHING;
+
+-- 6. SEED SAMPLE SPORTS ACHIEVEMENTS
+INSERT INTO public.sports_achievements (id, user_email, title, sport, category, level, organization, year, position_rank, description, verified, verification_badge, certificate_url)
+VALUES
+  (
+    '88888888-8888-8888-8888-888888888888',
+    'arjun.mehta@khelgrid.com',
+    'Gold Medal · Karnataka State Inter-District U-19 Championship',
+    'Cricket',
+    'tournament',
+    'State',
+    'Karnataka State Cricket Association (KSCA)',
+    2025,
+    'Champions · 1st Place',
+    'Scored 114* off 82 balls in the final against Mysuru Zone at M. Chinnaswamy auxiliary grounds.',
+    TRUE,
+    'KSCA Verified Official',
+    'https://khelgrid.com/verify/cert/ksca-u19-2025-098'
+  ),
+  (
+    '99999999-9999-9999-9999-999999999999',
+    'arjun.mehta@khelgrid.com',
+    'Player of the Tournament · Bengaluru Super League T20',
+    'Cricket',
+    'award',
+    'District',
+    'Bengaluru District Cricket Foundation',
+    2025,
+    'MVP Award & Orange Cap',
+    'Amassed 342 runs across 6 innings at a strike rate of 148.6 with 4 half-centuries.',
+    TRUE,
+    'Tournament Scorer Verified',
+    NULL
+  ),
+  (
+    'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
+    'arjun.mehta@khelgrid.com',
+    'State Selection Camp Finalist · Karnataka Colts Academy',
+    'Cricket',
+    'selection',
+    'State',
+    'National Cricket Academy (NCA) / KSCA',
+    2024,
+    'Top 30 Finalist Shortlist',
+    'Cleared beep test baseline (Level 19.8) and specialized power-hitting metrics over 4 intensive evaluation rounds.',
+    TRUE,
+    'Camp Accredited',
+    'https://khelgrid.com/verify/cert/nca-camp-2024-411'
+  )
+ON CONFLICT (id) DO NOTHING;
+
+-- 7. SEED SAMPLE USER MEMBERSHIP
+INSERT INTO public.user_memberships (id, user_email, plan_name, tier, status, sport, venue_name, valid_from, valid_until, auto_renew, perks, allocated_hours_per_month, used_hours_this_month, price_paid)
+VALUES
+  (
+    'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb',
+    'arjun.mehta@khelgrid.com',
+    'KhelGrid Pro Athlete Annual Pass',
+    'pro',
+    'active',
+    'Cricket & Multi-Sport',
+    'All Partner Venues Across Bengaluru',
+    NOW(),
+    NOW() + INTERVAL '1 year',
+    TRUE,
+    ARRAY[
+      'Unlimited verified trial applications across India',
+      '12 complimentary floodlit court hours every month',
+      'Priority instant confirmation at 40+ partner sports hubs',
+      'Direct recruiter profile showcasing with verified scout badges',
+      '15% concession on official tournament entries & gear'
+    ],
+    12,
+    4,
+    4999.00
+  )
+ON CONFLICT (id) DO NOTHING;
+
+-- 8. ENSURE ROW LEVEL SECURITY IS PERMISSIVE FOR INSERT & SELECT
 DO $$
 BEGIN
   -- Venues
