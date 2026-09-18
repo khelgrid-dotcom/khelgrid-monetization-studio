@@ -62,9 +62,10 @@ import {
   type EnrolledProgram,
   type UserMembershipStatus,
 } from "@/lib/user-profile-service";
+import { SportsCV } from "@/components/SportsCV";
 
 interface UserProfileProps {
-  initialTab?: "achievements" | "programs" | "membership";
+  initialTab?: "achievements" | "programs" | "membership" | "sports-cv";
   showEditControls?: boolean;
   className?: string;
 }
@@ -82,9 +83,9 @@ export function UserProfile({
 
   const [loading, setLoading] = useState(false);
   const [isSupabaseLive, setIsSupabaseLive] = useState(false);
-  const [activeTab, setActiveTab] = useState<"achievements" | "programs" | "membership">(
-    initialTab,
-  );
+  const [activeTab, setActiveTab] = useState<
+    "achievements" | "programs" | "membership" | "sports-cv"
+  >(initialTab);
 
   // Filters for achievements
   const [selectedSport, setSelectedSport] = useState<string>("All");
@@ -522,6 +523,28 @@ export function UserProfile({
               Active
             </span>
           </button>
+
+          <button
+            id="tab-sports-cv-card"
+            onClick={() => setActiveTab("sports-cv")}
+            className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all ${
+              activeTab === "sports-cv"
+                ? "bg-primary text-primary-foreground shadow-sm"
+                : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+            }`}
+          >
+            <ShieldCheck className="h-4 w-4" />
+            <span>Sports CV Card</span>
+            <span
+              className={`ml-1 rounded-full px-2 py-0.5 text-[10px] font-semibold ${
+                activeTab === "sports-cv"
+                  ? "bg-primary-foreground/20 text-primary-foreground"
+                  : "bg-amber-500/20 text-amber-600 dark:text-amber-400"
+              }`}
+            >
+              Live
+            </span>
+          </button>
         </div>
 
         <Button
@@ -956,6 +979,15 @@ export function UserProfile({
               </div>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* SECTION 4: SPORTS CV VISUAL CARD & METRICS */}
+      {/* ========================================================================= */}
+      {activeTab === "sports-cv" && (
+        <div id="section-sports-cv" className="space-y-4">
+          <SportsCV initialViewMode="split" />
         </div>
       )}
 
