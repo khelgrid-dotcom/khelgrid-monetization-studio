@@ -8,52 +8,63 @@ interface ThemeContextType {
   resolvedTheme: ResolvedTheme;
   setTheme: (theme: Theme) => void;
   toggleTheme: () => void;
+  mounted: boolean;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 const THEME_STORAGE_KEY = "khelgrid-theme";
 
+function computeTheme(currentTheme: Theme): ResolvedTheme {
+  if (typeof window === "undefined") return "dark";
+  if (currentTheme === "system") {
+    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  }
+  return currentTheme;
+}
+
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>(() => {
-    if (typeof window === "undefined") return "dark";
+  // Always initialize with identical static defaults on both server and client
+  // so the SSR HTML and initial client hydration DOM are guaranteed to match.
+  const [theme, setThemeState] = useState<Theme>("dark");
+  const [resolvedTheme, setResolvedTheme] = useState<ResolvedTheme>("dark");
+  const [mounted, setMounted] = useState(false);
+
+  // Once mounted on the client, read persisted preferences and sync DOM
+  useEffect(() => {
+    let activeTheme: Theme = "dark";
     try {
       const saved = localStorage.getItem(THEME_STORAGE_KEY) || localStorage.getItem("theme");
       if (saved === "light" || saved === "dark" || saved === "system") {
-        return saved as Theme;
+        activeTheme = saved as Theme;
+        setThemeState(activeTheme);
       }
     } catch {
       // Ignore localStorage access errors
     }
-    return "dark";
-  });
 
-  const [resolvedTheme, setResolvedTheme] = useState<ResolvedTheme>(() => {
-    if (typeof window === "undefined") return "dark";
-    try {
-      const saved = localStorage.getItem(THEME_STORAGE_KEY) || localStorage.getItem("theme");
-      if (saved === "light") return "light";
-      if (saved === "dark") return "dark";
-      if (saved === "system") {
-        return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-      }
-    } catch {
-      // Fallback
-    }
-    return "dark";
-  });
+    const nextResolved = computeTheme(activeTheme);
+    setResolvedTheme(nextResolved);
 
-  useEffect(() => {
     const root = document.documentElement;
+    if (nextResolved === "dark") {
+      root.classList.add("dark");
+      root.classList.remove("light");
+      root.style.colorScheme = "dark";
+    } else {
+      root.classList.remove("dark");
+      root.classList.add("light");
+      root.style.colorScheme = "light";
+    }
 
-    const computeResolvedTheme = (currentTheme: Theme): ResolvedTheme => {
-      if (currentTheme === "system") {
-        return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-      }
-      return currentTheme;
-    };
+    setMounted(true);
+  }, []);
 
-    const nextResolved = computeResolvedTheme(theme);
+  // Update theme when changed after mount
+  useEffect(() => {
+    if (!mounted) return;
+    const root = document.documentElement;
+    const nextResolved = computeTheme(theme);
     setResolvedTheme(nextResolved);
 
     if (nextResolved === "dark") {
@@ -92,7 +103,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       mediaQuery.addEventListener("change", handleChange);
       return () => mediaQuery.removeEventListener("change", handleChange);
     }
-  }, [theme]);
+  }, [theme, mounted]);
 
   const setTheme = (newTheme: Theme) => {
     setThemeState(newTheme);
@@ -106,7 +117,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <ThemeContext.Provider value={{ theme, resolvedTheme, setTheme, toggleTheme }}>
+    <ThemeContext.Provider value={{ theme, resolvedTheme, setTheme, toggleTheme, mounted }}>
       {children}
     </ThemeContext.Provider>
   );
@@ -117,6 +128,7 @@ const defaultThemeContext: ThemeContextType = {
   resolvedTheme: "dark",
   setTheme: () => {},
   toggleTheme: () => {},
+  mounted: false,
 };
 
 export function useTheme() {

@@ -15,7 +15,12 @@ export function ThemeSwitcher({
   className,
   id = "theme-switcher-btn",
 }: ThemeSwitcherProps) {
-  const { theme, resolvedTheme, setTheme, toggleTheme } = useTheme();
+  const { theme, resolvedTheme, setTheme, toggleTheme, mounted } = useTheme();
+
+  // Prior to client mount, rely on consistent initial "dark" theme to guarantee
+  // that server-rendered HTML and client hydration DOM match bit-for-bit.
+  const activeResolvedTheme = mounted ? resolvedTheme : "dark";
+  const activeTheme = mounted ? theme : "dark";
 
   if (variant === "segmented") {
     const options: { value: Theme; label: string; icon: React.ElementType }[] = [
@@ -27,6 +32,7 @@ export function ThemeSwitcher({
     return (
       <div
         id={id}
+        suppressHydrationWarning
         className={cn(
           "inline-flex items-center rounded-xl p-1 bg-muted/60 border border-border/60",
           className,
@@ -34,11 +40,12 @@ export function ThemeSwitcher({
       >
         {options.map((opt) => {
           const Icon = opt.icon;
-          const isSelected = theme === opt.value;
+          const isSelected = activeTheme === opt.value;
           return (
             <button
               key={opt.value}
               type="button"
+              suppressHydrationWarning
               onClick={() => setTheme(opt.value)}
               className={cn(
                 "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer",
@@ -68,14 +75,17 @@ export function ThemeSwitcher({
         id={id}
         type="button"
         onClick={toggleTheme}
+        suppressHydrationWarning
         className={cn(
           "inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-border bg-card text-xs font-medium text-foreground hover:bg-muted/80 transition-all cursor-pointer shadow-2xs",
           className,
         )}
-        title={resolvedTheme === "dark" ? "Switch to Light Theme" : "Switch to Dark Theme"}
-        aria-label={resolvedTheme === "dark" ? "Switch to Light Theme" : "Switch to Dark Theme"}
+        title={activeResolvedTheme === "dark" ? "Switch to Light Theme" : "Switch to Dark Theme"}
+        aria-label={
+          activeResolvedTheme === "dark" ? "Switch to Light Theme" : "Switch to Dark Theme"
+        }
       >
-        {resolvedTheme === "dark" ? (
+        {activeResolvedTheme === "dark" ? (
           <>
             <Sun className="h-3.5 w-3.5 text-amber-400 animate-in fade-in zoom-in" />
             <span>Light Mode</span>
@@ -91,7 +101,7 @@ export function ThemeSwitcher({
   }
 
   // Default: icon button
-  const isDark = resolvedTheme === "dark";
+  const isDark = activeResolvedTheme === "dark";
 
   return (
     <Button
@@ -100,6 +110,7 @@ export function ThemeSwitcher({
       variant="outline"
       size="icon"
       onClick={toggleTheme}
+      suppressHydrationWarning
       className={cn(
         "rounded-full h-8 w-8 sm:h-9 sm:w-9 border-border bg-card hover:bg-muted text-foreground transition-transform active:scale-95 shadow-2xs",
         className,

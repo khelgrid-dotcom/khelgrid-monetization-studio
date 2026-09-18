@@ -5,10 +5,19 @@
  * adhering to Google Search Console and AdSense quality standards (E-E-A-T).
  */
 
+import { ROUTE_LABELS } from "@/config/nav";
+
 export const SITE_URL = "https://khelgrid.com";
 export const DEFAULT_OG_IMAGE = "https://khelgrid.com/og-image.png";
 export const DEFAULT_SITE_NAME = "KhelGrid";
 export const TWITTER_HANDLE = "@KhelGrid";
+
+export interface BreadcrumbItemSchema {
+  "@type": "ListItem";
+  position: number;
+  name: string;
+  item: string;
+}
 
 export interface SeoOptions {
   title: string;
@@ -22,6 +31,427 @@ export interface SeoOptions {
   modifiedTime?: string;
   author?: string;
   section?: string;
+  breadcrumbs?: Array<{ name: string; path?: string }>;
+  customSchema?: Record<string, unknown> | Array<Record<string, unknown>>;
+  scripts?: Array<{ type: string; children: string }>;
+}
+
+/**
+ * Prettifies URL slugs into human-readable titles.
+ */
+export function prettifySlug(slug: string): string {
+  return slug
+    .replace(/[-_]+/g, " ")
+    .replace(/\b\w/g, (c) => c.toUpperCase())
+    .trim();
+}
+
+/**
+ * Resolves breadcrumbs hierarchy for any given pathname.
+ * Handles single paths, nested routes, and deep dynamic routes.
+ */
+export function buildBreadcrumbsFromPath(
+  pathname: string,
+  customCrumbs?: Array<{ name: string; path?: string }>,
+): Array<{ name: string; item: string }> {
+  if (customCrumbs && customCrumbs.length > 0) {
+    const list: Array<{ name: string; item: string }> = [];
+    const hasHome = customCrumbs.some((c) => c.name.toLowerCase() === "home" || c.path === "/");
+    if (!hasHome) {
+      list.push({ name: "Home", item: SITE_URL });
+    }
+    for (const c of customCrumbs) {
+      const fullUrl = c.path
+        ? c.path.startsWith("http")
+          ? c.path
+          : `${SITE_URL}${c.path.startsWith("/") ? c.path : `/${c.path}`}`
+        : SITE_URL;
+      list.push({ name: c.name, item: fullUrl });
+    }
+    return list;
+  }
+
+  const clean = pathname.split("?")[0].replace(/\/+$/, "");
+  const baseCrumb = { name: "Home", item: SITE_URL };
+
+  if (!clean || clean === "") {
+    return [baseCrumb];
+  }
+
+  const segments = clean.split("/").filter(Boolean);
+  const crumbs: Array<{ name: string; item: string }> = [baseCrumb];
+
+  // Specific parent mappings for singular prefixes to plural canonical hubs
+  const parentMap: Record<string, { label: string; to: string }> = {
+    sport: { label: "Sports", to: "/sports" },
+    city: { label: "Cities", to: "/cities" },
+    guide: { label: "Guides", to: "/guides" },
+    tool: { label: "Tools & calculators", to: "/tools" },
+    venue: { label: "Book venues", to: "/book" },
+    trial: { label: "Search trials", to: "/search" },
+  };
+
+  let accumulatedPath = "";
+
+  for (let i = 0; i < segments.length; i++) {
+    const segment = segments[i];
+    accumulatedPath += `/${segment}`;
+
+    // If first segment has a designated canonical hub parent (e.g. /sport/$slug)
+    if (i === 0 && parentMap[segment] && segments.length > 1) {
+      crumbs.push({
+        name: parentMap[segment].label,
+        item: `${SITE_URL}${parentMap[segment].to}`,
+      });
+      continue;
+    }
+
+    // Resolve label
+    let label = ROUTE_LABELS[accumulatedPath];
+    if (!label) {
+      label = prettifySlug(segment);
+    }
+
+    crumbs.push({
+      name: label,
+      item: `${SITE_URL}${accumulatedPath}`,
+    });
+  }
+
+  return crumbs;
+}
+
+/**
+ * Generates Schema.org BreadcrumbList structured data.
+ */
+export function generateBreadcrumbSchema(
+  pathname: string,
+  customCrumbs?: Array<{ name: string; path?: string }>,
+) {
+  const crumbs = buildBreadcrumbsFromPath(pathname, customCrumbs);
+  return {
+    "@type": "BreadcrumbList",
+    itemListElement: crumbs.map((crumb, idx) => ({
+      "@type": "ListItem",
+      position: idx + 1,
+      name: crumb.name,
+      item: crumb.item,
+    })),
+  };
+}
+
+/**
+ * Generates Schema.org WebSite schema with Sitelinks Searchbox potentialAction.
+ */
+export function generateSitelinksSearchboxSchema() {
+  return {
+    "@type": "WebSite",
+    "@id": `${SITE_URL}/#website`,
+    name: DEFAULT_SITE_NAME,
+    alternateName: [
+      "KhelGrid",
+      "Khel Grid",
+      "KhelGrid India",
+      "India's Sports Opportunity Network",
+    ],
+    url: SITE_URL,
+    potentialAction: {
+      "@type": "SearchAction",
+      target: {
+        "@type": "EntryPoint",
+        urlTemplate: `${SITE_URL}/search?q={search_term_string}`,
+      },
+      "query-input": "required name=search_term_string",
+    },
+  };
+}
+
+/**
+ * Generates Schema.org ItemList of SiteNavigationElements for sitelinks discovery.
+ */
+export function generateSitelinksNavigationSchema() {
+  return {
+    "@type": "ItemList",
+    "@id": `${SITE_URL}/#sitelinks`,
+    name: "KhelGrid Sitelinks",
+    description: "Primary navigational sections of KhelGrid",
+    itemListElement: [
+      {
+        "@type": "SiteNavigationElement",
+        position: 1,
+        name: "Search Trials",
+        url: `${SITE_URL}/search`,
+        description: "Discover upcoming sports trials, selection camps, and scouting calls.",
+      },
+      {
+        "@type": "SiteNavigationElement",
+        position: 2,
+        name: "Play Pickup Games",
+        url: `${SITE_URL}/play`,
+        description: "Find local pickup games, community tournaments, and amateur matches.",
+      },
+      {
+        "@type": "SiteNavigationElement",
+        position: 3,
+        name: "Book Venues & Turf",
+        url: `${SITE_URL}/book`,
+        description: "Book verified sports turfs, badminton courts, cricket nets, and arenas.",
+      },
+      {
+        "@type": "SiteNavigationElement",
+        position: 4,
+        name: "Sports Academies",
+        url: `${SITE_URL}/academy`,
+        description: "Verified coaching academies and high-performance sports centres.",
+      },
+      {
+        "@type": "SiteNavigationElement",
+        position: 5,
+        name: "Sports Guides & Knowledge",
+        url: `${SITE_URL}/guides`,
+        description: "Athlete development guides, fitness routines, and trial prep roadmaps.",
+      },
+      {
+        "@type": "SiteNavigationElement",
+        position: 6,
+        name: "Tools & Calculators",
+        url: `${SITE_URL}/tools`,
+        description: "Free athletic calculators, calorie estimators, and tournament planners.",
+      },
+      {
+        "@type": "SiteNavigationElement",
+        position: 7,
+        name: "Memberships",
+        url: `${SITE_URL}/memberships`,
+        description: "Multi-facility sports memberships and trial credit passes.",
+      },
+      {
+        "@type": "SiteNavigationElement",
+        position: 8,
+        name: "Pricing & Plans",
+        url: `${SITE_URL}/pricing`,
+        description: "Athlete, parent, academy, and scout membership pricing tiers.",
+      },
+      {
+        "@type": "SiteNavigationElement",
+        position: 9,
+        name: "About KhelGrid",
+        url: `${SITE_URL}/about`,
+        description: "Learn about KhelGrid's mission to digitize grassroots Indian sports.",
+      },
+    ],
+  };
+}
+
+/**
+ * Generates Schema.org SportsOrganization schema.
+ */
+export function generateOrganizationSchema() {
+  return {
+    "@type": "SportsOrganization",
+    "@id": `${SITE_URL}/#organization`,
+    name: DEFAULT_SITE_NAME,
+    url: SITE_URL,
+    logo: `${SITE_URL}/favicon-96x96.png`,
+    image: DEFAULT_OG_IMAGE,
+    description: "India's premier sports discovery and talent development network.",
+    sameAs: ["https://twitter.com/khelgrid", "https://www.instagram.com/khelgrid"],
+    contactPoint: {
+      "@type": "ContactPoint",
+      contactType: "customer service",
+      email: "khelgrid@gmail.com",
+      areaServed: "IN",
+      availableLanguage: ["en", "hi"],
+    },
+  };
+}
+
+/**
+ * Generates specific route entity schema based on pathname.
+ */
+export function generateRouteSpecificSchema(
+  pathname: string,
+  options?: Partial<SeoOptions>,
+): Record<string, unknown> {
+  const cleanPath = pathname.split("?")[0].replace(/\/+$/, "") || "/";
+  const canonicalUrl = `${SITE_URL}${cleanPath === "/" ? "" : cleanPath}`;
+  const title = options?.title || DEFAULT_SITE_NAME;
+  const description = options?.description || "";
+
+  if (cleanPath === "/") {
+    return {
+      "@type": "WebPage",
+      "@id": `${canonicalUrl}#webpage`,
+      url: canonicalUrl,
+      name: title,
+      description,
+      isPartOf: { "@id": `${SITE_URL}/#website` },
+      about: { "@id": `${SITE_URL}/#organization` },
+    };
+  }
+
+  if (cleanPath === "/search" || cleanPath === "/trials") {
+    return {
+      "@type": "SearchResultsPage",
+      "@id": `${canonicalUrl}#webpage`,
+      url: canonicalUrl,
+      name: title,
+      description,
+      isPartOf: { "@id": `${SITE_URL}/#website` },
+    };
+  }
+
+  if (cleanPath === "/about") {
+    return {
+      "@type": "AboutPage",
+      "@id": `${canonicalUrl}#webpage`,
+      url: canonicalUrl,
+      name: title,
+      description,
+      isPartOf: { "@id": `${SITE_URL}/#website` },
+      mainEntity: { "@id": `${SITE_URL}/#organization` },
+    };
+  }
+
+  if (cleanPath === "/contact") {
+    return {
+      "@type": "ContactPage",
+      "@id": `${canonicalUrl}#webpage`,
+      url: canonicalUrl,
+      name: title,
+      description,
+      isPartOf: { "@id": `${SITE_URL}/#website` },
+      mainEntity: { "@id": `${SITE_URL}/#organization` },
+    };
+  }
+
+  if (cleanPath.startsWith("/tools")) {
+    return {
+      "@type": "WebApplication",
+      "@id": `${canonicalUrl}#software`,
+      name: title,
+      applicationCategory: "SportsApplication",
+      operatingSystem: "All",
+      url: canonicalUrl,
+      description,
+      offers: {
+        "@type": "Offer",
+        price: "0",
+        priceCurrency: "INR",
+      },
+    };
+  }
+
+  if (cleanPath.startsWith("/guide")) {
+    return {
+      "@type": "Article",
+      "@id": `${canonicalUrl}#article`,
+      headline: title,
+      description,
+      url: canonicalUrl,
+      publisher: { "@id": `${SITE_URL}/#organization` },
+      ...(options?.author ? { author: { "@type": "Person", name: options.author } } : {}),
+      ...(options?.publishedTime ? { datePublished: options.publishedTime } : {}),
+      ...(options?.modifiedTime ? { dateModified: options.modifiedTime } : {}),
+    };
+  }
+
+  if (cleanPath.startsWith("/blog")) {
+    return {
+      "@type": cleanPath === "/blog" ? "Blog" : "BlogPosting",
+      "@id": `${canonicalUrl}#blog`,
+      headline: title,
+      name: title,
+      description,
+      url: canonicalUrl,
+      publisher: { "@id": `${SITE_URL}/#organization` },
+      ...(options?.author ? { author: { "@type": "Person", name: options.author } } : {}),
+      ...(options?.publishedTime ? { datePublished: options.publishedTime } : {}),
+      ...(options?.modifiedTime ? { dateModified: options.modifiedTime } : {}),
+    };
+  }
+
+  if (cleanPath.startsWith("/play")) {
+    return {
+      "@type": "SportsActivityLocation",
+      "@id": `${canonicalUrl}#sports-activity`,
+      name: title,
+      description,
+      url: canonicalUrl,
+      provider: { "@id": `${SITE_URL}/#organization` },
+    };
+  }
+
+  if (cleanPath === "/pricing" || cleanPath === "/memberships") {
+    return {
+      "@type": "WebPage",
+      "@id": `${canonicalUrl}#webpage`,
+      name: title,
+      description,
+      url: canonicalUrl,
+      offers: {
+        "@type": "AggregateOffer",
+        priceCurrency: "INR",
+        lowPrice: "0",
+        highPrice: "999",
+        offerCount: "4",
+      },
+    };
+  }
+
+  return {
+    "@type": "WebPage",
+    "@id": `${canonicalUrl}#webpage`,
+    name: title,
+    description,
+    url: canonicalUrl,
+    isPartOf: { "@id": `${SITE_URL}/#website` },
+  };
+}
+
+/**
+ * Compiles a comprehensive Schema.org @graph containing:
+ * 1. WebSite schema with Sitelinks Searchbox potentialAction
+ * 2. SportsOrganization schema
+ * 3. Sitelinks ItemList navigation
+ * 4. Dynamic BreadcrumbList for this page
+ * 5. Specific Page / Entity Schema for this route
+ * 6. Any optional custom schema or FAQs
+ */
+export function generateFullRouteJsonLd(
+  pathname: string,
+  options?: SeoOptions & {
+    breadcrumbs?: Array<{ name: string; path?: string }>;
+    customSchema?: Record<string, unknown> | Array<Record<string, unknown>>;
+  },
+) {
+  const cleanPath = pathname.split("?")[0].replace(/\/+$/, "") || "/";
+  const sitelinksWebSite = generateSitelinksSearchboxSchema();
+  const sitelinksNavigation = generateSitelinksNavigationSchema();
+  const organization = generateOrganizationSchema();
+  const breadcrumbs = generateBreadcrumbSchema(cleanPath, options?.breadcrumbs);
+  const routePage = generateRouteSpecificSchema(cleanPath, options);
+
+  const graphItems: Array<Record<string, unknown>> = [
+    sitelinksWebSite,
+    organization,
+    sitelinksNavigation,
+    breadcrumbs,
+    routePage,
+  ];
+
+  if (options?.customSchema) {
+    if (Array.isArray(options.customSchema)) {
+      graphItems.push(...options.customSchema);
+    } else {
+      graphItems.push(options.customSchema);
+    }
+  }
+
+  return {
+    "@context": "https://schema.org",
+    "@graph": graphItems,
+  };
 }
 
 /**
@@ -90,7 +520,16 @@ export function buildSeoHead(options: SeoOptions) {
 
   const links = [{ rel: "canonical", href: cleanPath }];
 
-  return { meta, links };
+  const jsonLd = generateFullRouteJsonLd(options.canonicalPath, options);
+  const scripts: Array<Record<string, unknown>> = [
+    {
+      type: "application/ld+json",
+      children: JSON.stringify(jsonLd),
+    },
+    ...(options.scripts || []),
+  ];
+
+  return { meta, links, scripts };
 }
 
 /**
@@ -99,3 +538,5 @@ export function buildSeoHead(options: SeoOptions) {
 export function noindexMeta() {
   return { name: "robots", content: "noindex, follow" } as const;
 }
+
+export { SEOHead } from "@/components/SEOHead";

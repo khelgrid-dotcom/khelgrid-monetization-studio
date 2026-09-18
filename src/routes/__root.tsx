@@ -29,6 +29,7 @@ import {
 } from "@/components/ads";
 import { adsConfig, hasValidPublisherId } from "@/config/ads";
 import { GoogleTagLoader } from "@/components/GoogleTagLoader";
+import { SEOHead } from "@/components/SEOHead";
 import { SiteFooter } from "@/components/SiteFooter";
 import { HydrationDiagnostics } from "@/components/HydrationDiagnostics";
 
@@ -165,8 +166,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('khelgrid-theme')||localStorage.getItem('theme')||'dark';var d=t==='dark'||(t==='system'&&window.matchMedia('(prefers-color-scheme: dark)').matches);if(d){document.documentElement.classList.add('dark');document.documentElement.style.colorScheme='dark';}else{document.documentElement.classList.remove('dark');document.documentElement.style.colorScheme='light';}}catch(e){}})()`,
+          }}
+        />
         <link rel="icon" href="/favicon.ico" sizes="32x32" />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
@@ -184,8 +190,8 @@ function RootShell({ children }: { children: ReactNode }) {
 }
 
 function ThemedToaster() {
-  const { resolvedTheme } = useTheme();
-  return <Toaster theme={resolvedTheme} position="top-right" />;
+  const { resolvedTheme, mounted } = useTheme();
+  return <Toaster theme={mounted ? resolvedTheme : "dark"} position="top-right" />;
 }
 
 function RootComponent() {
@@ -200,6 +206,7 @@ function RootComponent() {
                 <NotificationProvider>
                   <AdConsentProvider requireConsent>
                     <GoogleTagLoader />
+                    <SEOHead />
                     <AdSenseLoader />
 
                     <Navbar />

@@ -124,7 +124,9 @@
     font-family: var(--font-sans);
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
-    transition: background-color 0.2s ease, color 0.2s ease;
+    transition:
+      background-color 0.2s ease,
+      color 0.2s ease;
   }
   .dark body {
     background-color: var(--color-background);
