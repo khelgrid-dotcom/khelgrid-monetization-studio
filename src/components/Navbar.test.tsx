@@ -60,4 +60,11 @@ describe("Navbar /play active highlighting", () => {
     expect(playClass).toBeTruthy();
     expect(hasToken(playClass!, "bg-secondary")).toBe(false);
   });
+
+  it("renders the settings trigger button in the navbar", () => {
+    (useRouterState as any).mockReturnValue("/");
+    const html = renderToString(<Navbar />);
+    expect(html).toContain('id="navbar-settings-btn"');
+    expect(html).toContain("Settings &amp; Appearance");
+  });
 });

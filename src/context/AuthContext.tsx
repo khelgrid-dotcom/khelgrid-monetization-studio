@@ -1,16 +1,41 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { type UserAccount, type UserRole, DEMO_ACCOUNTS, normalizeRole } from "@/types/auth";
+import { recordUserLoginInDatabase } from "@/lib/user-profile-service";
 
 export type Plan = "free" | "pro";
 
 export interface AuthState {
-  name: string;
+  isAuthenticated: boolean;
+  user: UserAccount;
+  name: string; // for backward compatibility with existing components
+  email: string;
+  phone: string;
   plan: Plan;
   wallet: number;
   applications: string[]; // trial IDs applied to (counts include paid unlocks)
   paidApplications: string[]; // trial IDs paid for individually
   boostedTrials: string[];
   sportsCVUnlocked: boolean;
-  role: "athlete" | "organizer" | "recruiter";
+  role: UserRole;
+  lastLoginAt?: string;
+  lastSyncedToDb?: boolean;
+}
+
+export interface LoginOptions {
+  identifier: string; // phone number or email
+  role: "user" | "coach" | "academy";
+  name?: string;
+  organization?: string;
+  otp?: string;
+  password?: string;
+}
+
+export interface LoginResult {
+  success: boolean;
+  syncedToDb: boolean;
+  user: UserAccount;
+  targetRoute: string;
+  message?: string;
 }
 
 interface AuthContextValue extends AuthState {
@@ -24,22 +49,33 @@ interface AuthContextValue extends AuthState {
   payForApplication: (trialId: string, method: "wallet" | "upi") => boolean;
   boostTrial: (trialId: string, method: "wallet" | "upi") => boolean;
   unlockSportsCV: (method: "wallet" | "upi") => boolean;
-  setRole: (r: "athlete" | "organizer" | "recruiter") => void;
+  login: (options: LoginOptions) => Promise<LoginResult>;
+  logout: () => void;
+  switchRole: (role: "user" | "coach" | "academy") => Promise<void>;
+  setRole: (r: UserRole) => void;
   reset: () => void;
 }
 
 const FREE_LIMIT = 2;
 const STORAGE_KEY = "khelgrid-auth-v1";
 
+const defaultUser: UserAccount = DEMO_ACCOUNTS.user;
+
 const defaultState: AuthState = {
-  name: "Arjun Mehta",
+  isAuthenticated: true,
+  user: defaultUser,
+  name: defaultUser.name,
+  email: defaultUser.email,
+  phone: defaultUser.phone,
   plan: "free",
   wallet: 150,
   applications: [],
   paidApplications: [],
   boostedTrials: ["t-3"],
   sportsCVUnlocked: false,
-  role: "athlete",
+  role: "user",
+  lastLoginAt: new Date().toISOString(),
+  lastSyncedToDb: true,
 };
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -51,7 +87,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) setState({ ...defaultState, ...JSON.parse(raw) });
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        const resolvedRole = normalizeRole(parsed.role || parsed.user?.role);
+        const baseUser = DEMO_ACCOUNTS[resolvedRole] || defaultUser;
+        const resolvedUser: UserAccount = {
+          ...baseUser,
+          ...(parsed.user || {}),
+          name: parsed.name || parsed.user?.name || baseUser.name,
+          role: resolvedRole,
+        };
+
+        setState({
+          ...defaultState,
+          ...parsed,
+          user: resolvedUser,
+          name: resolvedUser.name,
+          role: resolvedRole,
+        });
+      }
     } catch {
       // Ignore localStorage parse errors
     }
@@ -59,7 +113,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    if (hydrated) localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    if (hydrated) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
   }, [state, hydrated]);
 
   const remainingFree = Math.max(
@@ -147,8 +203,94 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return true;
   };
 
-  const setRole = (r: "athlete" | "organizer" | "recruiter") =>
-    setState((s) => ({ ...s, role: r }));
+  const login = async (options: LoginOptions): Promise<LoginResult> => {
+    const role = options.role;
+    const baseDemo = DEMO_ACCOUNTS[role];
+    const isEmail = options.identifier.includes("@");
+
+    const account: UserAccount = {
+      id: `${role}-${options.identifier.replace(/[^a-zA-Z0-9]/g, "").slice(0, 15) || "demo"}`,
+      name: options.name || baseDemo.name,
+      email: isEmail
+        ? options.identifier
+        : options.identifier
+          ? `${options.identifier}@khelgrid.com`
+          : baseDemo.email,
+      phone: !isEmail ? options.identifier : baseDemo.phone,
+      role,
+      avatarUrl: baseDemo.avatarUrl,
+      city: baseDemo.city,
+      primarySport: baseDemo.primarySport,
+      secondarySports: baseDemo.secondarySports,
+      organization: options.organization || baseDemo.organization,
+      credentials: baseDemo.credentials,
+      licenseNumber: baseDemo.licenseNumber,
+      verified: true,
+      lastLoginAt: new Date().toISOString(),
+      targetRoute: baseDemo.targetRoute,
+    };
+
+    // Sync to Supabase user_profiles table and localStorage
+    const dbResult = await recordUserLoginInDatabase(account);
+
+    setState((s) => ({
+      ...s,
+      isAuthenticated: true,
+      user: account,
+      name: account.name,
+      email: account.email,
+      phone: account.phone,
+      role,
+      lastLoginAt: dbResult.timestamp,
+      lastSyncedToDb: dbResult.syncedToDb,
+    }));
+
+    return {
+      success: true,
+      syncedToDb: dbResult.syncedToDb,
+      user: account,
+      targetRoute: account.targetRoute || "/dashboard",
+      message: `Signed in as ${account.name} (${role})`,
+    };
+  };
+
+  const logout = () => {
+    setState((s) => ({
+      ...s,
+      isAuthenticated: false,
+      name: "Guest User",
+      role: "user",
+      user: {
+        id: "guest-user",
+        name: "Guest User",
+        email: "guest@khelgrid.com",
+        phone: "",
+        role: "user",
+      },
+    }));
+  };
+
+  const switchRole = async (targetRole: "user" | "coach" | "academy") => {
+    const targetAccount = DEMO_ACCOUNTS[targetRole];
+    await login({
+      identifier: targetAccount.phone,
+      role: targetRole,
+      name: targetAccount.name,
+    });
+  };
+
+  const setRole = (r: UserRole) => {
+    const norm = normalizeRole(r);
+    setState((s) => ({
+      ...s,
+      role: r,
+      user: {
+        ...s.user,
+        role: norm,
+      },
+    }));
+  };
+
   const reset = () => setState(defaultState);
 
   return (
@@ -165,6 +307,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         payForApplication,
         boostTrial,
         unlockSportsCV,
+        login,
+        logout,
+        switchRole,
         setRole,
         reset,
       }}

@@ -15,7 +15,11 @@ const FEATURES: readonly NavItem[] = FEATURE_ITEMS;
 export function NavDrawer() {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
-  const { plan, wallet } = useAuth();
+  const auth = useAuth();
+  const { plan, wallet } = auth;
+  const isAuth = Boolean(auth.isAuthenticated);
+  const role = auth.role || "user";
+  const userName = auth.name || auth.user?.name || "Athlete";
   const path = useRouterState({ select: (s) => s.location.pathname });
 
   // Close drawer on route change
@@ -67,10 +71,29 @@ export function NavDrawer() {
               </div>
               <div className="min-w-0">
                 <div className="truncate text-sm font-semibold">
-                  {plan === "pro" ? "Pro Athlete" : "Guest Athlete"}
+                  {isAuth ? userName : "Guest Athlete"}
                 </div>
-                <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                  <Wallet className="h-3 w-3" /> ₹{wallet} wallet
+                <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                  <span
+                    className={`inline-block h-1.5 w-1.5 rounded-full ${
+                      role === "coach"
+                        ? "bg-blue-500"
+                        : role === "academy"
+                          ? "bg-amber-500"
+                          : "bg-emerald-500"
+                    }`}
+                  />
+                  <span>
+                    {role === "coach"
+                      ? "Coach"
+                      : role === "academy"
+                        ? "Academy"
+                        : plan === "pro"
+                          ? "Pro Athlete"
+                          : "Athlete"}
+                  </span>
+                  <span>·</span>
+                  <Wallet className="h-3 w-3" /> ₹{wallet}
                 </div>
               </div>
             </div>
@@ -81,7 +104,7 @@ export function NavDrawer() {
               className="rounded-full border-primary/50 text-primary hover:bg-primary/10 hover:text-primary"
             >
               <Link to="/login">
-                <LogIn className="mr-1 h-3.5 w-3.5" /> Log in
+                <LogIn className="mr-1 h-3.5 w-3.5" /> {isAuth ? "Account" : "Log in"}
               </Link>
             </Button>
           </div>

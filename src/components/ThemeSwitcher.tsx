@@ -48,7 +48,7 @@ export function ThemeSwitcher({
               suppressHydrationWarning
               onClick={() => setTheme(opt.value)}
               className={cn(
-                "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer",
+                "flex flex-1 items-center justify-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer",
                 isSelected
                   ? "bg-card text-foreground shadow-xs border border-border/80"
                   : "text-muted-foreground hover:text-foreground",

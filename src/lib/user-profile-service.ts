@@ -676,3 +676,133 @@ export async function updateUserProfile(
   current.syncedToDb = synced;
   return { profile: current, syncedToDb: synced };
 }
+
+/**
+ * Record and sync user login state to Supabase database and local session
+ */
+export async function recordUserLoginInDatabase(account: {
+  id: string;
+  name: string;
+  email?: string;
+  phone?: string;
+  role: "user" | "coach" | "academy" | string;
+  city?: string;
+  primarySport?: string;
+  avatarUrl?: string;
+  organization?: string;
+  credentials?: string;
+}): Promise<{
+  success: boolean;
+  syncedToDb: boolean;
+  timestamp: string;
+  profile: UserProfileData;
+}> {
+  const timestamp = new Date().toISOString();
+  let syncedToDb = false;
+
+  const roleLabel =
+    account.role === "coach"
+      ? "Certified Coach"
+      : account.role === "academy"
+        ? "Verified Academy"
+        : "Athlete / Player";
+
+  const tier =
+    account.role === "academy"
+      ? "Academy Partner Pass"
+      : account.role === "coach"
+        ? "Coach Pro Pass"
+        : "Pro Athlete Pass";
+
+  const profileData: UserProfileData = {
+    id: `profile-${account.id}`,
+    userId: account.id,
+    fullName: account.name,
+    email: account.email || `${account.id}@khelgrid.com`,
+    phone: account.phone || "+91 98765 43210",
+    avatarUrl:
+      account.avatarUrl ||
+      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80",
+    primarySport: account.primarySport || (account.role === "academy" ? "Multi-Sport" : "Cricket"),
+    secondarySports:
+      account.role === "academy" ? ["Turf Football", "Badminton"] : ["Badminton", "Football"],
+    city: account.city || "Bengaluru",
+    ageCategory: account.role === "user" ? "Senior / U-23" : "Senior / Professional",
+    playingPosition:
+      account.role === "coach"
+        ? account.credentials || "Head Coach & High-Performance Director"
+        : account.role === "academy"
+          ? account.organization || "Official Sports Training Academy"
+          : "Top-Order Batsman & All-Rounder",
+    bio:
+      account.role === "coach"
+        ? `Verified Coach on KhelGrid. Specializing in ${account.primarySport || "Cricket"}. Mentoring aspiring talent for state and national selections.`
+        : account.role === "academy"
+          ? `Official partner academy on KhelGrid. Hosting sanctioned trials, tournament qualifiers, and turf bookings in ${account.city || "India"}.`
+          : "Active athlete on KhelGrid preparing for state selection trials and competitive tournaments.",
+    skillLevel: roleLabel,
+    membershipTier: tier,
+    syncedToDb: false,
+  };
+
+  // 1. Sync to Supabase `user_profiles` database table
+  if (isSupabaseConfigured) {
+    try {
+      const { error } = await supabase.from("user_profiles").upsert({
+        full_name: profileData.fullName,
+        email: profileData.email,
+        phone: profileData.phone,
+        avatar_url: profileData.avatarUrl,
+        primary_sport: profileData.primarySport,
+        secondary_sports: profileData.secondarySports,
+        city: profileData.city,
+        age_category: profileData.ageCategory,
+        playing_position: profileData.playingPosition,
+        bio: profileData.bio,
+        skill_level: profileData.skillLevel,
+        membership_tier: profileData.membershipTier,
+      });
+
+      if (!error) {
+        syncedToDb = true;
+      } else {
+        console.warn("Supabase user_profiles login upsert returned error:", error);
+      }
+    } catch (err) {
+      console.warn("Supabase user_profiles login sync connection failed:", err);
+    }
+  }
+
+  profileData.syncedToDb = syncedToDb;
+
+  // 2. Persist in local storage table cache
+  if (typeof window !== "undefined") {
+    try {
+      localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(profileData));
+      localStorage.setItem(
+        "khelgrid_last_login_sync",
+        JSON.stringify({
+          userId: account.id,
+          role: account.role,
+          timestamp,
+          syncedToDb,
+        }),
+      );
+      // Dispatch custom event to notify all components
+      window.dispatchEvent(
+        new CustomEvent("khelgrid_user_logged_in", {
+          detail: { profile: profileData, syncedToDb, timestamp },
+        }),
+      );
+    } catch (e) {
+      console.warn("Failed saving login session to localStorage:", e);
+    }
+  }
+
+  return {
+    success: true,
+    syncedToDb,
+    timestamp,
+    profile: profileData,
+  };
+}

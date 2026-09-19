@@ -15,6 +15,9 @@ import {
   Mail,
   MessageSquare,
   Smartphone,
+  LifeBuoy,
+  Bug,
+  Lightbulb,
 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -22,6 +25,7 @@ import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { useTheme } from "@/context/ThemeContext";
 import { buildSeoHead } from "@/lib/seo";
+import { FeedbackSupportDialog, FeedbackType } from "@/components/FeedbackSupportDialog";
 
 export const Route = createFileRoute("/settings")({
   head: () =>
@@ -46,9 +50,23 @@ interface SettingsState {
 function SettingsPage() {
   const { theme, setTheme } = useTheme();
   const [activeTab, setActiveTab] = useState<
-    "account" | "notifications" | "privacy" | "appearance"
+    "account" | "notifications" | "privacy" | "appearance" | "support"
   >("account");
   const [saved, setSaved] = useState(false);
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
+  const [feedbackType, setFeedbackType] = useState<FeedbackType>("bug");
+  const [submittedHistory, setSubmittedHistory] = useState<
+    Array<{ id: string; type: string; title: string; date: string; category?: string }>
+  >([]);
+
+  useEffect(() => {
+    try {
+      const stored = JSON.parse(localStorage.getItem("khelgrid_user_feedback") || "[]");
+      setSubmittedHistory(stored);
+    } catch {
+      // safe fallback
+    }
+  }, [feedbackOpen]);
 
   const [settings, setSettings] = useState<SettingsState>({
     notifications: {
@@ -126,6 +144,7 @@ function SettingsPage() {
                 { id: "notifications", label: "Notifications", icon: "🔔" },
                 { id: "privacy", label: "Privacy", icon: "🔒" },
                 { id: "appearance", label: "Appearance", icon: "🎨" },
+                { id: "support", label: "Support & Feedback", icon: "🛟" },
               ].map((tab) => (
                 <button
                   key={tab.id}
@@ -456,6 +475,146 @@ function SettingsPage() {
               </Card>
             )}
 
+            {/* Support & Feedback Settings */}
+            {activeTab === "support" && (
+              <div className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                        <LifeBuoy className="h-5 w-5" />
+                      </div>
+                      <div>
+                        <CardTitle>Feedback & Support Desk</CardTitle>
+                        <CardDescription>
+                          Report bugs, suggest new capabilities, or get in touch with our team
+                        </CardDescription>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {/* Report a Bug */}
+                      <div className="flex flex-col justify-between rounded-xl border border-red-500/20 bg-red-500/5 p-5">
+                        <div>
+                          <div className="flex items-center gap-2 text-red-600 dark:text-red-400 font-semibold text-sm">
+                            <Bug className="h-4 w-4" />
+                            <span>Report an Issue</span>
+                          </div>
+                          <p className="mt-2 text-xs text-muted-foreground leading-relaxed">
+                            Encountered a bug, broken layout, or payment error? Let our engineering
+                            team know so we can resolve it promptly.
+                          </p>
+                        </div>
+                        <Button
+                          id="settings-report-bug-btn"
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            setFeedbackType("bug");
+                            setFeedbackOpen(true);
+                          }}
+                          className="mt-4 border-red-500/40 text-red-600 hover:bg-red-500/10 dark:text-red-400"
+                        >
+                          Report a Bug
+                        </Button>
+                      </div>
+
+                      {/* Suggest a Feature */}
+                      <div className="flex flex-col justify-between rounded-xl border border-amber-500/20 bg-amber-500/5 p-5">
+                        <div>
+                          <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400 font-semibold text-sm">
+                            <Lightbulb className="h-4 w-4" />
+                            <span>Suggest a Feature</span>
+                          </div>
+                          <p className="mt-2 text-xs text-muted-foreground leading-relaxed">
+                            Have ideas for a sport format, team management feature, or booking tool?
+                            We prioritize user-requested features.
+                          </p>
+                        </div>
+                        <Button
+                          id="settings-suggest-feature-btn"
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            setFeedbackType("feature");
+                            setFeedbackOpen(true);
+                          }}
+                          className="mt-4 border-amber-500/40 text-amber-600 hover:bg-amber-500/10 dark:text-amber-400"
+                        >
+                          Suggest Feature
+                        </Button>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col sm:flex-row items-center justify-between rounded-xl border border-border/70 bg-card p-4 gap-3">
+                      <div>
+                        <p className="text-sm font-semibold text-foreground">
+                          General Question or Direct Support?
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          Reach our sports support desk at support@khelgrid.com
+                        </p>
+                      </div>
+                      <Button
+                        id="settings-general-inquiry-btn"
+                        size="sm"
+                        onClick={() => {
+                          setFeedbackType("general");
+                          setFeedbackOpen(true);
+                        }}
+                        className="w-full sm:w-auto"
+                      >
+                        Contact Support
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Submission History */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-base">Recent Submissions</CardTitle>
+                    <CardDescription>
+                      Feedback and issues submitted from this browser session
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    {submittedHistory.length === 0 ? (
+                      <div className="py-8 text-center text-xs text-muted-foreground">
+                        No previous feedback submitted yet. Your submitted tickets will show up
+                        here.
+                      </div>
+                    ) : (
+                      <div className="space-y-3">
+                        {submittedHistory.slice(0, 5).map((item) => (
+                          <div
+                            key={item.id}
+                            className="flex items-center justify-between rounded-xl border border-border/60 bg-muted/20 p-3 text-xs"
+                          >
+                            <div className="space-y-0.5">
+                              <div className="flex items-center gap-2">
+                                <Badge variant="outline" className="font-mono text-[10px]">
+                                  {item.id}
+                                </Badge>
+                                <span className="font-semibold text-foreground">{item.title}</span>
+                              </div>
+                              <p className="text-[11px] text-muted-foreground">
+                                Submitted on {item.date} {item.category ? `• ${item.category}` : ""}
+                              </p>
+                            </div>
+                            <Badge className="bg-primary/20 text-primary border-primary/30">
+                              Received
+                            </Badge>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              </div>
+            )}
+
             {/* Action Buttons */}
             <div className="flex gap-3 sticky bottom-4">
               <Button onClick={handleSave} className="flex-1 gap-2" size="lg">
@@ -470,6 +629,12 @@ function SettingsPage() {
           </div>
         </div>
       </div>
+
+      <FeedbackSupportDialog
+        open={feedbackOpen}
+        onOpenChange={setFeedbackOpen}
+        defaultType={feedbackType}
+      />
     </div>
   );
 }

@@ -34,6 +34,7 @@ import { Route as OpportunitiesRouteImport } from './routes/opportunities'
 import { Route as PlayRouteImport } from './routes/play'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as RecommendationsRouteImport } from './routes/recommendations'
 import { Route as ResourcesRouteImport } from './routes/resources'
 import { Route as ScoutPortalRouteImport } from './routes/scout-portal'
@@ -62,6 +63,7 @@ import { Route as SportsSlugRouteImport } from './routes/sports.$slug'
 import { Route as ToolsSlugRouteImport } from './routes/tools.$slug'
 import { Route as TopGuidesCategoryRouteImport } from './routes/top-guides.$category'
 import { Route as TrialIdRouteImport } from './routes/trial.$id'
+import { Route as VenueIdRouteImport } from './routes/venue.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -186,6 +188,11 @@ const PricingRoute = PricingRouteImport.update({
 const PrivacyRoute = PrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RecommendationsRoute = RecommendationsRouteImport.update({
@@ -328,6 +335,11 @@ const TrialIdRoute = TrialIdRouteImport.update({
   path: '/trial/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const VenueIdRoute = VenueIdRouteImport.update({
+  id: '/venue/$id',
+  path: '/venue/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -355,6 +367,7 @@ export interface FileRoutesByFullPath {
   '/play': typeof PlayRoute
   '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
+  '/profile': typeof ProfileRoute
   '/recommendations': typeof RecommendationsRoute
   '/resources': typeof ResourcesRoute
   '/scout-portal': typeof ScoutPortalRoute
@@ -383,6 +396,7 @@ export interface FileRoutesByFullPath {
   '/tools/$slug': typeof ToolsSlugRoute
   '/top-guides/$category': typeof TopGuidesCategoryRoute
   '/trial/$id': typeof TrialIdRoute
+  '/venue/$id': typeof VenueIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -410,6 +424,7 @@ export interface FileRoutesByTo {
   '/play': typeof PlayRoute
   '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
+  '/profile': typeof ProfileRoute
   '/recommendations': typeof RecommendationsRoute
   '/resources': typeof ResourcesRoute
   '/scout-portal': typeof ScoutPortalRoute
@@ -438,6 +453,7 @@ export interface FileRoutesByTo {
   '/tools/$slug': typeof ToolsSlugRoute
   '/top-guides/$category': typeof TopGuidesCategoryRoute
   '/trial/$id': typeof TrialIdRoute
+  '/venue/$id': typeof VenueIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -466,6 +482,7 @@ export interface FileRoutesById {
   '/play': typeof PlayRoute
   '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
+  '/profile': typeof ProfileRoute
   '/recommendations': typeof RecommendationsRoute
   '/resources': typeof ResourcesRoute
   '/scout-portal': typeof ScoutPortalRoute
@@ -494,6 +511,7 @@ export interface FileRoutesById {
   '/tools/$slug': typeof ToolsSlugRoute
   '/top-guides/$category': typeof TopGuidesCategoryRoute
   '/trial/$id': typeof TrialIdRoute
+  '/venue/$id': typeof VenueIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -523,6 +541,7 @@ export interface FileRouteTypes {
     | '/play'
     | '/pricing'
     | '/privacy'
+    | '/profile'
     | '/recommendations'
     | '/resources'
     | '/scout-portal'
@@ -551,6 +570,7 @@ export interface FileRouteTypes {
     | '/tools/$slug'
     | '/top-guides/$category'
     | '/trial/$id'
+    | '/venue/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -578,6 +598,7 @@ export interface FileRouteTypes {
     | '/play'
     | '/pricing'
     | '/privacy'
+    | '/profile'
     | '/recommendations'
     | '/resources'
     | '/scout-portal'
@@ -606,6 +627,7 @@ export interface FileRouteTypes {
     | '/tools/$slug'
     | '/top-guides/$category'
     | '/trial/$id'
+    | '/venue/$id'
   id:
     | '__root__'
     | '/'
@@ -633,6 +655,7 @@ export interface FileRouteTypes {
     | '/play'
     | '/pricing'
     | '/privacy'
+    | '/profile'
     | '/recommendations'
     | '/resources'
     | '/scout-portal'
@@ -661,6 +684,7 @@ export interface FileRouteTypes {
     | '/tools/$slug'
     | '/top-guides/$category'
     | '/trial/$id'
+    | '/venue/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -689,6 +713,7 @@ export interface RootRouteChildren {
   PlayRoute: typeof PlayRoute
   PricingRoute: typeof PricingRoute
   PrivacyRoute: typeof PrivacyRoute
+  ProfileRoute: typeof ProfileRoute
   RecommendationsRoute: typeof RecommendationsRoute
   ResourcesRoute: typeof ResourcesRoute
   ScoutPortalRoute: typeof ScoutPortalRoute
@@ -712,6 +737,7 @@ export interface RootRouteChildren {
   SportSlugRoute: typeof SportSlugRoute
   TopGuidesCategoryRoute: typeof TopGuidesCategoryRoute
   TrialIdRoute: typeof TrialIdRoute
+  VenueIdRoute: typeof VenueIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -889,6 +915,13 @@ declare module '@tanstack/react-router' {
       path: '/privacy'
       fullPath: '/privacy'
       preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/recommendations': {
@@ -1087,6 +1120,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TrialIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/venue/$id': {
+      id: '/venue/$id'
+      path: '/venue/$id'
+      fullPath: '/venue/$id'
+      preLoaderRoute: typeof VenueIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -1161,6 +1201,7 @@ const rootRouteChildren: RootRouteChildren = {
   PlayRoute: PlayRoute,
   PricingRoute: PricingRoute,
   PrivacyRoute: PrivacyRoute,
+  ProfileRoute: ProfileRoute,
   RecommendationsRoute: RecommendationsRoute,
   ResourcesRoute: ResourcesRoute,
   ScoutPortalRoute: ScoutPortalRoute,
@@ -1184,6 +1225,7 @@ const rootRouteChildren: RootRouteChildren = {
   SportSlugRoute: SportSlugRoute,
   TopGuidesCategoryRoute: TopGuidesCategoryRoute,
   TrialIdRoute: TrialIdRoute,
+  VenueIdRoute: VenueIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
