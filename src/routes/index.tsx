@@ -28,6 +28,7 @@ import {
 import { BannerAd, ResponsiveAd } from "@/components/ads";
 import { GUIDES_CATALOG, SPORTS_CATALOG } from "@/data/catalog";
 import { TRIALS } from "@/data/trials";
+import { SportsNewsSection } from "@/components/SportsNewsSection";
 import { buildSeoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/")({
@@ -250,6 +251,9 @@ function Home() {
               </Link>
             ))}
           </div>
+
+          {/* Real-time Sports Wire & National Updates (SEO Optimized News Section) */}
+          <SportsNewsSection />
 
           <div className="mt-12 flex items-end justify-between gap-4">
             <div>
