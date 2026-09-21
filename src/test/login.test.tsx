@@ -10,6 +10,7 @@ vi.mock("@tanstack/react-router", () => ({
     ...config,
     component: config.component,
     head: config.head,
+    useSearch: () => ({ redirect: undefined }),
   }),
   useNavigate: () => vi.fn(),
   Link: ({ to, children, ...props }: any) => (

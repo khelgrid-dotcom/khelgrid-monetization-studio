@@ -39,6 +39,8 @@ export interface LoginResult {
 }
 
 interface AuthContextValue extends AuthState {
+  isLoading: boolean;
+  hydrated: boolean;
   freeLimit: number;
   remainingFree: number;
   canApply: (trialId: string) => boolean;
@@ -297,6 +299,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     <AuthContext.Provider
       value={{
         ...state,
+        isLoading: !hydrated,
+        hydrated,
         freeLimit: FREE_LIMIT,
         remainingFree,
         canApply,

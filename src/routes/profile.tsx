@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { UserProfile } from "@/components/UserProfile";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { buildSeoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/profile")({
@@ -17,9 +18,11 @@ export const Route = createFileRoute("/profile")({
 
 function ProfilePage() {
   return (
-    <main className="mx-auto max-w-6xl px-4 py-8 sm:py-12">
-      <UserProfile />
-    </main>
+    <ProtectedRoute message="Sign in to view and manage your verified sports profile and athletic achievements.">
+      <main className="mx-auto max-w-6xl px-4 py-8 sm:py-12">
+        <UserProfile />
+      </main>
+    </ProtectedRoute>
   );
 }
 

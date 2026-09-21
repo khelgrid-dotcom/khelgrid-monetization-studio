@@ -28,6 +28,9 @@ import { isSupabaseConfigured } from "@/lib/supabase";
 import { DEMO_ACCOUNTS, ROLE_DEFINITIONS } from "@/types/auth";
 
 export const Route = createFileRoute("/login")({
+  validateSearch: (search: Record<string, unknown>): { redirect?: string } => ({
+    redirect: typeof search.redirect === "string" ? search.redirect : undefined,
+  }),
   head: () =>
     buildSeoHead({
       title: "Sports Portal Sign In · Athlete, Coach & Academy Login | KhelGrid",
@@ -96,6 +99,8 @@ function resolveTargetRoute(role?: string): "/dashboard" | "/scout-portal" | "/a
 
 function LoginPage() {
   const navigate = useNavigate();
+  const search = Route.useSearch();
+  const redirectTarget = search.redirect;
   const auth = useAuth();
   const { login, logout, isAuthenticated, user } = auth;
 
@@ -179,7 +184,11 @@ function LoginPage() {
 
       // Small delay so user sees database sync feedback
       setTimeout(() => {
-        navigate({ to: resolveTargetRoute(result.user.role) });
+        const dest =
+          redirectTarget && redirectTarget.startsWith("/")
+            ? redirectTarget
+            : resolveTargetRoute(result.user.role);
+        navigate({ to: dest as unknown as "/" });
       }, 700);
     } catch (err) {
       console.error("Login failed:", err);
@@ -211,7 +220,11 @@ function LoginPage() {
       toast.success(`Signed in as ${demo.name} (${role}) · Database synced!`);
 
       setTimeout(() => {
-        navigate({ to: resolveTargetRoute(role) });
+        const dest =
+          redirectTarget && redirectTarget.startsWith("/")
+            ? redirectTarget
+            : resolveTargetRoute(role);
+        navigate({ to: dest as unknown as "/" });
       }, 600);
     } catch (err) {
       console.error("Demo login error:", err);
@@ -240,6 +253,32 @@ function LoginPage() {
             across India.
           </p>
         </div>
+
+        {/* If redirected from a protected route, show helpful prompt */}
+        {redirectTarget && (
+          <div
+            id="login-redirect-notice"
+            className="mx-auto mb-6 flex max-w-2xl items-center justify-between gap-3 rounded-xl border border-primary/30 bg-primary/10 px-4 py-3 text-sm text-foreground shadow-sm"
+          >
+            <div className="flex items-center gap-2">
+              <Lock className="h-4 w-4 shrink-0 text-primary" />
+              <span>
+                Sign in to continue to:{" "}
+                <span className="font-semibold text-primary">{redirectTarget}</span>
+              </span>
+            </div>
+            {isAuthenticated && (
+              <Button
+                size="sm"
+                variant="default"
+                className="h-7 text-xs font-semibold"
+                onClick={() => navigate({ to: redirectTarget as unknown as "/" })}
+              >
+                Proceed Now
+              </Button>
+            )}
+          </div>
+        )}
 
         {/* If already authenticated, display current session card */}
         {isAuthenticated && user && (
