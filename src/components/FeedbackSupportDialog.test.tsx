@@ -19,12 +19,7 @@ vi.mock("sonner", () => ({
 describe("FeedbackSupportDialog", () => {
   it("renders the feedback dialog with all key fields when open is true", () => {
     const html = renderToString(
-      <FeedbackSupportDialog
-        open={true}
-        inline={true}
-        onOpenChange={() => {}}
-        defaultType="bug"
-      />,
+      <FeedbackSupportDialog open={true} inline={true} onOpenChange={() => {}} defaultType="bug" />,
     );
 
     // Header & title

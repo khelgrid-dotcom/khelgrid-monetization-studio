@@ -1,4 +1,4 @@
-import { Link, useRouterState } from "@tanstack/react-router";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import {
   Home,
   Users,
@@ -10,6 +10,9 @@ import {
   Bell,
   User,
   LogIn,
+  LogOut,
+  ChevronDown,
+  LayoutDashboard,
   Newspaper,
   MoreHorizontal,
   Settings,
@@ -23,6 +26,7 @@ import { NavDrawer } from "@/components/NavDrawer";
 import { SportsLauncher } from "@/components/SportsLauncher";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import { FeedbackSupportDialog } from "@/components/FeedbackSupportDialog";
+import { toast } from "sonner";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -49,10 +53,24 @@ const SECONDARY_NAV = [
 
 export function Navbar() {
   const auth = useAuth();
-  const { plan, wallet } = auth;
-  const isAuth = Boolean(auth.isAuthenticated);
-  const role = auth.role || "user";
-  const userName = auth.name || auth.user?.name || "Athlete";
+  const { plan = "free", wallet = 0, isAuthenticated, role = "user", name, email, logout } = auth;
+  const isAuth = Boolean(isAuthenticated);
+  const userName = name || auth.user?.name || "Athlete";
+  const userEmail = email || auth.user?.email || "";
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    try {
+      if (typeof logout === "function") {
+        logout();
+      }
+      toast.success("Logged out successfully");
+      navigate({ to: "/" });
+    } catch (err) {
+      console.error("Sign out error", err);
+      toast.error("Failed to log out");
+    }
+  };
 
   const { unreadCount } = useNotifications();
   const [sportsLauncherOpen, setSportsLauncherOpen] = useState(false);
@@ -204,39 +222,106 @@ export function Navbar() {
 
           {/* Single Unified Auth/Account Control */}
           {isAuth ? (
-            <Link
-              to={role === "coach" ? "/scout-portal" : role === "academy" ? "/academy" : "/profile"}
-              title={`Signed in as ${userName} (${role})`}
-              className="flex shrink-0 items-center gap-1.5 rounded-full border border-border bg-card/90 px-2.5 py-1.5 text-xs font-semibold text-foreground hover:border-primary/40 hover:bg-muted/60 sm:gap-2 sm:px-3"
-            >
-              <span
-                className={`h-2 w-2 rounded-full ${
-                  role === "coach"
-                    ? "bg-blue-500"
-                    : role === "academy"
-                      ? "bg-amber-500"
-                      : "bg-emerald-500"
-                }`}
-              />
-              <User className="h-3.5 w-3.5 text-muted-foreground" />
-              <span className="hidden text-[11px] font-medium uppercase tracking-wide text-muted-foreground sm:inline">
-                {role === "coach" ? "Coach" : role === "academy" ? "Academy" : "Athlete"}
-              </span>
-              <span className="max-w-[70px] truncate font-bold text-foreground sm:max-w-[85px]">
-                {userName.split(" ")[0]}
-              </span>
-            </Link>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  id="navbar-user-menu-btn"
+                  type="button"
+                  title={`Signed in as ${userName} (${role})`}
+                  className="flex shrink-0 items-center gap-1.5 rounded-full border border-border bg-card/90 px-2.5 py-1.5 text-xs font-semibold text-foreground hover:border-primary/40 hover:bg-muted/60 transition-colors sm:gap-2 sm:px-3 focus:outline-none focus:ring-2 focus:ring-primary/30"
+                >
+                  <span
+                    className={`h-2 w-2 rounded-full ${
+                      role === "coach"
+                        ? "bg-blue-500"
+                        : role === "academy"
+                          ? "bg-amber-500"
+                          : "bg-emerald-500"
+                    }`}
+                  />
+                  <User className="h-3.5 w-3.5 text-muted-foreground" />
+                  <span className="hidden text-[11px] font-medium uppercase tracking-wide text-muted-foreground sm:inline">
+                    {role === "coach" ? "Coach" : role === "academy" ? "Academy" : "Athlete"}
+                  </span>
+                  <span className="max-w-[70px] truncate font-bold text-foreground sm:max-w-[85px]">
+                    {userName.split(" ")[0]}
+                  </span>
+                  <ChevronDown className="h-3 w-3 text-muted-foreground" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56 p-1.5 shadow-lg border-border/80">
+                <div className="px-2.5 py-2">
+                  <div className="flex items-center justify-between gap-2">
+                    <p className="truncate text-xs font-bold text-foreground">{userName}</p>
+                    <span className="rounded-full bg-primary/10 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary">
+                      {role}
+                    </span>
+                  </div>
+                  {userEmail && (
+                    <p className="truncate text-[11px] text-muted-foreground mt-0.5">{userEmail}</p>
+                  )}
+                </div>
+                <DropdownMenuSeparator className="my-1" />
+                <DropdownMenuItem asChild className="cursor-pointer rounded-lg">
+                  <Link
+                    to={
+                      role === "coach"
+                        ? "/scout-portal"
+                        : role === "academy"
+                          ? "/academy"
+                          : "/profile"
+                    }
+                    className="flex items-center gap-2 px-2.5 py-2 text-xs font-medium"
+                  >
+                    <User className="h-3.5 w-3.5 text-muted-foreground" />
+                    <span>My Profile</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild className="cursor-pointer rounded-lg">
+                  <Link
+                    to="/dashboard"
+                    className="flex items-center gap-2 px-2.5 py-2 text-xs font-medium"
+                  >
+                    <LayoutDashboard className="h-3.5 w-3.5 text-muted-foreground" />
+                    <span>My Dashboard</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild className="cursor-pointer rounded-lg">
+                  <Link
+                    to="/settings"
+                    className="flex items-center gap-2 px-2.5 py-2 text-xs font-medium"
+                  >
+                    <Settings className="h-3.5 w-3.5 text-muted-foreground" />
+                    <span>Account Settings</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator className="my-1" />
+                <DropdownMenuItem
+                  id="navbar-logout-btn"
+                  onSelect={handleLogout}
+                  className="flex cursor-pointer items-center gap-2 rounded-lg px-2.5 py-2 text-xs font-semibold text-destructive hover:bg-destructive/10 focus:bg-destructive/10 focus:text-destructive"
+                >
+                  <LogOut className="h-3.5 w-3.5 text-destructive" />
+                  <span>Log Out</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           ) : (
             <Button
               asChild
-              variant="ghost"
-              size="icon"
+              variant="default"
+              size="sm"
               id="navbar-login-btn"
-              className="h-8 w-8 shrink-0 rounded-full text-foreground hover:bg-muted/60 sm:h-9 sm:w-9"
+              className="h-8 shrink-0 rounded-full bg-primary px-3 text-xs font-semibold text-primary-foreground shadow-sm hover:bg-primary/90 sm:h-9 sm:px-3.5"
             >
-              <Link to="/login" title="Log In" aria-label="Log In">
-                <LogIn className="h-4 w-4 text-primary" />
-                <span className="sr-only">Log In</span>
+              <Link
+                to="/login"
+                title="Log In"
+                aria-label="Log In"
+                className="flex items-center gap-1.5"
+              >
+                <LogIn className="h-3.5 w-3.5" />
+                <span>Log In</span>
               </Link>
             </Button>
           )}

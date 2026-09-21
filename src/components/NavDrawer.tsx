@@ -1,9 +1,21 @@
-import { Link, useRouterState } from "@tanstack/react-router";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
-import { Menu, Trophy, Search, User, Wallet, LogIn, Zap } from "lucide-react";
+import {
+  Menu,
+  Trophy,
+  Search,
+  User,
+  Wallet,
+  LogIn,
+  LogOut,
+  Zap,
+  Settings,
+  LayoutDashboard,
+} from "lucide-react";
+import { toast } from "sonner";
 import { NavLink } from "@/components/NavLink";
 import { PlayNavLink } from "@/components/PlayNavLink";
 import { PRIMARY_ITEMS, FEATURE_ITEMS, isActivePath, type NavItem } from "@/config/nav";
@@ -16,11 +28,25 @@ export function NavDrawer() {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const auth = useAuth();
-  const { plan, wallet } = auth;
-  const isAuth = Boolean(auth.isAuthenticated);
-  const role = auth.role || "user";
-  const userName = auth.name || auth.user?.name || "Athlete";
+  const { plan = "free", wallet = 0, isAuthenticated, role = "user", name, logout } = auth;
+  const isAuth = Boolean(isAuthenticated);
+  const userName = name || auth.user?.name || "Athlete";
   const path = useRouterState({ select: (s) => s.location.pathname });
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    try {
+      if (typeof logout === "function") {
+        logout();
+      }
+      setOpen(false);
+      toast.success("Logged out successfully");
+      navigate({ to: "/" });
+    } catch (err) {
+      console.error("Sign out error", err);
+      toast.error("Failed to log out");
+    }
+  };
 
   // Close drawer on route change
   useEffect(() => {
@@ -65,7 +91,19 @@ export function NavDrawer() {
         {/* Account strip */}
         <div className="border-b border-border/60 px-5 py-4">
           <div className="flex items-center justify-between gap-3">
-            <div className="flex min-w-0 items-center gap-3">
+            <Link
+              to={
+                isAuth
+                  ? role === "coach"
+                    ? "/scout-portal"
+                    : role === "academy"
+                      ? "/academy"
+                      : "/profile"
+                  : "/login"
+              }
+              onClick={() => setOpen(false)}
+              className="flex min-w-0 items-center gap-3 transition-opacity hover:opacity-90"
+            >
               <div className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-secondary text-foreground">
                 <User className="h-5 w-5" />
               </div>
@@ -74,39 +112,66 @@ export function NavDrawer() {
                   {isAuth ? userName : "Guest Athlete"}
                 </div>
                 <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                  <span
-                    className={`inline-block h-1.5 w-1.5 rounded-full ${
-                      role === "coach"
-                        ? "bg-blue-500"
-                        : role === "academy"
-                          ? "bg-amber-500"
-                          : "bg-emerald-500"
-                    }`}
-                  />
-                  <span>
-                    {role === "coach"
-                      ? "Coach"
-                      : role === "academy"
-                        ? "Academy"
-                        : plan === "pro"
-                          ? "Pro Athlete"
-                          : "Athlete"}
-                  </span>
-                  <span>·</span>
-                  <Wallet className="h-3 w-3" /> ₹{wallet}
+                  {isAuth ? (
+                    <>
+                      <span
+                        className={`inline-block h-1.5 w-1.5 rounded-full ${
+                          role === "coach"
+                            ? "bg-blue-500"
+                            : role === "academy"
+                              ? "bg-amber-500"
+                              : "bg-emerald-500"
+                        }`}
+                      />
+                      <span>
+                        {role === "coach"
+                          ? "Coach"
+                          : role === "academy"
+                            ? "Academy"
+                            : plan === "pro"
+                              ? "Pro Athlete"
+                              : "Athlete"}
+                      </span>
+                      <span>·</span>
+                      <Wallet className="h-3 w-3" /> ₹{wallet}
+                    </>
+                  ) : (
+                    <span>Sign in to save progress</span>
+                  )}
                 </div>
               </div>
-            </div>
-            <Button
-              asChild
-              size="sm"
-              variant="outline"
-              className="rounded-full border-primary/50 text-primary hover:bg-primary/10 hover:text-primary"
-            >
-              <Link to="/login">
-                <LogIn className="mr-1 h-3.5 w-3.5" /> {isAuth ? "Account" : "Log in"}
-              </Link>
-            </Button>
+            </Link>
+            {isAuth ? (
+              <Button
+                asChild
+                size="sm"
+                variant="outline"
+                className="rounded-full border-primary/50 text-xs text-primary hover:bg-primary/10 hover:text-primary"
+              >
+                <Link
+                  to={
+                    role === "coach"
+                      ? "/scout-portal"
+                      : role === "academy"
+                        ? "/academy"
+                        : "/profile"
+                  }
+                  onClick={() => setOpen(false)}
+                >
+                  <User className="mr-1 h-3.5 w-3.5" /> Profile
+                </Link>
+              </Button>
+            ) : (
+              <Button
+                asChild
+                size="sm"
+                className="rounded-full bg-primary text-xs text-primary-foreground shadow-sm hover:bg-primary/90"
+              >
+                <Link to="/login" onClick={() => setOpen(false)}>
+                  <LogIn className="mr-1 h-3.5 w-3.5" /> Log in
+                </Link>
+              </Button>
+            )}
           </div>
         </div>
 
@@ -171,15 +236,39 @@ export function NavDrawer() {
           )}
         </div>
 
-        <div className="sticky bottom-0 border-t border-border/60 bg-background/95 p-4 backdrop-blur-xl">
+        <div className="sticky bottom-0 space-y-2 border-t border-border/60 bg-background/95 p-4 backdrop-blur-xl">
           <Button
             asChild
-            className="w-full rounded-xl bg-gradient-hero text-primary-foreground hover:opacity-95"
+            className="w-full rounded-xl bg-gradient-hero text-primary-foreground shadow-sm hover:opacity-95"
           >
-            <Link to="/pricing">
-              <Zap className="mr-1 h-4 w-4" /> {plan === "pro" ? "Manage Pro" : "Go Pro · ₹499/mo"}
+            <Link to="/pricing" onClick={() => setOpen(false)}>
+              <Zap className="mr-1.5 h-4 w-4" />
+              {plan === "pro" ? "Manage Pro" : "Go Pro · ₹499/mo"}
             </Link>
           </Button>
+
+          {isAuth ? (
+            <Button
+              type="button"
+              variant="outline"
+              id="drawer-logout-btn"
+              onClick={handleLogout}
+              className="h-9 w-full rounded-xl border-destructive/30 text-xs font-semibold text-destructive hover:bg-destructive/10 hover:text-destructive"
+            >
+              <LogOut className="mr-2 h-3.5 w-3.5" /> Log Out
+            </Button>
+          ) : (
+            <Button
+              asChild
+              variant="outline"
+              id="drawer-login-btn"
+              className="h-9 w-full rounded-xl border-border text-xs font-semibold text-foreground hover:bg-secondary"
+            >
+              <Link to="/login" onClick={() => setOpen(false)}>
+                <LogIn className="mr-2 h-3.5 w-3.5 text-primary" /> Log In / Sign Up
+              </Link>
+            </Button>
+          )}
         </div>
       </SheetContent>
     </Sheet>

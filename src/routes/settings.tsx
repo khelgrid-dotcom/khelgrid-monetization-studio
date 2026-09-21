@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import {
   Settings,
@@ -18,12 +18,17 @@ import {
   LifeBuoy,
   Bug,
   Lightbulb,
+  LogOut,
+  LogIn,
+  User,
 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { useTheme } from "@/context/ThemeContext";
+import { useAuth } from "@/context/AuthContext";
+import { toast } from "sonner";
 import { buildSeoHead } from "@/lib/seo";
 import { FeedbackSupportDialog, FeedbackType } from "@/components/FeedbackSupportDialog";
 
@@ -49,6 +54,26 @@ interface SettingsState {
 
 function SettingsPage() {
   const { theme, setTheme } = useTheme();
+  const auth = useAuth();
+  const navigate = useNavigate();
+  const { isAuthenticated, name, email, role = "user", logout } = auth;
+  const isAuth = Boolean(isAuthenticated);
+  const userName = name || auth.user?.name || "Athlete";
+  const userEmail = email || auth.user?.email || "";
+
+  const handleLogout = () => {
+    try {
+      if (typeof logout === "function") {
+        logout();
+      }
+      toast.success("Logged out successfully");
+      navigate({ to: "/" });
+    } catch (err) {
+      console.error("Sign out error", err);
+      toast.error("Failed to log out");
+    }
+  };
+
   const [activeTab, setActiveTab] = useState<
     "account" | "notifications" | "privacy" | "appearance" | "support"
   >("account");
@@ -223,20 +248,57 @@ function SettingsPage() {
 
                 <Card>
                   <CardHeader>
-                    <CardTitle>Account Status</CardTitle>
+                    <CardTitle>Account & Authentication</CardTitle>
+                    <CardDescription>
+                      Manage your current session and login credentials
+                    </CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4">
-                    <div className="flex items-center justify-between p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
-                      <div>
-                        <p className="font-semibold text-green-900 dark:text-green-100">
-                          Account Active
-                        </p>
-                        <p className="text-sm text-green-700 dark:text-green-300">
-                          Your account is in good standing
-                        </p>
+                    {isAuth ? (
+                      <>
+                        <div className="flex items-center justify-between p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
+                          <div className="space-y-0.5">
+                            <p className="font-semibold text-green-900 dark:text-green-100">
+                              Signed in as {userName}
+                            </p>
+                            <p className="text-sm text-green-700 dark:text-green-300">
+                              {userEmail ? `${userEmail} · ` : ""}Role:{" "}
+                              <span className="capitalize font-medium">{role}</span>
+                            </p>
+                          </div>
+                          <Badge className="bg-green-600">Active</Badge>
+                        </div>
+                        <div className="flex justify-end pt-2">
+                          <Button
+                            id="settings-logout-btn"
+                            variant="destructive"
+                            onClick={handleLogout}
+                            className="gap-2"
+                          >
+                            <LogOut className="h-4 w-4" />
+                            Log Out of Account
+                          </Button>
+                        </div>
+                      </>
+                    ) : (
+                      <div className="flex flex-col items-start justify-between gap-4 rounded-lg border border-border bg-muted/40 p-4 sm:flex-row sm:items-center">
+                        <div className="space-y-0.5">
+                          <p className="font-semibold text-foreground">Guest Athlete Mode</p>
+                          <p className="text-sm text-muted-foreground">
+                            You are not signed in. Log in or create an account to save your CV,
+                            stats, and trial registrations.
+                          </p>
+                        </div>
+                        <Button
+                          id="settings-login-btn"
+                          onClick={() => navigate({ to: "/login" })}
+                          className="shrink-0 gap-2"
+                        >
+                          <LogIn className="h-4 w-4" />
+                          Log In / Sign Up
+                        </Button>
                       </div>
-                      <Badge className="bg-green-600">Active</Badge>
-                    </div>
+                    )}
                   </CardContent>
                 </Card>
               </>
