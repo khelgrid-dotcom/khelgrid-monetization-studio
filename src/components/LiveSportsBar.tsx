@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
-import { type LiveMatchUpdate } from "@/data/liveSports";
-import { useLiveSports } from "@/hooks/use-live-sports";
+import { type SportsMatch } from "@/services/SportsDataService";
+import { useLiveScores } from "@/hooks/useLiveScores";
 import {
   Activity,
   ChevronLeft,
@@ -36,9 +36,9 @@ export function LiveSportsBar() {
     isCollapsed,
     toggleCollapse,
     refresh,
-  } = useLiveSports();
+  } = useLiveScores();
 
-  const [activeModalMatch, setActiveModalMatch] = useState<LiveMatchUpdate | null>(null);
+  const [activeModalMatch, setActiveModalMatch] = useState<SportsMatch | null>(null);
   const tickerContainerRef = useRef<HTMLDivElement>(null);
 
   // Horizontal scroll controls for sports ticker

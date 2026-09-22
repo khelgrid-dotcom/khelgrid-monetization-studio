@@ -18,7 +18,6 @@ import { NotificationProvider } from "@/context/NotificationContext";
 import { SavedOpportunityProvider } from "@/context/SavedOpportunityContext";
 import { ThemeProvider, useTheme } from "@/context/ThemeContext";
 import { Navbar } from "@/components/Navbar";
-import { LiveSportsBar } from "@/components/LiveSportsBar";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { BottomTabBar } from "@/components/BottomTabBar";
 import { Toaster } from "@/components/ui/sonner";
@@ -210,7 +209,6 @@ function RootComponent() {
                     <SEOHead />
                     <AdSenseLoader />
 
-                    <LiveSportsBar />
                     <Navbar />
                     <Breadcrumbs />
                     <div className="pb-20 xl:pb-0">
