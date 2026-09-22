@@ -101,7 +101,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         name: "description",
         content:
-          "India's premier sports platform for discovery and development. Find trials, tournaments, verified academies, sports turf venues, and amateur pickup games across 16+ sports.",
+          "India's Sports Opportunity Network · Discover trials, book venues, join games, enroll in coaching, and manage Sports CV.",
       },
       { name: "author", content: "KhelGrid" },
       { property: "og:site_name", content: "KhelGrid" },
@@ -109,7 +109,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         property: "og:description",
         content:
-          "India's premier sports platform for discovery and development. Find trials, tournaments, verified academies, sports turf venues, and amateur pickup games across 16+ sports.",
+          "India's Sports Opportunity Network · Discover trials, book venues, join games, enroll in coaching, and manage Sports CV.",
       },
       { property: "og:type", content: "website" },
       { property: "og:image", content: "https://khelgrid.com/og-image.svg" },

@@ -8,18 +8,21 @@ export interface LiveMatchUpdate {
     name: string;
     code: string;
     score: string;
+    logo?: string;
     flag?: string;
   };
   teamB: {
     name: string;
     code: string;
     score: string;
+    logo?: string;
     flag?: string;
   };
   highlight: string;
   venueOrOvers?: string;
   liveTime?: string;
   source: string;
+  isRealTime?: boolean;
 }
 
 export const LIVE_SPORTS_UPDATES: LiveMatchUpdate[] = [
@@ -34,7 +37,7 @@ export const LIVE_SPORTS_UPDATES: LiveMatchUpdate[] = [
     highlight: "Gill 88* (76), Rahul 42* · Run Rate 6.47",
     venueOrOvers: "38.2/50 ov",
     liveTime: "Live from Ahmedabad",
-    source: "Google Sports / Cricinfo",
+    source: "Google Sports",
   },
   {
     id: "football-isl-mcfc-mbsg",
@@ -47,7 +50,7 @@ export const LIVE_SPORTS_UPDATES: LiveMatchUpdate[] = [
     highlight: "Chhangte 61' goal · Intense midfield battle",
     venueOrOvers: "74'",
     liveTime: "2nd Half · Mumbai Football Arena",
-    source: "Google Sports / ISL Media",
+    source: "Google Sports",
   },
   {
     id: "badminton-all-england",
@@ -60,7 +63,7 @@ export const LIVE_SPORTS_UPDATES: LiveMatchUpdate[] = [
     highlight: "Deciding Game 3 · 16-14 in Lakshya's favor",
     venueOrOvers: "Game 3",
     liveTime: "Court 1 · Live",
-    source: "BWF / Google Sports",
+    source: "Google Sports",
   },
   {
     id: "kabaddi-pkl-del-pun",
@@ -73,7 +76,7 @@ export const LIVE_SPORTS_UPDATES: LiveMatchUpdate[] = [
     highlight: "Naveen Express super raid under 2 mins left",
     venueOrOvers: "38'",
     liveTime: "2nd Half · Delhi",
-    source: "PKL / Google Sports",
+    source: "Google Sports",
   },
   {
     id: "hockey-ind-ger",
@@ -86,7 +89,7 @@ export const LIVE_SPORTS_UPDATES: LiveMatchUpdate[] = [
     highlight: "Harmanpreet Singh hat-trick on drag flicks",
     venueOrOvers: "Full Time",
     liveTime: "Rourkela Stadium",
-    source: "FIH / Google Sports",
+    source: "Google Sports",
   },
   {
     id: "tennis-atp-bopanna",
@@ -99,6 +102,6 @@ export const LIVE_SPORTS_UPDATES: LiveMatchUpdate[] = [
     highlight: "Match scheduled at 18:30 IST today",
     venueOrOvers: "Starts 18:30 IST",
     liveTime: "Center Court",
-    source: "ATP / Google Sports",
+    source: "Google Sports",
   },
 ];
