@@ -1,4 +1,13 @@
-import { ArrowLeft, CalendarDays, Clock, PenLine } from "lucide-react";
+import { useMemo } from "react";
+import {
+  ArrowLeft,
+  CalendarDays,
+  Clock,
+  HelpCircle,
+  ListFilter,
+  PenLine,
+  ShieldCheck,
+} from "lucide-react";
 import { Link, useParams, createFileRoute } from "@tanstack/react-router";
 import { InArticleAd } from "@/components/ads";
 import { Badge } from "@/components/ui/badge";
@@ -6,6 +15,12 @@ import { Button } from "@/components/ui/button";
 import { useBlog } from "@/context/BlogContext";
 import { BLOG_POSTS } from "@/data/blog";
 import { buildSeoHead } from "@/lib/seo";
+import { MatchStatsCard } from "@/components/blog/MatchStatsCard";
+import { MatchAnalysisFeedbackForm } from "@/components/blog/MatchAnalysisFeedbackForm";
+import { MatchStatisticsCharts } from "@/components/blog/MatchStatisticsCharts";
+import { IndiaJapanSocialFeed } from "@/components/blog/IndiaJapanSocialFeed";
+import { AsianGamesAnalytics } from "@/components/blog/AsianGamesAnalytics";
+import { MatchOutcomePredictor } from "@/components/blog/MatchOutcomePredictor";
 
 export const Route = createFileRoute("/blog/$slug")({
   loader: ({ params }) => {
@@ -14,10 +29,48 @@ export const Route = createFileRoute("/blog/$slug")({
   },
   head: ({ loaderData, params }) => {
     const post = loaderData?.post;
-    const title = post ? post.title : "Sports Training & Career Advice · KhelGrid Blog";
-    const description = post
-      ? post.excerpt
-      : "Original sports training tips, trial preparation checklists, recovery guidance and athlete development advice.";
+    const title =
+      post?.metaTitle ||
+      (post
+        ? `${post.title} · KhelGrid Sports Blog`
+        : "Sports Training & Career Advice · KhelGrid Blog");
+    const description =
+      post?.metaDescription ||
+      post?.excerpt ||
+      "Original sports training tips, trial preparation checklists, recovery guidance and athlete development advice.";
+
+    const customSchema: Array<Record<string, unknown>> = [];
+
+    if (post?.faqs && post.faqs.length > 0) {
+      customSchema.push({
+        "@type": "FAQPage",
+        mainEntity: post.faqs.map((faq) => ({
+          "@type": "Question",
+          name: faq.question,
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: faq.answer,
+          },
+        })),
+      });
+    }
+
+    if (post?.matchStats) {
+      customSchema.push({
+        "@type": "SportsEvent",
+        name: post.matchStats.matchTitle,
+        startDate: `${post.matchStats.date}T09:30:00+02:00`,
+        location: {
+          "@type": "Place",
+          name: post.matchStats.venue,
+        },
+        competitor: [
+          { "@type": "SportsTeam", name: post.matchStats.teams.team1.name },
+          { "@type": "SportsTeam", name: post.matchStats.teams.team2.name },
+        ],
+        description: post.excerpt,
+      });
+    }
 
     return buildSeoHead({
       title,
@@ -29,6 +82,8 @@ export const Route = createFileRoute("/blog/$slug")({
       publishedTime: post?.publishedAt ? `${post.publishedAt}T00:00:00Z` : undefined,
       modifiedTime: post?.updatedAt ? `${post.updatedAt}T00:00:00Z` : undefined,
       section: post?.category,
+      keywords: post?.keywords,
+      customSchema: customSchema.length > 0 ? customSchema : undefined,
     });
   },
   component: BlogArticle,
@@ -40,10 +95,37 @@ function formatDate(value: string) {
   );
 }
 
+function slugifySection(heading: string): string {
+  return heading
+    .toLowerCase()
+    .replace(/^\d+[.\s]*/, "")
+    .replace(/[^a-z0-9\s-]/g, "")
+    .trim()
+    .replace(/\s+/g, "-")
+    .slice(0, 40);
+}
+
 function BlogArticle() {
   const { slug } = useParams({ from: "/blog/$slug" });
   const { posts } = useBlog();
   const post = posts.find((item) => item.slug === slug);
+
+  const wordCount = useMemo(() => {
+    if (!post) return 0;
+    let count = (post.excerpt || "").split(/\s+/).filter(Boolean).length;
+    post.sections.forEach((sec) => {
+      count += sec.heading.split(/\s+/).filter(Boolean).length;
+      sec.paragraphs.forEach((p) => {
+        count += p.split(/\s+/).filter(Boolean).length;
+      });
+      if (sec.bullets) {
+        sec.bullets.forEach((b) => {
+          count += b.split(/\s+/).filter(Boolean).length;
+        });
+      }
+    });
+    return count;
+  }, [post]);
 
   if (!post) {
     return (
@@ -72,9 +154,16 @@ function BlogArticle() {
         >
           <ArrowLeft className="h-4 w-4" /> All articles
         </Link>
-        <Badge variant="outline" className="mt-6 border-primary/40 bg-primary/10 text-primary">
-          {post.category}
-        </Badge>
+        <div className="mt-6 flex flex-wrap items-center gap-2">
+          <Badge variant="outline" className="border-primary/40 bg-primary/10 text-primary">
+            {post.category}
+          </Badge>
+          {post.tags?.map((tag) => (
+            <Badge key={tag} variant="secondary" className="text-xs font-normal">
+              {tag}
+            </Badge>
+          ))}
+        </div>
         <h1 className="mt-3 text-3xl font-bold leading-tight tracking-tight sm:text-5xl">
           {post.title}
         </h1>
@@ -90,16 +179,16 @@ function BlogArticle() {
           </span>
           <span className="inline-flex items-center gap-1">
             <Clock className="h-3.5 w-3.5" />
-            {post.readMins} min read
+            {post.readMins} min read ({wordCount} words)
           </span>
         </div>
       </div>
 
       <div className="mx-auto mt-8 max-w-5xl overflow-hidden rounded-2xl border border-border bg-secondary">
-        <img src={post.coverImage} alt="" className="max-h-[480px] w-full object-cover" />
+        <img src={post.coverImage} alt={post.title} className="max-h-[480px] w-full object-cover" />
       </div>
 
-      <div className="mx-auto mt-8 grid max-w-5xl gap-10 lg:grid-cols-[minmax(0,1fr)_240px]">
+      <div className="mx-auto mt-8 grid max-w-5xl gap-10 lg:grid-cols-[minmax(0,1fr)_260px]">
         <article className="min-w-0">
           <div className="rounded-2xl border border-border bg-card/50 p-4 text-sm leading-relaxed text-muted-foreground sm:p-5">
             <strong className="text-foreground">KhelGrid editorial note:</strong> This article is
@@ -108,60 +197,226 @@ function BlogArticle() {
             current selection rules, fees and deadlines with the relevant official organizer.
           </div>
 
+          {/* Optional Match Scorecard / Stats */}
+          {post.matchStats && <MatchStatsCard stats={post.matchStats} />}
+
           <div className="mt-8 space-y-9">
-            {post.sections.map((section, index) => (
-              <section key={section.heading}>
-                <h2 className="text-xl font-bold tracking-tight sm:text-2xl">{section.heading}</h2>
-                <div className="mt-3 space-y-3 text-sm leading-7 text-muted-foreground sm:text-base">
-                  {section.paragraphs.map((paragraph) => (
-                    <p key={paragraph}>{paragraph}</p>
-                  ))}
-                </div>
-                {section.bullets && (
-                  <ul className="mt-4 space-y-2 rounded-xl border border-border bg-gradient-card p-4 text-sm leading-relaxed">
-                    {section.bullets.map((bullet) => (
-                      <li key={bullet} className="flex gap-2">
-                        <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
-                        {bullet}
-                      </li>
+            {post.sections.map((section, index) => {
+              const sectionId = slugifySection(section.heading);
+              return (
+                <section key={section.heading} id={sectionId} className="scroll-mt-24">
+                  <h2 className="text-xl font-bold tracking-tight sm:text-2xl">
+                    {section.heading}
+                  </h2>
+                  <div className="mt-3 space-y-3 text-sm leading-7 text-muted-foreground sm:text-base">
+                    {section.paragraphs.map((paragraph) => (
+                      <p key={paragraph}>{paragraph}</p>
                     ))}
-                  </ul>
-                )}
-                {index === 1 && (
-                  <InArticleAd adSlot="guideInline" minHeight={160} className="mt-8" />
-                )}
-              </section>
-            ))}
+                  </div>
+                  {section.bullets && (
+                    <ul className="mt-4 space-y-2 rounded-xl border border-border bg-gradient-card p-4 text-sm leading-relaxed">
+                      {section.bullets.map((bullet) => (
+                        <li key={bullet} className="flex gap-2">
+                          <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
+                          <span>{bullet}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                  {index === 1 && (
+                    <InArticleAd adSlot="guideInline" minHeight={160} className="mt-8" />
+                  )}
+                </section>
+              );
+            })}
           </div>
 
-          <div className="mt-10 rounded-2xl border border-primary/30 bg-primary/5 p-5">
-            <h2 className="font-semibold">Turn the advice into a next step</h2>
-            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-              Save the key questions from this article, discuss them with your coach or family, and
-              verify the details before you pay, travel or change your training plan.
-            </p>
-            <Button
-              asChild
-              className="mt-4 rounded-full bg-gradient-hero text-primary-foreground hover:opacity-95"
+          {/* Recharts Analytics for India vs Japan or matches with stats */}
+          {post.slug === "india-vs-japan-cricket-match-tactical-analysis" && (
+            <>
+              <MatchStatisticsCharts />
+              <MatchOutcomePredictor />
+            </>
+          )}
+
+          {/* Asian Games 2026 Medal Analytics & Live Updates Hub */}
+          {post.slug ===
+            "asian-games-2026-live-updates-september-23-india-medal-tally-analysis" && (
+            <>
+              <AsianGamesAnalytics />
+              <MatchOutcomePredictor />
+            </>
+          )}
+
+          {/* FAQs section if present */}
+          {post.faqs && post.faqs.length > 0 && (
+            <section
+              id="frequently-asked-questions"
+              aria-labelledby="faq-heading"
+              className="mt-12 rounded-2xl border border-border/80 bg-secondary/30 p-5 sm:p-6"
             >
-              <Link to="/blog">
-                <PenLine className="mr-2 h-4 w-4" />
-                Read more articles
-              </Link>
-            </Button>
+              <div className="flex items-center gap-2">
+                <HelpCircle className="h-5 w-5 text-primary" />
+                <h2 id="faq-heading" className="text-xl font-bold tracking-tight">
+                  Frequently Asked Questions
+                </h2>
+              </div>
+              <div className="mt-5 space-y-4">
+                {post.faqs.map((faq) => (
+                  <div
+                    key={faq.question}
+                    className="rounded-xl border border-border bg-card/60 p-4 transition-colors"
+                  >
+                    <h3 className="font-semibold text-foreground text-sm sm:text-base">
+                      {faq.question}
+                    </h3>
+                    <p className="mt-2 text-xs leading-relaxed text-muted-foreground sm:text-sm">
+                      {faq.answer}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* Social Feed Component for trending India vs Japan community discussion */}
+          {post.slug === "india-vs-japan-cricket-match-tactical-analysis" && (
+            <IndiaJapanSocialFeed />
+          )}
+
+          {/* Interactive SEO-Optimized Discussion & Feedback Form */}
+          <MatchAnalysisFeedbackForm
+            postSlug={post.slug}
+            postTitle={post.title}
+            readMins={post.readMins}
+            wordCount={wordCount}
+            metaTitle={post.metaTitle}
+            metaDescription={post.metaDescription}
+            keywords={post.keywords}
+          />
+
+          <div className="mt-10 rounded-2xl border border-primary/30 bg-primary/5 p-5">
+            <h2 className="font-semibold">Turn the tactical advice into action</h2>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+              Save key insights from this match analysis, review bowling drills with your coach, and
+              apply pace adaptation exercises to your weekly nets routine.
+            </p>
+            <div className="mt-4 flex flex-wrap gap-3">
+              <Button
+                asChild
+                className="rounded-full bg-gradient-hero text-primary-foreground hover:opacity-95"
+              >
+                <Link to="/blog">
+                  <PenLine className="mr-2 h-4 w-4" />
+                  Read more articles
+                </Link>
+              </Button>
+              <Button asChild variant="outline" className="rounded-full">
+                <Link to="/guides">Explore Cricket Guides</Link>
+              </Button>
+            </div>
           </div>
         </article>
 
-        <aside className="self-start lg:sticky lg:top-24">
+        <aside className="self-start lg:sticky lg:top-24 space-y-6">
+          {/* Table of Contents */}
+          <div className="rounded-2xl border border-border bg-gradient-card p-4">
+            <div className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-primary">
+              <ListFilter className="h-3.5 w-3.5" /> Table of Contents
+            </div>
+            <nav className="mt-3 space-y-2 text-xs">
+              {post.matchStats && (
+                <a
+                  href="#match-scorecard-summary"
+                  className="block text-muted-foreground hover:text-primary transition-colors truncate"
+                >
+                  • Match Scorecard Summary
+                </a>
+              )}
+              {post.sections.map((section, idx) => {
+                const sectionId = slugifySection(section.heading);
+                return (
+                  <a
+                    key={section.heading}
+                    href={`#${sectionId}`}
+                    className="block text-muted-foreground hover:text-primary transition-colors truncate"
+                  >
+                    • {idx + 1}. {section.heading.replace(/^\d+[.\s]*/, "").slice(0, 30)}…
+                  </a>
+                );
+              })}
+              {post.slug === "india-vs-japan-cricket-match-tactical-analysis" && (
+                <>
+                  <a
+                    href="#match-statistics-recharts-section"
+                    className="block text-muted-foreground hover:text-primary transition-colors truncate"
+                  >
+                    • Recharts Match Analytics
+                  </a>
+                  <a
+                    href="#match-outcome-predictor-section"
+                    className="block text-muted-foreground hover:text-primary transition-colors truncate"
+                  >
+                    • Match Outcome Predictor (Live Engine)
+                  </a>
+                </>
+              )}
+              {post.slug ===
+                "asian-games-2026-live-updates-september-23-india-medal-tally-analysis" && (
+                <>
+                  <a
+                    href="#asian-games-2026-analytics-hub"
+                    className="block text-muted-foreground hover:text-primary transition-colors truncate"
+                  >
+                    • Asiad Medal Analytics & Live Hub
+                  </a>
+                  <a
+                    href="#match-outcome-predictor-section"
+                    className="block text-muted-foreground hover:text-primary transition-colors truncate"
+                  >
+                    • Match Outcome Predictor (Live Engine)
+                  </a>
+                </>
+              )}
+              {post.faqs && post.faqs.length > 0 && (
+                <a
+                  href="#frequently-asked-questions"
+                  className="block text-muted-foreground hover:text-primary transition-colors truncate"
+                >
+                  • Frequently Asked Questions
+                </a>
+              )}
+              {post.slug === "india-vs-japan-cricket-match-tactical-analysis" && (
+                <a
+                  href="#india-japan-social-feed-section"
+                  className="block text-muted-foreground hover:text-primary transition-colors truncate"
+                >
+                  • Trending Social Wire & Buzz
+                </a>
+              )}
+              <a
+                href="#match-analysis-feedback-section"
+                className="block font-medium text-primary hover:underline transition-colors truncate"
+              >
+                • Reader Discussion & Review
+              </a>
+            </nav>
+          </div>
+
+          {/* Author Card */}
           <div className="rounded-2xl border border-border bg-gradient-card p-4">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
               About the author
             </p>
             <p className="mt-3 font-semibold">{post.author}</p>
             <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-              {post.authorRole}. We publish practical explanations and identify where readers need
-              current official guidance.
+              {post.authorRole}. We publish practical explanations, match technical reviews, and
+              grassroots player pathways.
             </p>
+            <div className="mt-3 flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 font-medium">
+              <ShieldCheck className="h-3.5 w-3.5" />
+              <span>Fact-checked editorial</span>
+            </div>
             <Link
               to="/editorial-policy"
               className="mt-3 inline-block text-sm font-semibold text-primary hover:underline"

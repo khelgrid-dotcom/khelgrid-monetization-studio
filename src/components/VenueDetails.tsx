@@ -23,6 +23,7 @@ import {
   ChevronDown,
   MessageCircle,
   Send,
+  Sparkles,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -49,6 +50,14 @@ import {
   BookingConfirmationModal,
   type BookingConfirmationModalProps,
 } from "@/components/BookingConfirmationModal";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { VenueBookingForm } from "@/components/venue-booking";
 import type { Database } from "@/types/database";
 import type { Venue as PlayoVenue } from "@/data/playo";
 
@@ -182,6 +191,7 @@ export function VenueDetails({
   );
   const [selectedTime, setSelectedTime] = useState<string>("6:00 PM");
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState<boolean>(defaultConfirmModalOpen);
+  const [isInteractiveBookingOpen, setIsInteractiveBookingOpen] = useState<boolean>(false);
   const [isConfirming, setIsConfirming] = useState<boolean>(false);
 
   const fullAddress = venue.address || `${venue.area}, ${venue.city}`;
@@ -631,6 +641,19 @@ export function VenueDetails({
                 {venue.bookable ? "Book Court / Turf Now" : "Venue Not Bookable"}
               </Button>
 
+              {/* Interactive Calendar & Slot Selector Trigger */}
+              <Button
+                id="venue-open-interactive-booking-btn"
+                variant="outline"
+                type="button"
+                onClick={() => setIsInteractiveBookingOpen(true)}
+                disabled={!venue.bookable}
+                className="w-full h-10 text-xs font-semibold gap-2 border-primary/40 text-primary hover:bg-primary/10 transition-colors shadow-2xs"
+              >
+                <Sparkles className="h-4 w-4 text-primary" />
+                Interactive Slot & Calendar Booking
+              </Button>
+
               <p className="text-[11px] text-center text-muted-foreground flex items-center justify-center gap-1">
                 <ShieldCheck className="h-3 w-3 text-emerald-500" />
                 Instant confirmation & secure reservation
@@ -738,6 +761,33 @@ export function VenueDetails({
         isConfirming={isConfirming}
         inline={confirmModalInline}
       />
+
+      {/* Interactive Slot & Calendar Booking Dialog */}
+      <Dialog open={isInteractiveBookingOpen} onOpenChange={setIsInteractiveBookingOpen}>
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto border-border bg-card p-4 sm:p-6">
+          <DialogHeader className="pb-2">
+            <DialogTitle className="text-xl font-bold">{venue.name}</DialogTitle>
+            <DialogDescription>
+              {venue.area} · {venue.city} · Interactive Slot & Calendar Reservation
+            </DialogDescription>
+          </DialogHeader>
+
+          <VenueBookingForm
+            showVenueSelector={false}
+            initialVenueId={venue.id}
+            initialSport={venue.sports[0]}
+            initialDate={selectedDate}
+            initialTime={selectedTime}
+            onBookingComplete={() => {
+              setIsInteractiveBookingOpen(false);
+              toast.success(`Booking successfully reserved for ${venue.name}!`);
+              if (onBook) {
+                onBook(venue, selectedDate, selectedTime);
+              }
+            }}
+          />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

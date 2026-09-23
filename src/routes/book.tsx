@@ -38,6 +38,7 @@ import {
 } from "@/components/ui/dialog";
 import { BookingConfirmationModal } from "@/components/BookingConfirmationModal";
 import { VenueDetails } from "@/components/VenueDetails";
+import { VenueBookingForm } from "@/components/venue-booking";
 import {
   createVenueBooking,
   getVenueBookings,
@@ -80,7 +81,7 @@ function BookVenues() {
   const [city, setCity] = useState<string>("Bengaluru");
   const [booking, setBooking] = useState<BookingSelection | null>(null);
   const [selectedVenueForDetails, setSelectedVenueForDetails] = useState<Venue | null>(null);
-  const [activeTab, setActiveTab] = useState<"venues" | "my-bookings">("venues");
+  const [activeTab, setActiveTab] = useState<"venues" | "slot-booking" | "my-bookings">("venues");
   const [bookings, setBookings] = useState<BookingRecord[]>([]);
   const today = new Date().toISOString().slice(0, 10);
 
@@ -195,8 +196,9 @@ function BookVenues() {
       </div>
 
       {/* Tabs */}
-      <div className="mt-6 flex gap-6 border-b border-border/60 text-sm">
+      <div className="mt-6 flex flex-wrap gap-4 sm:gap-6 border-b border-border/60 text-sm">
         <button
+          id="tab-venues-browse"
           onClick={() => setActiveTab("venues")}
           className={`pb-3 font-semibold transition-colors flex items-center gap-2 ${
             activeTab === "venues"
@@ -204,9 +206,25 @@ function BookVenues() {
               : "text-muted-foreground hover:text-foreground"
           }`}
         >
-          Venues ({list.length})
+          Browse Venues ({list.length})
         </button>
         <button
+          id="tab-interactive-slot-booking"
+          onClick={() => setActiveTab("slot-booking")}
+          className={`pb-3 font-semibold transition-colors flex items-center gap-2 ${
+            activeTab === "slot-booking"
+              ? "border-b-2 border-primary text-primary"
+              : "text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          <Sparkles className="h-4 w-4 text-primary" />
+          Interactive Slot Booking
+          <span className="rounded-full bg-primary/10 text-primary px-2 py-0.5 text-[11px] font-bold">
+            New
+          </span>
+        </button>
+        <button
+          id="tab-my-bookings"
           onClick={() => setActiveTab("my-bookings")}
           className={`pb-3 font-semibold transition-colors flex items-center gap-2 ${
             activeTab === "my-bookings"
@@ -222,6 +240,17 @@ function BookVenues() {
           )}
         </button>
       </div>
+
+      {/* Tab: Interactive Slot Booking Form */}
+      {activeTab === "slot-booking" && (
+        <div className="mt-6 max-w-4xl mx-auto">
+          <VenueBookingForm
+            onBookingComplete={() => {
+              loadBookings();
+            }}
+          />
+        </div>
+      )}
 
       {/* Tab: Venues Grid */}
       {activeTab === "venues" && (
@@ -640,156 +669,30 @@ function BookingDialog({
   initialTime: string | null;
   onBookingSuccess?: () => void;
 }) {
-  const [sport, setSport] = useState(venue.sports[0]);
-  const [date, setDate] = useState(initialDate);
-  const [time, setTime] = useState<string | null>(initialTime);
-  const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
-  const availableSlots = getAvailableSlots(venue, date);
-
-  const selectDate = (nextDate: string) => {
-    setDate(nextDate);
-    if (time && !getAvailableSlots(venue, nextDate).includes(time)) setTime(null);
-  };
-
-  const handleOpenConfirmation = () => {
-    if (!time) return;
-    setShowConfirmModal(true);
-  };
-
-  const handleFinalConfirm = async () => {
-    if (!time) return;
-    setShowConfirmModal(false);
-
-    try {
-      const result = await createVenueBooking({
-        venue: {
-          id: venue.id,
-          name: venue.name,
-          area: venue.area,
-          city: venue.city,
-          price_per_hour: venue.pricePerHour,
-          sports: venue.sports,
-          image_url: venue.image,
-        },
-        sport,
-        booking_date: date,
-        start_time: time,
-        duration_hours: 1,
-      });
-
-      toast.success(`Booking confirmed for ${venue.name}!`, {
-        description: `Date: ${date} | Time: ${time} | Total: ₹${venue.pricePerHour} • ${result.message}`,
-      });
-
-      onOpenChange(false);
-      if (onBookingSuccess) {
-        onBookingSuccess();
-      }
-    } catch (err) {
-      toast.error("Could not complete booking. Please try again.");
-    }
-  };
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md border-border bg-gradient-card">
-        <DialogHeader>
-          <DialogTitle className="text-xl">{venue.name}</DialogTitle>
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto border-border bg-card p-4 sm:p-6">
+        <DialogHeader className="pb-2">
+          <DialogTitle className="text-xl font-bold">{venue.name}</DialogTitle>
           <DialogDescription>
-            {venue.area} · {venue.city}
+            {venue.area} · {venue.city} · Interactive Slot & Calendar Reservation
           </DialogDescription>
         </DialogHeader>
-        <div className="space-y-3">
-          <div>
-            <label className="text-xs font-medium text-muted-foreground">Sport</label>
-            <Select value={sport} onValueChange={setSport}>
-              <SelectTrigger className="mt-1 h-11">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {venue.sports.map((s) => (
-                  <SelectItem key={s} value={s}>
-                    {s}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div>
-            <label className="text-xs font-medium text-muted-foreground">
-              <Calendar className="mr-1 inline h-3 w-3" /> Date
-            </label>
-            <Input
-              type="date"
-              min={new Date().toISOString().slice(0, 10)}
-              value={date}
-              onChange={(event) => selectDate(event.target.value)}
-              className="mt-1 h-11"
-            />
-          </div>
-          <div>
-            <div className="flex items-center justify-between">
-              <label className="text-xs font-medium text-muted-foreground">
-                <Clock className="mr-1 inline h-3 w-3" /> Slot
-              </label>
-              <span className="text-[10px] text-muted-foreground">Available slots</span>
-            </div>
-            <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-4">
-              {TIMES.map((slot) => {
-                const available = availableSlots.includes(slot);
-                const active = time === slot;
-                return (
-                  <button
-                    key={slot}
-                    disabled={!available}
-                    onClick={() => setTime(slot)}
-                    className={`rounded-lg border px-1 py-2 text-xs transition ${
-                      active
-                        ? "border-primary bg-primary text-primary-foreground"
-                        : available
-                          ? "border-border hover:border-primary/50"
-                          : "cursor-not-allowed border-border/50 bg-secondary/40 text-muted-foreground line-through"
-                    }`}
-                  >
-                    {active && <Check className="mr-0.5 inline h-3 w-3" />}
-                    {slot}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-          <div className="rounded-xl border border-border bg-background/40 p-3 text-sm">
-            <div className="flex items-center justify-between">
-              <span className="text-muted-foreground">Estimated total</span>
-              <span className="text-lg font-bold">₹{venue.pricePerHour}</span>
-            </div>
-          </div>
-          <Button
-            id="book-dialog-open-confirmation-btn"
-            onClick={handleOpenConfirmation}
-            disabled={!time}
-            className="w-full"
-            size="lg"
-          >
-            {time ? `Review & Confirm Booking · ${time}` : "Select an available slot"}
-          </Button>
-        </div>
-      </DialogContent>
 
-      <BookingConfirmationModal
-        open={showConfirmModal}
-        onOpenChange={setShowConfirmModal}
-        venueName={venue.name}
-        venueArea={venue.area}
-        venueCity={venue.city}
-        selectedDate={date}
-        selectedTime={time || undefined}
-        durationHours={1}
-        pricePerHour={venue.pricePerHour}
-        totalPrice={venue.pricePerHour}
-        sports={venue.sports}
-        onConfirm={handleFinalConfirm}
-      />
+        <VenueBookingForm
+          showVenueSelector={false}
+          initialVenueId={venue.id}
+          initialSport={venue.sports[0]}
+          initialDate={initialDate}
+          initialTime={initialTime || undefined}
+          onBookingComplete={() => {
+            onOpenChange(false);
+            if (onBookingSuccess) {
+              onBookingSuccess();
+            }
+          }}
+        />
+      </DialogContent>
     </Dialog>
   );
 }

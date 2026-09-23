@@ -11,6 +11,7 @@ import { buildSeoHead } from "@/lib/seo";
 
 const CATEGORIES: Array<"All" | BlogCategory> = [
   "All",
+  "Match analysis",
   "Training",
   "Trial preparation",
   "Sports career",

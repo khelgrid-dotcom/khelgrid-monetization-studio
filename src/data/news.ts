@@ -1,6 +1,7 @@
 export interface SportsNewsArticle {
   id: string;
   slug: string;
+  blogSlug?: string;
   title: string;
   headline: string;
   excerpt: string;
@@ -21,6 +22,64 @@ export interface SportsNewsArticle {
 }
 
 export const SPORTS_NEWS_CATALOG: SportsNewsArticle[] = [
+  {
+    id: "news-asian-games-2026-sept-23-live",
+    slug: "asian-games-2026-live-updates-september-23-india-medal-tally-analysis",
+    blogSlug: "asian-games-2026-live-updates-september-23-india-medal-tally-analysis",
+    title:
+      "Asian Games 2026 Live Updates (Sept 23): India Medal Tally Hits 12 as Mirabai Clinches Silver & Skeet Teams Bag Bronze",
+    headline:
+      "Aichi-Nagoya 2026 Day 5: Mirabai Chanu ends 28-year wait with 49kg silver; double bronze in shotgun skeet; India reaches 13th in medal table.",
+    excerpt:
+      "Tactical analysis of Asian Games 2026 Day 5: Mirabai Chanu's 194kg total, men's and women's skeet shooting team podiums, Suchika Tariyal's pioneering MMA bronze, and complete continental medal standings.",
+    content:
+      "India's campaign at the XX Asian Games Aichi-Nagoya 2026 gathered powerful momentum on September 23, adding four medals to take the nation's tally to 12 (1 Gold, 5 Silver, 6 Bronze). Saikhom Mirabai Chanu secured a momentous silver in women's 49kg weightlifting (194kg total), marking India's first Asiad weightlifting medal since 1998. India also claimed two bronze medals in skeet team competitions at Aichi Range, while Suchika Tariyal captured India's first-ever Asian Games medal in Mixed Martial Arts.",
+    sport: "Multi-Sport",
+    category: "National",
+    publishedAt: "2026-09-23T10:30:00.000Z",
+    readTime: "8 min read",
+    imageUrl:
+      "https://images.unsplash.com/photo-1517649763962-0c623266ddc0?auto=format&fit=crop&w=1200&q=80",
+    author: {
+      name: "KhelGrid Olympic Desk",
+      role: "High-Performance Olympic & Tactical Analyst",
+    },
+    tags: [
+      "Asian Games 2026",
+      "Mirabai Chanu",
+      "Medal Tally",
+      "Shooting",
+      "Aichi-Nagoya",
+      "Live Updates",
+    ],
+    featured: true,
+    trending: true,
+  },
+  {
+    id: "news-india-vs-japan-cricket-tactical",
+    slug: "india-vs-japan-cricket-match-tactical-analysis",
+    blogSlug: "india-vs-japan-cricket-match-tactical-analysis",
+    title: "India vs Japan Cricket: Tactical Analysis, Match Statistics & Grassroots Lessons",
+    headline:
+      "India U19 seals 10-wicket victory after dismissing Japan for 41; comprehensive bowling economy and run rate data revealed.",
+    excerpt:
+      "In-depth tactical review of the India vs Japan cricket clash: Ravi Bishnoi's 4/5 masterclass, Kartik Tyagi's seam bounce, phase-wise run rates, Recharts data analytics, and bilateral grassroots training takeaways.",
+    content:
+      "The ICC U19 World Cup encounter between India and Japan provided critical tactical benchmarks for developmental international cricket. India's bowling unit produced an extraordinary 79% dot-ball ratio at Mangaung Oval, with leg-spinner Ravi Bishnoi capturing 4 wickets for just 5 runs in 8 overs. In reply, openers Yashasvi Jaiswal and Kumar Kushagra knocked off the 42-run target in just 4.5 overs at 8.69 runs per over.",
+    sport: "Cricket",
+    category: "National",
+    publishedAt: "2026-09-22T06:00:00.000Z",
+    readTime: "7 min read",
+    imageUrl:
+      "https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?auto=format&fit=crop&w=1200&q=80",
+    author: {
+      name: "Arunav Sen",
+      role: "High-Performance Cricket & Analytics Editor",
+    },
+    tags: ["Cricket", "India vs Japan", "U19 World Cup", "Bowling Economy", "Match Analysis"],
+    featured: true,
+    trending: true,
+  },
   {
     id: "news-khelo-india-2026",
     slug: "khelo-india-youth-games-2026-dates-state-selection-trials-announced",

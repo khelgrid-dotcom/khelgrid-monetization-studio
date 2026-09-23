@@ -19,6 +19,7 @@ import type { BlogCategory, BlogSection } from "@/data/blog";
 import { buildSeoHead } from "@/lib/seo";
 
 const CATEGORIES: BlogCategory[] = [
+  "Match analysis",
   "Training",
   "Trial preparation",
   "Sports career",
@@ -156,33 +157,99 @@ function BlogWriter() {
         </div>
 
         <form onSubmit={publish} className="mt-8 space-y-6">
+          {/* SEO Snippet & Realtime Metrics Bar */}
+          <section className="rounded-2xl border border-primary/30 bg-primary/5 p-4 sm:p-5">
+            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-primary/20 pb-3">
+              <span className="text-xs font-bold uppercase tracking-wider text-primary flex items-center gap-1.5">
+                <CheckCircle2 className="h-4 w-4" /> SEO Optimization & Readability Inspector
+              </span>
+              <div className="flex items-center gap-2">
+                <Badge
+                  variant={
+                    Math.ceil(body.trim().split(/\s+/).filter(Boolean).length / 180) >= 5
+                      ? "default"
+                      : "outline"
+                  }
+                  className="text-xs"
+                >
+                  Est. Read:{" "}
+                  {Math.max(1, Math.ceil(body.trim().split(/\s+/).filter(Boolean).length / 180))}{" "}
+                  min
+                  {Math.ceil(body.trim().split(/\s+/).filter(Boolean).length / 180) >= 5
+                    ? " (Meets ≥ 5 min goal)"
+                    : " (Under 5 min)"}
+                </Badge>
+                <Badge variant="secondary" className="text-xs">
+                  {body.trim().split(/\s+/).filter(Boolean).length} words
+                </Badge>
+              </div>
+            </div>
+
+            {/* Google Search Result Preview */}
+            <div className="mt-3 rounded-xl border border-border/80 bg-background/90 p-3.5 text-xs">
+              <p className="text-[11px] text-muted-foreground">Google Search Snippet Preview:</p>
+              <p className="mt-1 font-medium text-blue-600 dark:text-blue-400 truncate text-sm">
+                {title.trim() || "Article Title · KhelGrid Sports Blog"}
+              </p>
+              <p className="text-[11px] text-emerald-700 dark:text-emerald-500 truncate">
+                https://khelgrid.com/blog/
+                {title
+                  ? title
+                      .toLowerCase()
+                      .replace(/[^a-z0-9]+/g, "-")
+                      .slice(0, 30)
+                  : "article-slug"}
+              </p>
+              <p className="mt-1 text-muted-foreground line-clamp-2 leading-relaxed">
+                {excerpt.trim() ||
+                  "Add a concise, compelling summary between 120 and 160 characters describing the article for search results."}
+              </p>
+            </div>
+          </section>
+
           <section className="rounded-2xl border border-border bg-card/50 p-4 sm:p-6">
-            <h2 className="text-lg font-semibold">Article identity</h2>
+            <h2 className="text-lg font-semibold">Article identity & Search Metadata</h2>
             <div className="mt-4 grid gap-4 sm:grid-cols-2">
               <div className="sm:col-span-2">
-                <Label htmlFor="article-title">Title</Label>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="article-title">Title (Recommended: 40–65 characters)</Label>
+                  <span
+                    className={`text-xs ${title.length > 65 ? "text-amber-500 font-medium" : "text-muted-foreground"}`}
+                  >
+                    {title.length} characters
+                  </span>
+                </div>
                 <Input
                   id="article-title"
                   value={title}
                   onChange={(event) => setTitle(event.target.value)}
-                  placeholder="Example: How to plan your first month of sprint training"
+                  placeholder="Example: India vs Japan Cricket Match: Tactical Analysis and Grassroots Lessons"
                   className="mt-2"
                   required
                 />
               </div>
               <div className="sm:col-span-2">
-                <Label htmlFor="article-excerpt">Short summary</Label>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="article-excerpt">
+                    Meta Description & Excerpt (Recommended: 120–160 characters)
+                  </Label>
+                  <span
+                    className={`text-xs ${excerpt.length >= 120 && excerpt.length <= 160 ? "text-emerald-500 font-medium" : "text-muted-foreground"}`}
+                  >
+                    {excerpt.length}/160 characters
+                  </span>
+                </div>
                 <Textarea
                   id="article-excerpt"
                   value={excerpt}
                   onChange={(event) => setExcerpt(event.target.value)}
-                  placeholder="Explain the reader's problem and what they will learn…"
+                  placeholder="Explain the tactical problem, key match highlights, and what coaches or players will learn…"
                   className="mt-2 min-h-24"
                   required
                 />
               </div>
               <div>
-                <Label htmlFor="article-category">Topic</Label>
+                <Label htmlFor="article-category">Topic Category</Label>
                 <Select
                   value={category}
                   onValueChange={(value) => setCategory(value as BlogCategory)}

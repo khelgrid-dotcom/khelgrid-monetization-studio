@@ -5,18 +5,27 @@ import {
   Newspaper,
   TrendingUp,
   Clock,
-  User,
   ArrowRight,
-  ExternalLink,
   Flame,
   Share2,
   Bookmark,
+  BarChart3,
+  MessageCircle,
+  ChevronDown,
+  ChevronUp,
+  Sparkles,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { MatchStatisticsCharts } from "@/components/blog/MatchStatisticsCharts";
+import { IndiaJapanSocialFeed } from "@/components/blog/IndiaJapanSocialFeed";
+import { AsianGamesAnalytics } from "@/components/blog/AsianGamesAnalytics";
+import { MatchOutcomePredictor } from "@/components/blog/MatchOutcomePredictor";
 
 const SPORT_TABS = [
   "All Sports",
+  "Asian Games",
   "Cricket",
   "Football",
   "Badminton",
@@ -27,12 +36,23 @@ const SPORT_TABS = [
 export function SportsNewsSection() {
   const [selectedSportTab, setSelectedSportTab] = useState<string>("All Sports");
   const [savedArticles, setSavedArticles] = useState<Set<string>>(new Set());
+  const [showMatchAnalytics, setShowMatchAnalytics] = useState<boolean>(true);
+  const [activeAnalyticsHub, setActiveAnalyticsHub] = useState<"asiad" | "cricket" | "predictor">(
+    "asiad",
+  );
 
   const filteredArticles = useMemo(() => {
     if (selectedSportTab === "All Sports") return SPORTS_NEWS_CATALOG;
     return SPORTS_NEWS_CATALOG.filter((item) => {
       if (selectedSportTab === "Grassroots") {
         return item.category === "Grassroots" || item.sport === "Grassroots";
+      }
+      if (selectedSportTab === "Asian Games") {
+        return (
+          item.tags?.some((t) => t.toLowerCase().includes("asian games")) ||
+          item.sport === "Multi-Sport" ||
+          item.title.toLowerCase().includes("asian games")
+        );
       }
       return item.sport.toLowerCase() === selectedSportTab.toLowerCase();
     });
@@ -205,6 +225,35 @@ export function SportsNewsSection() {
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                 {featuredArticle.excerpt}
               </p>
+
+              {featuredArticle.blogSlug && (
+                <div className="mt-4 flex flex-wrap items-center gap-2.5">
+                  <Link
+                    to="/blog/$slug"
+                    params={{ slug: featuredArticle.blogSlug }}
+                    className="inline-flex items-center gap-1.5 rounded-full bg-primary px-3.5 py-1.5 text-xs font-semibold text-primary-foreground shadow-sm transition hover:bg-primary/90"
+                  >
+                    Read Full Tactical Analysis <ArrowRight className="h-3.5 w-3.5" />
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={() => setShowMatchAnalytics(!showMatchAnalytics)}
+                    className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background/80 px-3.5 py-1.5 text-xs font-medium text-foreground hover:bg-muted"
+                  >
+                    <BarChart3 className="h-3.5 w-3.5 text-primary" />
+                    <span>
+                      {showMatchAnalytics
+                        ? "Hide Recharts & Social Feed"
+                        : "View Recharts & Social Feed"}
+                    </span>
+                    {showMatchAnalytics ? (
+                      <ChevronUp className="h-3 w-3 text-muted-foreground" />
+                    ) : (
+                      <ChevronDown className="h-3 w-3 text-muted-foreground" />
+                    )}
+                  </button>
+                </div>
+              )}
             </div>
 
             <div className="mt-6 flex items-center justify-between border-t border-border/60 pt-4">
@@ -292,6 +341,15 @@ export function SportsNewsSection() {
                     <h4 className="mt-1 line-clamp-2 text-xs font-semibold leading-snug text-foreground transition-colors group-hover:text-primary sm:text-sm">
                       {article.title}
                     </h4>
+                    {article.blogSlug && (
+                      <Link
+                        to="/blog/$slug"
+                        params={{ slug: article.blogSlug }}
+                        className="mt-1.5 inline-flex items-center gap-1 text-[11px] font-semibold text-primary hover:underline"
+                      >
+                        Read match analysis & data <ArrowRight className="h-3 w-3" />
+                      </Link>
+                    )}
                   </div>
 
                   <div className="mt-2 flex items-center justify-between text-[11px] text-muted-foreground">
@@ -334,6 +392,116 @@ export function SportsNewsSection() {
           </div>
         </div>
       </div>
+
+      {/* Embedded Live Match Intelligence Hub (Recharts & Trending Social Feed) */}
+      {showMatchAnalytics && (
+        <div
+          className="mt-10 space-y-8 border-t border-border/70 pt-8"
+          id="live-match-wire-intelligence"
+        >
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <div className="flex items-center gap-2">
+                <Badge variant="outline" className="border-primary/40 bg-primary/10 text-primary">
+                  <Sparkles className="mr-1.5 h-3.5 w-3.5" /> High-Performance Analytics Hub
+                </Badge>
+                <span className="rounded-full bg-emerald-500/15 px-2 py-0.5 text-[10px] font-bold text-emerald-500">
+                  Live Wire Data
+                </span>
+              </div>
+              <h3 className="mt-1 text-xl font-bold tracking-tight text-foreground sm:text-2xl">
+                {activeAnalyticsHub === "asiad"
+                  ? "Asian Games 2026: Live Medal Tally & Discipline Breakdown"
+                  : activeAnalyticsHub === "predictor"
+                    ? "Match Outcome Predictor: Dynamic Win Probability Engine"
+                    : "Match Intelligence: Recharts Analytics & Community Buzz"}
+              </h3>
+              <p className="text-xs text-muted-foreground sm:text-sm">
+                {activeAnalyticsHub === "asiad"
+                  ? "Live updates on September 23, 2026: Mirabai Chanu's silver, shotgun skeet hit rates, and Asian Games leaderboard."
+                  : activeAnalyticsHub === "predictor"
+                    ? "Real-time win probability forecasting based on current run rates (CRR vs RRR), wickets in hand, and historical win rates."
+                    : "Real-time cricket wire featuring bowling economy rates, run rate progression, and social buzz."}
+              </p>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2">
+              {/* Switcher between Asiad, Cricket and Predictor */}
+              <div className="flex items-center rounded-full border border-border bg-background p-1 text-xs">
+                <button
+                  type="button"
+                  onClick={() => setActiveAnalyticsHub("asiad")}
+                  className={`rounded-full px-3 py-1 font-medium transition-colors ${
+                    activeAnalyticsHub === "asiad"
+                      ? "bg-primary text-primary-foreground shadow-xs"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  Asian Games 2026
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveAnalyticsHub("cricket")}
+                  className={`rounded-full px-3 py-1 font-medium transition-colors ${
+                    activeAnalyticsHub === "cricket"
+                      ? "bg-primary text-primary-foreground shadow-xs"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  India vs Japan Cricket
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveAnalyticsHub("predictor")}
+                  className={`rounded-full px-3 py-1 font-medium transition-colors ${
+                    activeAnalyticsHub === "predictor"
+                      ? "bg-primary text-primary-foreground shadow-xs"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  Match Outcome Predictor
+                </button>
+              </div>
+
+              <Link
+                to="/blog/$slug"
+                params={{
+                  slug:
+                    activeAnalyticsHub === "asiad"
+                      ? "asian-games-2026-live-updates-september-23-india-medal-tally-analysis"
+                      : "india-vs-japan-cricket-match-tactical-analysis",
+                }}
+                className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3.5 py-1.5 text-xs font-semibold text-primary hover:bg-primary/20 transition-colors"
+              >
+                Read Full Blog <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowMatchAnalytics(false)}
+                className="text-xs text-muted-foreground hover:text-foreground"
+              >
+                Hide <ChevronUp className="ml-1 h-3.5 w-3.5" />
+              </Button>
+            </div>
+          </div>
+
+          {/* Render Active Analytics Dashboard */}
+          {activeAnalyticsHub === "asiad" ? (
+            <AsianGamesAnalytics />
+          ) : activeAnalyticsHub === "predictor" ? (
+            <MatchOutcomePredictor />
+          ) : (
+            <>
+              {/* Recharts Component */}
+              <MatchStatisticsCharts />
+
+              {/* Social Media Feed Component */}
+              <IndiaJapanSocialFeed />
+            </>
+          )}
+        </div>
+      )}
     </section>
   );
 }
