@@ -75,7 +75,16 @@ const COLUMNS: Array<{ title: string; items: ReturnType<typeof pick> }> = [
   },
   {
     title: "Grow",
-    items: pick(["/academy", "/pricing", "/community", "/cities", "/mobile-app", "/dashboard"]),
+    items: pick([
+      "/academy",
+      "/partner",
+      "/careers",
+      "/pricing",
+      "/community",
+      "/cities",
+      "/mobile-app",
+      "/dashboard",
+    ]),
   },
 ];
 

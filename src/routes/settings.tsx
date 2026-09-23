@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import {
   Settings,
@@ -21,6 +21,8 @@ import {
   LogOut,
   LogIn,
   User,
+  Briefcase,
+  Handshake,
 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -629,6 +631,70 @@ function SettingsPage() {
                       >
                         Contact Support
                       </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Careers & Partnerships Card */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-base">
+                      Careers & Institutional Partnerships
+                    </CardTitle>
+                    <CardDescription>
+                      Join our team or register your academy, venue, or sports tournament on
+                      KhelGrid
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="flex flex-col justify-between rounded-xl border border-border/80 bg-background/50 p-4">
+                        <div>
+                          <div className="flex items-center gap-2 font-semibold text-sm text-foreground">
+                            <Briefcase className="h-4 w-4 text-primary" />
+                            <span>Work with KhelGrid</span>
+                            <Badge
+                              variant="outline"
+                              className="text-[10px] text-emerald-600 border-emerald-500/30"
+                            >
+                              Hiring
+                            </Badge>
+                          </div>
+                          <p className="mt-2 text-xs text-muted-foreground leading-relaxed">
+                            Join our engineering, high-performance data science, scouting, and
+                            sports journalism teams.
+                          </p>
+                        </div>
+                        <Button
+                          asChild
+                          size="sm"
+                          variant="outline"
+                          className="mt-4 rounded-xl text-xs font-semibold"
+                        >
+                          <Link to="/careers">Explore Open Roles</Link>
+                        </Button>
+                      </div>
+
+                      <div className="flex flex-col justify-between rounded-xl border border-border/80 bg-background/50 p-4">
+                        <div>
+                          <div className="flex items-center gap-2 font-semibold text-sm text-foreground">
+                            <Handshake className="h-4 w-4 text-primary" />
+                            <span>Partner with Us</span>
+                          </div>
+                          <p className="mt-2 text-xs text-muted-foreground leading-relaxed">
+                            Onboard your sports academy, list court/turf bookings, or run sanctioned
+                            tournaments with KhelGrid.
+                          </p>
+                        </div>
+                        <Button
+                          asChild
+                          size="sm"
+                          variant="outline"
+                          className="mt-4 rounded-xl text-xs font-semibold"
+                        >
+                          <Link to="/partner">Academy & Venue Onboarding</Link>
+                        </Button>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
