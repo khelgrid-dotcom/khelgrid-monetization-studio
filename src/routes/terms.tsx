@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { Scale } from "lucide-react";
 import { buildSeoHead } from "@/lib/seo";
 
@@ -14,7 +14,7 @@ export const Route = createFileRoute("/terms")({
   component: TermsPage,
 });
 
-const SECTIONS: Array<{ heading: string; body: string[] }> = [
+const SECTIONS: Array<{ heading: string; body: string[]; link?: { to: string; text: string } }> = [
   {
     heading: "1. Accepting these terms",
     body: [
@@ -48,10 +48,15 @@ const SECTIONS: Array<{ heading: string; body: string[] }> = [
     ],
   },
   {
-    heading: "6. Refunds",
+    heading: "6. Cancellations and refunds",
     body: [
-      "Digital unlocks and boosts are non-refundable once delivered, except where a listing turns out to be fraudulent or is removed by us — in that case we refund in full. Email support@khelgrid.com within 14 days.",
+      "Venue bookings, trial registrations, and coaching clinics are governed by our comprehensive Cancellation & Refund Policy. Turf and court reservations cancelled >24 hours prior are eligible for a 100% refund or wallet credit. Bad weather or rainouts confirmed by ground managers entitle athletes to free rescheduling or automatic 100% wallet credits.",
+      "Digital unlocks and boosts are non-refundable once delivered, except where a listing turns out to be fraudulent or is removed by us — in that case we refund in full.",
     ],
+    link: {
+      to: "/cancellation-policy",
+      text: "Read Full Cancellation & Refund Policy →",
+    },
   },
   {
     heading: "7. Acceptable use",
@@ -66,19 +71,29 @@ const SECTIONS: Array<{ heading: string; body: string[] }> = [
     ],
   },
   {
-    heading: "9. Advertising",
+    heading: "9. Prevention of sexual harassment & safe sports",
+    body: [
+      "KhelGrid maintains zero tolerance towards sexual harassment, exploitation, and abuse across all sports facilities, training academies, and trial events under the POSH Act 2013 and POCSO regulations for minors. An autonomous Internal Complaints Committee (ICC) oversees grievances under strict confidentiality.",
+    ],
+    link: {
+      to: "/posh-policy",
+      text: "Read POSH & Safe Sports Policy →",
+    },
+  },
+  {
+    heading: "10. Advertising",
     body: [
       "KhelGrid is funded partly by advertising. Ads are labelled and separated from editorial and listing content. See our Privacy Policy for how advertising cookies work and how to change your choice.",
     ],
   },
   {
-    heading: "10. Liability",
+    heading: "11. Liability",
     body: [
       'The service is provided on an "as is" and "as available" basis. To the extent permitted by law, we are not liable for indirect losses, injury, travel costs, payment disputes, data loss, or missed opportunities arising from third-party trials, venues, organizers, coaches, community users, or unavailable features.',
     ],
   },
   {
-    heading: "11. Changes and contact",
+    heading: "12. Changes and contact",
     body: [
       "We may update these terms; material changes will be posted here. Questions go to support@khelgrid.com. These terms are governed by the laws of India, subject to any mandatory consumer protections that apply to you.",
     ],
@@ -106,6 +121,13 @@ function TermsPage() {
                 {p}
               </p>
             ))}
+            {s.link && (
+              <div className="mt-2.5">
+                <Link to={s.link.to} className="text-xs font-semibold text-primary hover:underline">
+                  {s.link.text}
+                </Link>
+              </div>
+            )}
           </section>
         ))}
       </div>

@@ -332,9 +332,17 @@ export function VenuePoliciesAccordion({
               </div>
             </div>
 
-            <div className="flex items-center gap-2 p-2.5 rounded-lg bg-primary/5 border border-primary/20 text-xs text-muted-foreground">
-              <CheckCircle2 className="h-4 w-4 text-primary shrink-0" />
-              <span>{policies.idCheck}</span>
+            <div className="flex items-center justify-between gap-2 p-2.5 rounded-lg bg-primary/5 border border-primary/20 text-xs text-muted-foreground flex-wrap">
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="h-4 w-4 text-primary shrink-0" />
+                <span>{policies.idCheck}</span>
+              </div>
+              <a
+                href="/cancellation-policy"
+                className="text-primary hover:underline font-semibold text-[11px]"
+              >
+                Read Full Cancellation &amp; Refund Policy →
+              </a>
             </div>
           </AccordionContent>
         </AccordionItem>

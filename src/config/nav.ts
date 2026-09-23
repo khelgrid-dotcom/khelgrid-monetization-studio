@@ -34,6 +34,8 @@ import {
   FileText,
   Mail,
   ScrollText,
+  RotateCcw,
+  ShieldAlert,
 } from "lucide-react";
 
 export type NavItem = {
@@ -103,6 +105,8 @@ export const NAV_ITEMS: NavItem[] = [
   { to: "/terms", label: "Terms of Service", icon: FileText, surfaces: [] },
   { to: "/contact", label: "Contact", icon: Mail, surfaces: [] },
   { to: "/editorial-policy", label: "Editorial Policy", icon: ScrollText, surfaces: [] },
+  { to: "/cancellation-policy", label: "Cancellation Policy", icon: RotateCcw, surfaces: [] },
+  { to: "/posh-policy", label: "POSH Policy", icon: ShieldAlert, surfaces: [] },
 ];
 
 /**

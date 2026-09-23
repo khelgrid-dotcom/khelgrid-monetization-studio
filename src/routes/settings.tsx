@@ -23,6 +23,9 @@ import {
   User,
   Briefcase,
   Handshake,
+  ShieldAlert,
+  ShieldCheck,
+  FileText,
 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -472,6 +475,90 @@ function SettingsPage() {
                     >
                       → Manage Google Ad Settings
                     </a>
+                  </CardContent>
+                </Card>
+
+                {/* Platform Legal & Safeguarding Policies */}
+                <Card>
+                  <CardHeader>
+                    <div className="flex items-center gap-2">
+                      <ShieldCheck className="h-5 w-5 text-primary" />
+                      <div>
+                        <CardTitle className="text-base">
+                          Platform Policies & Athlete Safeguarding
+                        </CardTitle>
+                        <CardDescription>
+                          Review your rights, refund timelines, and anti-harassment standards
+                        </CardDescription>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      <Link
+                        to="/cancellation-policy"
+                        className="flex items-start gap-3 rounded-xl border border-border/80 bg-background/50 p-3.5 transition hover:border-primary/50 hover:bg-muted/30"
+                      >
+                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 mt-0.5">
+                          <RotateCcw className="h-4 w-4" />
+                        </div>
+                        <div>
+                          <p className="text-xs font-semibold text-foreground">
+                            Cancellation & Refund Policy
+                          </p>
+                          <p className="text-[11px] text-muted-foreground mt-0.5">
+                            Turf bookings, trials, rainout guarantees & SLA
+                          </p>
+                        </div>
+                      </Link>
+
+                      <Link
+                        to="/posh-policy"
+                        className="flex items-start gap-3 rounded-xl border border-border/80 bg-background/50 p-3.5 transition hover:border-primary/50 hover:bg-muted/30"
+                      >
+                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-rose-500/10 text-rose-500 mt-0.5">
+                          <ShieldAlert className="h-4 w-4" />
+                        </div>
+                        <div>
+                          <p className="text-xs font-semibold text-foreground">
+                            POSH & Safe Sports Policy
+                          </p>
+                          <p className="text-[11px] text-muted-foreground mt-0.5">
+                            Zero tolerance, ICC committee & POCSO protection
+                          </p>
+                        </div>
+                      </Link>
+
+                      <Link
+                        to="/privacy"
+                        className="flex items-start gap-3 rounded-xl border border-border/80 bg-background/50 p-3.5 transition hover:border-primary/50 hover:bg-muted/30"
+                      >
+                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary mt-0.5">
+                          <Lock className="h-4 w-4" />
+                        </div>
+                        <div>
+                          <p className="text-xs font-semibold text-foreground">Privacy Policy</p>
+                          <p className="text-[11px] text-muted-foreground mt-0.5">
+                            Data collection, cookie usage & athlete security
+                          </p>
+                        </div>
+                      </Link>
+
+                      <Link
+                        to="/terms"
+                        className="flex items-start gap-3 rounded-xl border border-border/80 bg-background/50 p-3.5 transition hover:border-primary/50 hover:bg-muted/30"
+                      >
+                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary mt-0.5">
+                          <FileText className="h-4 w-4" />
+                        </div>
+                        <div>
+                          <p className="text-xs font-semibold text-foreground">Terms of Service</p>
+                          <p className="text-[11px] text-muted-foreground mt-0.5">
+                            Platform terms, fair play & organizer rules
+                          </p>
+                        </div>
+                      </Link>
+                    </div>
                   </CardContent>
                 </Card>
               </>

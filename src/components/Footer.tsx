@@ -123,7 +123,7 @@ export function Footer() {
             </div>
 
             <div>
-              <h4 className="font-semibold text-foreground mb-4">Legal</h4>
+              <h4 className="font-semibold text-foreground mb-4">Legal & Trust</h4>
               <ul className="space-y-2">
                 <li>
                   <Link
@@ -139,6 +139,30 @@ export function Footer() {
                     className="text-sm text-muted-foreground hover:text-primary transition"
                   >
                     Terms of Service
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/cancellation-policy"
+                    className="text-sm text-muted-foreground hover:text-primary transition"
+                  >
+                    Cancellation Policy
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/posh-policy"
+                    className="text-sm text-muted-foreground hover:text-primary transition"
+                  >
+                    POSH Policy
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/trust-center"
+                    className="text-sm text-muted-foreground hover:text-primary transition"
+                  >
+                    Trust Center
                   </Link>
                 </li>
                 <li>
@@ -160,12 +184,18 @@ export function Footer() {
         {/* Bottom Footer */}
         <div className="flex flex-col sm:flex-row justify-between items-center text-sm text-muted-foreground">
           <p>© {currentYear} KhelGrid. All rights reserved.</p>
-          <div className="flex gap-6 mt-4 sm:mt-0">
+          <div className="flex flex-wrap gap-x-6 gap-y-2 mt-4 sm:mt-0">
             <Link to="/privacy" className="hover:text-primary transition">
               Privacy
             </Link>
             <Link to="/terms" className="hover:text-primary transition">
               Terms
+            </Link>
+            <Link to="/cancellation-policy" className="hover:text-primary transition">
+              Cancellation
+            </Link>
+            <Link to="/posh-policy" className="hover:text-primary transition">
+              POSH Policy
             </Link>
             <Link to="/settings" className="hover:text-primary transition">
               Settings

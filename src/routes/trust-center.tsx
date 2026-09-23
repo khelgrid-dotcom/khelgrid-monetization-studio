@@ -1,5 +1,14 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { AlertTriangle, CheckCircle2, FileCheck2, Mail, ShieldCheck } from "lucide-react";
+import {
+  AlertTriangle,
+  CheckCircle2,
+  FileCheck2,
+  Mail,
+  ShieldCheck,
+  ShieldAlert,
+  RotateCcw,
+  FileText,
+} from "lucide-react";
 import { buildSeoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/trust-center")({
@@ -76,6 +85,73 @@ function TrustCenterPage() {
           planned, or that a payment is risk-free. Confirm the latest official notice, keep
           receipts, and never pay for guaranteed selection.
         </p>
+      </section>
+
+      {/* Safeguarding & Compliance Policies */}
+      <section className="mt-8 rounded-2xl border border-border bg-gradient-card p-6">
+        <h2 className="text-lg font-bold text-foreground">Compliance & Safeguarding Policies</h2>
+        <p className="mt-1 text-xs text-muted-foreground sm:text-sm">
+          Transparent guidelines protecting athletes, organizers, and families:
+        </p>
+        <div className="mt-4 grid gap-3 sm:grid-cols-2">
+          <Link
+            to="/posh-policy"
+            className="flex items-center gap-3 rounded-xl border border-border/70 bg-background/60 p-4 transition-colors hover:border-primary/50 hover:bg-muted/40"
+          >
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-rose-500/10 text-rose-500">
+              <ShieldAlert className="h-5 w-5" />
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-foreground">POSH & Safe Sports Policy</p>
+              <p className="text-xs text-muted-foreground">
+                Zero tolerance & ICC athlete protection
+              </p>
+            </div>
+          </Link>
+
+          <Link
+            to="/cancellation-policy"
+            className="flex items-center gap-3 rounded-xl border border-border/70 bg-background/60 p-4 transition-colors hover:border-primary/50 hover:bg-muted/40"
+          >
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
+              <RotateCcw className="h-5 w-5" />
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-foreground">Cancellation & Refund Policy</p>
+              <p className="text-xs text-muted-foreground">
+                Turf slots, trials & weather guarantees
+              </p>
+            </div>
+          </Link>
+
+          <Link
+            to="/editorial-policy"
+            className="flex items-center gap-3 rounded-xl border border-border/70 bg-background/60 p-4 transition-colors hover:border-primary/50 hover:bg-muted/40"
+          >
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+              <FileText className="h-5 w-5" />
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-foreground">Editorial Policy</p>
+              <p className="text-xs text-muted-foreground">
+                E-E-A-T reporting standards & verification
+              </p>
+            </div>
+          </Link>
+
+          <Link
+            to="/verification-policy"
+            className="flex items-center gap-3 rounded-xl border border-border/70 bg-background/60 p-4 transition-colors hover:border-primary/50 hover:bg-muted/40"
+          >
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+              <ShieldCheck className="h-5 w-5" />
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-foreground">Trial Verification Standards</p>
+              <p className="text-xs text-muted-foreground">Academy vetting & anti-fraud audits</p>
+            </div>
+          </Link>
+        </div>
       </section>
 
       <section className="mt-8 rounded-2xl border border-primary/25 bg-primary/5 p-6">

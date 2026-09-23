@@ -208,6 +208,12 @@ export function SiteFooter() {
             <Link to="/terms" className="hover:text-foreground">
               Terms
             </Link>
+            <Link to="/cancellation-policy" className="hover:text-foreground">
+              Cancellation
+            </Link>
+            <Link to="/posh-policy" className="hover:text-foreground">
+              POSH Policy
+            </Link>
             <Link to="/editorial-policy" className="hover:text-foreground">
               Editorial
             </Link>
