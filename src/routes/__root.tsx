@@ -121,14 +121,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         content: adsConfig.publisherId || "ca-pub-8352691151177209",
       },
     ],
-    scripts: [
-      {
-        id: "adsbygoogle-loader",
-        async: true,
-        src: `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsConfig.publisherId || "ca-pub-8352691151177209"}`,
-        crossOrigin: "anonymous",
-      },
-    ],
     links: [
       // Brand Favicons & Icons for browser tabs and mobile home screens
       { rel: "icon", href: "/favicon.ico", sizes: "32x32" },
@@ -178,22 +170,10 @@ function RootShell({ children }: { children: ReactNode }) {
     <html lang="en" suppressHydrationWarning>
       <head>
         <script
+          suppressHydrationWarning
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var t=localStorage.getItem('khelgrid-theme')||localStorage.getItem('theme')||'dark';var d=t==='dark'||(t==='system'&&window.matchMedia('(prefers-color-scheme: dark)').matches);if(d){document.documentElement.classList.add('dark');document.documentElement.style.colorScheme='dark';}else{document.documentElement.classList.remove('dark');document.documentElement.style.colorScheme='light';}}catch(e){}})()`,
           }}
-        />
-        <link rel="icon" href="/favicon.ico" sizes="32x32" />
-        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-        <link rel="manifest" href="/site.webmanifest" />
-        <meta name="google-adsense-account" content="ca-pub-8352691151177209" />
-        <script
-          id="adsbygoogle-loader"
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8352691151177209"
-          crossOrigin="anonymous"
         />
         <HeadContent />
       </head>
