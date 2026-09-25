@@ -1,7 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { FeaturesSidebar } from "@/components/FeaturesSidebar";
 import {
   Search,
@@ -87,31 +86,17 @@ function Home() {
       <FeaturesSidebar />
 
       <main className="min-w-0 flex-1">
-        {/* Hero */}
-        <section className="relative overflow-hidden">
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(800px_400px_at_50%_-10%,oklch(0.78_0.19_155/0.18),transparent_70%)]" />
-          <div className="relative mx-auto max-w-7xl px-4 pb-10 pt-10 text-center sm:pt-24">
-            <Badge
-              variant="outline"
-              className="border-primary/40 bg-primary/10 text-xs text-primary"
-            >
-              India's Sports Opportunity Network
-            </Badge>
-
-            <h1 className="mt-5 text-4xl font-bold leading-[1.05] tracking-tight sm:mt-8 sm:text-7xl">
-              <span className="block">Discover.</span>
-              <span className="block bg-gradient-to-r from-[oklch(0.78_0.18_55)] via-[oklch(0.82_0.18_95)] to-[oklch(0.78_0.19_155)] bg-clip-text text-transparent">
-                Participate. Compete.
-              </span>
+        {/* Hero Section matching Image 2 */}
+        <section className="relative overflow-hidden pt-6 pb-6 sm:pt-8 sm:pb-8">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(800px_350px_at_50%_-10%,oklch(0.78_0.19_155/0.14),transparent_70%)]" />
+          <div className="relative mx-auto max-w-5xl px-4">
+            <h1 className="sr-only">
+              KhelGrid · India&apos;s Sports Opportunity Network · Discover trials, book venues,
+              join games
             </h1>
 
-            <p className="mx-auto mt-4 max-w-2xl text-sm text-muted-foreground sm:mt-6 sm:text-lg">
-              Trials, tournaments, leagues, camps, scholarships and online competitions. Start where
-              you are.
-            </p>
-
             {/* Search bar — stacked on mobile */}
-            <div className="mx-auto mt-6 flex max-w-4xl flex-col gap-2 rounded-2xl border border-border/60 bg-card/60 p-2 backdrop-blur-xl sm:mt-10 sm:flex-row sm:items-center">
+            <div className="flex flex-col gap-2 rounded-2xl border border-border/80 bg-card/90 p-2 shadow-xs backdrop-blur-xl sm:flex-row sm:items-center">
               <div className="relative flex-1">
                 <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <input
@@ -162,38 +147,48 @@ function Home() {
               </Button>
             </div>
 
-            <div className="mt-6 flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-muted-foreground sm:mt-10 sm:text-sm">
-              <div>🏆 Curated opportunity listings</div>
-              <div>🛡️ Verification-first discovery</div>
-              <div>👑 Built for athletes and academies</div>
+            {/* Trust points */}
+            <div className="my-5 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-muted-foreground sm:my-6 sm:text-sm">
+              <div className="flex items-center gap-1.5">
+                <span>🏆</span>
+                <span>Curated opportunity listings</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span>🛡️</span>
+                <span>Verification-first discovery</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span>👑</span>
+                <span>Built for athletes and academies</span>
+              </div>
             </div>
-          </div>
-        </section>
 
-        {/* Playo-style quick tiles — horizontal scroll on mobile */}
-        <section className="mx-auto -mt-2 max-w-7xl pb-8">
-          <div className="flex gap-3 overflow-x-auto px-4 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:grid sm:grid-cols-5 sm:overflow-visible sm:pb-0">
-            {[
-              { to: "/play", label: "Play", desc: "Find games", icon: Users },
-              { to: "/book", label: "Book", desc: "Venues & turfs", icon: CalendarCheck },
-              { to: "/train", label: "Train", desc: "Coaching", icon: GraduationCap },
-              { to: "/events", label: "Events", desc: "Tournaments", icon: CalendarDays },
-              { to: "/memberships", label: "Memberships", desc: "Perks & passes", icon: Star },
-            ].map((t) => (
-              <Link
-                key={t.to}
-                to={t.to}
-                className="group flex w-[140px] shrink-0 flex-col items-start gap-2 rounded-2xl border border-border bg-gradient-card p-4 transition-all hover:-translate-y-0.5 hover:border-primary/40 active:scale-[0.98] sm:w-auto"
-              >
-                <div className="grid h-10 w-10 place-items-center rounded-xl bg-primary/15 text-primary group-hover:bg-primary group-hover:text-primary-foreground">
-                  <t.icon className="h-5 w-5" />
-                </div>
-                <div>
-                  <div className="text-sm font-semibold">{t.label}</div>
-                  <div className="text-xs text-muted-foreground">{t.desc}</div>
-                </div>
-              </Link>
-            ))}
+            {/* 5 Category Cards */}
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
+              {[
+                { to: "/play", label: "Play", desc: "Find games", icon: Users },
+                { to: "/book", label: "Book", desc: "Venues & turfs", icon: CalendarCheck },
+                { to: "/train", label: "Train", desc: "Coaching", icon: GraduationCap },
+                { to: "/events", label: "Events", desc: "Tournaments", icon: CalendarDays },
+                { to: "/memberships", label: "Memberships", desc: "Perks & passes", icon: Star },
+              ].map((t) => (
+                <Link
+                  key={t.to}
+                  to={t.to}
+                  className="group flex flex-col items-start rounded-2xl border border-border/80 bg-card p-4 transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-xs active:scale-[0.98]"
+                >
+                  <div className="grid h-10 w-10 place-items-center rounded-full bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+                    <t.icon className="h-5 w-5" />
+                  </div>
+                  <div className="mt-3">
+                    <div className="text-sm font-semibold text-foreground sm:text-base">
+                      {t.label}
+                    </div>
+                    <div className="text-xs text-muted-foreground">{t.desc}</div>
+                  </div>
+                </Link>
+              ))}
+            </div>
           </div>
         </section>
 
