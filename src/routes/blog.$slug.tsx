@@ -21,6 +21,7 @@ import { MatchStatisticsCharts } from "@/components/blog/MatchStatisticsCharts";
 import { IndiaJapanSocialFeed } from "@/components/blog/IndiaJapanSocialFeed";
 import { AsianGamesAnalytics } from "@/components/blog/AsianGamesAnalytics";
 import { MatchOutcomePredictor } from "@/components/blog/MatchOutcomePredictor";
+import { AnalyticNewsletterForm } from "@/components/blog/AnalyticNewsletterForm";
 
 export const Route = createFileRoute("/blog/$slug")({
   loader: ({ params }) => {
@@ -284,6 +285,13 @@ function BlogArticle() {
             <IndiaJapanSocialFeed />
           )}
 
+          {/* Monetization & Scouting Intelligence Newsletter Subscription Lead Capture */}
+          <AnalyticNewsletterForm
+            postSlug={post.slug}
+            postTitle={post.title}
+            postCategory={post.category}
+          />
+
           {/* Interactive SEO-Optimized Discussion & Feedback Form */}
           <MatchAnalysisFeedbackForm
             postSlug={post.slug}
@@ -395,8 +403,14 @@ function BlogArticle() {
                 </a>
               )}
               <a
-                href="#match-analysis-feedback-section"
+                href="#scouting-analytics-newsletter"
                 className="block font-medium text-primary hover:underline transition-colors truncate"
+              >
+                • VIP Scouting & Monetization Wire
+              </a>
+              <a
+                href="#match-analysis-feedback-section"
+                className="block text-muted-foreground hover:text-primary transition-colors truncate"
               >
                 • Reader Discussion & Review
               </a>
