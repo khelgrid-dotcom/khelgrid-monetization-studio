@@ -77,6 +77,11 @@ export default defineConfig({
     server: { entry: "server" },
   },
   vite: {
+    server: {
+      host: "0.0.0.0",
+      port: 3000,
+      allowedHosts: true,
+    },
     build: {
       rollupOptions: {
         onwarn(warning, warn) {

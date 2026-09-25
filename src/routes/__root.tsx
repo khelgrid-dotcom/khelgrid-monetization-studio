@@ -116,9 +116,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:site", content: "@khelgrid" },
       { name: "twitter:image", content: "https://khelgrid.com/og-image.svg" },
       // AdSense site ownership verification
-      ...(hasValidPublisherId()
-        ? ([{ name: "google-adsense-account", content: adsConfig.publisherId }] as const)
-        : []),
+      {
+        name: "google-adsense-account",
+        content: adsConfig.publisherId || "ca-pub-8352691151177209",
+      },
+    ],
+    scripts: [
+      {
+        id: "adsbygoogle-loader",
+        async: true,
+        src: `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsConfig.publisherId || "ca-pub-8352691151177209"}`,
+        crossOrigin: "anonymous",
+      },
     ],
     links: [
       // Brand Favicons & Icons for browser tabs and mobile home screens
@@ -179,6 +188,13 @@ function RootShell({ children }: { children: ReactNode }) {
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/site.webmanifest" />
+        <meta name="google-adsense-account" content="ca-pub-8352691151177209" />
+        <script
+          id="adsbygoogle-loader"
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8352691151177209"
+          crossOrigin="anonymous"
+        />
         <HeadContent />
       </head>
       <body className="overflow-x-hidden">
@@ -204,7 +220,7 @@ function RootComponent() {
             <SavedOpportunityProvider>
               <FollowedAcademyProvider>
                 <NotificationProvider>
-                  <AdConsentProvider requireConsent>
+                  <AdConsentProvider requireConsent={false}>
                     <GoogleTagLoader />
                     <SEOHead />
                     <AdSenseLoader />
