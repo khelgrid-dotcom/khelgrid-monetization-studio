@@ -19,6 +19,7 @@ import {
   LifeBuoy,
   Briefcase,
   Handshake,
+  Wand2,
 } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
@@ -320,6 +321,15 @@ export function Navbar() {
                   >
                     <LayoutDashboard className="h-3.5 w-3.5 text-muted-foreground" />
                     <span>My Dashboard</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild className="cursor-pointer rounded-lg">
+                  <Link
+                    to="/onboarding"
+                    className="flex items-center gap-2 px-2.5 py-2 text-xs font-medium text-primary"
+                  >
+                    <Wand2 className="h-3.5 w-3.5 text-primary" />
+                    <span>Sports CV Wizard</span>
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild className="cursor-pointer rounded-lg">

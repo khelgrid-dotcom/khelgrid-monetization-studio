@@ -15,6 +15,12 @@ import {
   Sparkles,
   Flame,
   CheckCircle2,
+  Instagram,
+  Video,
+  Play,
+  ExternalLink,
+  Globe,
+  Share2,
 } from "lucide-react";
 
 interface SportsCVCardProps {
@@ -364,6 +370,127 @@ export function SportsCVCard({ data, className = "" }: SportsCVCardProps) {
           </div>
         )}
       </div>
+
+      {/* Section 3: Connected Athletic Socials & Match Footage */}
+      {(data.socialProfiles || data.highlightVideoUrl) && (
+        <div className="mt-6">
+          <div className="flex items-center justify-between border-b border-white/10 pb-2">
+            <h4 className="flex items-center gap-1.5 text-sm font-bold uppercase tracking-wider text-white">
+              <Share2 className={`h-4 w-4 ${theme.accentText}`} />
+              Connected Socials & Match Footage
+            </h4>
+            <span className="text-[11px] text-neutral-400">Scout Verified</span>
+          </div>
+
+          <div className="mt-3 flex flex-wrap items-center gap-2">
+            {data.socialProfiles?.instagram && (
+              <a
+                href={
+                  data.socialProfiles.instagram.startsWith("http")
+                    ? data.socialProfiles.instagram
+                    : `https://instagram.com/${data.socialProfiles.instagram.replace(/^@/, "")}`
+                }
+                target="_blank"
+                rel="noreferrer"
+                className="group flex items-center gap-1.5 rounded-lg border border-pink-500/30 bg-pink-500/10 px-3 py-1.5 text-xs font-semibold text-pink-300 transition-all hover:bg-pink-500/20 hover:border-pink-500/50"
+              >
+                <Instagram className="h-3.5 w-3.5 text-pink-400 group-hover:scale-110 transition-transform" />
+                <span>
+                  {data.socialProfiles.instagram.startsWith("@")
+                    ? data.socialProfiles.instagram
+                    : `@${data.socialProfiles.instagram.replace(/^https?:\/\/(www\.)?instagram\.com\//, "").replace(/\/$/, "")}`}
+                </span>
+                <ExternalLink className="h-3 w-3 opacity-60 group-hover:opacity-100" />
+              </a>
+            )}
+
+            {data.highlightVideoUrl && (
+              <a
+                href={data.highlightVideoUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="group flex items-center gap-1.5 rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-1.5 text-xs font-semibold text-red-300 transition-all hover:bg-red-500/20 hover:border-red-500/50"
+              >
+                <Play className="h-3.5 w-3.5 text-red-400 group-hover:scale-110 transition-transform" />
+                <span>Watch Skills Reel</span>
+                <ExternalLink className="h-3 w-3 opacity-60 group-hover:opacity-100" />
+              </a>
+            )}
+
+            {data.socialProfiles?.twitter && (
+              <a
+                href={
+                  data.socialProfiles.twitter.startsWith("http")
+                    ? data.socialProfiles.twitter
+                    : `https://x.com/${data.socialProfiles.twitter.replace(/^@/, "")}`
+                }
+                target="_blank"
+                rel="noreferrer"
+                className="group flex items-center gap-1.5 rounded-lg border border-sky-500/30 bg-sky-500/10 px-3 py-1.5 text-xs font-semibold text-sky-300 transition-all hover:bg-sky-500/20 hover:border-sky-500/50"
+              >
+                <span className="font-bold text-[11px] text-sky-400">𝕏</span>
+                <span>
+                  {data.socialProfiles.twitter.startsWith("@")
+                    ? data.socialProfiles.twitter
+                    : `@${data.socialProfiles.twitter.replace(/^https?:\/\/(www\.)?(twitter|x)\.com\//, "").replace(/\/$/, "")}`}
+                </span>
+                <ExternalLink className="h-3 w-3 opacity-60 group-hover:opacity-100" />
+              </a>
+            )}
+
+            {data.socialProfiles?.cricheroes && (
+              <a
+                href={
+                  data.socialProfiles.cricheroes.startsWith("http")
+                    ? data.socialProfiles.cricheroes
+                    : `https://cricheroes.com/player-profile/${data.socialProfiles.cricheroes}`
+                }
+                target="_blank"
+                rel="noreferrer"
+                className="group flex items-center gap-1.5 rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 py-1.5 text-xs font-semibold text-amber-300 transition-all hover:bg-amber-500/20 hover:border-amber-500/50"
+              >
+                <Award className="h-3.5 w-3.5 text-amber-400 group-hover:scale-110 transition-transform" />
+                <span>CricHeroes Stats</span>
+                <ExternalLink className="h-3 w-3 opacity-60 group-hover:opacity-100" />
+              </a>
+            )}
+
+            {data.socialProfiles?.strava && (
+              <a
+                href={
+                  data.socialProfiles.strava.startsWith("http")
+                    ? data.socialProfiles.strava
+                    : `https://www.strava.com/athletes/${data.socialProfiles.strava}`
+                }
+                target="_blank"
+                rel="noreferrer"
+                className="group flex items-center gap-1.5 rounded-lg border border-orange-500/30 bg-orange-500/10 px-3 py-1.5 text-xs font-semibold text-orange-300 transition-all hover:bg-orange-500/20 hover:border-orange-500/50"
+              >
+                <Activity className="h-3.5 w-3.5 text-orange-400 group-hover:scale-110 transition-transform" />
+                <span>Strava Activity</span>
+                <ExternalLink className="h-3 w-3 opacity-60 group-hover:opacity-100" />
+              </a>
+            )}
+
+            {data.socialProfiles?.playo && (
+              <a
+                href={
+                  data.socialProfiles.playo.startsWith("http")
+                    ? data.socialProfiles.playo
+                    : `https://playo.co/${data.socialProfiles.playo}`
+                }
+                target="_blank"
+                rel="noreferrer"
+                className="group flex items-center gap-1.5 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 text-xs font-semibold text-emerald-300 transition-all hover:bg-emerald-500/20 hover:border-emerald-500/50"
+              >
+                <Globe className="h-3.5 w-3.5 text-emerald-400 group-hover:scale-110 transition-transform" />
+                <span>Playo Karma</span>
+                <ExternalLink className="h-3 w-3 opacity-60 group-hover:opacity-100" />
+              </a>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Card Footer with QR verification & coach reference */}
       <div className="mt-6 flex flex-col gap-3 rounded-xl border border-white/10 bg-white/[0.02] p-3.5 sm:flex-row sm:items-center sm:justify-between text-xs">

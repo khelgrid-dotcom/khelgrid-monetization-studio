@@ -108,6 +108,12 @@ export function getDefaultSportsCV(athleteName = "Aarav Sharma"): SportsCVData {
     achievements: SAMPLE_ACHIEVEMENTS,
     performanceMetrics: SAMPLE_METRICS,
     highlightVideoUrl: "https://youtu.be/sample-reel",
+    socialProfiles: {
+      instagram: "@aarav.sharma.pace",
+      youtube: "https://youtu.be/sample-reel",
+      twitter: "@aaravsharma_pace",
+      cricheroes: "https://cricheroes.com/player-profile/aarav-sharma",
+    },
     coachReference: {
       name: "Coach R. S. Negi",
       designation: "Head High-Performance Coach, NSEA",
@@ -432,6 +438,18 @@ export function buildScoutTextSummary(data: SportsCVData): string {
     .map((a) => `• [${a.year}] ${a.title} (${a.level} - ${a.award})`)
     .join("\n");
 
+  const socialStr = data.socialProfiles
+    ? [
+        data.socialProfiles.instagram ? `• Instagram: ${data.socialProfiles.instagram}` : null,
+        data.socialProfiles.youtube ? `• Video Reel: ${data.socialProfiles.youtube}` : null,
+        data.socialProfiles.twitter ? `• Twitter/X: ${data.socialProfiles.twitter}` : null,
+        data.socialProfiles.cricheroes ? `• CricHeroes: ${data.socialProfiles.cricheroes}` : null,
+        data.socialProfiles.strava ? `• Strava: ${data.socialProfiles.strava}` : null,
+      ]
+        .filter(Boolean)
+        .join("\n")
+    : "";
+
   return `🏅 ATHLETE SPORTS CV · KHELGRID SCOUT PORTAL
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Name: ${data.athleteName}
@@ -448,8 +466,8 @@ ${metricsStr || "• Standard baseline trials pending"}
 
 🏆 ATHLETIC ACHIEVEMENTS & HONOURS:
 ${achStr || "• In-season record registered"}
-
-${data.coachReference ? `👤 Coach Reference: ${data.coachReference.name} (${data.coachReference.designation})` : ""}
+${socialStr ? `\n📱 CONNECTED ATHLETIC PROFILES:\n${socialStr}` : ""}
+${data.coachReference ? `\n👤 Coach Reference: ${data.coachReference.name} (${data.coachReference.designation})` : ""}
 🔗 Verified Profile ID: ${data.athleteId} (https://khelgrid.com)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━`;
 }

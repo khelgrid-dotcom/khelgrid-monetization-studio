@@ -9,7 +9,17 @@ import { DashboardProgressShare } from "@/components/DashboardProgressShare";
 import { OpportunityInterviewAgent } from "@/components/OpportunityInterviewAgent";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Wallet, Plus, Crown, Trophy, RotateCcw, Calendar, CheckCircle2, User } from "lucide-react";
+import {
+  Wallet,
+  Plus,
+  Crown,
+  Trophy,
+  RotateCcw,
+  Calendar,
+  CheckCircle2,
+  User,
+  Wand2,
+} from "lucide-react";
 import { getVenueBookings, type BookingRecord } from "@/lib/booking-service";
 import { UserProfile } from "@/components/UserProfile";
 import { toast } from "sonner";
@@ -68,9 +78,14 @@ function Dashboard() {
             <p className="text-sm text-muted-foreground">Your athlete control room.</p>
           </div>
           <div className="flex items-center gap-2">
+            <Button asChild size="sm" className="bg-primary text-primary-foreground font-semibold">
+              <Link to="/onboarding">
+                <Wand2 className="mr-1.5 h-3.5 w-3.5" /> Sports CV Wizard
+              </Link>
+            </Button>
             <Button asChild variant="outline" size="sm">
               <Link to="/profile">
-                <User className="mr-1 h-3.5 w-3.5" /> Full Athlete Profile
+                <User className="mr-1 h-3.5 w-3.5" /> Full Profile
               </Link>
             </Button>
             <Button
@@ -84,6 +99,33 @@ function Dashboard() {
               <RotateCcw className="mr-1 h-3.5 w-3.5" /> Reset simulator
             </Button>
           </div>
+        </div>
+
+        {/* Onboarding Wizard Callout */}
+        <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between rounded-2xl border border-primary/25 bg-primary/5 p-4 shadow-sm">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+              <Wand2 className="h-5 w-5" />
+            </div>
+            <div>
+              <div className="font-bold text-sm text-foreground">
+                Set Up Your Sports CV & Connect Social Media Handles
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Launch the guided 6-step wizard to calibrate athletic benchmarks, tournament medals,
+                and connect your Instagram & YouTube highlight reels for recruiters.
+              </p>
+            </div>
+          </div>
+          <Button
+            asChild
+            size="sm"
+            className="shrink-0 gap-1.5 bg-primary text-primary-foreground font-semibold"
+          >
+            <Link to="/onboarding">
+              <Wand2 className="h-3.5 w-3.5" /> Launch Wizard →
+            </Link>
+          </Button>
         </div>
 
         <div className="mt-6 grid gap-4 md:grid-cols-3">

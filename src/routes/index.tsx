@@ -86,21 +86,9 @@ function Home() {
       <FeaturesSidebar />
 
       <main className="min-w-0 flex-1">
-        {/* Hero Section with Sports Arena Background matching Theme & Domain */}
-        <section className="relative overflow-hidden pt-6 pb-6 sm:pt-9 sm:pb-10 border-b border-border/30">
-          {/* Background Image with theme gradient overlays */}
-          <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-            <img
-              src="/assets/sports-hero-bg.svg"
-              alt="Indian sports arena, turf and athletic opportunity background"
-              className="h-full w-full object-cover object-center opacity-85 dark:opacity-90"
-              referrerPolicy="no-referrer"
-            />
-            {/* Contrast-enhancing gradient overlays for both light & dark mode */}
-            <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/50 to-background" />
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_35%,transparent_30%,var(--background)_90%)]" />
-          </div>
-
+        {/* Hero Section matching Image 2 */}
+        <section className="relative overflow-hidden pt-6 pb-6 sm:pt-8 sm:pb-8">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(800px_350px_at_50%_-10%,oklch(0.78_0.19_155/0.14),transparent_70%)]" />
           <div className="relative mx-auto max-w-5xl px-4">
             <h1 className="sr-only">
               KhelGrid · India&apos;s Sports Opportunity Network · Discover trials, book venues,
@@ -108,7 +96,7 @@ function Home() {
             </h1>
 
             {/* Search bar — stacked on mobile */}
-            <div className="flex flex-col gap-2 rounded-2xl border border-border/80 bg-card/95 shadow-sm backdrop-blur-xl sm:flex-row sm:items-center">
+            <div className="flex flex-col gap-2 rounded-2xl border border-border/80 bg-card/90 p-2 shadow-xs backdrop-blur-xl sm:flex-row sm:items-center">
               <div className="relative flex-1">
                 <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <input
@@ -153,7 +141,7 @@ function Home() {
               <Button
                 onClick={submit}
                 size="lg"
-                className="h-11 rounded-xl bg-gradient-hero px-6 text-primary-foreground hover:opacity-95 shadow-xs"
+                className="h-11 rounded-xl bg-gradient-hero px-6 text-primary-foreground hover:opacity-95"
               >
                 Find Matches <ArrowRight className="ml-1 h-4 w-4" />
               </Button>
@@ -175,8 +163,8 @@ function Home() {
               </div>
             </div>
 
-            {/* 5 Category Cards — Horizontally movable on small screens, grid on desktop */}
-            <div className="-mx-4 flex gap-3 overflow-x-auto px-4 pb-2 pt-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden snap-x snap-mandatory sm:mx-0 sm:grid sm:grid-cols-5 sm:overflow-visible sm:px-0 sm:pb-0">
+            {/* 5 Category Cards */}
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
               {[
                 { to: "/play", label: "Play", desc: "Find games", icon: Users },
                 { to: "/book", label: "Book", desc: "Venues & turfs", icon: CalendarCheck },
@@ -187,7 +175,7 @@ function Home() {
                 <Link
                   key={t.to}
                   to={t.to}
-                  className="group flex w-[140px] shrink-0 snap-start flex-col items-start rounded-2xl border border-border/80 bg-card/90 backdrop-blur-md p-4 transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md active:scale-[0.98] sm:w-auto"
+                  className="group flex flex-col items-start rounded-2xl border border-border/80 bg-card p-4 transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-xs active:scale-[0.98]"
                 >
                   <div className="grid h-10 w-10 place-items-center rounded-full bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
                     <t.icon className="h-5 w-5" />
@@ -237,25 +225,22 @@ function Home() {
               Browse all →
             </Link>
           </div>
-          {/* Latest Opportunities Cards — Horizontally movable on small screens, grid on desktop */}
-          <div className="-mx-4 mt-4 flex gap-3 overflow-x-auto px-4 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden snap-x snap-mandatory sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-4">
+          <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {FEATURED_TRIALS.map((trial) => (
               <Link
                 key={trial.id}
                 to="/trial/$id"
                 params={{ id: trial.id }}
-                className="flex w-[260px] shrink-0 snap-start flex-col justify-between rounded-2xl border border-border bg-gradient-card p-4 transition hover:border-primary/40 sm:w-auto"
+                className="rounded-2xl border border-border bg-gradient-card p-4 transition hover:border-primary/40"
               >
-                <div>
-                  <div className="text-[10px] font-semibold uppercase tracking-wider text-primary">
-                    {trial.sport} · {trial.tag}
-                  </div>
-                  <h3 className="mt-2 line-clamp-2 text-sm font-semibold">{trial.title}</h3>
-                  <p className="mt-2 text-xs text-muted-foreground">
-                    {trial.academy} · {trial.city}
-                  </p>
+                <div className="text-[10px] font-semibold uppercase tracking-wider text-primary">
+                  {trial.sport} · {trial.tag}
                 </div>
-                <p className="mt-3 text-xs font-medium text-foreground/80">
+                <h3 className="mt-2 line-clamp-2 text-sm font-semibold">{trial.title}</h3>
+                <p className="mt-2 text-xs text-muted-foreground">
+                  {trial.academy} · {trial.city}
+                </p>
+                <p className="mt-3 text-xs text-muted-foreground">
                   {trial.date} · {trial.fee === 0 ? "Free entry" : `₹${trial.fee}`}
                 </p>
               </Link>

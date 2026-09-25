@@ -36,6 +36,7 @@ import {
   ScrollText,
   RotateCcw,
   ShieldAlert,
+  Wand2,
 } from "lucide-react";
 
 export type NavItem = {
@@ -86,6 +87,7 @@ export const NAV_ITEMS: NavItem[] = [
   { to: "/my-stats", label: "My Stats", icon: TrendingUp, surfaces: ["primary", "features"] },
   { to: "/crawler", label: "Sports Crawler", icon: Bot, surfaces: ["features"] },
   { to: "/dashboard", label: "My Dashboard", icon: User, surfaces: ["primary"] },
+  { to: "/onboarding", label: "Sports CV Wizard", icon: Wand2, surfaces: ["primary", "features"] },
   { to: "/start-from-zero", label: "Start From Zero", icon: Sparkles, surfaces: ["features"] },
   { to: "/ai-guide", label: "AI Guide", icon: Bot, surfaces: ["features"] },
   { to: "/verify", label: "Verify", icon: ShieldCheck, surfaces: ["features"] },

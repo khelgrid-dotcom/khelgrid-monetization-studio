@@ -50,6 +50,16 @@ export interface PerformanceMetric {
   benchmark?: string; // e.g. "State Benchmark: 5.1s"
 }
 
+export interface SocialProfiles {
+  instagram?: string;
+  youtube?: string;
+  twitter?: string;
+  cricheroes?: string;
+  strava?: string;
+  playo?: string;
+  linkedin?: string;
+}
+
 export interface SportsCVData {
   id: string;
   athleteName: string;
@@ -59,6 +69,7 @@ export interface SportsCVData {
   jerseyNumber?: string;
   ageCategory: string; // e.g. "U-19", "U-16", "Senior Open"
   age?: number;
+  gender?: "Male" | "Female" | "Other";
   city: string;
   state: string;
   currentAcademy: string;
@@ -72,6 +83,7 @@ export interface SportsCVData {
   achievements: AthleticAchievement[];
   performanceMetrics: PerformanceMetric[];
   highlightVideoUrl?: string;
+  socialProfiles?: SocialProfiles;
   coachReference?: {
     name: string;
     designation: string;

@@ -862,6 +862,101 @@ export function SportsCVEditor({ data, onChange }: SportsCVEditorProps) {
           </div>
         </div>
       </section>
+
+      {/* 5. Connected Athletic Socials & Profiles */}
+      <section className="rounded-2xl border border-border bg-card p-5 sm:p-6 shadow-sm">
+        <div className="flex items-center justify-between border-b border-border pb-3">
+          <div className="flex items-center gap-2">
+            <User className="h-5 w-5 text-primary" />
+            <h3 className="text-base font-bold">Connected Socials & Athletic Profiles</h3>
+          </div>
+          <Badge variant="outline" className="text-xs">
+            Scout Recruitment
+          </Badge>
+        </div>
+
+        <p className="text-xs text-muted-foreground mt-2">
+          Connect your sports handles so scouts and trial coaches can verify training clips and
+          match stats.
+        </p>
+
+        <div className="mt-4 grid gap-4 sm:grid-cols-2">
+          <div className="space-y-1.5">
+            <Label htmlFor="cv-instagram">Instagram Handle or Link</Label>
+            <Input
+              id="cv-instagram"
+              value={data.socialProfiles?.instagram || ""}
+              onChange={(e) =>
+                updateField("socialProfiles", {
+                  ...data.socialProfiles,
+                  instagram: e.target.value,
+                })
+              }
+              placeholder="e.g. @aarav.cricket or full URL"
+            />
+          </div>
+
+          <div className="space-y-1.5">
+            <Label htmlFor="cv-twitter">Twitter / 𝕏 Handle or Link</Label>
+            <Input
+              id="cv-twitter"
+              value={data.socialProfiles?.twitter || ""}
+              onChange={(e) =>
+                updateField("socialProfiles", {
+                  ...data.socialProfiles,
+                  twitter: e.target.value,
+                })
+              }
+              placeholder="e.g. @aarav_pace"
+            />
+          </div>
+
+          <div className="space-y-1.5">
+            <Label htmlFor="cv-cricheroes">CricHeroes Profile (for Cricket)</Label>
+            <Input
+              id="cv-cricheroes"
+              value={data.socialProfiles?.cricheroes || ""}
+              onChange={(e) =>
+                updateField("socialProfiles", {
+                  ...data.socialProfiles,
+                  cricheroes: e.target.value,
+                })
+              }
+              placeholder="e.g. https://cricheroes.com/player-profile/..."
+            />
+          </div>
+
+          <div className="space-y-1.5">
+            <Label htmlFor="cv-strava">Strava Profile (for Athletics/Running)</Label>
+            <Input
+              id="cv-strava"
+              value={data.socialProfiles?.strava || ""}
+              onChange={(e) =>
+                updateField("socialProfiles", {
+                  ...data.socialProfiles,
+                  strava: e.target.value,
+                })
+              }
+              placeholder="e.g. https://www.strava.com/athletes/..."
+            />
+          </div>
+
+          <div className="sm:col-span-2 space-y-1.5">
+            <Label htmlFor="cv-playo">Playo Profile / Community ID</Label>
+            <Input
+              id="cv-playo"
+              value={data.socialProfiles?.playo || ""}
+              onChange={(e) =>
+                updateField("socialProfiles", {
+                  ...data.socialProfiles,
+                  playo: e.target.value,
+                })
+              }
+              placeholder="e.g. playo.co/username or karma profile link"
+            />
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

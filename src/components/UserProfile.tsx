@@ -21,6 +21,7 @@ import {
   Filter,
   Layers,
   ChevronRight,
+  Wand2,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -367,7 +368,18 @@ export function UserProfile({
             </div>
 
             {showEditControls && (
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
+                <Button
+                  asChild
+                  variant="secondary"
+                  size="sm"
+                  className="h-9 gap-1.5 border border-border font-semibold text-xs"
+                >
+                  <a href="/onboarding">
+                    <Wand2 className="h-3.5 w-3.5 text-primary" />
+                    <span>CV Wizard</span>
+                  </a>
+                </Button>
                 <Button
                   id="btn-edit-user-profile"
                   variant="outline"

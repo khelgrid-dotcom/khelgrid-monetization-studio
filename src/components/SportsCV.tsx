@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "@tanstack/react-router";
 import { useAuth } from "@/context/AuthContext";
 import type { SportsCVData, CardTheme } from "@/types/sports-cv";
 import {
@@ -11,6 +12,7 @@ import {
 import { SportsCVCard } from "@/components/SportsCVCard";
 import { SportsCVEditor } from "@/components/SportsCVEditor";
 import { AthleteProfileAgent } from "@/components/AthleteProfileAgent";
+import { AthleteOnboardingWizard } from "@/components/AthleteOnboardingWizard";
 import type { AthleteProfile } from "@/lib/athlete-profile-agent";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -29,6 +31,7 @@ import {
   RotateCcw,
   Palette,
   ExternalLink,
+  Wand2,
 } from "lucide-react";
 import {
   Dialog,
@@ -40,7 +43,7 @@ import {
 import { toast } from "sonner";
 
 export interface SportsCVProps {
-  initialViewMode?: "card" | "edit" | "split";
+  initialViewMode?: "card" | "edit" | "split" | "wizard";
   className?: string;
 }
 
@@ -49,7 +52,7 @@ export function SportsCV({ initialViewMode = "card", className = "" }: SportsCVP
 
   // Active CV state
   const [data, setData] = useState<SportsCVData>(() => loadSportsCVData(name));
-  const [viewMode, setViewMode] = useState<"card" | "edit" | "split">(initialViewMode);
+  const [viewMode, setViewMode] = useState<"card" | "edit" | "split" | "wizard">(initialViewMode);
   const [unlockModalOpen, setUnlockModalOpen] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<"wallet" | "upi">("wallet");
   const [isExporting, setIsExporting] = useState(false);
@@ -65,6 +68,22 @@ export function SportsCV({ initialViewMode = "card", className = "" }: SportsCVP
       }
       return prev;
     });
+  }, [name]);
+
+  // Listen for custom event whenever wizard or another editor updates CV
+  useEffect(() => {
+    const handleUpdate = (e: Event) => {
+      const customEvent = e as CustomEvent<SportsCVData>;
+      if (customEvent?.detail) {
+        setData(customEvent.detail);
+      } else {
+        setData(loadSportsCVData(name));
+      }
+    };
+    if (typeof window !== "undefined") {
+      window.addEventListener("khelgrid_sportscv_updated", handleUpdate);
+      return () => window.removeEventListener("khelgrid_sportscv_updated", handleUpdate);
+    }
   }, [name]);
 
   // Handle updates from editor
@@ -175,6 +194,38 @@ export function SportsCV({ initialViewMode = "card", className = "" }: SportsCVP
 
   return (
     <div className={`space-y-5 ${className}`}>
+      {/* Onboarding Wizard Invitation Banner */}
+      {viewMode !== "wizard" && (
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between rounded-2xl border border-primary/30 bg-primary/5 p-4 text-xs shadow-sm">
+          <div className="flex items-center gap-3">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+              <Wand2 className="h-4 w-4" />
+            </div>
+            <div>
+              <div className="font-bold text-foreground text-xs sm:text-sm">
+                Interactive Sports CV & Social Profiles Setup Wizard
+              </div>
+              <p className="text-[11px] text-muted-foreground mt-0.5">
+                Guided 6-step flow to calibrate performance metrics, honours, and connect your
+                Instagram & YouTube highlight reels.
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <Button
+              size="sm"
+              onClick={() => setViewMode("wizard")}
+              className="h-8 text-xs font-semibold gap-1.5 bg-primary text-primary-foreground shadow-sm"
+            >
+              <Wand2 className="h-3.5 w-3.5" /> Start Wizard
+            </Button>
+            <Button asChild variant="outline" size="sm" className="h-8 text-xs">
+              <Link to="/onboarding">Full Screen →</Link>
+            </Button>
+          </div>
+        </div>
+      )}
+
       {/* Top Controls Bar */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between rounded-2xl border border-border bg-card p-4 shadow-sm">
         <div className="flex flex-wrap items-center gap-2">
@@ -203,7 +254,7 @@ export function SportsCV({ initialViewMode = "card", className = "" }: SportsCVP
               }`}
             >
               <Edit3 className="h-3.5 w-3.5" />
-              Edit Stats & CV
+              Edit Stats
             </button>
 
             <button
@@ -216,7 +267,20 @@ export function SportsCV({ initialViewMode = "card", className = "" }: SportsCVP
               }`}
             >
               <Columns className="h-3.5 w-3.5" />
-              Live Split View
+              Split View
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setViewMode("wizard")}
+              className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${
+                viewMode === "wizard"
+                  ? "bg-primary text-primary-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <Wand2 className="h-3.5 w-3.5" />
+              Setup Wizard
             </button>
           </div>
 
@@ -341,6 +405,18 @@ export function SportsCV({ initialViewMode = "card", className = "" }: SportsCVP
             <SportsCVCard data={data} />
             <AthleteProfileAgent profile={athleteProfileForAgent} />
           </div>
+        </div>
+      )}
+
+      {viewMode === "wizard" && (
+        <div className="rounded-2xl border border-border bg-card p-4 sm:p-6 shadow-sm">
+          <AthleteOnboardingWizard
+            onComplete={(updated) => {
+              setData(updated);
+              setViewMode("card");
+            }}
+            onCancel={() => setViewMode("card")}
+          />
         </div>
       )}
 

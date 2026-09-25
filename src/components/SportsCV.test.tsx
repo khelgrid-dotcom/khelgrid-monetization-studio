@@ -165,6 +165,30 @@ describe("Sports CV Component & Data Layer", () => {
       expect(html).toContain(data.athleteId);
     });
 
+    it("renders connected athletic social media handles and highlight reels", () => {
+      const data: SportsCVData = {
+        ...getDefaultSportsCV("Smriti Mandhana Fan"),
+        socialProfiles: {
+          instagram: "@smriti_future_star",
+          youtube: "https://youtu.be/match-highlights-2026",
+          twitter: "@smriti_cricket",
+          cricheroes: "https://cricheroes.com/player-profile/smriti-99",
+          strava: "https://www.strava.com/athletes/123456",
+          playo: "https://playo.co/profile/smriti",
+        },
+      };
+
+      const html = renderToString(<SportsCVCard data={data} />);
+
+      expect(html).toContain("Connected Socials &amp; Match Footage");
+      expect(html).toContain("@smriti_future_star");
+      expect(html).toContain("Watch Skills Reel");
+      expect(html).toContain("@smriti_cricket");
+      expect(html).toContain("CricHeroes Stats");
+      expect(html).toContain("Strava Activity");
+      expect(html).toContain("Playo Karma");
+    });
+
     it("applies theme styles (cyber, emerald, crimson, gold, classic)", () => {
       const dataGold = getDefaultSportsCV();
       dataGold.theme = "gold";
