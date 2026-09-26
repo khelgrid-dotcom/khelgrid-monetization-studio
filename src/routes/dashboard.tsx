@@ -21,6 +21,7 @@ import {
   Wand2,
 } from "lucide-react";
 import { getVenueBookings, type BookingRecord } from "@/lib/booking-service";
+import { getMyApplications } from "@/lib/opportunity-service";
 import { UserProfile } from "@/components/UserProfile";
 import { toast } from "sonner";
 import { buildSeoHead } from "@/lib/seo";
@@ -51,8 +52,12 @@ function Dashboard() {
     reset,
     upgradeToPro,
   } = useAuth();
-  const applied = TRIALS.filter((t) => applications.includes(t.id));
+  const [applied, setApplied] = useState<any[]>([]);
   const [venueBookings, setVenueBookings] = useState<BookingRecord[]>([]);
+
+  useEffect(() => {
+    getMyApplications().then(setApplied).catch((error) => console.error("Failed to load applications", error));
+  }, [applications.length]);
 
   useEffect(() => {
     getVenueBookings()
@@ -206,18 +211,12 @@ function Dashboard() {
                     className="flex items-center justify-between rounded-xl border border-border bg-gradient-card p-4"
                   >
                     <div>
-                      <div className="font-medium">{t.title}</div>
+                      <div className="font-medium">{t.opportunities?.title || "Opportunity application"}</div>
                       <div className="text-xs text-muted-foreground">
-                        {t.academy} · {t.city} · {t.date}
+                        {t.opportunities?.city || "India"} · {t.status || "submitted"}
                       </div>
                     </div>
-                    {paidApplications.includes(t.id) ? (
-                      <Badge className="bg-gradient-gold text-primary-foreground border-0">
-                        Paid · ₹49
-                      </Badge>
-                    ) : (
-                      <Badge variant="secondary">Free</Badge>
-                    )}
+                    <Badge variant="secondary">{t.status || "Submitted"}</Badge>
                   </div>
                 ))}
               </div>
