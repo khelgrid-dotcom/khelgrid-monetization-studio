@@ -37,6 +37,7 @@ import {
   RotateCcw,
   ShieldAlert,
   Wand2,
+  Copyright,
 } from "lucide-react";
 
 export type NavItem = {
@@ -109,6 +110,7 @@ export const NAV_ITEMS: NavItem[] = [
   { to: "/editorial-policy", label: "Editorial Policy", icon: ScrollText, surfaces: [] },
   { to: "/cancellation-policy", label: "Cancellation Policy", icon: RotateCcw, surfaces: [] },
   { to: "/posh-policy", label: "POSH Policy", icon: ShieldAlert, surfaces: [] },
+  { to: "/ipr-policy", label: "IPR & Copyright Policy", icon: Copyright, surfaces: [] },
 ];
 
 /**

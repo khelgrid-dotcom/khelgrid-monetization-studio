@@ -191,6 +191,9 @@ export function Footer() {
             <Link to="/terms" className="hover:text-primary transition">
               Terms
             </Link>
+            <Link to="/ipr-policy" className="hover:text-primary transition">
+              IPR & Copyright
+            </Link>
             <Link to="/cancellation-policy" className="hover:text-primary transition">
               Cancellation
             </Link>

@@ -65,10 +65,14 @@ const SECTIONS: Array<{ heading: string; body: string[]; link?: { to: string; te
     ],
   },
   {
-    heading: "8. Your content",
+    heading: "8. Your content & intellectual property",
     body: [
-      "You keep ownership of everything you upload. You grant us a limited, non-exclusive licence to host, display, and process it so we can run the service and show your profile to academies or communities you choose. Do not upload another person's private information, copyrighted material you cannot share, or claims you cannot support. We may remove content that violates these terms or our safety rules.",
+      "You keep ownership of everything you upload. You grant us a limited, non-exclusive licence to host, display, and process it so we can run the service and show your profile to academies or communities you choose. Do not upload another person's private information, copyrighted material you cannot share, or claims you cannot support. We may remove content that violates these terms, our safety rules, or the Indian Copyright Act 1957.",
     ],
+    link: {
+      to: "/ipr-policy",
+      text: "Read Intellectual Property Rights (IPR) & Copyright Policy →",
+    },
   },
   {
     heading: "9. Prevention of sexual harassment & safe sports",
