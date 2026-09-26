@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import { supabase } from "@/lib/supabase";
-import { getCurrentProfile } from "@/lib/profile-service";
+import { getCurrentProfile, upsertCurrentProfile } from "@/lib/profile-service";
 import { getWalletBalance } from "@/lib/wallet-service";
 import { getMyApplications } from "@/lib/opportunity-service";
 import { type UserAccount, type UserRole, DEMO_ACCOUNTS, normalizeRole } from "@/types/auth";
@@ -51,7 +51,10 @@ export function AuthProvider({children}:{children:ReactNode}){
    const isEmail=o.identifier.includes("@"); let authData:any;
    if(o.otp){const r=await supabase.auth.verifyOtp(isEmail?{email:o.identifier,token:o.otp,type:"email"}:{phone:o.identifier,token:o.otp,type:"sms"});if(r.error)throw r.error;authData=r.data}
    else {const r=await supabase.auth.signInWithPassword({email:o.identifier,password:o.password||""});if(r.error)throw r.error;authData=r.data}
-   await hydrate(authData.user); const role=normalizeRole(o.role); setState(s=>({...s,role,user:{...s.user,role}}));
+   const role=normalizeRole(o.role);
+   await upsertCurrentProfile({full_name:o.name||authData.user.user_metadata?.full_name||authData.user.email||"KhelGrid User",phone:isEmail?null:o.identifier,role});
+   await hydrate(authData.user);
+   setState(s=>({...s,role,user:{...s.user,role}}));
    return {success:true,syncedToDb:true,user:{...state.user,role},targetRoute:role==="coach"?"/scout-portal":role==="academy"?"/academy":"/dashboard",message:"Signed in successfully"};
  };
  const logout=()=>{void supabase.auth.signOut();setState(initial)};
