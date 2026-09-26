@@ -24,7 +24,7 @@ import {
 import { toast } from "sonner";
 import { buildSeoHead, SITE_URL } from "@/lib/seo";
 import { useAuth } from "@/context/AuthContext";
-import { isSupabaseConfigured } from "@/lib/supabase";
+import { isSupabaseConfigured, supabase } from "@/lib/supabase";
 import { DEMO_ACCOUNTS, ROLE_DEFINITIONS } from "@/types/auth";
 
 export const Route = createFileRoute("/login")({
@@ -143,16 +143,23 @@ function LoginPage() {
   const demoPreset = DEMO_ACCOUNTS[selectedRole];
 
   // Send OTP handler
-  const handleSendOtp = (e: React.FormEvent) => {
+  const handleSendOtp = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!phone.trim()) {
       toast.error("Please enter a valid mobile number");
       return;
     }
-    setOtpSent(true);
-    setResendTimer(45);
-    setOtpCode("123456"); // simulated fast OTP for demo convenience
-    toast.success(`OTP sent to ${phone}! Demo code 123456 auto-filled.`);
+    try {
+      const { error } = await supabase.auth.signInWithOtp({ phone: phone.trim() });
+      if (error) throw error;
+      setOtpSent(true);
+      setResendTimer(45);
+      setOtpCode("");
+      toast.success("OTP sent. Enter the code received on your phone.");
+    } catch (error) {
+      console.error("OTP request failed:", error);
+      toast.error("Could not send OTP. Check the number and Supabase SMS configuration.");
+    }
   };
 
   // Submit / Verify Login
@@ -217,7 +224,7 @@ function LoginPage() {
         timestamp: new Date().toLocaleTimeString(),
       });
 
-      toast.success(`Signed in as ${demo.name} (${role}) · Database synced!`);
+      toast.success(`Signed in as ${demo.name} (${role})`);
 
       setTimeout(() => {
         const dest =
