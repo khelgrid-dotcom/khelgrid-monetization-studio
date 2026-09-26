@@ -233,14 +233,19 @@ function TrialDetailPage() {
 
       {related.length > 0 && (
         <section className="mt-10">
-          <h2 className="text-xl font-semibold">More {trial.sport} opportunities</h2>
-          <div className="mt-4 grid gap-3 md:grid-cols-3">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-semibold">More {trial.sport} opportunities</h2>
+            <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary sm:hidden">
+              Swipe ↔
+            </span>
+          </div>
+          <div className="-mx-4 mt-4 flex gap-3 overflow-x-auto px-4 pb-2 no-scrollbar snap-x snap-mandatory sm:mx-0 sm:grid sm:grid-cols-2 md:grid-cols-3 sm:overflow-visible sm:p-0">
             {related.map((item) => (
               <Link
                 key={item.id}
                 to="/trial/$id"
                 params={{ id: item.id }}
-                className="rounded-2xl border border-border bg-gradient-card p-4 transition hover:border-primary/40"
+                className="w-[260px] shrink-0 snap-start rounded-2xl border border-border bg-gradient-card p-4 transition hover:border-primary/40 sm:w-auto sm:shrink"
               >
                 <div className="text-sm font-semibold">{item.title}</div>
                 <div className="mt-2 text-xs text-muted-foreground">

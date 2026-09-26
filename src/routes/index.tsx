@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { FeaturesSidebar } from "@/components/FeaturesSidebar";
 import {
@@ -7,6 +7,8 @@ import {
   Trophy,
   MapPin,
   ChevronDown,
+  ChevronLeft,
+  ChevronRight,
   ArrowRight,
   Crown,
   Flame,
@@ -74,6 +76,17 @@ function Home() {
   const [query, setQuery] = useState("");
   const [sport, setSport] = useState("All Sports");
   const [location, setLocation] = useState("All Locations");
+  const opportunitiesRef = useRef<HTMLDivElement>(null);
+
+  const scrollOpportunities = (direction: "left" | "right") => {
+    if (opportunitiesRef.current) {
+      const scrollAmount = 300;
+      opportunitiesRef.current.scrollBy({
+        left: direction === "left" ? -scrollAmount : scrollAmount,
+        behavior: "smooth",
+      });
+    }
+  };
 
   const submit = () =>
     navigate({
@@ -216,33 +229,78 @@ function Home() {
 
           <div className="mt-8 flex items-end justify-between gap-4">
             <div>
-              <h2 className="text-xl font-bold tracking-tight">Latest opportunities</h2>
+              <div className="flex items-center gap-2">
+                <h2 className="text-xl font-bold tracking-tight">Latest opportunities</h2>
+                <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary sm:hidden">
+                  Swipe ↔
+                </span>
+              </div>
               <p className="mt-1 text-sm text-muted-foreground">
                 Review the details before you apply, travel or pay.
               </p>
             </div>
-            <Link to="/search" className="text-sm font-semibold text-primary hover:underline">
-              Browse all →
-            </Link>
+            <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1 sm:hidden">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="h-8 w-8 rounded-full border-border/80 bg-background/80"
+                  onClick={() => scrollOpportunities("left")}
+                  aria-label="Scroll left"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="h-8 w-8 rounded-full border-border/80 bg-background/80"
+                  onClick={() => scrollOpportunities("right")}
+                  aria-label="Scroll right"
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+              </div>
+              <Link to="/search" className="text-sm font-semibold text-primary hover:underline">
+                Browse all →
+              </Link>
+            </div>
           </div>
-          <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+
+          <div
+            ref={opportunitiesRef}
+            className="-mx-4 mt-4 flex gap-3 overflow-x-auto px-4 pb-3 pt-1 no-scrollbar snap-x snap-mandatory sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-3 sm:overflow-visible sm:p-0 lg:grid-cols-4"
+          >
             {FEATURED_TRIALS.map((trial) => (
               <Link
                 key={trial.id}
                 to="/trial/$id"
                 params={{ id: trial.id }}
-                className="rounded-2xl border border-border bg-gradient-card p-4 transition hover:border-primary/40"
+                className="group flex w-[280px] shrink-0 snap-start flex-col justify-between rounded-2xl border border-border bg-gradient-card p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/50 hover:shadow-md active:scale-[0.99] sm:w-auto sm:shrink"
               >
-                <div className="text-[10px] font-semibold uppercase tracking-wider text-primary">
-                  {trial.sport} · {trial.tag}
+                <div>
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-[10px] font-semibold uppercase tracking-wider text-primary">
+                      {trial.sport} · {trial.tag}
+                    </span>
+                    <span className="rounded-full bg-secondary/80 px-2 py-0.5 text-[10px] font-medium text-foreground">
+                      {trial.fee === 0 ? "Free entry" : `₹${trial.fee}`}
+                    </span>
+                  </div>
+                  <h3 className="mt-2 line-clamp-2 text-sm font-semibold text-foreground transition-colors group-hover:text-primary">
+                    {trial.title}
+                  </h3>
+                  <p className="mt-1.5 line-clamp-1 text-xs text-muted-foreground">
+                    {trial.academy}
+                  </p>
                 </div>
-                <h3 className="mt-2 line-clamp-2 text-sm font-semibold">{trial.title}</h3>
-                <p className="mt-2 text-xs text-muted-foreground">
-                  {trial.academy} · {trial.city}
-                </p>
-                <p className="mt-3 text-xs text-muted-foreground">
-                  {trial.date} · {trial.fee === 0 ? "Free entry" : `₹${trial.fee}`}
-                </p>
+
+                <div className="mt-4 flex items-center justify-between border-t border-border/50 pt-2.5 text-xs text-muted-foreground">
+                  <span className="flex items-center gap-1">
+                    <MapPin className="h-3 w-3 text-primary/70 shrink-0" />
+                    <span className="max-w-[120px] truncate">{trial.city}</span>
+                  </span>
+                  <span className="text-[11px] font-medium text-foreground/80">{trial.date}</span>
+                </div>
               </Link>
             ))}
           </div>
