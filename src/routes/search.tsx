@@ -3,7 +3,7 @@ import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { z } from "zod";
 import { Fragment, useEffect, useMemo, useState } from "react";
 import { BannerAd, InFeedAd } from "@/components/ads";
-import { liveTrials, SPORTS, CITIES, type Trial } from "@/data/trials";
+import { SPORTS, CITIES, type Trial } from "@/data/trials";
 import { TrialCard } from "@/components/TrialCard";
 import { CheckoutModal } from "@/components/CheckoutModal";
 import { BoostModal } from "@/components/BoostModal";
