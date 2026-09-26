@@ -7,7 +7,14 @@ export interface SportsNewsArticle {
   excerpt: string;
   content: string;
   sport:
-    "Cricket" | "Football" | "Badminton" | "Athletics" | "Kabaddi" | "Grassroots" | "Multi-Sport";
+    | "Cricket"
+    | "Football"
+    | "Tennis"
+    | "Badminton"
+    | "Athletics"
+    | "Kabaddi"
+    | "Grassroots"
+    | "Multi-Sport";
   category: "National" | "Trials & Selection" | "Grassroots" | "Championships" | "Scholarship";
   publishedAt: string;
   readTime: string;
@@ -220,6 +227,29 @@ export const SPORTS_NEWS_CATALOG: SportsNewsArticle[] = [
       role: "Athlete Pathway Advisory",
     },
     tags: ["Scholarship", "Athlete Funding", "Sports Grants", "Education", "Grassroots"],
+    trending: true,
+  },
+  {
+    id: "news-aita-national-tennis-series",
+    slug: "aita-national-championship-series-junior-tennis-trials-rankings",
+    title: "AITA National Championship Series: Junior Circuit Trials & National Selection Rankings",
+    headline:
+      "All India Tennis Association confirms entry dates and direct selection cut-offs for U-14 & U-16 national grade tournaments.",
+    excerpt:
+      "AITA releases nationwide trial schedules for upcoming clay and hard court championships. Top 16 ranked players secure direct wildcards into Asian Tennis Federation (ATF) junior fixtures.",
+    content:
+      "State tennis associations across New Delhi, Bengaluru, Mumbai, and Kolkata will conduct national series screening. The high-performance committee will track first-serve percentages, return depth metrics, and fitness benchmarks to draft developmental squads.",
+    sport: "Tennis",
+    category: "Championships",
+    publishedAt: "2026-09-17T11:00:00.000Z",
+    readTime: "3 min read",
+    imageUrl:
+      "https://images.unsplash.com/photo-1595435934249-5df7ed86e1c0?auto=format&fit=crop&w=1200&q=80",
+    author: {
+      name: "Siddharth Nair",
+      role: "Tennis & Racquet Sports Editor",
+    },
+    tags: ["AITA", "Tennis", "National Ranking", "Junior Circuit", "Grand Slam Pathway"],
     trending: true,
   },
 ];

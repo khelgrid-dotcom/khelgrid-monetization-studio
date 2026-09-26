@@ -32,13 +32,14 @@ import { AsianGamesAnalytics } from "@/components/blog/AsianGamesAnalytics";
 import { MatchOutcomePredictor } from "@/components/blog/MatchOutcomePredictor";
 
 const SPORT_TABS_CONFIG = [
-  { id: "All Sports", key: "allSports", fallback: "All Sports" },
-  { id: "Asian Games", key: "asianGames", fallback: "Asian Games" },
-  { id: "Cricket", key: "cricket", fallback: "Cricket" },
-  { id: "Football", key: "football", fallback: "Football" },
-  { id: "Badminton", key: "badminton", fallback: "Badminton" },
-  { id: "Athletics", key: "athletics", fallback: "Athletics" },
-  { id: "Grassroots", key: "grassroots", fallback: "Grassroots" },
+  { id: "All Sports", label: "All", fullLabel: "All Sports", key: "allSports", fallback: "All" },
+  { id: "Cricket", label: "Cricket", fullLabel: "Cricket", key: "cricket", fallback: "Cricket" },
+  { id: "Football", label: "Football", fullLabel: "Football", key: "football", fallback: "Football" },
+  { id: "Tennis", label: "Tennis", fullLabel: "Tennis", key: "tennis", fallback: "Tennis" },
+  { id: "Badminton", label: "Badminton", fullLabel: "Badminton", key: "badminton", fallback: "Badminton" },
+  { id: "Athletics", label: "Athletics", fullLabel: "Athletics", key: "athletics", fallback: "Athletics" },
+  { id: "Asian Games", label: "Asian Games", fullLabel: "Asian Games", key: "asianGames", fallback: "Asian Games" },
+  { id: "Grassroots", label: "Grassroots", fullLabel: "Grassroots", key: "grassroots", fallback: "Grassroots" },
 ] as const;
 
 const SAVED_NEWS_STORAGE_KEY = "khelgrid-saved-news-v1";
@@ -323,7 +324,7 @@ export function SportsNewsSection() {
   return (
     <section
       id="sports-news-section"
-      className="mt-14 border-t border-border/60 pt-10 sm:mt-16 sm:pt-12"
+      className="mt-8 border-t border-border/60 pt-6 sm:mt-10 sm:pt-8"
       aria-labelledby="sports-news-heading"
       itemScope
       itemType="https://schema.org/CollectionPage"
@@ -334,36 +335,28 @@ export function SportsNewsSection() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(newsJsonLd) }}
       />
 
-      {/* Header with Title, Live Status Indicator, and Quick Actions */}
-      <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.2em] text-primary">
-              <Flame className="h-3.5 w-3.5 text-primary animate-pulse" />
-              {t("sportsWire", "Real-time Sports Wire")}
-            </span>
-
-            {/* Live animated pulsing badge */}
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-[11px] font-bold text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
-              <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
-              </span>
-              {t("updatedLive", "Updated Live")}
-            </span>
-
-            <span className="hidden text-[11px] text-muted-foreground sm:inline-block">
-              • {lastRefreshedTime === "Just now" ? t("syncedJustNow", "Synced just now") : `Synced ${lastRefreshedTime}`}
-            </span>
-          </div>
-
+      {/* Streamlined Header: Low-profile title, live status, and compact actions */}
+      <header className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between mb-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="sr-only">Real-time Sports Wire</span>
           <h2
             id="sports-news-heading"
-            className="mt-2 text-2xl font-bold tracking-tight text-foreground sm:text-3xl"
+            className="text-lg sm:text-xl font-bold tracking-tight text-foreground flex items-center gap-2"
           >
-            {t("sportsUpdatesTitle", "Sports Updates & National News")}
+            <Flame className="h-4 w-4 text-primary shrink-0 animate-pulse" />
+            <span>{t("sportsUpdatesTitle", "KhelWire")}</span>
           </h2>
-          <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
+
+          {/* Live pulsing badge */}
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 shrink-0">
+            <span className="relative flex h-1.5 w-1.5">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500" />
+            </span>
+            <span>{t("updatedLive", "Updated Live")}</span>
+          </span>
+
+          <p className="sr-only sm:not-sr-only text-[11px] text-muted-foreground ml-1 hidden md:inline truncate max-w-sm">
             {t(
               "sportsUpdatesDesc",
               "Breaking selection trials, Khelo India updates, state championships, and athlete pathways across India.",
@@ -371,29 +364,50 @@ export function SportsNewsSection() {
           </p>
         </div>
 
-        {/* Header Right Actions: Live Refresh + Search */}
-        <div className="flex items-center gap-2">
-          {/* Refresh Live Wire */}
+        {/* Compact Right Actions: Quick Search + Refresh + Mobile Toggle */}
+        <div className="flex items-center gap-1.5 shrink-0 self-end sm:self-center">
+          {/* Quick Search */}
+          <div className="relative">
+            <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder={t("searchNewsPlaceholder", "Search news...")}
+              className="h-7 w-28 sm:w-36 focus:w-44 sm:focus:w-52 rounded-full border border-border/80 bg-background/80 pl-7 pr-6 text-xs text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-hidden focus:ring-1 focus:ring-primary transition-all"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery("")}
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-muted-foreground hover:text-foreground"
+                aria-label="Clear search"
+              >
+                ×
+              </button>
+            )}
+          </div>
+
+          {/* Refresh button */}
           <Button
-            variant="outline"
-            size="sm"
+            variant="ghost"
+            size="icon"
             onClick={handleRefreshWire}
             disabled={isRefreshing}
-            className="h-8 rounded-full border-border/80 bg-background/80 px-3 text-xs font-medium text-foreground hover:bg-muted"
+            className="h-7 w-7 rounded-full border border-border/60 hover:bg-muted text-muted-foreground hover:text-foreground"
             title="Refresh Sports Wire feed"
+            aria-label="Refresh Wire"
           >
             <RefreshCw
-              className={`mr-1.5 h-3.5 w-3.5 text-primary ${isRefreshing ? "animate-spin" : ""}`}
+              className={`h-3.5 w-3.5 ${isRefreshing ? "animate-spin text-primary" : ""}`}
             />
-            <span>{t("refreshWire", "Refresh Wire")}</span>
           </Button>
 
-          {/* View Toggle: Reel vs Grid */}
+          {/* View Toggle: Reel vs Grid (on small screens) */}
           <div className="flex items-center rounded-full border border-border bg-muted/40 p-0.5 sm:hidden">
             <button
               type="button"
               onClick={() => setMobileViewMode("carousel")}
-              className={`rounded-full px-2.5 py-1 text-xs font-semibold transition-all ${
+              className={`rounded-full px-2 py-0.5 text-[11px] font-semibold transition-all ${
                 mobileViewMode === "carousel"
                   ? "bg-primary text-primary-foreground shadow-xs"
                   : "text-muted-foreground hover:text-foreground"
@@ -401,13 +415,13 @@ export function SportsNewsSection() {
               title="Horizontally scrollable reel"
               aria-label="Switch to horizontal reel view"
             >
-              <SlidersHorizontal className="inline h-3 w-3 mr-1" />
+              <SlidersHorizontal className="inline h-2.5 w-2.5 mr-1" />
               {t("reelView", "Reel")}
             </button>
             <button
               type="button"
               onClick={() => setMobileViewMode("list")}
-              className={`rounded-full px-2.5 py-1 text-xs font-semibold transition-all ${
+              className={`rounded-full px-2 py-0.5 text-[11px] font-semibold transition-all ${
                 mobileViewMode === "list"
                   ? "bg-primary text-primary-foreground shadow-xs"
                   : "text-muted-foreground hover:text-foreground"
@@ -415,20 +429,19 @@ export function SportsNewsSection() {
               title="Responsive CSS grid view"
               aria-label="Switch to responsive grid view"
             >
-              <LayoutGrid className="inline h-3 w-3 mr-1" />
+              <LayoutGrid className="inline h-2.5 w-2.5 mr-1" />
               {t("gridView", "Grid")}
             </button>
           </div>
         </div>
       </header>
 
-      {/* Filter Bar: Horizontally scrollable sport tags + search filter */}
-      <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        {/* Horizontally scrollable tab pills with smooth scrolling */}
+      {/* Streamlined Horizontal Filtering Bar directly above news grid */}
+      <div className="mb-3 flex items-center justify-between gap-2 border-b border-border/40 pb-2">
         <nav
           ref={tabsContainerRef}
           aria-label="Sports categories"
-          className="flex items-center gap-1.5 overflow-x-auto pb-1.5 pt-0.5 no-scrollbar scroll-smooth"
+          className="flex items-center gap-1.5 overflow-x-auto no-scrollbar scroll-smooth py-0.5"
         >
           {SPORT_TABS_CONFIG.map((tab) => {
             const active = selectedSportTab === tab.id;
@@ -436,37 +449,23 @@ export function SportsNewsSection() {
               <button
                 key={tab.id}
                 onClick={() => setSelectedSportTab(tab.id)}
-                className={`shrink-0 rounded-full px-3.5 py-1.5 text-xs font-medium transition-all ${
+                className={`shrink-0 rounded-full px-3 py-1 text-xs font-semibold transition-all cursor-pointer ${
                   active
-                    ? "bg-primary text-primary-foreground shadow-sm ring-1 ring-primary"
-                    : "bg-muted/70 text-muted-foreground hover:bg-muted hover:text-foreground"
+                    ? "bg-primary text-primary-foreground shadow-xs ring-1 ring-primary"
+                    : "bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground"
                 }`}
+                title={tab.fullLabel}
               >
-                {t(tab.key, tab.fallback)}
+                <span>{tab.label}</span>
+                <span className="sr-only"> ({tab.fullLabel})</span>
               </button>
             );
           })}
         </nav>
 
-        {/* Small Search / Filter input */}
-        <div className="relative w-full sm:w-64 shrink-0">
-          <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder={t("searchNewsPlaceholder", "Search news & trials...")}
-            className="h-8 w-full rounded-full border border-border/80 bg-background/80 pl-8 pr-3 text-xs text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-hidden focus:ring-1 focus:ring-primary"
-          />
-          {searchQuery && (
-            <button
-              onClick={() => setSearchQuery("")}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs text-muted-foreground hover:text-foreground"
-            >
-              ×
-            </button>
-          )}
-        </div>
+        <span className="shrink-0 text-[11px] font-medium text-muted-foreground hidden sm:inline-block">
+          {filteredArticles.length} {t("updates", "updates")}
+        </span>
       </div>
 
       {/* --- SMALL SCREEN HORIZONTALLY MOVABLE CAROUSEL --- */}
@@ -474,7 +473,7 @@ export function SportsNewsSection() {
       <div
         className={`${
           mobileViewMode === "carousel" ? "block sm:hidden" : "hidden"
-        } mt-5`}
+        } mt-2`}
       >
         {/* Movable Controls & Swipe Affordance */}
         <div className="mb-3 flex items-center justify-between px-1">
@@ -671,7 +670,7 @@ export function SportsNewsSection() {
       {/* --- RESPONSIVE CSS GRID NEWS FEED --- */}
       {/* Single column on mobile, 2 columns on tablets (sm/md), multi-column on desktop (lg/xl) */}
       <div
-        className={`mt-6 ${
+        className={`mt-2 sm:mt-3 ${
           mobileViewMode === "list" ? "grid" : "hidden sm:grid"
         } grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-5 lg:gap-6`}
       >

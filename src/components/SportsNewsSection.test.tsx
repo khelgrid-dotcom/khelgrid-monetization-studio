@@ -33,7 +33,7 @@ describe("SportsNewsSection", () => {
 
     expect(html).toContain("Real-time Sports Wire");
     expect(html).toContain("Updated Live");
-    expect(html).toContain("Sports Updates &amp; National News");
+    expect(html).toContain("KhelWire");
     expect(html).toContain("Breaking selection trials, Khelo India updates");
   });
 
