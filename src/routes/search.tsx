@@ -1,9 +1,9 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { z } from "zod";
-import { Fragment, useMemo, useState } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 import { BannerAd, InFeedAd } from "@/components/ads";
-import { TRIALS, SPORTS, CITIES, type Trial } from "@/data/trials";
+import { SPORTS, CITIES, type Trial } from "@/data/trials";
 import { TrialCard } from "@/components/TrialCard";
 import { CheckoutModal } from "@/components/CheckoutModal";
 import { BoostModal } from "@/components/BoostModal";
@@ -44,6 +44,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { buildSeoHead } from "@/lib/seo";
+import { getLiveTrials } from "@/lib/opportunity-service";
 
 const ALL_SPORT = "All Sports";
 const ALL_CITY = "All Locations";
@@ -208,15 +209,26 @@ function SearchPage() {
   const [checkout, setCheckout] = useState<Trial | null>(null);
   const [boost, setBoost] = useState<Trial | null>(null);
   const [sheetOpen, setSheetOpen] = useState(false);
+  const [liveTrials, setLiveTrials] = useState<Trial[]>([]);
+  const [loadingTrials, setLoadingTrials] = useState(true);
+
+  useEffect(() => {
+    let mounted = true;
+    getLiveTrials().then((items) => { if (mounted) setLiveTrials(items as Trial[]); }).catch((error) => {
+      console.error("Failed to load live opportunities", error);
+      if (mounted) toast.error("Could not load live opportunities. Please try again.");
+    }).finally(() => { if (mounted) setLoadingTrials(false); });
+    return () => { mounted = false; };
+  }, []);
 
   const update = (patch: Partial<typeof params>) =>
     navigate({ search: (prev: typeof params) => ({ ...prev, ...patch }), replace: true });
 
   // Count trials per sport for badges
   const sportCounts = useMemo(() => {
-    const counts: Record<string, number> = { [ALL_SPORT]: TRIALS.length };
+    const counts: Record<string, number> = { [ALL_SPORT]: liveTrials.length };
     for (const s of SPORTS) counts[s] = 0;
-    for (const t of TRIALS) {
+    for (const t of liveTrials) {
       if (counts[t.sport] !== undefined) counts[t.sport]++;
       else counts[t.sport] = 1;
     }
@@ -226,7 +238,7 @@ function SearchPage() {
   // Filtered and sorted results
   const results = useMemo(() => {
     const q = params.q.trim().toLowerCase();
-    let list = TRIALS.filter((t) => {
+    let list = liveTrials.filter((t) => {
       if (params.sport !== ALL_SPORT && t.sport !== params.sport) return false;
       if (params.city !== ALL_CITY && t.city !== params.city) return false;
       if (params.free && t.fee > 0) return false;
@@ -281,7 +293,7 @@ function SearchPage() {
     const boosted = list.filter((t) => auth.boostedTrials.includes(t.id));
     const regular = list.filter((t) => !auth.boostedTrials.includes(t.id));
     return { boosted, regular, total: list.length, all: list };
-  }, [params, auth.boostedTrials]);
+  }, [params, auth.boostedTrials, liveTrials]);
 
   const handleApply = (trial: Trial) => {
     if (auth.applications.includes(trial.id)) return;
@@ -887,7 +899,7 @@ function SearchPage() {
             </div>
           </div>
 
-          {/* FEATURED / BOOSTED TRIALS */}
+          {/* FEATURED / BOOSTED liveTrials */}
           {results.boosted.length > 0 && (
             <section className="space-y-3 pt-2">
               <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-primary">
@@ -909,7 +921,7 @@ function SearchPage() {
             </section>
           )}
 
-          {/* REGULAR TRIALS GRID OR COMPACT LIST */}
+          {/* REGULAR liveTrials GRID OR COMPACT LIST */}
           <section className="space-y-4 pt-2">
             {results.regular.length === 0 && results.boosted.length === 0 ? (
               /* EMPTY STATE WITH HELPFUL NEXT STEPS */

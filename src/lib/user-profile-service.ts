@@ -255,62 +255,46 @@ function calculateDaysRemaining(validUntil: string): number {
 /**
  * Fetch User Profile with live Supabase query and local fallback
  */
-export async function getUserProfile(email: string = "arjun.mehta@khelgrid.com"): Promise<{
-  profile: UserProfileData;
-  isSupabaseLive: boolean;
-}> {
-  let isSupabaseLive = false;
-  let cached: UserProfileData = DEFAULT_USER_PROFILE;
-
-  if (typeof window !== "undefined") {
-    try {
-      const stored = localStorage.getItem(PROFILE_STORAGE_KEY);
-      if (stored) cached = { ...DEFAULT_USER_PROFILE, ...JSON.parse(stored) };
-    } catch (e) {
-      console.warn("Failed reading profile from localStorage", e);
-    }
+export async function getUserProfile(): Promise<{ profile: UserProfileData; isSupabaseLive: boolean }> {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { profile: DEFAULT_USER_PROFILE, isSupabaseLive: false };
+  const { data, error } = await supabase.from("profiles").select("*, athletes(*)").eq("id", user.id).maybeSingle();
+  if (error) throw error;
+  if (!data) {
+    return {
+      profile: {
+        ...DEFAULT_USER_PROFILE,
+        id: user.id,
+        userId: user.id,
+        fullName: user.user_metadata?.full_name || user.email || "KhelGrid User",
+        email: user.email || "",
+        phone: user.phone || "",
+        syncedToDb: false,
+      },
+      isSupabaseLive: true,
+    };
   }
-
-  if (isSupabaseConfigured) {
-    try {
-      const { data, error } = await supabase
-        .from("user_profiles")
-        .select("*")
-        .or(`email.eq.${email},full_name.ilike.%${cached.fullName}%`)
-        .limit(1);
-
-      if (!error && data && data.length > 0) {
-        const row = data[0];
-        isSupabaseLive = true;
-        const profile: UserProfileData = {
-          id: row.id,
-          userId: row.user_id,
-          fullName: row.full_name,
-          email: row.email || email,
-          phone: row.phone || cached.phone,
-          avatarUrl: row.avatar_url || cached.avatarUrl,
-          primarySport: row.primary_sport || cached.primarySport,
-          secondarySports: row.secondary_sports || cached.secondarySports,
-          city: row.city || cached.city,
-          ageCategory: row.age_category || cached.ageCategory,
-          playingPosition: row.playing_position || cached.playingPosition,
-          bio: row.bio || cached.bio,
-          skillLevel: row.skill_level || cached.skillLevel,
-          membershipTier: row.membership_tier || cached.membershipTier,
-          syncedToDb: true,
-        };
-
-        if (typeof window !== "undefined") {
-          localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(profile));
-        }
-        return { profile, isSupabaseLive: true };
-      }
-    } catch (err) {
-      console.warn("Supabase user_profiles table query failed, falling back to local state", err);
-    }
-  }
-
-  return { profile: cached, isSupabaseLive };
+  const athlete = Array.isArray((data as any).athletes) ? (data as any).athletes[0] : (data as any).athletes;
+  return {
+    profile: {
+      id: data.id,
+      userId: data.id,
+      fullName: data.full_name || "",
+      email: data.email || user.email || "",
+      phone: data.phone || "",
+      avatarUrl: data.avatar_url || "",
+      primarySport: athlete?.sport_id || "",
+      secondarySports: athlete?.secondary_sports || [],
+      city: data.city || athlete?.city || "",
+      ageCategory: athlete?.date_of_birth || "",
+      playingPosition: athlete?.position || "",
+      bio: data.bio || "",
+      skillLevel: athlete?.playing_level || "",
+      membershipTier: data.plan || "free",
+      syncedToDb: true,
+    },
+    isSupabaseLive: true,
+  };
 }
 
 /**
