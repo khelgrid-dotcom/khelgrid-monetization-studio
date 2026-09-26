@@ -16,6 +16,10 @@ export interface Trial {
   selectionProcess?: string;
   registrationDeadline?: string;
   venue?: string;
+  ageCategory?: string;
+  gender?: string;
+  verifiedLabel?: string;
+  urgencyText?: string;
 }
 
 export const TRIALS: Trial[] = [
@@ -29,6 +33,10 @@ export const TRIALS: Trial[] = [
     fee: 0,
     spots: 32,
     tag: "Open",
+    ageCategory: "U-19",
+    gender: "Boys",
+    verifiedLabel: "DDCA Affiliated",
+    urgencyText: "Closes in 2 days",
   },
   {
     id: "t-2",
@@ -40,6 +48,10 @@ export const TRIALS: Trial[] = [
     fee: 0,
     spots: 60,
     tag: "Scouted",
+    ageCategory: "U-17 & U-19",
+    gender: "Boys / Men",
+    verifiedLabel: "AIFF Grassroots Verified",
+    urgencyText: "Filling fast · 14 spots left",
   },
   {
     id: "t-3",
@@ -51,6 +63,10 @@ export const TRIALS: Trial[] = [
     fee: 0,
     spots: 24,
     tag: "Premium",
+    ageCategory: "U-15 & U-17",
+    gender: "Open / Co-ed",
+    verifiedLabel: "BAI Accredited",
+    urgencyText: "Limited spots",
   },
   {
     id: "t-4",
@@ -62,6 +78,10 @@ export const TRIALS: Trial[] = [
     fee: 0,
     spots: 120,
     tag: "Official",
+    ageCategory: "Open (16-23 yrs)",
+    gender: "Men & Women",
+    verifiedLabel: "State Govt. Sanctioned",
+    urgencyText: "Free Entry",
   },
   {
     id: "t-5",
@@ -73,6 +93,10 @@ export const TRIALS: Trial[] = [
     fee: 0,
     spots: 40,
     tag: "Scouted",
+    ageCategory: "U-16 Sub-Junior",
+    gender: "Boys",
+    verifiedLabel: "Hockey India Recognized",
+    urgencyText: "Closes this week",
   },
   {
     id: "t-6",
@@ -84,6 +108,10 @@ export const TRIALS: Trial[] = [
     fee: 0,
     spots: 28,
     tag: "Open",
+    ageCategory: "U-14 & U-16",
+    gender: "Open / Co-ed",
+    verifiedLabel: "AITA Certified Coach",
+    urgencyText: "Registration Open",
   },
   {
     id: "t-7",
@@ -95,6 +123,10 @@ export const TRIALS: Trial[] = [
     fee: 250,
     spots: 18,
     tag: "Elite",
+    ageCategory: "Senior / U-23",
+    gender: "Men",
+    verifiedLabel: "KSCA Official",
+    urgencyText: "Final 6 spots",
   },
   {
     id: "t-8",
@@ -106,6 +138,10 @@ export const TRIALS: Trial[] = [
     fee: 0,
     spots: 80,
     tag: "Scouted",
+    ageCategory: "U-15 & U-18",
+    gender: "Boys",
+    verifiedLabel: "ISL Academy Tier 1",
+    urgencyText: "Pro Scouts Attending",
   },
   {
     id: "t-9",
@@ -117,6 +153,10 @@ export const TRIALS: Trial[] = [
     fee: 0,
     spots: 45,
     tag: "Open",
+    ageCategory: "Open (15+ yrs)",
+    gender: "Girls / Women",
+    verifiedLabel: "IWL Certified Club",
+    urgencyText: "Scholarships Available",
   },
   {
     id: "t-10",
@@ -128,6 +168,10 @@ export const TRIALS: Trial[] = [
     fee: 100,
     spots: 30,
     tag: "Official",
+    ageCategory: "U-17",
+    gender: "Open / Co-ed",
+    verifiedLabel: "Khelo India Center",
+    urgencyText: "Subsidized Fee",
   },
   {
     id: "t-11",
@@ -139,6 +183,10 @@ export const TRIALS: Trial[] = [
     fee: 0,
     spots: 200,
     tag: "Official",
+    ageCategory: "U-20 & Senior",
+    gender: "Men & Women",
+    verifiedLabel: "SAI Official",
+    urgencyText: "National Pathway",
   },
   {
     id: "t-12",
@@ -150,6 +198,10 @@ export const TRIALS: Trial[] = [
     fee: 0,
     spots: 50,
     tag: "Open",
+    ageCategory: "U-14",
+    gender: "Boys & Girls",
+    verifiedLabel: "Odisha Sports Verified",
+    urgencyText: "Free Kit Provided",
   },
   {
     id: "t-13",
@@ -161,6 +213,10 @@ export const TRIALS: Trial[] = [
     fee: 150,
     spots: 36,
     tag: "Premium",
+    ageCategory: "U-12 & U-14",
+    gender: "Open / Co-ed",
+    verifiedLabel: "AITA National Ranking",
+    urgencyText: "Points Awarded",
   },
   {
     id: "t-14",
@@ -172,6 +228,10 @@ export const TRIALS: Trial[] = [
     fee: 0,
     spots: 60,
     tag: "Premium",
+    ageCategory: "U-16 & U-19",
+    gender: "Boys",
+    verifiedLabel: "IPL Franchise Scout",
+    urgencyText: "Scouts Present",
   },
   {
     id: "t-15",
@@ -183,6 +243,10 @@ export const TRIALS: Trial[] = [
     fee: 0,
     spots: 90,
     tag: "Open",
+    ageCategory: "U-18",
+    gender: "Boys & Girls",
+    verifiedLabel: "State Federation",
+    urgencyText: "Medals & Certificates",
   },
   {
     id: "t-16",
@@ -194,6 +258,10 @@ export const TRIALS: Trial[] = [
     fee: 0,
     spots: 55,
     tag: "Open",
+    ageCategory: "U-17",
+    gender: "Boys",
+    verifiedLabel: "WIFA Affiliated",
+    urgencyText: "Trial Open",
   },
   {
     id: "t-17",
@@ -205,6 +273,10 @@ export const TRIALS: Trial[] = [
     fee: 200,
     spots: 24,
     tag: "Elite",
+    ageCategory: "U-16 & Senior",
+    gender: "Girls & Women",
+    verifiedLabel: "Specialized Academy",
+    urgencyText: "High Performance",
   },
   {
     id: "t-18",
@@ -216,6 +288,10 @@ export const TRIALS: Trial[] = [
     fee: 0,
     spots: 48,
     tag: "Official",
+    ageCategory: "U-19",
+    gender: "Men",
+    verifiedLabel: "Hockey India Official",
+    urgencyText: "National Camp Prep",
   },
 ];
 
