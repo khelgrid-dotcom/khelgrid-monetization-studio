@@ -36,7 +36,10 @@ import {
 import { BannerAd, ResponsiveAd } from "@/components/ads";
 import { GUIDES_CATALOG, SPORTS_CATALOG } from "@/data/catalog";
 import { TRIALS, type Trial } from "@/data/trials";
+import { getRealtimeOpportunityBadge } from "@/lib/opportunity-badge";
 import { SportsNewsSection } from "@/components/SportsNewsSection";
+import { HomeFaqSection } from "@/components/HomeFaqSection";
+import { HOME_FAQ_ITEMS } from "@/data/home-faq";
 import { buildSeoHead } from "@/lib/seo";
 import { useSavedOpportunities } from "@/context/SavedOpportunityContext";
 import { toast } from "sonner";
@@ -51,6 +54,17 @@ export const Route = createFileRoute("/")({
       keywords:
         "sports trials India, sports academies near me, book turf, pickup sports games, badminton courts, cricket trials, football tournament, athletics scholarship",
       type: "website",
+      customSchema: {
+        "@type": "FAQPage",
+        mainEntity: HOME_FAQ_ITEMS.map((faq) => ({
+          "@type": "Question",
+          name: faq.question,
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: faq.answer,
+          },
+        })),
+      },
     }),
   component: Home,
 });
@@ -106,6 +120,54 @@ function getSportBadgeStyle(sport: string) {
       return "bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border-cyan-500/20";
     default:
       return "bg-primary/10 text-primary border-primary/20";
+  }
+}
+
+type OpportunityBadgeType = "New" | "Closing Soon" | "High Demand" | "Scouted" | "Popular";
+
+function getOpportunityStatusBadge(badge?: OpportunityBadgeType | string) {
+  if (!badge) return null;
+
+  switch (badge) {
+    case "New":
+      return {
+        label: "New",
+        icon: Sparkles,
+        style:
+          "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-500/30 shadow-xs",
+        dotStyle: "bg-emerald-500 animate-pulse",
+      };
+    case "Closing Soon":
+      return {
+        label: "Closing Soon",
+        icon: Clock,
+        style: "bg-rose-500/15 text-rose-700 dark:text-rose-300 border-rose-500/30 shadow-xs",
+        dotStyle: "bg-rose-500",
+      };
+    case "High Demand":
+      return {
+        label: "High Demand",
+        icon: Flame,
+        style: "bg-amber-500/15 text-amber-700 dark:text-amber-300 border-amber-500/30 shadow-xs",
+        dotStyle: "bg-amber-500",
+      };
+    case "Scouted":
+      return {
+        label: "Scouted",
+        icon: Star,
+        style:
+          "bg-indigo-500/15 text-indigo-700 dark:text-indigo-300 border-indigo-500/30 shadow-xs",
+        dotStyle: "bg-indigo-500",
+      };
+    case "Popular":
+      return {
+        label: "Popular",
+        icon: Trophy,
+        style: "bg-sky-500/15 text-sky-700 dark:text-sky-300 border-sky-500/30 shadow-xs",
+        dotStyle: "bg-sky-500",
+      };
+    default:
+      return null;
   }
 }
 
@@ -467,6 +529,7 @@ function Home() {
                 const saved = isSaved(trial.id);
                 const sportStyle = getSportBadgeStyle(trial.sport);
                 const initials = getInitials(trial.academy);
+                const statusBadge = getRealtimeOpportunityBadge(trial);
                 const cardTitleId = `trial-title-${trial.id}`;
                 const cardDescId = `trial-meta-${trial.id}`;
 
@@ -475,13 +538,15 @@ function Home() {
                     key={trial.id}
                     role="group"
                     aria-roledescription="slide"
-                    aria-label={`Opportunity ${index + 1} of ${filteredOpportunities.length}: ${trial.title}`}
+                    aria-label={`Opportunity ${index + 1} of ${filteredOpportunities.length}: ${trial.title}${statusBadge ? ` (${statusBadge.label})` : ""}`}
                     aria-labelledby={cardTitleId}
                     aria-describedby={cardDescId}
-                    className="group relative flex w-[285px] shrink-0 snap-start flex-col justify-between rounded-2xl border border-border/80 bg-gradient-card p-4 transition-all duration-200 hover:-translate-y-1 hover:border-primary/50 hover:shadow-lg active:scale-[0.99] sm:w-auto sm:shrink"
+                    className={`group relative flex w-[285px] shrink-0 snap-start flex-col justify-between rounded-2xl border border-border/80 bg-gradient-card p-4 transition-all duration-200 hover:-translate-y-1 hover:border-primary/50 hover:shadow-lg active:scale-[0.99] sm:w-auto sm:shrink ${
+                      statusBadge?.isExpired ? "opacity-80 grayscale-[0.25]" : ""
+                    }`}
                   >
                     <div>
-                      {/* Top Organizer Branding & Action Bar */}
+                      {/* Top Organizer Branding, Status Badge & Action Bar */}
                       <div className="flex items-start justify-between gap-2">
                         <div className="flex items-center gap-2 min-w-0">
                           <div
@@ -540,10 +605,32 @@ function Home() {
                         </div>
                       </div>
 
+                      {/* Visual Indicator Status Badge (Real-time Date Based: Closed, Closing Soon, High Demand, etc.) */}
+                      {statusBadge && (
+                        <div className="mt-2.5 flex items-center gap-2">
+                          <span
+                            className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider ${statusBadge.style}`}
+                            aria-label={`Status: ${statusBadge.label}`}
+                          >
+                            <span
+                              className={`h-1.5 w-1.5 rounded-full shrink-0 ${statusBadge.dotStyle}`}
+                              aria-hidden="true"
+                            />
+                            <statusBadge.icon className="h-3 w-3 shrink-0" aria-hidden="true" />
+                            <span>{statusBadge.label}</span>
+                          </span>
+                          {statusBadge.sublabel && (
+                            <span className="text-[10px] font-medium text-muted-foreground">
+                              {statusBadge.sublabel}
+                            </span>
+                          )}
+                        </div>
+                      )}
+
                       {/* Trial Title with link */}
                       <h3
                         id={cardTitleId}
-                        className="mt-3 line-clamp-2 text-sm font-bold text-foreground transition-colors group-hover:text-primary"
+                        className={`${statusBadge ? "mt-2" : "mt-3"} line-clamp-2 text-sm font-bold text-foreground transition-colors group-hover:text-primary`}
                       >
                         <Link
                           to="/trial/$id"
@@ -641,10 +728,15 @@ function Home() {
                         <Link
                           to="/trial/$id"
                           params={{ id: trial.id }}
-                          className="inline-flex items-center gap-1 text-xs font-semibold text-primary transition-transform group-hover:translate-x-0.5 hover:underline focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary rounded-xs"
-                          aria-label={`View full details and registration for ${trial.title}`}
+                          className={`inline-flex items-center gap-1 text-xs font-semibold transition-transform group-hover:translate-x-0.5 hover:underline focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary rounded-xs ${
+                            statusBadge?.isExpired
+                              ? "text-muted-foreground hover:text-foreground"
+                              : "text-primary"
+                          }`}
+                          aria-label={`View full details for ${trial.title}${statusBadge?.isExpired ? " (Registration Closed)" : ""}`}
                         >
-                          Details <span aria-hidden="true">→</span>
+                          {statusBadge?.isExpired ? "View Archive" : "Details"}{" "}
+                          <span aria-hidden="true">→</span>
                         </Link>
                       </div>
                     </div>
@@ -817,6 +909,11 @@ function Home() {
             ))}
           </div>
         </section>
+
+        {/* FAQ Accordion Section: Monetization, Platform Usage & Trust */}
+        <div className="mx-auto max-w-7xl px-4 pb-16">
+          <HomeFaqSection />
+        </div>
 
         {/* Ad · end of page */}
         <div className="mx-auto max-w-7xl px-4 pb-16">

@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar, CheckCircle2, FileText, MapPin, ShieldCheck, Users } from "lucide-react";
 import { TRIALS } from "@/data/trials";
+import { getRealtimeOpportunityBadge } from "@/lib/opportunity-badge";
 import { buildSeoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/trial/$id")({
@@ -44,6 +45,7 @@ export const Route = createFileRoute("/trial/$id")({
 
 function TrialDetailPage() {
   const { trial } = Route.useLoaderData();
+  const statusBadge = getRealtimeOpportunityBadge(trial);
   const sourceLabel = trial.sourceLabel ?? "Organizer source not recorded";
   const verificationLabel = trial.lastVerified
     ? `Last verified ${trial.lastVerified}`
@@ -76,6 +78,21 @@ function TrialDetailPage() {
           {trial.sport}
         </Badge>
         <Badge variant="secondary">{trial.tag}</Badge>
+        {statusBadge && (
+          <span
+            className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider ${statusBadge.style}`}
+          >
+            <span
+              className={`h-1.5 w-1.5 rounded-full shrink-0 ${statusBadge.dotStyle}`}
+              aria-hidden="true"
+            />
+            <statusBadge.icon className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+            <span>{statusBadge.label}</span>
+            {statusBadge.sublabel && (
+              <span className="font-normal opacity-80">· {statusBadge.sublabel}</span>
+            )}
+          </span>
+        )}
       </div>
       <h1 className="mt-4 max-w-4xl text-3xl font-bold tracking-tight sm:text-5xl">
         {trial.title}

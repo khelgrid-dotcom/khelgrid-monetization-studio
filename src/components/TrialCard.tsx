@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/context/AuthContext";
 import { useSavedOpportunities } from "@/context/SavedOpportunityContext";
 import { useFollowedAcademies } from "@/context/FollowedAcademyContext";
+import { getRealtimeOpportunityBadge } from "@/lib/opportunity-badge";
 import { toast } from "sonner";
 
 interface Props {
@@ -23,6 +24,7 @@ export function TrialCard({ trial, boosted, onApply, onBoost, showBoostAction }:
   const applied = applications.includes(trial.id);
   const saved = isSaved(trial.id);
   const followingAcademy = isFollowingAcademy(trial.academy);
+  const statusBadge = getRealtimeOpportunityBadge(trial);
 
   return (
     <div
@@ -30,7 +32,7 @@ export function TrialCard({ trial, boosted, onApply, onBoost, showBoostAction }:
         boosted
           ? "border-primary/60 animate-pulse-glow"
           : "border-border hover:border-border/80 hover:translate-y-[-2px]"
-      }`}
+      } ${statusBadge?.isExpired ? "opacity-85 grayscale-[0.2]" : ""}`}
     >
       {boosted && (
         <div className="absolute right-4 top-4 flex items-center gap-1 rounded-full bg-gradient-hero px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-primary-foreground shadow-lg">
@@ -38,12 +40,25 @@ export function TrialCard({ trial, boosted, onApply, onBoost, showBoostAction }:
         </div>
       )}
 
-      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+      <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
         <Badge variant="outline" className="border-border text-[10px]">
           {trial.sport}
         </Badge>
         <span className="text-foreground/60">·</span>
         <span>{trial.tag}</span>
+
+        {statusBadge && (
+          <span
+            className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider ${statusBadge.style}`}
+          >
+            <span
+              className={`h-1 w-1 rounded-full shrink-0 ${statusBadge.dotStyle}`}
+              aria-hidden="true"
+            />
+            <statusBadge.icon className="h-2.5 w-2.5 shrink-0" aria-hidden="true" />
+            <span>{statusBadge.label}</span>
+          </span>
+        )}
       </div>
 
       <h3 className="mt-3 text-lg font-semibold leading-snug">
@@ -111,14 +126,16 @@ export function TrialCard({ trial, boosted, onApply, onBoost, showBoostAction }:
         </Button>
         <Button
           onClick={onApply}
-          disabled={applied}
+          disabled={applied || statusBadge?.isExpired}
           className="flex-1"
-          variant={applied ? "secondary" : "default"}
+          variant={applied || statusBadge?.isExpired ? "secondary" : "default"}
         >
           {applied ? (
             <>
               <Check className="mr-1 h-4 w-4" /> Applied
             </>
+          ) : statusBadge?.isExpired ? (
+            "Registration Closed"
           ) : (
             "Apply now"
           )}

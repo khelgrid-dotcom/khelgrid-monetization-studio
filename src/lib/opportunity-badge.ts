@@ -1,0 +1,167 @@
+import { Sparkles, Clock, Flame, Star, Trophy, XCircle, AlertTriangle } from "lucide-react";
+import type { Trial } from "@/data/trials";
+
+export interface ComputedOpportunityBadge {
+  label: string;
+  sublabel?: string;
+  icon: typeof Sparkles;
+  style: string;
+  dotStyle: string;
+  isExpired: boolean;
+  isUrgent: boolean;
+}
+
+/**
+ * Parses dates formatted like:
+ * - "Mar 14, 2026"
+ * - "Apr 02, 2026"
+ * - ISO string "2026-03-14"
+ */
+export function parseTrialDate(dateStr?: string): Date | null {
+  if (!dateStr) return null;
+  const parsed = new Date(dateStr);
+  if (!isNaN(parsed.getTime())) {
+    // If the string only has a date (no time), set it to the end of the day local/UTC
+    if (!dateStr.includes(":") && !dateStr.includes("T")) {
+      parsed.setHours(23, 59, 59, 999);
+    }
+    return parsed;
+  }
+  return null;
+}
+
+/**
+ * Computes dynamic, real-time date-based badges for sports opportunity cards:
+ * 1. "Closed" (Red/Muted) - when the trial date / registration deadline is in the past.
+ * 2. "Closing Soon" (Rose/Red) - within 24 hours of closing.
+ * 3. "High Demand" (Amber) - spots filling fast (< 20 spots or explicit high demand).
+ * 4. "New" (Emerald) - freshly added trials.
+ * 5. "Scouted" / "Popular" - verified federation or pro scout presence.
+ */
+export function getRealtimeOpportunityBadge(
+  trial: Pick<Trial, "date" | "registrationDeadline" | "badge" | "spots" | "urgencyText">,
+  currentDate: Date = new Date(),
+): ComputedOpportunityBadge | null {
+  const targetDate = parseTrialDate(trial.registrationDeadline || trial.date);
+
+  if (targetDate) {
+    const diffMs = targetDate.getTime() - currentDate.getTime();
+    const diffHours = diffMs / (1000 * 60 * 60);
+
+    // 1. Expired / Past Date -> "Closed"
+    if (diffMs <= 0) {
+      return {
+        label: "Closed",
+        sublabel: "Registration ended",
+        icon: XCircle,
+        style:
+          "bg-slate-500/15 text-slate-700 dark:text-slate-300 border-slate-500/30 line-through opacity-85 shadow-xs",
+        dotStyle: "bg-slate-400 dark:bg-slate-500",
+        isExpired: true,
+        isUrgent: false,
+      };
+    }
+
+    // 2. Less than or equal to 24 hours -> "Closing Soon"
+    if (diffHours <= 24) {
+      const hoursRemaining = Math.max(1, Math.ceil(diffHours));
+      return {
+        label: "Closing Soon",
+        sublabel: `${hoursRemaining}h left`,
+        icon: AlertTriangle,
+        style:
+          "bg-rose-500/20 text-rose-700 dark:text-rose-300 border-rose-500/40 shadow-xs animate-pulse",
+        dotStyle: "bg-rose-500 animate-ping",
+        isExpired: false,
+        isUrgent: true,
+      };
+    }
+
+    // 3. Between 24 hours and 72 hours -> "Closes in Xd" / "Closing Soon"
+    if (diffHours <= 72) {
+      const daysRemaining = Math.ceil(diffHours / 24);
+      return {
+        label: `Closes in ${daysRemaining}d`,
+        sublabel: `${daysRemaining} days left`,
+        icon: Clock,
+        style: "bg-rose-500/15 text-rose-700 dark:text-rose-300 border-rose-500/30 shadow-xs",
+        dotStyle: "bg-rose-500",
+        isExpired: false,
+        isUrgent: true,
+      };
+    }
+  }
+
+  // 4. Low Spots / Explicit High Demand -> "High Demand"
+  if (
+    trial.badge === "High Demand" ||
+    (typeof trial.spots === "number" && trial.spots > 0 && trial.spots <= 20) ||
+    trial.urgencyText?.toLowerCase().includes("filling fast") ||
+    trial.urgencyText?.toLowerCase().includes("final")
+  ) {
+    return {
+      label: "High Demand",
+      sublabel: "Filling fast",
+      icon: Flame,
+      style: "bg-amber-500/15 text-amber-700 dark:text-amber-300 border-amber-500/30 shadow-xs",
+      dotStyle: "bg-amber-500",
+      isExpired: false,
+      isUrgent: false,
+    };
+  }
+
+  // 5. New Trials
+  if (trial.badge === "New") {
+    return {
+      label: "New",
+      sublabel: "Recently added",
+      icon: Sparkles,
+      style:
+        "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-500/30 shadow-xs",
+      dotStyle: "bg-emerald-500 animate-pulse",
+      isExpired: false,
+      isUrgent: false,
+    };
+  }
+
+  // 6. Scouted Trials
+  if (trial.badge === "Scouted" || trial.urgencyText?.toLowerCase().includes("scout")) {
+    return {
+      label: "Scouted",
+      sublabel: "Pro scouts present",
+      icon: Star,
+      style: "bg-indigo-500/15 text-indigo-700 dark:text-indigo-300 border-indigo-500/30 shadow-xs",
+      dotStyle: "bg-indigo-500",
+      isExpired: false,
+      isUrgent: false,
+    };
+  }
+
+  // 7. Popular Trials
+  if (trial.badge === "Popular") {
+    return {
+      label: "Popular",
+      sublabel: "High participation",
+      icon: Trophy,
+      style: "bg-sky-500/15 text-sky-700 dark:text-sky-300 border-sky-500/30 shadow-xs",
+      dotStyle: "bg-sky-500",
+      isExpired: false,
+      isUrgent: false,
+    };
+  }
+
+  // Fallback if badge is set to "Closing Soon" manually even without date match
+  if (trial.badge === "Closing Soon") {
+    return {
+      label: "Closing Soon",
+      sublabel: "Registration closing",
+      icon: Clock,
+      style: "bg-rose-500/15 text-rose-700 dark:text-rose-300 border-rose-500/30 shadow-xs",
+      dotStyle: "bg-rose-500",
+      isExpired: false,
+      isUrgent: true,
+    };
+  }
+
+  return null;
+}
