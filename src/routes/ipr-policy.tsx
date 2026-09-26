@@ -113,8 +113,38 @@ const SECTIONS = [
     ],
   },
   {
+    id: "ai-content-imagery",
+    heading: "5. AI-Generated Content, Visual Media & Authorship",
+    icon: Sparkles,
+    body: [
+      "Under Section 2(d) of the Indian Copyright Act, 1957 and prevailing global jurisprudence (including US Copyright Office guidelines), purely autonomous, machine-generated outputs produced by artificial intelligence algorithms without human creative intervention do not qualify for independent copyright authorship.",
+      "Human Creative Arrangements: Original arrangements, selection, creative prompting frameworks, human-curated composites, UI graphic compositions, and editorial analyses published on KhelGrid reflect human creative expression and are protected under Indian copyright law.",
+      "Platform AI Assistive Features: AI-assisted tools on KhelGrid (such as Sports CV phrasing enhancers or tactical guide outlines) are assistive utilities. Athletes retain all personal and commercial rights in the factual data, achievements, and customized biographical text they formulate and finalize using these tools.",
+      "Third-Party AI Model Acknowledgement: Any generative models utilized for platform enhancement or asset generation comply with the commercial terms, safety guidelines, and licenses of the underlying model providers.",
+    ],
+  },
+  {
+    id: "synthetic-media-likeness",
+    heading: "6. Synthetic Media, Deepfakes & Athlete Likeness Protection",
+    icon: ShieldAlert,
+    body: [
+      "Right to Publicity & Personality Rights: Athletes, coaches, and sports personalities possess inherent personality and publicity rights recognized under Article 21 of the Constitution of India and Indian common law. Generating, uploading, or distributing unauthorized AI deepfakes, voice clones, face-swaps, or synthetic likenesses of any person without their explicit written consent is strictly prohibited on KhelGrid.",
+      "Ban on Forged Sports Credentials: Any use of generative AI to fabricate, modify, or forge trial certificates, federation affiliation letters, age proofs, or scout endorsements constitutes fraud and will result in immediate permanent account termination and referral to law enforcement agencies under Section 66D of the IT Act.",
+      "Expedited 24-36 Hour Takedown for Synthetic Violations: Any notice concerning non-consensual synthetic media, deepfakes, or impersonation receives top-priority statutory processing under Rule 3(2)(b) of the IT Rules, 2021, with takedown enforced within 24 to 36 hours of receipt.",
+    ],
+  },
+  {
+    id: "ai-training-optout",
+    heading: "7. Express Reservation Against AI Model Training (TDM Opt-Out)",
+    icon: Scale,
+    body: [
+      "KhelGrid expressly reserves all rights in relation to Text and Data Mining (TDM), automated harvesting, and machine learning training under applicable domestic and international intellectual property laws, including Article 4(3) of the European Union Digital Single Market Directive 2019/790 and Section 43 of the Indian Information Technology Act, 2000.",
+      "No entity or automated system may ingest, crawl, scrape, or extract athlete biographies, trial schedules, biometric performance scores, scout contact numbers, or editorial guides for the purpose of training commercial Large Language Models (LLMs), visual generative models, or artificial intelligence algorithms without an explicit, negotiated commercial license agreement executed in writing by KhelGrid.",
+    ],
+  },
+  {
     id: "dmca-takedown",
-    heading: "5. Statutory Notice & Takedown Procedure (DMCA & IT Rules 2021)",
+    heading: "8. Statutory Notice & Takedown Procedure (DMCA & IT Rules 2021)",
     icon: AlertCircle,
     body: [
       "KhelGrid operates as an intermediary under Section 79 of the Information Technology Act, 2000 and the Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021, and honors the principles of the US Digital Millennium Copyright Act (17 U.S.C. § 512).",
@@ -124,7 +154,7 @@ const SECTIONS = [
   },
   {
     id: "notice-elements",
-    heading: "6. Required Elements for a Valid Infringement Notice",
+    heading: "9. Required Elements for a Valid Infringement Notice",
     icon: Clock,
     body: [
       "To be effective, your written infringement notice must be dispatched to our designated Nodal IPR Officer and include:",
@@ -138,7 +168,7 @@ const SECTIONS = [
   },
   {
     id: "counter-notice",
-    heading: "7. Counter-Notification & Repeat Infringer Policy",
+    heading: "10. Counter-Notification & Repeat Infringer Policy",
     icon: Building,
     body: [
       "If content you uploaded was removed following an infringement notice and you believe this was due to mistaken identity, misidentification, or authorization, you may submit a formal counter-notification to ipr@khelgrid.com.",

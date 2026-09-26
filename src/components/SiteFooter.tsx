@@ -194,66 +194,37 @@ export function SiteFooter() {
         </div>
       </div>
 
-      {/* IPR & Copyright Compliance Footbar Section */}
-      <section className="border-t border-border bg-muted/20">
-        <div className="mx-auto max-w-7xl px-4 py-8 md:px-6">
-          <div className="rounded-2xl border border-border/80 bg-background/80 p-5 md:p-6 shadow-xs backdrop-blur-xs">
-            <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-              <div className="space-y-1.5">
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                    <Copyright className="h-4 w-4" />
-                  </span>
-                  <h3 className="font-heading text-base font-bold text-foreground">
-                    Intellectual Property Rights & Copyright Compliance
-                  </h3>
-                  <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-[10px] font-semibold text-emerald-600 dark:text-emerald-400">
-                    Indian Copyright Act, 1957 · IT Rules 2021
-                  </span>
-                </div>
-                <p className="max-w-4xl text-xs leading-relaxed text-muted-foreground">
-                  All original platform software, design architecture, database compilations, and
-                  the Verified Sports CV formats are proprietary intellectual property of KhelGrid.
-                  Federation, league, and academy marks (e.g. AIFF, BCCI, SAI, BWF) are property of
-                  their respective statutory owners and referenced strictly under nominative Fair
-                  Dealing for athlete trial discovery and news reporting.
-                </p>
-              </div>
+      {/* IPR, AI & Copyright Footbar Strip (Ultra-Compact) */}
+      <section className="border-t border-border bg-muted/15 py-3">
+        <div className="mx-auto flex max-w-7xl flex-col gap-2.5 px-4 text-xs md:flex-row md:items-center md:justify-between md:px-6">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 min-w-0">
+            <span className="inline-flex items-center gap-1 font-semibold text-foreground">
+              <Copyright className="h-3.5 w-3.5 text-primary shrink-0" />
+              IPR, AI & Copyright Notice:
+            </span>
+            <span className="text-[11px] text-muted-foreground">
+              Protected under Indian Copyright Act 1957. Purely autonomous AI outputs lack natural
+              authorship; creative arrangements & Sports CV layouts are proprietary. Unauthorized AI
+              deepfakes, athlete likeness theft & automated scraping for LLM training are strictly
+              prohibited.
+            </span>
+          </div>
 
-              <div className="flex flex-wrap items-center gap-2.5 shrink-0">
-                <Link
-                  to="/ipr-policy"
-                  className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-card px-3.5 py-2 text-xs font-semibold text-foreground transition hover:border-primary/50 hover:bg-accent"
-                >
-                  <Scale className="h-3.5 w-3.5 text-primary" />
-                  Read Full IPR Policy
-                </Link>
-                <a
-                  href="mailto:ipr@khelgrid.com?subject=Statutory%20IPR%20%2F%20Copyright%20Notice&body=Dear%20Nodal%20IPR%20Officer%2C%0A%0AI%20am%20reporting%20an%20alleged%20intellectual%20property%20matter%20under%20the%20Indian%20Copyright%20Act%201957.%0A%0AWork%2FTrademark%3A%0AURL(s)%3A%0ADetails%3A"
-                  className="inline-flex items-center gap-1.5 rounded-xl bg-primary px-3.5 py-2 text-xs font-semibold text-primary-foreground shadow-xs transition hover:bg-primary/90"
-                >
-                  <Mail className="h-3.5 w-3.5" />
-                  Report Infringement
-                </a>
-              </div>
-            </div>
-
-            <div className="mt-4 grid gap-3 border-t border-border/60 pt-3 text-[11px] text-muted-foreground sm:grid-cols-3">
-              <div className="flex items-center gap-2">
-                <ShieldCheck className="h-3.5 w-3.5 text-emerald-500 shrink-0" />
-                <span>Intermediary Safe Harbor under Section 79 IT Act</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Clock className="h-3.5 w-3.5 text-amber-500 shrink-0" />
-                <span>Expedited 36-hour statutory takedown response SLA</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Mail className="h-3.5 w-3.5 text-primary shrink-0" />
-                <span>
-                  Nodal IPR Officer: <strong className="text-foreground">ipr@khelgrid.com</strong>
-                </span>
-              </div>
-            </div>
+          <div className="flex items-center gap-2 shrink-0 pt-1 md:pt-0">
+            <Link
+              to="/ipr-policy"
+              className="inline-flex items-center gap-1 rounded-md border border-border/80 bg-background/80 px-2.5 py-1 text-[11px] font-semibold text-foreground transition hover:border-primary/50 hover:bg-card"
+            >
+              <Scale className="h-3 w-3 text-primary" />
+              IPR & AI Policy
+            </Link>
+            <a
+              href="mailto:ipr@khelgrid.com?subject=IPR%2FAI%20Takedown%20Notice&body=Attention%20Nodal%20IPR%20Officer%2C%0A%0AWork%2FAI%20Content%20URL%3A%0AInfringement%2FLikeness%20Issue%3A"
+              className="inline-flex items-center gap-1 rounded-md bg-primary/10 px-2.5 py-1 text-[11px] font-semibold text-primary transition hover:bg-primary hover:text-primary-foreground"
+            >
+              <Mail className="h-3 w-3" />
+              ipr@khelgrid.com
+            </a>
           </div>
         </div>
       </section>
