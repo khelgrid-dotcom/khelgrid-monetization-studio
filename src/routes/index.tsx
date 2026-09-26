@@ -164,7 +164,7 @@ function Home() {
             </div>
 
             {/* 5 Category Cards */}
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
+            <div className="-mx-4 flex gap-3 overflow-x-auto px-4 pb-2 pt-1 no-scrollbar snap-x snap-mandatory sm:mx-0 sm:grid sm:grid-cols-5 sm:overflow-visible sm:p-0">
               {[
                 { to: "/play", label: "Play", desc: "Find games", icon: Users },
                 { to: "/book", label: "Book", desc: "Venues & turfs", icon: CalendarCheck },
@@ -175,7 +175,7 @@ function Home() {
                 <Link
                   key={t.to}
                   to={t.to}
-                  className="group flex flex-col items-start rounded-2xl border border-border/80 bg-card p-4 transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-xs active:scale-[0.98]"
+                  className="group flex min-w-[130px] flex-1 shrink-0 snap-start flex-col items-start rounded-2xl border border-border/80 bg-card p-4 transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-xs active:scale-[0.98] sm:min-w-0 sm:shrink"
                 >
                   <div className="grid h-10 w-10 place-items-center rounded-full bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
                     <t.icon className="h-5 w-5" />

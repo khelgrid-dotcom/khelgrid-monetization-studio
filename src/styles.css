@@ -168,6 +168,13 @@
   .animate-pulse-glow {
     animation: pulse-glow 2.4s ease-in-out infinite;
   }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
   @keyframes pulse-glow {
     0%,
     100% {
