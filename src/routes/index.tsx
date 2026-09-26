@@ -329,255 +329,363 @@ function Home() {
             </p>
           </div>
 
-          <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <div className="flex flex-wrap items-center gap-2">
-                <h2 className="text-xl font-bold tracking-tight sm:text-2xl">
-                  Latest opportunities
-                </h2>
-                <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">
-                  <ShieldCheck className="h-3.5 w-3.5 shrink-0" /> Verified Listings
-                </span>
-                <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary sm:hidden">
-                  Swipe ↔
-                </span>
-              </div>
-              <p className="mt-1.5 text-sm text-muted-foreground">
-                Review eligibility, age cutoffs & verified organizer badges before you apply, travel
-                or pay.
-              </p>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <div className="flex items-center gap-1.5">
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="h-8 w-8 rounded-full border-border/80 bg-background/80 disabled:opacity-30"
-                  onClick={() => scrollOpportunities("left")}
-                  disabled={!canScrollLeft}
-                  aria-label="Scroll left"
-                >
-                  <ChevronLeft className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="h-8 w-8 rounded-full border-border/80 bg-background/80 disabled:opacity-30"
-                  onClick={() => scrollOpportunities("right")}
-                  disabled={!canScrollRight}
-                  aria-label="Scroll right"
-                >
-                  <ChevronRight className="h-4 w-4" />
-                </Button>
-              </div>
-              <Link to="/search" className="text-sm font-semibold text-primary hover:underline">
-                Browse all ({TRIALS.length}) →
-              </Link>
-            </div>
-          </div>
-
-          {/* Sport Filter Chips */}
-          <div className="-mx-4 mt-4 flex items-center gap-1.5 overflow-x-auto px-4 pb-2 pt-1 no-scrollbar sm:mx-0 sm:flex-wrap">
-            {SPORT_FILTER_CHIPS.map((chip) => {
-              const count =
-                chip.id === "All"
-                  ? TRIALS.length
-                  : TRIALS.filter((t) => t.sport.toLowerCase() === chip.id.toLowerCase()).length;
-              const isActive = selectedSportFilter === chip.id;
-              return (
-                <button
-                  key={chip.id}
-                  type="button"
-                  onClick={() => {
-                    setSelectedSportFilter(chip.id);
-                    if (opportunitiesRef.current) {
-                      opportunitiesRef.current.scrollTo({ left: 0, behavior: "smooth" });
-                    }
-                  }}
-                  className={`group inline-flex shrink-0 items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium transition-all ${
-                    isActive
-                      ? "bg-primary text-primary-foreground shadow-sm ring-2 ring-primary/30"
-                      : "border border-border/80 bg-card text-muted-foreground hover:border-primary/40 hover:text-foreground active:scale-95"
-                  }`}
-                >
-                  <span>{chip.label}</span>
+          <section aria-labelledby="latest-opportunities-heading" className="mt-8">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <div className="flex flex-wrap items-center gap-2">
+                  <h2
+                    id="latest-opportunities-heading"
+                    className="text-xl font-bold tracking-tight sm:text-2xl"
+                  >
+                    Latest opportunities
+                  </h2>
                   <span
-                    className={`rounded-full px-1.5 py-0.2 text-[10px] font-semibold transition-colors ${
+                    className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400"
+                    aria-label="Verified listings only"
+                  >
+                    <ShieldCheck className="h-3.5 w-3.5 shrink-0" aria-hidden="true" /> Verified
+                    Listings
+                  </span>
+                  <span
+                    className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary sm:hidden"
+                    aria-hidden="true"
+                  >
+                    Swipe ↔
+                  </span>
+                </div>
+                <p className="mt-1.5 text-sm text-muted-foreground">
+                  Review eligibility, age cutoffs & verified organizer badges before you apply,
+                  travel or pay.
+                </p>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <div
+                  className="flex items-center gap-1.5"
+                  role="group"
+                  aria-label="Carousel navigation controls"
+                >
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="h-8 w-8 rounded-full border-border/80 bg-background/80 disabled:opacity-30"
+                    onClick={() => scrollOpportunities("left")}
+                    disabled={!canScrollLeft}
+                    aria-label="Previous opportunity cards"
+                    aria-controls="opportunities-carousel"
+                  >
+                    <ChevronLeft className="h-4 w-4" aria-hidden="true" />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="h-8 w-8 rounded-full border-border/80 bg-background/80 disabled:opacity-30"
+                    onClick={() => scrollOpportunities("right")}
+                    disabled={!canScrollRight}
+                    aria-label="Next opportunity cards"
+                    aria-controls="opportunities-carousel"
+                  >
+                    <ChevronRight className="h-4 w-4" aria-hidden="true" />
+                  </Button>
+                </div>
+                <Link
+                  to="/search"
+                  className="text-sm font-semibold text-primary hover:underline focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary rounded-sm"
+                  aria-label={`Browse all ${TRIALS.length} sports opportunities`}
+                >
+                  Browse all ({TRIALS.length}) →
+                </Link>
+              </div>
+            </div>
+
+            {/* Sport Filter Chips with tablist accessibility */}
+            <div
+              role="tablist"
+              aria-label="Filter opportunities by sport"
+              className="-mx-4 mt-4 flex items-center gap-1.5 overflow-x-auto px-4 pb-2 pt-1 no-scrollbar sm:mx-0 sm:flex-wrap"
+            >
+              {SPORT_FILTER_CHIPS.map((chip) => {
+                const count =
+                  chip.id === "All"
+                    ? TRIALS.length
+                    : TRIALS.filter((t) => t.sport.toLowerCase() === chip.id.toLowerCase()).length;
+                const isActive = selectedSportFilter === chip.id;
+                return (
+                  <button
+                    key={chip.id}
+                    type="button"
+                    role="tab"
+                    id={`filter-tab-${chip.id.toLowerCase()}`}
+                    aria-selected={isActive}
+                    aria-controls="opportunities-carousel"
+                    onClick={() => {
+                      setSelectedSportFilter(chip.id);
+                      if (opportunitiesRef.current) {
+                        opportunitiesRef.current.scrollTo({ left: 0, behavior: "smooth" });
+                      }
+                    }}
+                    className={`group inline-flex shrink-0 items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium transition-all focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary ${
                       isActive
-                        ? "bg-primary-foreground/20 text-primary-foreground"
-                        : "bg-muted text-muted-foreground group-hover:bg-muted/80"
+                        ? "bg-primary text-primary-foreground shadow-sm ring-2 ring-primary/30"
+                        : "border border-border/80 bg-card text-muted-foreground hover:border-primary/40 hover:text-foreground active:scale-95"
                     }`}
                   >
-                    {count}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
+                    <span>{chip.label}</span>
+                    <span
+                      aria-label={`${count} available`}
+                      className={`rounded-full px-1.5 py-0.2 text-[10px] font-semibold transition-colors ${
+                        isActive
+                          ? "bg-primary-foreground/20 text-primary-foreground"
+                          : "bg-muted text-muted-foreground group-hover:bg-muted/80"
+                      }`}
+                    >
+                      {count}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
 
-          {/* Horizontally movable opportunities container */}
-          <div
-            ref={opportunitiesRef}
-            onScroll={handleOpportunitiesScroll}
-            className="-mx-4 mt-3 flex gap-3.5 overflow-x-auto px-4 pb-3 pt-1 no-scrollbar snap-x snap-mandatory scroll-smooth sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-3 sm:overflow-visible sm:p-0 lg:grid-cols-4"
-          >
-            {filteredOpportunities.map((trial) => {
-              const saved = isSaved(trial.id);
-              const sportStyle = getSportBadgeStyle(trial.sport);
-              const initials = getInitials(trial.academy);
+            {/* Live region announcing filtered count to screen readers */}
+            <div className="sr-only" aria-live="polite" aria-atomic="true">
+              Showing {filteredOpportunities.length} opportunities for{" "}
+              {selectedSportFilter === "All" ? "all sports" : selectedSportFilter}
+            </div>
 
-              return (
-                <div
-                  key={trial.id}
-                  className="group relative flex w-[285px] shrink-0 snap-start flex-col justify-between rounded-2xl border border-border/80 bg-gradient-card p-4 transition-all duration-200 hover:-translate-y-1 hover:border-primary/50 hover:shadow-lg active:scale-[0.99] sm:w-auto sm:shrink"
-                >
-                  <div>
-                    {/* Top Organizer Branding & Action Bar */}
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="flex items-center gap-2 min-w-0">
-                        <div
-                          className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl font-bold text-xs shadow-xs ${sportStyle}`}
-                        >
-                          {initials}
-                        </div>
-                        <div className="min-w-0">
-                          <p className="truncate text-xs font-semibold text-foreground">
-                            {trial.academy}
-                          </p>
-                          <div className="flex items-center gap-1 text-[10px] font-medium text-emerald-600 dark:text-emerald-400">
-                            <ShieldCheck className="h-3 w-3 shrink-0" />
-                            <span className="truncate">{trial.verifiedLabel || "Verified"}</span>
+            {/* Horizontally movable opportunities carousel */}
+            <div
+              id="opportunities-carousel"
+              ref={opportunitiesRef}
+              onScroll={handleOpportunitiesScroll}
+              tabIndex={0}
+              role="region"
+              aria-roledescription="carousel"
+              aria-label="Latest sports opportunities and trials"
+              className="-mx-4 mt-3 flex gap-3.5 overflow-x-auto px-4 pb-3 pt-1 no-scrollbar snap-x snap-mandatory scroll-smooth focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary/40 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-3 sm:overflow-visible sm:p-0 lg:grid-cols-4"
+            >
+              {filteredOpportunities.map((trial, index) => {
+                const saved = isSaved(trial.id);
+                const sportStyle = getSportBadgeStyle(trial.sport);
+                const initials = getInitials(trial.academy);
+                const cardTitleId = `trial-title-${trial.id}`;
+                const cardDescId = `trial-meta-${trial.id}`;
+
+                return (
+                  <article
+                    key={trial.id}
+                    role="group"
+                    aria-roledescription="slide"
+                    aria-label={`Opportunity ${index + 1} of ${filteredOpportunities.length}: ${trial.title}`}
+                    aria-labelledby={cardTitleId}
+                    aria-describedby={cardDescId}
+                    className="group relative flex w-[285px] shrink-0 snap-start flex-col justify-between rounded-2xl border border-border/80 bg-gradient-card p-4 transition-all duration-200 hover:-translate-y-1 hover:border-primary/50 hover:shadow-lg active:scale-[0.99] sm:w-auto sm:shrink"
+                  >
+                    <div>
+                      {/* Top Organizer Branding & Action Bar */}
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex items-center gap-2 min-w-0">
+                          <div
+                            aria-hidden="true"
+                            className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl font-bold text-xs shadow-xs ${sportStyle}`}
+                          >
+                            {initials}
+                          </div>
+                          <div className="min-w-0">
+                            <p className="truncate text-xs font-semibold text-foreground">
+                              {trial.academy}
+                            </p>
+                            <div className="flex items-center gap-1 text-[10px] font-medium text-emerald-600 dark:text-emerald-400">
+                              <ShieldCheck className="h-3 w-3 shrink-0" aria-hidden="true" />
+                              <span className="truncate">{trial.verifiedLabel || "Verified"}</span>
+                            </div>
                           </div>
                         </div>
+
+                        {/* Bookmark & WhatsApp Share Actions */}
+                        <div
+                          className="flex items-center gap-1 shrink-0"
+                          role="group"
+                          aria-label={`Actions for ${trial.title}`}
+                        >
+                          <button
+                            type="button"
+                            onClick={(e) => handleToggleBookmark(e, trial)}
+                            title={saved ? "Remove from saved" : "Bookmark trial"}
+                            aria-label={
+                              saved
+                                ? `Remove ${trial.title} from saved trials`
+                                : `Save ${trial.title} to bookmarks`
+                            }
+                            aria-pressed={saved}
+                            className={`flex h-7 w-7 items-center justify-center rounded-full border transition-all focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary ${
+                              saved
+                                ? "border-primary bg-primary text-primary-foreground shadow-xs"
+                                : "border-border/80 bg-background/80 text-muted-foreground hover:border-primary/50 hover:text-primary"
+                            }`}
+                          >
+                            <Bookmark
+                              className={`h-3.5 w-3.5 ${saved ? "fill-current" : ""}`}
+                              aria-hidden="true"
+                            />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={(e) => handleWhatsAppShare(e, trial)}
+                            title="Share notice on WhatsApp"
+                            aria-label={`Share trial notice for ${trial.title} on WhatsApp`}
+                            className="flex h-7 w-7 items-center justify-center rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-600 transition-all hover:bg-emerald-600 hover:text-white dark:text-emerald-400 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-emerald-500"
+                          >
+                            <MessageCircle className="h-3.5 w-3.5" aria-hidden="true" />
+                          </button>
+                        </div>
                       </div>
 
-                      {/* Bookmark & WhatsApp Share Actions */}
-                      <div className="flex items-center gap-1 shrink-0">
-                        <button
-                          type="button"
-                          onClick={(e) => handleToggleBookmark(e, trial)}
-                          title={saved ? "Remove from saved" : "Bookmark trial"}
-                          aria-label={saved ? "Remove from saved" : "Bookmark trial"}
-                          className={`flex h-7 w-7 items-center justify-center rounded-full border transition-all ${
-                            saved
-                              ? "border-primary bg-primary text-primary-foreground shadow-xs"
-                              : "border-border/80 bg-background/80 text-muted-foreground hover:border-primary/50 hover:text-primary"
-                          }`}
-                        >
-                          <Bookmark className={`h-3.5 w-3.5 ${saved ? "fill-current" : ""}`} />
-                        </button>
-                        <button
-                          type="button"
-                          onClick={(e) => handleWhatsAppShare(e, trial)}
-                          title="Share notice on WhatsApp"
-                          aria-label="Share trial on WhatsApp"
-                          className="flex h-7 w-7 items-center justify-center rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-600 transition-all hover:bg-emerald-600 hover:text-white dark:text-emerald-400"
-                        >
-                          <MessageCircle className="h-3.5 w-3.5" />
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* Trial Title with link */}
-                    <h3 className="mt-3 line-clamp-2 text-sm font-bold text-foreground transition-colors group-hover:text-primary">
-                      <Link
-                        to="/trial/$id"
-                        params={{ id: trial.id }}
-                        className="focus:outline-hidden"
+                      {/* Trial Title with link */}
+                      <h3
+                        id={cardTitleId}
+                        className="mt-3 line-clamp-2 text-sm font-bold text-foreground transition-colors group-hover:text-primary"
                       >
-                        {trial.title}
-                      </Link>
-                    </h3>
+                        <Link
+                          to="/trial/$id"
+                          params={{ id: trial.id }}
+                          className="focus:outline-hidden focus-visible:ring-2 focus-visible:ring-primary rounded-xs"
+                          aria-label={`${trial.title}, organized by ${trial.academy}`}
+                        >
+                          {trial.title}
+                        </Link>
+                      </h3>
 
-                    {/* Eligibility & Category Tags (Age, Gender, Sport) */}
-                    <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
-                      <span className="inline-flex items-center rounded-md bg-secondary/90 px-2 py-0.5 text-[10px] font-semibold text-secondary-foreground">
-                        {trial.sport}
-                      </span>
-                      {trial.ageCategory && (
-                        <span className="inline-flex items-center rounded-md bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary">
-                          {trial.ageCategory}
+                      {/* Eligibility & Category Tags (Age, Gender, Sport) */}
+                      <div
+                        id={cardDescId}
+                        className="mt-2.5 flex flex-wrap items-center gap-1.5"
+                        aria-label="Trial categories and eligibility"
+                      >
+                        <span className="inline-flex items-center rounded-md bg-secondary/90 px-2 py-0.5 text-[10px] font-semibold text-secondary-foreground">
+                          {trial.sport}
                         </span>
-                      )}
-                      {trial.gender && (
-                        <span className="inline-flex items-center rounded-md border border-border/80 bg-card px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
-                          {trial.gender}
-                        </span>
-                      )}
-                    </div>
-
-                    {/* Urgency / Cutoff Alert */}
-                    {trial.urgencyText && (
-                      <div className="mt-3 flex items-center gap-1.5 rounded-lg bg-amber-500/10 px-2.5 py-1 text-[11px] font-medium text-amber-700 dark:text-amber-400">
-                        <Clock className="h-3 w-3 shrink-0" />
-                        <span className="truncate">{trial.urgencyText}</span>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Card Footer with Location, Date & Fee */}
-                  <div className="mt-4 border-t border-border/60 pt-3">
-                    <div className="flex items-center justify-between text-xs text-muted-foreground">
-                      <span className="flex items-center gap-1">
-                        <MapPin className="h-3.5 w-3.5 text-primary/70 shrink-0" />
-                        <span className="max-w-[110px] truncate">{trial.city}</span>
-                      </span>
-                      <span className="flex items-center gap-1 font-medium text-foreground/80">
-                        <CalendarDays className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
-                        <span>{trial.date}</span>
-                      </span>
-                    </div>
-
-                    <div className="mt-2.5 flex items-center justify-between">
-                      <div>
-                        {trial.fee === 0 ? (
-                          <span className="rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-[11px] font-bold text-emerald-600 dark:text-emerald-400">
-                            Free entry
+                        {trial.ageCategory && (
+                          <span
+                            className="inline-flex items-center rounded-md bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary"
+                            aria-label={`Age category: ${trial.ageCategory}`}
+                          >
+                            {trial.ageCategory}
                           </span>
-                        ) : (
-                          <span className="rounded-full bg-secondary px-2.5 py-0.5 text-[11px] font-bold text-foreground">
-                            ₹{trial.fee}
+                        )}
+                        {trial.gender && (
+                          <span
+                            className="inline-flex items-center rounded-md border border-border/80 bg-card px-2 py-0.5 text-[10px] font-medium text-muted-foreground"
+                            aria-label={`Gender eligibility: ${trial.gender}`}
+                          >
+                            {trial.gender}
                           </span>
                         )}
                       </div>
 
-                      <Link
-                        to="/trial/$id"
-                        params={{ id: trial.id }}
-                        className="inline-flex items-center gap-1 text-xs font-semibold text-primary transition-transform group-hover:translate-x-0.5 hover:underline"
-                      >
-                        Details →
-                      </Link>
+                      {/* Urgency / Cutoff Alert */}
+                      {trial.urgencyText && (
+                        <div
+                          role="status"
+                          className="mt-3 flex items-center gap-1.5 rounded-lg bg-amber-500/10 px-2.5 py-1 text-[11px] font-medium text-amber-700 dark:text-amber-400"
+                          aria-label={`Urgency alert: ${trial.urgencyText}`}
+                        >
+                          <Clock className="h-3 w-3 shrink-0" aria-hidden="true" />
+                          <span className="truncate">{trial.urgencyText}</span>
+                        </div>
+                      )}
                     </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
 
-          {/* Mobile Carousel Indicators (Progress dots & count) */}
-          <div className="mt-3 flex items-center justify-between px-1 sm:hidden">
-            <span className="text-[11px] font-medium text-muted-foreground">
-              Showing {filteredOpportunities.length} opportunities · Swipe horizontally
-            </span>
+                    {/* Card Footer with Location, Date & Fee */}
+                    <div className="mt-4 border-t border-border/60 pt-3">
+                      <div className="flex items-center justify-between text-xs text-muted-foreground">
+                        <span className="flex items-center gap-1">
+                          <MapPin
+                            className="h-3.5 w-3.5 text-primary/70 shrink-0"
+                            aria-hidden="true"
+                          />
+                          <span
+                            className="max-w-[110px] truncate"
+                            aria-label={`Location: ${trial.city}`}
+                          >
+                            {trial.city}
+                          </span>
+                        </span>
+                        <span className="flex items-center gap-1 font-medium text-foreground/80">
+                          <CalendarDays
+                            className="h-3.5 w-3.5 text-muted-foreground shrink-0"
+                            aria-hidden="true"
+                          />
+                          <span aria-label={`Date: ${trial.date}`}>{trial.date}</span>
+                        </span>
+                      </div>
 
-            <div className="flex items-center gap-1">
-              {filteredOpportunities
-                .slice(0, Math.min(6, filteredOpportunities.length))
-                .map((_, i) => (
-                  <button
-                    key={i}
-                    type="button"
-                    onClick={() => scrollToIndex(i)}
-                    aria-label={`Scroll to opportunity ${i + 1}`}
-                    className={`h-1.5 rounded-full transition-all ${
-                      activeScrollIndex === i ? "w-5 bg-primary" : "w-1.5 bg-muted-foreground/30"
-                    }`}
-                  />
-                ))}
+                      <div className="mt-2.5 flex items-center justify-between">
+                        <div>
+                          {trial.fee === 0 ? (
+                            <span
+                              className="rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-[11px] font-bold text-emerald-600 dark:text-emerald-400"
+                              aria-label="Registration fee: Free entry"
+                            >
+                              Free entry
+                            </span>
+                          ) : (
+                            <span
+                              className="rounded-full bg-secondary px-2.5 py-0.5 text-[11px] font-bold text-foreground"
+                              aria-label={`Registration fee: ₹${trial.fee}`}
+                            >
+                              ₹{trial.fee}
+                            </span>
+                          )}
+                        </div>
+
+                        <Link
+                          to="/trial/$id"
+                          params={{ id: trial.id }}
+                          className="inline-flex items-center gap-1 text-xs font-semibold text-primary transition-transform group-hover:translate-x-0.5 hover:underline focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary rounded-xs"
+                          aria-label={`View full details and registration for ${trial.title}`}
+                        >
+                          Details <span aria-hidden="true">→</span>
+                        </Link>
+                      </div>
+                    </div>
+                  </article>
+                );
+              })}
             </div>
-          </div>
+
+            {/* Mobile Carousel Indicators (Progress dots & count) */}
+            <div
+              className="mt-3 flex items-center justify-between px-1 sm:hidden"
+              role="group"
+              aria-label="Carousel pagination"
+            >
+              <span className="text-[11px] font-medium text-muted-foreground" aria-live="polite">
+                Showing {filteredOpportunities.length} opportunities · Swipe horizontally
+              </span>
+
+              <div
+                className="flex items-center gap-1"
+                role="tablist"
+                aria-label="Opportunity slide indicators"
+              >
+                {filteredOpportunities
+                  .slice(0, Math.min(6, filteredOpportunities.length))
+                  .map((_, i) => (
+                    <button
+                      key={i}
+                      type="button"
+                      role="tab"
+                      aria-selected={activeScrollIndex === i}
+                      aria-label={`Go to slide ${i + 1} of ${Math.min(6, filteredOpportunities.length)}`}
+                      onClick={() => scrollToIndex(i)}
+                      className={`h-1.5 rounded-full transition-all focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary ${
+                        activeScrollIndex === i ? "w-5 bg-primary" : "w-1.5 bg-muted-foreground/30"
+                      }`}
+                    />
+                  ))}
+              </div>
+            </div>
+          </section>
 
           {/* Real-time Sports Wire & National Updates (SEO Optimized News Section) */}
           <SportsNewsSection />
