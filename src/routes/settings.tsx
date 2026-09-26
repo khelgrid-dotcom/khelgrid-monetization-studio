@@ -33,6 +33,7 @@ import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { useTheme } from "@/context/ThemeContext";
 import { useAuth } from "@/context/AuthContext";
+import { useLanguage, type LanguageCode } from "@/context/LanguageContext";
 import { toast } from "sonner";
 import { buildSeoHead } from "@/lib/seo";
 import { FeedbackSupportDialog, FeedbackType } from "@/components/FeedbackSupportDialog";
@@ -59,6 +60,7 @@ interface SettingsState {
 
 function SettingsPage() {
   const { theme, setTheme } = useTheme();
+  const { language, setLanguage, supportedLanguages } = useLanguage();
   const auth = useAuth();
   const navigate = useNavigate();
   const { isAuthenticated, name, email, role = "user", logout } = auth;
@@ -139,12 +141,14 @@ function SettingsPage() {
   const handleReset = () => {
     // Reset to defaults
     setTheme("auto");
+    setLanguage("en");
     setSettings({
       notifications: { email: true, sms: false, push: true },
       privacy: { profilePublic: true, showActivity: false, allowMessages: true },
       advertising: { personalized: true, trackingAllowed: true, targetedAds: true },
       preferences: { theme: "auto", language: "en", emailFrequency: "weekly" },
     });
+    toast.info("Settings reset to defaults");
   };
 
   return (
@@ -204,23 +208,32 @@ function SettingsPage() {
                   </CardHeader>
                   <CardContent className="space-y-6">
                     <div>
-                      <label className="block font-semibold text-slate-900 dark:text-white mb-3">
-                        Language
-                      </label>
+                      <div className="flex items-center justify-between mb-3">
+                        <label className="block font-semibold text-slate-900 dark:text-white">
+                          Language / भाषा
+                        </label>
+                        <span className="text-xs text-muted-foreground">
+                          Changes apply across the entire application
+                        </span>
+                      </div>
                       <select
-                        value={settings.preferences.language}
+                        value={language}
                         onChange={(e) => {
+                          const newLang = e.target.value as LanguageCode;
+                          setLanguage(newLang);
                           setSettings({
                             ...settings,
-                            preferences: { ...settings.preferences, language: e.target.value },
+                            preferences: { ...settings.preferences, language: newLang },
                           });
+                          toast.success("Application language updated");
                         }}
-                        className="w-full px-4 py-2 border border-border rounded-lg bg-background dark:bg-slate-700"
+                        className="w-full px-4 py-2.5 border border-border rounded-lg bg-background dark:bg-slate-700 text-foreground text-sm font-medium"
                       >
-                        <option value="en">🇬🇧 English</option>
-                        <option value="hi">🇮🇳 Hindi (हिंदी)</option>
-                        <option value="es">🇪🇸 Spanish (Español)</option>
-                        <option value="fr">🇫🇷 French (Français)</option>
+                        {supportedLanguages.map((lang) => (
+                          <option key={lang.code} value={lang.code}>
+                            {lang.flag} {lang.name} ({lang.nativeName}) — {lang.region}
+                          </option>
+                        ))}
                       </select>
                     </div>
 

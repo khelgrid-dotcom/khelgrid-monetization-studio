@@ -14,8 +14,10 @@ import {
   Zap,
   Settings,
   LayoutDashboard,
+  Languages,
 } from "lucide-react";
 import { toast } from "sonner";
+import { useLanguage } from "@/context/LanguageContext";
 import { NavLink } from "@/components/NavLink";
 import { PlayNavLink } from "@/components/PlayNavLink";
 import { PRIMARY_ITEMS, FEATURE_ITEMS, isActivePath, type NavItem } from "@/config/nav";
@@ -27,6 +29,7 @@ const FEATURES: readonly NavItem[] = FEATURE_ITEMS;
 export function NavDrawer() {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
+  const { currentLanguage } = useLanguage();
   const auth = useAuth();
   const { plan = "free", wallet = 0, isAuthenticated, role = "user", name, logout } = auth;
   const isAuth = Boolean(isAuthenticated);
@@ -237,6 +240,23 @@ export function NavDrawer() {
         </div>
 
         <div className="sticky bottom-0 space-y-2 border-t border-border/60 bg-background/95 p-4 backdrop-blur-xl">
+          <div className="flex items-center justify-between px-1 pb-1">
+            <span className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground">
+              <Languages className="h-3.5 w-3.5 text-primary" />
+              <span>Language</span>
+            </span>
+            <Link
+              to="/settings"
+              onClick={() => setOpen(false)}
+              className="flex items-center gap-1 text-xs font-semibold text-primary hover:underline"
+            >
+              <span>
+                {currentLanguage.flag} {currentLanguage.nativeName}
+              </span>
+              <Settings className="h-3 w-3 text-muted-foreground" />
+            </Link>
+          </div>
+
           <Button
             asChild
             className="w-full rounded-xl bg-gradient-hero text-primary-foreground shadow-sm hover:opacity-95"

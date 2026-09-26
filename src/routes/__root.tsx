@@ -17,6 +17,7 @@ import { FollowedAcademyProvider } from "@/context/FollowedAcademyContext";
 import { NotificationProvider } from "@/context/NotificationContext";
 import { SavedOpportunityProvider } from "@/context/SavedOpportunityContext";
 import { ThemeProvider, useTheme } from "@/context/ThemeContext";
+import { LanguageProvider } from "@/context/LanguageContext";
 import { Navbar } from "@/components/Navbar";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { BottomTabBar } from "@/components/BottomTabBar";
@@ -195,34 +196,36 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
-        <AuthProvider>
-          <BlogProvider>
-            <SavedOpportunityProvider>
-              <FollowedAcademyProvider>
-                <NotificationProvider>
-                  <AdConsentProvider requireConsent={false}>
-                    <GoogleTagLoader />
-                    <SEOHead />
-                    <AdSenseLoader />
+        <LanguageProvider>
+          <AuthProvider>
+            <BlogProvider>
+              <SavedOpportunityProvider>
+                <FollowedAcademyProvider>
+                  <NotificationProvider>
+                    <AdConsentProvider requireConsent={false}>
+                      <GoogleTagLoader />
+                      <SEOHead />
+                      <AdSenseLoader />
 
-                    <Navbar />
-                    <Breadcrumbs />
-                    <div className="pb-20 xl:pb-0">
-                      <Outlet />
-                      <SiteFooter />
-                    </div>
-                    <BottomTabBar />
+                      <Navbar />
+                      <Breadcrumbs />
+                      <div className="pb-20 xl:pb-0">
+                        <Outlet />
+                        <SiteFooter />
+                      </div>
+                      <BottomTabBar />
 
-                    <StickyMobileAdSlot />
-                    <AdConsentBanner />
-                    <ThemedToaster />
-                    <HydrationDiagnostics />
-                  </AdConsentProvider>
-                </NotificationProvider>
-              </FollowedAcademyProvider>
-            </SavedOpportunityProvider>
-          </BlogProvider>
-        </AuthProvider>
+                      <StickyMobileAdSlot />
+                      <AdConsentBanner />
+                      <ThemedToaster />
+                      <HydrationDiagnostics />
+                    </AdConsentProvider>
+                  </NotificationProvider>
+                </FollowedAcademyProvider>
+              </SavedOpportunityProvider>
+            </BlogProvider>
+          </AuthProvider>
+        </LanguageProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );

@@ -25,24 +25,26 @@ import {
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useLanguage } from "@/context/LanguageContext";
 import { MatchStatisticsCharts } from "@/components/blog/MatchStatisticsCharts";
 import { IndiaJapanSocialFeed } from "@/components/blog/IndiaJapanSocialFeed";
 import { AsianGamesAnalytics } from "@/components/blog/AsianGamesAnalytics";
 import { MatchOutcomePredictor } from "@/components/blog/MatchOutcomePredictor";
 
-const SPORT_TABS = [
-  "All Sports",
-  "Asian Games",
-  "Cricket",
-  "Football",
-  "Badminton",
-  "Athletics",
-  "Grassroots",
+const SPORT_TABS_CONFIG = [
+  { id: "All Sports", key: "allSports", fallback: "All Sports" },
+  { id: "Asian Games", key: "asianGames", fallback: "Asian Games" },
+  { id: "Cricket", key: "cricket", fallback: "Cricket" },
+  { id: "Football", key: "football", fallback: "Football" },
+  { id: "Badminton", key: "badminton", fallback: "Badminton" },
+  { id: "Athletics", key: "athletics", fallback: "Athletics" },
+  { id: "Grassroots", key: "grassroots", fallback: "Grassroots" },
 ] as const;
 
 const SAVED_NEWS_STORAGE_KEY = "khelgrid-saved-news-v1";
 
 export function SportsNewsSection() {
+  const { t } = useLanguage();
   const [selectedSportTab, setSelectedSportTab] = useState<string>("All Sports");
   const [savedArticles, setSavedArticles] = useState<Set<string>>(new Set());
   const [showMatchAnalytics, setShowMatchAnalytics] = useState<boolean>(true);
@@ -125,8 +127,13 @@ export function SportsNewsSection() {
   }, [filteredArticles]);
 
   const listArticles = useMemo(() => {
-    return filteredArticles.filter((a) => a.id !== featuredArticle?.id).slice(0, 5);
+    return filteredArticles.filter((a) => a.id !== featuredArticle?.id).slice(0, 4);
   }, [filteredArticles, featuredArticle]);
+
+  const remainingGridArticles = useMemo(() => {
+    const shownIds = new Set([featuredArticle?.id, ...listArticles.map((a) => a.id)]);
+    return filteredArticles.filter((a) => !shownIds.has(a.id));
+  }, [filteredArticles, featuredArticle, listArticles]);
 
   // All displayed articles for mobile horizontal movable carousel
   const allCarouselArticles = useMemo(() => {
@@ -333,7 +340,7 @@ export function SportsNewsSection() {
           <div className="flex flex-wrap items-center gap-2">
             <span className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.2em] text-primary">
               <Flame className="h-3.5 w-3.5 text-primary animate-pulse" />
-              Real-time Sports Wire
+              {t("sportsWire", "Real-time Sports Wire")}
             </span>
 
             {/* Live animated pulsing badge */}
@@ -342,11 +349,11 @@ export function SportsNewsSection() {
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
               </span>
-              Updated Live
+              {t("updatedLive", "Updated Live")}
             </span>
 
             <span className="hidden text-[11px] text-muted-foreground sm:inline-block">
-              • Synced {lastRefreshedTime}
+              • {lastRefreshedTime === "Just now" ? t("syncedJustNow", "Synced just now") : `Synced ${lastRefreshedTime}`}
             </span>
           </div>
 
@@ -354,11 +361,13 @@ export function SportsNewsSection() {
             id="sports-news-heading"
             className="mt-2 text-2xl font-bold tracking-tight text-foreground sm:text-3xl"
           >
-            Sports Updates & National News
+            {t("sportsUpdatesTitle", "Sports Updates & National News")}
           </h2>
           <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
-            Breaking selection trials, Khelo India updates, state championships, and athlete
-            pathways across India.
+            {t(
+              "sportsUpdatesDesc",
+              "Breaking selection trials, Khelo India updates, state championships, and athlete pathways across India.",
+            )}
           </p>
         </div>
 
@@ -376,11 +385,11 @@ export function SportsNewsSection() {
             <RefreshCw
               className={`mr-1.5 h-3.5 w-3.5 text-primary ${isRefreshing ? "animate-spin" : ""}`}
             />
-            <span>Refresh Wire</span>
+            <span>{t("refreshWire", "Refresh Wire")}</span>
           </Button>
 
-          {/* Mobile View Toggle: Carousel vs List */}
-          <div className="flex items-center rounded-full border border-border bg-muted/40 p-0.5 lg:hidden">
+          {/* View Toggle: Reel vs Grid */}
+          <div className="flex items-center rounded-full border border-border bg-muted/40 p-0.5 sm:hidden">
             <button
               type="button"
               onClick={() => setMobileViewMode("carousel")}
@@ -393,7 +402,7 @@ export function SportsNewsSection() {
               aria-label="Switch to horizontal reel view"
             >
               <SlidersHorizontal className="inline h-3 w-3 mr-1" />
-              Reel
+              {t("reelView", "Reel")}
             </button>
             <button
               type="button"
@@ -403,11 +412,11 @@ export function SportsNewsSection() {
                   ? "bg-primary text-primary-foreground shadow-xs"
                   : "text-muted-foreground hover:text-foreground"
               }`}
-              title="Stacked vertical list view"
-              aria-label="Switch to stacked list view"
+              title="Responsive CSS grid view"
+              aria-label="Switch to responsive grid view"
             >
               <LayoutGrid className="inline h-3 w-3 mr-1" />
-              List
+              {t("gridView", "Grid")}
             </button>
           </div>
         </div>
@@ -421,19 +430,19 @@ export function SportsNewsSection() {
           aria-label="Sports categories"
           className="flex items-center gap-1.5 overflow-x-auto pb-1.5 pt-0.5 no-scrollbar scroll-smooth"
         >
-          {SPORT_TABS.map((tab) => {
-            const active = selectedSportTab === tab;
+          {SPORT_TABS_CONFIG.map((tab) => {
+            const active = selectedSportTab === tab.id;
             return (
               <button
-                key={tab}
-                onClick={() => setSelectedSportTab(tab)}
+                key={tab.id}
+                onClick={() => setSelectedSportTab(tab.id)}
                 className={`shrink-0 rounded-full px-3.5 py-1.5 text-xs font-medium transition-all ${
                   active
                     ? "bg-primary text-primary-foreground shadow-sm ring-1 ring-primary"
                     : "bg-muted/70 text-muted-foreground hover:bg-muted hover:text-foreground"
                 }`}
               >
-                {tab}
+                {t(tab.key, tab.fallback)}
               </button>
             );
           })}
@@ -446,7 +455,7 @@ export function SportsNewsSection() {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search news & trials..."
+            placeholder={t("searchNewsPlaceholder", "Search news & trials...")}
             className="h-8 w-full rounded-full border border-border/80 bg-background/80 pl-8 pr-3 text-xs text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-hidden focus:ring-1 focus:ring-primary"
           />
           {searchQuery && (
@@ -461,10 +470,10 @@ export function SportsNewsSection() {
       </div>
 
       {/* --- SMALL SCREEN HORIZONTALLY MOVABLE CAROUSEL --- */}
-      {/* Active on screens < lg when mobileViewMode === 'carousel' */}
+      {/* Active on screens < sm when mobileViewMode === 'carousel' */}
       <div
         className={`${
-          mobileViewMode === "carousel" ? "block lg:hidden" : "hidden"
+          mobileViewMode === "carousel" ? "block sm:hidden" : "hidden"
         } mt-5`}
       >
         {/* Movable Controls & Swipe Affordance */}
@@ -472,7 +481,8 @@ export function SportsNewsSection() {
           <div className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
             <Radio className="h-3 w-3 text-primary animate-pulse" />
             <span>
-              Swipe horizontally to browse <strong>{allCarouselArticles.length}</strong> updates
+              {t("swipeToBrowse", "Swipe horizontally to browse")}{" "}
+              <strong>{allCarouselArticles.length}</strong> {t("updates", "updates")}
             </span>
           </div>
 
@@ -500,23 +510,31 @@ export function SportsNewsSection() {
           </div>
         </div>
 
-        {/* Horizontally Movable Cards Reel */}
-        <div
-          ref={carouselRef}
-          role="region"
-          aria-roledescription="carousel"
-          aria-label="Horizontally movable sports news reel"
-          className="flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth touch-pan-x pb-4 pt-1 px-1 no-scrollbar"
-        >
-          {allCarouselArticles.map((article, idx) => (
-            <article
-              key={article.id}
-              data-carousel-card
-              id={`mobile-news-${article.slug}`}
-              itemScope
-              itemType="https://schema.org/NewsArticle"
-              className="group relative flex w-[84vw] max-w-[340px] shrink-0 snap-start flex-col justify-between overflow-hidden rounded-2xl border border-border bg-gradient-card p-4 transition-all hover:border-primary/50 shadow-xs"
-            >
+        {/* Horizontally Movable Cards Reel with Edge Fade Indicators */}
+        <div className="relative">
+          {canScrollLeft && (
+            <div className="pointer-events-none absolute left-0 top-0 bottom-4 z-10 w-6 bg-gradient-to-r from-background to-transparent" />
+          )}
+          {canScrollRight && (
+            <div className="pointer-events-none absolute right-0 top-0 bottom-4 z-10 w-6 bg-gradient-to-l from-background to-transparent" />
+          )}
+
+          <div
+            ref={carouselRef}
+            role="region"
+            aria-roledescription="carousel"
+            aria-label="Horizontally movable sports news reel"
+            className="flex gap-3.5 sm:gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth touch-pan-x pb-4 pt-1 px-1 no-scrollbar"
+          >
+            {allCarouselArticles.map((article, idx) => (
+              <article
+                key={article.id}
+                data-carousel-card
+                id={`mobile-news-${article.slug}`}
+                itemScope
+                itemType="https://schema.org/NewsArticle"
+                className="group relative flex w-[82vw] min-w-[260px] max-w-[340px] shrink-0 snap-center sm:snap-start flex-col justify-between overflow-hidden rounded-2xl border border-border bg-gradient-card p-4 transition-all hover:border-primary/50 shadow-xs"
+              >
               <div>
                 {/* Image Container with Responsive Aspect Ratio */}
                 <div className="relative aspect-[16/10] w-full overflow-hidden rounded-xl bg-muted">
@@ -627,6 +645,7 @@ export function SportsNewsSection() {
             </article>
           ))}
         </div>
+      </div>
 
         {/* Carousel Pagination Dots Indicator */}
         <div
@@ -649,20 +668,20 @@ export function SportsNewsSection() {
         </div>
       </div>
 
-      {/* --- DESKTOP GRID & MOBILE LIST VIEW --- */}
-      {/* Visible on lg+ always, and on mobile if user toggles to 'list' view */}
+      {/* --- RESPONSIVE CSS GRID NEWS FEED --- */}
+      {/* Single column on mobile, 2 columns on tablets (sm/md), multi-column on desktop (lg/xl) */}
       <div
         className={`mt-6 ${
-          mobileViewMode === "list" ? "grid" : "hidden lg:grid"
-        } gap-6 lg:grid-cols-12`}
+          mobileViewMode === "list" ? "grid" : "hidden sm:grid"
+        } grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-5 lg:gap-6`}
       >
-        {/* Featured Big Story (Left 60% on desktop) */}
+        {/* Featured Big Story (Left on desktop, 2-col span on tablet) */}
         {featuredArticle && (
           <article
             id={`news-${featuredArticle.slug}`}
             itemScope
             itemType="https://schema.org/NewsArticle"
-            className="group flex flex-col justify-between overflow-hidden rounded-3xl border border-border bg-gradient-card p-4 transition-all hover:border-primary/50 sm:p-6 lg:col-span-7"
+            className="group flex flex-col justify-between overflow-hidden rounded-3xl border border-border bg-gradient-card p-4 transition-all hover:border-primary/50 sm:p-6 sm:col-span-2 lg:col-span-7"
           >
             <div>
               <div className="relative aspect-[16/9] w-full overflow-hidden rounded-2xl bg-muted">
@@ -688,7 +707,7 @@ export function SportsNewsSection() {
 
               <div className="mt-3 flex items-center justify-between text-xs text-muted-foreground">
                 <span className="flex items-center gap-1 font-semibold text-primary">
-                  <Sparkles className="h-3.5 w-3.5" /> Featured Lead Story
+                  <Sparkles className="h-3.5 w-3.5" /> {t("featuredLeadStory", "Featured Lead Story")}
                 </span>
                 <time dateTime={featuredArticle.publishedAt} itemProp="datePublished">
                   {formatDate(featuredArticle.publishedAt)}
@@ -716,7 +735,7 @@ export function SportsNewsSection() {
                     params={{ slug: featuredArticle.blogSlug }}
                     className="inline-flex items-center gap-1.5 rounded-full bg-primary px-3.5 py-1.5 text-xs font-semibold text-primary-foreground shadow-sm transition hover:bg-primary/90"
                   >
-                    Read Full Tactical Analysis <ArrowRight className="h-3.5 w-3.5" />
+                    {t("readFullAnalysis", "Read Tactical Analysis")} <ArrowRight className="h-3.5 w-3.5" />
                   </Link>
                   <button
                     type="button"
@@ -726,8 +745,8 @@ export function SportsNewsSection() {
                     <BarChart3 className="h-3.5 w-3.5 text-primary" />
                     <span>
                       {showMatchAnalytics
-                        ? "Hide Recharts & Social Feed"
-                        : "View Recharts & Social Feed"}
+                        ? t("hideAnalytics", "Hide Recharts & Social Feed")
+                        : t("viewAnalytics", "View Recharts & Social Feed")}
                     </span>
                     {showMatchAnalytics ? (
                       <ChevronUp className="h-3 w-3 text-muted-foreground" />
@@ -784,19 +803,19 @@ export function SportsNewsSection() {
           </article>
         )}
 
-        {/* Right Side: Rapid Wire Stories (Right 40% on desktop) */}
-        <div className="flex flex-col gap-3 lg:col-span-5">
+        {/* Right Side: Rapid Wire Stories (Right on desktop, 2 columns on tablet) */}
+        <div className="flex flex-col gap-3 sm:col-span-2 lg:col-span-5">
           <div className="flex items-center justify-between px-1">
             <span className="flex items-center gap-1.5 text-xs font-bold tracking-wider uppercase text-muted-foreground">
               <TrendingUp className="h-3.5 w-3.5 text-primary" />
-              Trending Bulletins
+              {t("trendingBulletins", "Trending Bulletins")}
             </span>
             <span className="text-xs text-muted-foreground">
-              {filteredArticles.length} updates active
+              {filteredArticles.length} {t("activeUpdates", "updates active")}
             </span>
           </div>
 
-          <div className="flex flex-col gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3.5">
             {listArticles.map((article) => (
               <article
                 key={article.id}
@@ -884,7 +903,7 @@ export function SportsNewsSection() {
               </div>
               <div>
                 <h5 className="text-xs font-bold text-foreground">
-                  Have a tournament or trial update?
+                  {t("haveTournamentUpdate", "Have a tournament or trial update?")}
                 </h5>
                 <p className="mt-0.5 text-[11px] text-muted-foreground">
                   Academy directors and federation organizers can publish verified notices on
@@ -894,12 +913,140 @@ export function SportsNewsSection() {
                   to="/blog/write"
                   className="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline"
                 >
-                  Submit sports notice <ArrowRight className="h-3 w-3" />
+                  {t("submitNotice", "Submit sports notice")} <ArrowRight className="h-3 w-3" />
                 </Link>
               </div>
             </div>
           </aside>
         </div>
+
+        {/* Extended Multi-Column News Card Grid: 1 col mobile, 2 cols tablet, 3 cols desktop */}
+        {remainingGridArticles.length > 0 && (
+          <div className="sm:col-span-2 lg:col-span-12 mt-4 space-y-4">
+            <div className="flex items-center justify-between px-1 pt-4 border-t border-border/60">
+              <span className="flex items-center gap-1.5 text-xs font-bold tracking-wider uppercase text-muted-foreground">
+                <Newspaper className="h-3.5 w-3.5 text-primary" />
+                {t("moreNationalUpdates", "National Sports Dispatches & Selection Wire")}
+              </span>
+              <span className="text-xs text-muted-foreground">
+                {remainingGridArticles.length} {t("articles", "articles")}
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              {remainingGridArticles.map((article) => (
+                <article
+                  key={article.id}
+                  id={`news-grid-${article.slug}`}
+                  itemScope
+                  itemType="https://schema.org/NewsArticle"
+                  className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-border/80 bg-gradient-card p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/50 hover:shadow-md"
+                >
+                  <div>
+                    {/* Image with sport badge & read time */}
+                    <div className="relative aspect-[16/10] w-full overflow-hidden rounded-xl bg-muted">
+                      <img
+                        src={article.imageUrl}
+                        alt={`${article.title} - ${article.sport}`}
+                        loading="lazy"
+                        decoding="async"
+                        itemProp="image"
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                      <div className="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between text-white">
+                        <span className="rounded-full bg-primary/95 px-2 py-0.5 text-[10px] font-bold tracking-wide uppercase">
+                          {article.sport}
+                        </span>
+                        <span className="flex items-center gap-1 text-[11px] font-medium text-white/90">
+                          <Clock className="h-3 w-3" />
+                          {article.readTime}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="mt-3">
+                      <div className="flex items-center justify-between text-[11px] text-muted-foreground">
+                        <span className="font-semibold text-primary">{article.category}</span>
+                        <time dateTime={article.publishedAt} itemProp="datePublished">
+                          {formatDate(article.publishedAt)}
+                        </time>
+                      </div>
+
+                      <h4
+                        itemProp="headline"
+                        className="mt-1.5 line-clamp-2 text-sm sm:text-base font-bold leading-snug text-foreground transition-colors group-hover:text-primary"
+                      >
+                        {article.title}
+                      </h4>
+
+                      <p
+                        itemProp="description"
+                        className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-muted-foreground"
+                      >
+                        {article.excerpt}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="mt-4 border-t border-border/60 pt-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/15 text-primary text-[10px] font-bold">
+                          {article.author.name.charAt(0)}
+                        </div>
+                        <span
+                          itemProp="author"
+                          className="line-clamp-1 text-xs font-medium text-foreground max-w-[130px]"
+                        >
+                          {article.author.name}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center gap-1">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => toggleSave(article.id)}
+                          className="h-7 w-7 rounded-full"
+                          aria-label={`Bookmark ${article.title}`}
+                        >
+                          <Bookmark
+                            className={`h-3.5 w-3.5 ${
+                              savedArticles.has(article.id)
+                                ? "fill-primary text-primary"
+                                : "text-muted-foreground"
+                            }`}
+                          />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleShare(article)}
+                          className="h-7 w-7 rounded-full"
+                          aria-label={`Share ${article.title}`}
+                        >
+                          <Share2 className="h-3.5 w-3.5 text-muted-foreground" />
+                        </Button>
+                      </div>
+                    </div>
+
+                    {article.blogSlug && (
+                      <Link
+                        to="/blog/$slug"
+                        params={{ slug: article.blogSlug }}
+                        className="mt-2.5 flex items-center justify-center gap-1.5 rounded-xl bg-primary/10 py-1.5 text-xs font-semibold text-primary transition hover:bg-primary/20"
+                      >
+                        <span>{t("readFullAnalysis", "Read Tactical Analysis")}</span>
+                        <ArrowRight className="h-3 w-3" />
+                      </Link>
+                    )}
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Embedded Live Match Intelligence Hub (Recharts & Trending Social Feed) */}
@@ -912,10 +1059,11 @@ export function SportsNewsSection() {
             <div>
               <div className="flex items-center gap-2">
                 <Badge variant="outline" className="border-primary/40 bg-primary/10 text-primary">
-                  <Sparkles className="mr-1.5 h-3.5 w-3.5" /> High-Performance Analytics Hub
+                  <Sparkles className="mr-1.5 h-3.5 w-3.5" />{" "}
+                  {t("analyticsHub", "High-Performance Analytics Hub")}
                 </Badge>
                 <span className="rounded-full bg-emerald-500/15 px-2 py-0.5 text-[10px] font-bold text-emerald-500">
-                  Live Wire Data
+                  {t("liveWireData", "Live Wire Data")}
                 </span>
               </div>
               <h3 className="mt-1 text-xl font-bold tracking-tight text-foreground sm:text-2xl">

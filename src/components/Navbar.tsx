@@ -20,10 +20,13 @@ import {
   Briefcase,
   Handshake,
   Wand2,
+  Languages,
+  Check,
 } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useNotifications } from "@/context/NotificationContext";
+import { useLanguage } from "@/context/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { NavDrawer } from "@/components/NavDrawer";
 import { SportsLauncher } from "@/components/SportsLauncher";
@@ -76,6 +79,7 @@ export function Navbar() {
   };
 
   const { unreadCount } = useNotifications();
+  const { language, setLanguage, currentLanguage, supportedLanguages, t } = useLanguage();
   const [sportsLauncherOpen, setSportsLauncherOpen] = useState(false);
   const [feedbackOpen, setFeedbackOpen] = useState(false);
   const path = useRouterState({ select: (s) => s.location.pathname });
@@ -194,6 +198,51 @@ export function Navbar() {
                 />
               </div>
               <DropdownMenuSeparator className="my-1.5" />
+
+              {/* Language Setting inside Setting button */}
+              <div className="px-2 py-1 flex items-center justify-between text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                <span className="flex items-center gap-1.5">
+                  <Languages className="h-3.5 w-3.5 text-primary" />
+                  <span>Language / भाषा</span>
+                </span>
+                <span className="rounded-full bg-primary/10 px-1.5 py-0.5 text-[10px] font-bold text-primary font-sans">
+                  {currentLanguage.flag} {currentLanguage.nativeName}
+                </span>
+              </div>
+              <div
+                className="grid grid-cols-2 gap-1 p-1"
+                onClick={(e) => e.stopPropagation()}
+                role="group"
+                aria-label="Language selection"
+              >
+                {supportedLanguages.map((lang) => {
+                  const isSelected = language === lang.code;
+                  return (
+                    <button
+                      key={lang.code}
+                      type="button"
+                      onClick={() => {
+                        setLanguage(lang.code);
+                        toast.success(`Language set to ${lang.name} (${lang.nativeName})`);
+                      }}
+                      className={`flex items-center justify-between rounded-lg px-2 py-1.5 text-left text-xs font-medium transition-colors cursor-pointer ${
+                        isSelected
+                          ? "bg-primary text-primary-foreground font-semibold shadow-xs"
+                          : "hover:bg-muted text-foreground"
+                      }`}
+                      title={`${lang.name} - ${lang.region}`}
+                    >
+                      <span className="truncate">
+                        <span className="mr-1.5">{lang.flag}</span>
+                        <span>{lang.nativeName}</span>
+                      </span>
+                      {isSelected && <Check className="h-3.5 w-3.5 shrink-0 ml-1" />}
+                    </button>
+                  );
+                })}
+              </div>
+              <DropdownMenuSeparator className="my-1.5" />
+
               <div className="px-2 py-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                 Company & Network
               </div>
