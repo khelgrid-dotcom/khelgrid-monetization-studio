@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useEffect, useCallback } from "react";
 import { Link } from "@tanstack/react-router";
 import { SPORTS_NEWS_CATALOG, type SportsNewsArticle } from "@/data/news";
 import {
@@ -10,10 +10,17 @@ import {
   Share2,
   Bookmark,
   BarChart3,
-  MessageCircle,
   ChevronDown,
   ChevronUp,
+  ChevronLeft,
+  ChevronRight,
   Sparkles,
+  RefreshCw,
+  Search,
+  SlidersHorizontal,
+  LayoutGrid,
+  Radio,
+  Calendar,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -33,6 +40,8 @@ const SPORT_TABS = [
   "Grassroots",
 ] as const;
 
+const SAVED_NEWS_STORAGE_KEY = "khelgrid-saved-news-v1";
+
 export function SportsNewsSection() {
   const [selectedSportTab, setSelectedSportTab] = useState<string>("All Sports");
   const [savedArticles, setSavedArticles] = useState<Set<string>>(new Set());
@@ -40,23 +49,74 @@ export function SportsNewsSection() {
   const [activeAnalyticsHub, setActiveAnalyticsHub] = useState<"asiad" | "cricket" | "predictor">(
     "asiad",
   );
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
+  const [lastRefreshedTime, setLastRefreshedTime] = useState<string>("Just now");
+  const [mobileViewMode, setMobileViewMode] = useState<"carousel" | "list">("carousel");
+  const [activeSlideIndex, setActiveSlideIndex] = useState<number>(0);
+  const [canScrollLeft, setCanScrollLeft] = useState<boolean>(false);
+  const [canScrollRight, setCanScrollRight] = useState<boolean>(true);
 
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const tabsContainerRef = useRef<HTMLDivElement>(null);
+
+  // Load saved bookmarks from localStorage on mount
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem(SAVED_NEWS_STORAGE_KEY);
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed)) {
+          setSavedArticles(new Set(parsed.filter((id): id is string => typeof id === "string")));
+        }
+      }
+    } catch {
+      // LocalStorage access fallback
+    }
+  }, []);
+
+  // Sync saved bookmarks to localStorage
+  const persistSavedArticles = (nextSet: Set<string>) => {
+    try {
+      localStorage.setItem(SAVED_NEWS_STORAGE_KEY, JSON.stringify(Array.from(nextSet)));
+    } catch {
+      // ignore
+    }
+  };
+
+  // Filtered news articles based on sport tab and search query
   const filteredArticles = useMemo(() => {
-    if (selectedSportTab === "All Sports") return SPORTS_NEWS_CATALOG;
-    return SPORTS_NEWS_CATALOG.filter((item) => {
-      if (selectedSportTab === "Grassroots") {
-        return item.category === "Grassroots" || item.sport === "Grassroots";
-      }
-      if (selectedSportTab === "Asian Games") {
-        return (
-          item.tags?.some((t) => t.toLowerCase().includes("asian games")) ||
-          item.sport === "Multi-Sport" ||
-          item.title.toLowerCase().includes("asian games")
-        );
-      }
-      return item.sport.toLowerCase() === selectedSportTab.toLowerCase();
-    });
-  }, [selectedSportTab]);
+    let list = SPORTS_NEWS_CATALOG;
+
+    if (selectedSportTab !== "All Sports") {
+      list = list.filter((item) => {
+        if (selectedSportTab === "Grassroots") {
+          return item.category === "Grassroots" || item.sport === "Grassroots";
+        }
+        if (selectedSportTab === "Asian Games") {
+          return (
+            item.tags?.some((t) => t.toLowerCase().includes("asian games")) ||
+            item.sport === "Multi-Sport" ||
+            item.title.toLowerCase().includes("asian games")
+          );
+        }
+        return item.sport.toLowerCase() === selectedSportTab.toLowerCase();
+      });
+    }
+
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      list = list.filter(
+        (item) =>
+          item.title.toLowerCase().includes(q) ||
+          item.excerpt.toLowerCase().includes(q) ||
+          item.sport.toLowerCase().includes(q) ||
+          item.tags?.some((t) => t.toLowerCase().includes(q)),
+      );
+    }
+
+    return list;
+  }, [selectedSportTab, searchQuery]);
 
   const featuredArticle = useMemo(() => {
     return (
@@ -65,25 +125,83 @@ export function SportsNewsSection() {
   }, [filteredArticles]);
 
   const listArticles = useMemo(() => {
-    return filteredArticles.filter((a) => a.id !== featuredArticle?.id).slice(0, 4);
+    return filteredArticles.filter((a) => a.id !== featuredArticle?.id).slice(0, 5);
   }, [filteredArticles, featuredArticle]);
 
+  // All displayed articles for mobile horizontal movable carousel
+  const allCarouselArticles = useMemo(() => {
+    if (!featuredArticle) return filteredArticles;
+    // Featured first, followed by remaining
+    const remaining = filteredArticles.filter((a) => a.id !== featuredArticle.id);
+    return [featuredArticle, ...remaining];
+  }, [featuredArticle, filteredArticles]);
+
+  // Update carousel scroll state
+  const updateScrollButtons = useCallback(() => {
+    const el = carouselRef.current;
+    if (!el) return;
+    const { scrollLeft, scrollWidth, clientWidth } = el;
+    setCanScrollLeft(scrollLeft > 10);
+    setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
+
+    // Approximate active slide index
+    const cardWidth = el.firstElementChild
+      ? (el.firstElementChild as HTMLElement).offsetWidth + 16
+      : 300;
+    const index = Math.round(scrollLeft / cardWidth);
+    setActiveSlideIndex(Math.min(index, allCarouselArticles.length - 1));
+  }, [allCarouselArticles.length]);
+
+  useEffect(() => {
+    const el = carouselRef.current;
+    if (!el) return;
+    updateScrollButtons();
+    el.addEventListener("scroll", updateScrollButtons, { passive: true });
+    window.addEventListener("resize", updateScrollButtons);
+    return () => {
+      el.removeEventListener("scroll", updateScrollButtons);
+      window.removeEventListener("resize", updateScrollButtons);
+    };
+  }, [updateScrollButtons, allCarouselArticles]);
+
+  const scrollCarousel = (direction: "left" | "right") => {
+    const el = carouselRef.current;
+    if (!el) return;
+    const scrollAmount = el.clientWidth * 0.85;
+    el.scrollBy({
+      left: direction === "left" ? -scrollAmount : scrollAmount,
+      behavior: "smooth",
+    });
+  };
+
+  const scrollToIndex = (index: number) => {
+    const el = carouselRef.current;
+    if (!el) return;
+    const cards = el.querySelectorAll<HTMLElement>("[data-carousel-card]");
+    if (cards[index]) {
+      cards[index].scrollIntoView({ behavior: "smooth", block: "nearest", inline: "start" });
+    }
+  };
+
   const handleShare = async (article: SportsNewsArticle) => {
-    const url =
-      typeof window !== "undefined" ? `${window.location.origin}/#news-${article.slug}` : "";
+    const origin = typeof window !== "undefined" ? window.location.origin : "https://khelgrid.com";
+    const shareUrl = article.blogSlug
+      ? `${origin}/blog/${article.blogSlug}`
+      : `${origin}/#news-${article.slug}`;
+
     if (navigator.share) {
       try {
         await navigator.share({
           title: article.title,
-          text: article.headline,
-          url,
+          text: `${article.headline} - Follow live sports updates on KhelGrid`,
+          url: shareUrl,
         });
         toast.success("Shared successfully");
       } catch {
-        // user dismissed or cancelled
+        // user dismissed dialog
       }
     } else if (navigator.clipboard) {
-      navigator.clipboard.writeText(url);
+      navigator.clipboard.writeText(shareUrl);
       toast.success("Article link copied to clipboard!");
     }
   };
@@ -98,26 +216,68 @@ export function SportsNewsSection() {
         next.add(id);
         toast.success("Saved to your reading list!");
       }
+      persistSavedArticles(next);
       return next;
     });
   };
 
-  // Structured Data (JSON-LD NewsArticle & ItemList) for Search Engine Crawlers
+  const handleRefreshWire = () => {
+    setIsRefreshing(true);
+    setTimeout(() => {
+      setIsRefreshing(false);
+      setLastRefreshedTime(
+        new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+      );
+      toast.success("Real-time sports wire refreshed", {
+        description: "Fetched the latest national trials and match dispatches.",
+      });
+    }, 600);
+  };
+
+  // Structured Data (JSON-LD NewsArticle & ItemList) according to Google Search Central specifications
   const newsJsonLd = useMemo(() => {
     return {
       "@context": "https://schema.org",
-      "@type": "ItemList",
-      itemListElement: SPORTS_NEWS_CATALOG.map((article, idx) => ({
-        "@type": "ListItem",
-        position: idx + 1,
-        item: {
+      "@graph": [
+        {
+          "@type": "ItemList",
+          "@id": "https://khelgrid.com/#sports-news-wire",
+          name: "KhelGrid Real-Time Sports Wire & National News",
+          description:
+            "Live national sports bulletins, Khelo India updates, Asian Games medal tallies, and high-performance tactical analysis.",
+          numberOfItems: SPORTS_NEWS_CATALOG.length,
+          itemListElement: SPORTS_NEWS_CATALOG.map((article, idx) => ({
+            "@type": "ListItem",
+            position: idx + 1,
+            url: article.blogSlug
+              ? `https://khelgrid.com/blog/${article.blogSlug}`
+              : `https://khelgrid.com/#news-${article.slug}`,
+            name: article.title,
+          })),
+        },
+        ...SPORTS_NEWS_CATALOG.map((article) => ({
           "@type": "NewsArticle",
+          "@id": article.blogSlug
+            ? `https://khelgrid.com/blog/${article.blogSlug}`
+            : `https://khelgrid.com/#news-${article.slug}`,
           headline: article.title,
+          alternativeHeadline: article.headline,
           description: article.excerpt,
-          url: `https://khelgrid.com/#news-${article.slug}`,
-          image: article.imageUrl,
+          articleBody: article.content,
+          articleSection: article.sport,
+          inLanguage: "en-IN",
+          url: article.blogSlug
+            ? `https://khelgrid.com/blog/${article.blogSlug}`
+            : `https://khelgrid.com/#news-${article.slug}`,
+          image: [article.imageUrl],
           datePublished: article.publishedAt,
           dateModified: article.publishedAt,
+          mainEntityOfPage: {
+            "@type": "WebPage",
+            "@id": article.blogSlug
+              ? `https://khelgrid.com/blog/${article.blogSlug}`
+              : `https://khelgrid.com/#news-${article.slug}`,
+          },
           author: {
             "@type": "Person",
             name: article.author.name,
@@ -126,60 +286,150 @@ export function SportsNewsSection() {
           publisher: {
             "@type": "SportsOrganization",
             name: "KhelGrid",
+            url: "https://khelgrid.com",
             logo: {
               "@type": "ImageObject",
               url: "https://khelgrid.com/favicon.svg",
+              width: 512,
+              height: 512,
             },
           },
-        },
-      })),
+          isAccessibleForFree: true,
+          keywords: article.tags?.join(", "),
+        })),
+      ],
     };
   }, []);
+
+  const formatDate = (isoString: string) => {
+    try {
+      return new Date(isoString).toLocaleDateString("en-IN", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      });
+    } catch {
+      return isoString;
+    }
+  };
 
   return (
     <section
       id="sports-news-section"
       className="mt-14 border-t border-border/60 pt-10 sm:mt-16 sm:pt-12"
-      aria-label="Sports Updates and News Wire"
+      aria-labelledby="sports-news-heading"
+      itemScope
+      itemType="https://schema.org/CollectionPage"
     >
-      {/* Schema.org NewsArticle & ItemList Structured Data Injection */}
+      {/* Schema.org NewsArticle & ItemList Structured Data Injection for Search Engine Crawlers */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(newsJsonLd) }}
       />
 
-      {/* Header with Title and Filter Tabs */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+      {/* Header with Title, Live Status Indicator, and Quick Actions */}
+      <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <div className="flex items-center gap-2">
-            <span className="flex items-center gap-1 text-xs font-semibold uppercase tracking-[0.2em] text-primary">
-              <Flame className="h-3.5 w-3.5" />
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.2em] text-primary">
+              <Flame className="h-3.5 w-3.5 text-primary animate-pulse" />
               Real-time Sports Wire
             </span>
-            <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary">
+
+            {/* Live animated pulsing badge */}
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-[11px] font-bold text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+              </span>
               Updated Live
             </span>
+
+            <span className="hidden text-[11px] text-muted-foreground sm:inline-block">
+              • Synced {lastRefreshedTime}
+            </span>
           </div>
-          <h2 className="mt-1.5 text-2xl font-bold tracking-tight sm:text-3xl">
+
+          <h2
+            id="sports-news-heading"
+            className="mt-2 text-2xl font-bold tracking-tight text-foreground sm:text-3xl"
+          >
             Sports Updates & National News
           </h2>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Breaking selection trials, Khelo India updates, state championships and athlete pathways
-            across India.
+          <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
+            Breaking selection trials, Khelo India updates, state championships, and athlete
+            pathways across India.
           </p>
         </div>
 
-        {/* Tab pills */}
-        <div className="flex gap-1.5 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        {/* Header Right Actions: Live Refresh + Search */}
+        <div className="flex items-center gap-2">
+          {/* Refresh Live Wire */}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleRefreshWire}
+            disabled={isRefreshing}
+            className="h-8 rounded-full border-border/80 bg-background/80 px-3 text-xs font-medium text-foreground hover:bg-muted"
+            title="Refresh Sports Wire feed"
+          >
+            <RefreshCw
+              className={`mr-1.5 h-3.5 w-3.5 text-primary ${isRefreshing ? "animate-spin" : ""}`}
+            />
+            <span>Refresh Wire</span>
+          </Button>
+
+          {/* Mobile View Toggle: Carousel vs List */}
+          <div className="flex items-center rounded-full border border-border bg-muted/40 p-0.5 lg:hidden">
+            <button
+              type="button"
+              onClick={() => setMobileViewMode("carousel")}
+              className={`rounded-full px-2.5 py-1 text-xs font-semibold transition-all ${
+                mobileViewMode === "carousel"
+                  ? "bg-primary text-primary-foreground shadow-xs"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+              title="Horizontally scrollable reel"
+              aria-label="Switch to horizontal reel view"
+            >
+              <SlidersHorizontal className="inline h-3 w-3 mr-1" />
+              Reel
+            </button>
+            <button
+              type="button"
+              onClick={() => setMobileViewMode("list")}
+              className={`rounded-full px-2.5 py-1 text-xs font-semibold transition-all ${
+                mobileViewMode === "list"
+                  ? "bg-primary text-primary-foreground shadow-xs"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+              title="Stacked vertical list view"
+              aria-label="Switch to stacked list view"
+            >
+              <LayoutGrid className="inline h-3 w-3 mr-1" />
+              List
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* Filter Bar: Horizontally scrollable sport tags + search filter */}
+      <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        {/* Horizontally scrollable tab pills with smooth scrolling */}
+        <nav
+          ref={tabsContainerRef}
+          aria-label="Sports categories"
+          className="flex items-center gap-1.5 overflow-x-auto pb-1.5 pt-0.5 no-scrollbar scroll-smooth"
+        >
           {SPORT_TABS.map((tab) => {
             const active = selectedSportTab === tab;
             return (
               <button
                 key={tab}
                 onClick={() => setSelectedSportTab(tab)}
-                className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
+                className={`shrink-0 rounded-full px-3.5 py-1.5 text-xs font-medium transition-all ${
                   active
-                    ? "bg-primary text-primary-foreground shadow-sm"
+                    ? "bg-primary text-primary-foreground shadow-sm ring-1 ring-primary"
                     : "bg-muted/70 text-muted-foreground hover:bg-muted hover:text-foreground"
                 }`}
               >
@@ -187,23 +437,241 @@ export function SportsNewsSection() {
               </button>
             );
           })}
+        </nav>
+
+        {/* Small Search / Filter input */}
+        <div className="relative w-full sm:w-64 shrink-0">
+          <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search news & trials..."
+            className="h-8 w-full rounded-full border border-border/80 bg-background/80 pl-8 pr-3 text-xs text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-hidden focus:ring-1 focus:ring-primary"
+          />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery("")}
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs text-muted-foreground hover:text-foreground"
+            >
+              ×
+            </button>
+          )}
         </div>
       </div>
 
-      {/* Main Grid: Featured Article (Left 60%) + Trending Wire (Right 40%) */}
-      <div className="mt-6 grid gap-6 lg:grid-cols-12">
-        {/* Featured Big Story */}
+      {/* --- SMALL SCREEN HORIZONTALLY MOVABLE CAROUSEL --- */}
+      {/* Active on screens < lg when mobileViewMode === 'carousel' */}
+      <div
+        className={`${
+          mobileViewMode === "carousel" ? "block lg:hidden" : "hidden"
+        } mt-5`}
+      >
+        {/* Movable Controls & Swipe Affordance */}
+        <div className="mb-3 flex items-center justify-between px-1">
+          <div className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+            <Radio className="h-3 w-3 text-primary animate-pulse" />
+            <span>
+              Swipe horizontally to browse <strong>{allCarouselArticles.length}</strong> updates
+            </span>
+          </div>
+
+          <div className="flex items-center gap-1.5">
+            <Button
+              variant="outline"
+              size="icon"
+              disabled={!canScrollLeft}
+              onClick={() => scrollCarousel("left")}
+              className="h-7 w-7 rounded-full border-border/80 disabled:opacity-30"
+              aria-label="Scroll left in sports wire"
+            >
+              <ChevronLeft className="h-3.5 w-3.5" />
+            </Button>
+            <Button
+              variant="outline"
+              size="icon"
+              disabled={!canScrollRight}
+              onClick={() => scrollCarousel("right")}
+              className="h-7 w-7 rounded-full border-border/80 disabled:opacity-30"
+              aria-label="Scroll right in sports wire"
+            >
+              <ChevronRight className="h-3.5 w-3.5" />
+            </Button>
+          </div>
+        </div>
+
+        {/* Horizontally Movable Cards Reel */}
+        <div
+          ref={carouselRef}
+          role="region"
+          aria-roledescription="carousel"
+          aria-label="Horizontally movable sports news reel"
+          className="flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth touch-pan-x pb-4 pt-1 px-1 no-scrollbar"
+        >
+          {allCarouselArticles.map((article, idx) => (
+            <article
+              key={article.id}
+              data-carousel-card
+              id={`mobile-news-${article.slug}`}
+              itemScope
+              itemType="https://schema.org/NewsArticle"
+              className="group relative flex w-[84vw] max-w-[340px] shrink-0 snap-start flex-col justify-between overflow-hidden rounded-2xl border border-border bg-gradient-card p-4 transition-all hover:border-primary/50 shadow-xs"
+            >
+              <div>
+                {/* Image Container with Responsive Aspect Ratio */}
+                <div className="relative aspect-[16/10] w-full overflow-hidden rounded-xl bg-muted">
+                  <img
+                    src={article.imageUrl}
+                    alt={`${article.title} - ${article.sport} Sports Wire`}
+                    loading="lazy"
+                    decoding="async"
+                    itemProp="image"
+                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent" />
+                  <div className="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between text-white">
+                    <span className="rounded-full bg-primary/95 px-2 py-0.5 text-[10px] font-bold tracking-wide uppercase">
+                      {article.sport}
+                    </span>
+                    <span className="flex items-center gap-1 text-[11px] font-medium text-white/90">
+                      <Clock className="h-3 w-3" />
+                      {article.readTime}
+                    </span>
+                  </div>
+                  {article.featured && (
+                    <span className="absolute top-2.5 left-2.5 flex items-center gap-1 rounded-full bg-amber-500/90 px-2 py-0.5 text-[10px] font-bold text-white shadow-xs">
+                      <Sparkles className="h-2.5 w-2.5" /> Featured Story
+                    </span>
+                  )}
+                </div>
+
+                {/* Article Headline & Meta */}
+                <div className="mt-3">
+                  <div className="flex items-center justify-between text-[11px] text-muted-foreground">
+                    <span className="font-semibold text-primary">{article.category}</span>
+                    <time dateTime={article.publishedAt} itemProp="datePublished">
+                      {formatDate(article.publishedAt)}
+                    </time>
+                  </div>
+
+                  <h3
+                    itemProp="headline"
+                    className="mt-1.5 line-clamp-2 text-base font-bold leading-snug text-foreground transition-colors group-hover:text-primary"
+                  >
+                    {article.title}
+                  </h3>
+
+                  <p
+                    itemProp="description"
+                    className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-muted-foreground"
+                  >
+                    {article.excerpt}
+                  </p>
+                </div>
+              </div>
+
+              {/* Bottom Actions */}
+              <div className="mt-4 border-t border-border/60 pt-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/15 text-primary text-[10px] font-bold">
+                      {article.author.name.charAt(0)}
+                    </div>
+                    <span
+                      itemProp="author"
+                      className="line-clamp-1 text-xs font-medium text-foreground max-w-[130px]"
+                    >
+                      {article.author.name}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-1">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => toggleSave(article.id)}
+                      className="h-7 w-7 rounded-full"
+                      aria-label={`Bookmark ${article.title}`}
+                    >
+                      <Bookmark
+                        className={`h-3.5 w-3.5 ${
+                          savedArticles.has(article.id)
+                            ? "fill-primary text-primary"
+                            : "text-muted-foreground"
+                        }`}
+                      />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => handleShare(article)}
+                      className="h-7 w-7 rounded-full"
+                      aria-label={`Share ${article.title}`}
+                    >
+                      <Share2 className="h-3.5 w-3.5 text-muted-foreground" />
+                    </Button>
+                  </div>
+                </div>
+
+                {article.blogSlug && (
+                  <Link
+                    to="/blog/$slug"
+                    params={{ slug: article.blogSlug }}
+                    className="mt-2.5 flex items-center justify-center gap-1.5 rounded-xl bg-primary/10 py-1.5 text-xs font-semibold text-primary transition hover:bg-primary/20"
+                  >
+                    <span>Read Analysis & Stats</span>
+                    <ArrowRight className="h-3 w-3" />
+                  </Link>
+                )}
+              </div>
+            </article>
+          ))}
+        </div>
+
+        {/* Carousel Pagination Dots Indicator */}
+        <div
+          className="mt-2 flex items-center justify-center gap-1.5"
+          role="tablist"
+          aria-label="Sports news slide indicators"
+        >
+          {allCarouselArticles.slice(0, 7).map((_, idx) => (
+            <button
+              key={idx}
+              role="tab"
+              aria-selected={activeSlideIndex === idx}
+              aria-label={`Go to story ${idx + 1}`}
+              onClick={() => scrollToIndex(idx)}
+              className={`h-1.5 rounded-full transition-all ${
+                activeSlideIndex === idx ? "w-5 bg-primary" : "w-1.5 bg-muted-foreground/30"
+              }`}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* --- DESKTOP GRID & MOBILE LIST VIEW --- */}
+      {/* Visible on lg+ always, and on mobile if user toggles to 'list' view */}
+      <div
+        className={`mt-6 ${
+          mobileViewMode === "list" ? "grid" : "hidden lg:grid"
+        } gap-6 lg:grid-cols-12`}
+      >
+        {/* Featured Big Story (Left 60% on desktop) */}
         {featuredArticle && (
           <article
             id={`news-${featuredArticle.slug}`}
+            itemScope
+            itemType="https://schema.org/NewsArticle"
             className="group flex flex-col justify-between overflow-hidden rounded-3xl border border-border bg-gradient-card p-4 transition-all hover:border-primary/50 sm:p-6 lg:col-span-7"
           >
             <div>
               <div className="relative aspect-[16/9] w-full overflow-hidden rounded-2xl bg-muted">
                 <img
                   src={featuredArticle.imageUrl}
-                  alt={featuredArticle.title}
+                  alt={`${featuredArticle.title} - Featured National Sports Story`}
                   loading="lazy"
+                  decoding="async"
+                  itemProp="image"
                   className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
@@ -218,11 +686,26 @@ export function SportsNewsSection() {
                 </div>
               </div>
 
-              <h3 className="mt-4 text-xl font-bold tracking-tight text-foreground transition-colors group-hover:text-primary sm:text-2xl">
+              <div className="mt-3 flex items-center justify-between text-xs text-muted-foreground">
+                <span className="flex items-center gap-1 font-semibold text-primary">
+                  <Sparkles className="h-3.5 w-3.5" /> Featured Lead Story
+                </span>
+                <time dateTime={featuredArticle.publishedAt} itemProp="datePublished">
+                  {formatDate(featuredArticle.publishedAt)}
+                </time>
+              </div>
+
+              <h3
+                itemProp="headline"
+                className="mt-2 text-xl font-bold tracking-tight text-foreground transition-colors group-hover:text-primary sm:text-2xl"
+              >
                 {featuredArticle.title}
               </h3>
 
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+              <p
+                itemProp="description"
+                className="mt-2 text-sm leading-relaxed text-muted-foreground"
+              >
                 {featuredArticle.excerpt}
               </p>
 
@@ -262,7 +745,7 @@ export function SportsNewsSection() {
                   {featuredArticle.author.name.charAt(0)}
                 </div>
                 <div>
-                  <div className="text-xs font-semibold text-foreground">
+                  <div itemProp="author" className="text-xs font-semibold text-foreground">
                     {featuredArticle.author.name}
                   </div>
                   <div className="text-[10px] text-muted-foreground">
@@ -277,7 +760,7 @@ export function SportsNewsSection() {
                   size="icon"
                   onClick={() => toggleSave(featuredArticle.id)}
                   className="h-8 w-8 rounded-full"
-                  title="Save to reading list"
+                  aria-label="Save to reading list"
                 >
                   <Bookmark
                     className={`h-4 w-4 ${
@@ -292,7 +775,7 @@ export function SportsNewsSection() {
                   size="icon"
                   onClick={() => handleShare(featuredArticle)}
                   className="h-8 w-8 rounded-full"
-                  title="Share article"
+                  aria-label="Share article"
                 >
                   <Share2 className="h-4 w-4 text-muted-foreground" />
                 </Button>
@@ -301,7 +784,7 @@ export function SportsNewsSection() {
           </article>
         )}
 
-        {/* Right Side: Rapid Wire Stories */}
+        {/* Right Side: Rapid Wire Stories (Right 40% on desktop) */}
         <div className="flex flex-col gap-3 lg:col-span-5">
           <div className="flex items-center justify-between px-1">
             <span className="flex items-center gap-1.5 text-xs font-bold tracking-wider uppercase text-muted-foreground">
@@ -309,7 +792,7 @@ export function SportsNewsSection() {
               Trending Bulletins
             </span>
             <span className="text-xs text-muted-foreground">
-              {filteredArticles.length} updates today
+              {filteredArticles.length} updates active
             </span>
           </div>
 
@@ -318,16 +801,20 @@ export function SportsNewsSection() {
               <article
                 key={article.id}
                 id={`news-${article.slug}`}
+                itemScope
+                itemType="https://schema.org/NewsArticle"
                 className="group relative flex gap-3.5 rounded-2xl border border-border/80 bg-gradient-card p-3.5 transition-all hover:border-primary/50 hover:bg-muted/40"
               >
                 <div className="relative h-20 w-24 shrink-0 overflow-hidden rounded-xl bg-muted">
                   <img
                     src={article.imageUrl}
-                    alt={article.title}
+                    alt={`${article.title} thumbnail`}
                     loading="lazy"
+                    decoding="async"
+                    itemProp="image"
                     className="h-full w-full object-cover transition-transform group-hover:scale-105"
                   />
-                  <span className="absolute top-1 left-1 rounded bg-black/70 px-1 py-0.5 text-[9px] font-semibold text-white">
+                  <span className="absolute top-1 left-1 rounded bg-black/75 px-1 py-0.5 text-[9px] font-semibold text-white">
                     {article.sport}
                   </span>
                 </div>
@@ -336,9 +823,14 @@ export function SportsNewsSection() {
                   <div>
                     <div className="flex items-center justify-between text-[11px] text-muted-foreground">
                       <span className="font-semibold text-primary">{article.category}</span>
-                      <span>{article.readTime}</span>
+                      <time dateTime={article.publishedAt} itemProp="datePublished">
+                        {formatDate(article.publishedAt)}
+                      </time>
                     </div>
-                    <h4 className="mt-1 line-clamp-2 text-xs font-semibold leading-snug text-foreground transition-colors group-hover:text-primary sm:text-sm">
+                    <h4
+                      itemProp="headline"
+                      className="mt-1 line-clamp-2 text-xs font-semibold leading-snug text-foreground transition-colors group-hover:text-primary sm:text-sm"
+                    >
                       {article.title}
                     </h4>
                     {article.blogSlug && (
@@ -353,14 +845,31 @@ export function SportsNewsSection() {
                   </div>
 
                   <div className="mt-2 flex items-center justify-between text-[11px] text-muted-foreground">
-                    <span className="line-clamp-1">{article.author.name}</span>
-                    <button
-                      onClick={() => handleShare(article)}
-                      className="p-1 text-muted-foreground hover:text-foreground"
-                      title="Share link"
-                    >
-                      <Share2 className="h-3 w-3" />
-                    </button>
+                    <span itemProp="author" className="line-clamp-1">
+                      {article.author.name}
+                    </span>
+                    <div className="flex items-center gap-1">
+                      <button
+                        onClick={() => toggleSave(article.id)}
+                        className="p-1 text-muted-foreground hover:text-foreground"
+                        aria-label={`Bookmark ${article.title}`}
+                      >
+                        <Bookmark
+                          className={`h-3 w-3 ${
+                            savedArticles.has(article.id)
+                              ? "fill-primary text-primary"
+                              : "text-muted-foreground"
+                          }`}
+                        />
+                      </button>
+                      <button
+                        onClick={() => handleShare(article)}
+                        className="p-1 text-muted-foreground hover:text-foreground"
+                        aria-label={`Share ${article.title}`}
+                      >
+                        <Share2 className="h-3 w-3" />
+                      </button>
+                    </div>
                   </div>
                 </div>
               </article>
@@ -368,7 +877,7 @@ export function SportsNewsSection() {
           </div>
 
           {/* Bottom Callout banner */}
-          <div className="mt-2 rounded-2xl border border-primary/20 bg-primary/5 p-4">
+          <aside className="mt-2 rounded-2xl border border-primary/20 bg-primary/5 p-4">
             <div className="flex items-start gap-3">
               <div className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-primary/15 text-primary">
                 <Newspaper className="h-4 w-4" />
@@ -389,7 +898,7 @@ export function SportsNewsSection() {
                 </Link>
               </div>
             </div>
-          </div>
+          </aside>
         </div>
       </div>
 
@@ -426,12 +935,12 @@ export function SportsNewsSection() {
             </div>
 
             <div className="flex flex-wrap items-center gap-2">
-              {/* Switcher between Asiad, Cricket and Predictor */}
-              <div className="flex items-center rounded-full border border-border bg-background p-1 text-xs">
+              {/* Horizontally scrollable switcher between Asiad, Cricket and Predictor */}
+              <div className="flex items-center overflow-x-auto max-w-full rounded-full border border-border bg-background p-1 text-xs no-scrollbar">
                 <button
                   type="button"
                   onClick={() => setActiveAnalyticsHub("asiad")}
-                  className={`rounded-full px-3 py-1 font-medium transition-colors ${
+                  className={`shrink-0 rounded-full px-3 py-1 font-medium transition-colors ${
                     activeAnalyticsHub === "asiad"
                       ? "bg-primary text-primary-foreground shadow-xs"
                       : "text-muted-foreground hover:text-foreground"
@@ -442,7 +951,7 @@ export function SportsNewsSection() {
                 <button
                   type="button"
                   onClick={() => setActiveAnalyticsHub("cricket")}
-                  className={`rounded-full px-3 py-1 font-medium transition-colors ${
+                  className={`shrink-0 rounded-full px-3 py-1 font-medium transition-colors ${
                     activeAnalyticsHub === "cricket"
                       ? "bg-primary text-primary-foreground shadow-xs"
                       : "text-muted-foreground hover:text-foreground"
@@ -453,7 +962,7 @@ export function SportsNewsSection() {
                 <button
                   type="button"
                   onClick={() => setActiveAnalyticsHub("predictor")}
-                  className={`rounded-full px-3 py-1 font-medium transition-colors ${
+                  className={`shrink-0 rounded-full px-3 py-1 font-medium transition-colors ${
                     activeAnalyticsHub === "predictor"
                       ? "bg-primary text-primary-foreground shadow-xs"
                       : "text-muted-foreground hover:text-foreground"

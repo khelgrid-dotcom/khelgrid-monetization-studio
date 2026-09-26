@@ -52,7 +52,7 @@ export const Route = createFileRoute("/")({
         "India's premier sports platform for discovery and development. Find trials, tournaments, leagues, verified academies, sports turf venues, and amateur pickup games across 16+ sports.",
       canonicalPath: "/",
       keywords:
-        "sports trials India, sports academies near me, book turf, pickup sports games, badminton courts, cricket trials, football tournament, athletics scholarship",
+        "sports trials India, sports academies near me, book turf, pickup sports games, badminton courts, cricket trials, football tournament, athletics scholarship, real-time sports wire, sports updates national news, Asian Games medal tally",
       type: "website",
       customSchema: {
         "@type": "FAQPage",
