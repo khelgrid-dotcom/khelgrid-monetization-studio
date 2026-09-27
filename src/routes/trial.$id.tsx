@@ -1,10 +1,11 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { Helmet } from "react-helmet-async";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar, CheckCircle2, FileText, MapPin, ShieldCheck, Users } from "lucide-react";
 import { TRIALS } from "@/data/trials";
 import { getRealtimeOpportunityBadge } from "@/lib/opportunity-badge";
-import { buildSeoHead } from "@/lib/seo";
+import { buildSeoHead, SITE_URL, DEFAULT_SITE_NAME, TWITTER_HANDLE } from "@/lib/seo";
 
 export const Route = createFileRoute("/trial/$id")({
   loader: ({ params }) => {
@@ -25,10 +26,12 @@ export const Route = createFileRoute("/trial/$id")({
 
     return buildSeoHead({
       title: `${trial.title} · ${trial.sport} Trial in ${trial.city}`,
-      description: `${trial.title} hosted by ${trial.academy} in ${trial.city}. Eligibility age ${trial.ageCategory || "all eligible age groups"}, entry fee ${trial.fee === 0 ? "Free" : `₹${trial.fee}`}, reporting date ${trial.date}. Apply through KhelGrid.`,
+      description: `${trial.title} hosted by ${trial.academy} in ${trial.city}. Eligibility: ${trial.ageCategory || "all eligible age groups"}, entry fee: ${trial.fee === 0 ? "Free" : `₹${trial.fee}`}, reporting date: ${trial.date} at ${trial.venue || trial.city}. Official selection trials verified on KhelGrid.`,
       canonicalPath: `/trial/${trial.id}`,
-      keywords: `${trial.title}, ${trial.sport} trial ${trial.city}, ${trial.academy}, youth sports selection, ${trial.sport} scholarship`,
+      keywords: `${trial.title}, ${trial.sport} trial ${trial.city}, ${trial.academy}, youth sports selection, ${trial.sport} scholarship, SAI NCOE wrestling, sports trials Mumbai 2026`,
       type: "website",
+      image: "https://khelgrid.com/og-image.png",
+      author: trial.academy,
     });
   },
   notFoundComponent: () => (
@@ -67,8 +70,85 @@ function TrialDetailPage() {
     "Save your confirmation and check for schedule or venue updates before travelling.",
   ];
 
+  const pageTitle = `${trial.title} · ${trial.sport} Selection Trials in ${trial.city} | ${DEFAULT_SITE_NAME}`;
+  const pageDescription = `${trial.title} by ${trial.academy} in ${trial.city}. Eligibility: ${trial.ageCategory || "All categories"}. Date: ${trial.date} at ${trial.venue || trial.city}. Entry fee: ${trial.fee === 0 ? "Free" : `₹${trial.fee}`}. Verified official trial on KhelGrid.`;
+  const canonicalUrl = `${SITE_URL}/trial/${trial.id}`;
+  const ogImageUrl = `${SITE_URL}/og-image.png`;
+
+  // Specific Open Graph & Schema.org event structured data for rich previews
+  const sportsEventSchema = {
+    "@context": "https://schema.org",
+    "@type": "SportsEvent",
+    name: trial.title,
+    description: pageDescription,
+    url: canonicalUrl,
+    startDate: "2026-09-30T08:00:00+05:30",
+    eventStatus: "https://schema.org/EventScheduled",
+    eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+    location: {
+      "@type": "Place",
+      name: trial.venue || `${trial.academy}, ${trial.city}`,
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: trial.city,
+        addressCountry: "IN",
+      },
+    },
+    organizer: {
+      "@type": "SportsOrganization",
+      name: trial.academy,
+      url: trial.sourceUrl || canonicalUrl,
+    },
+    offers: {
+      "@type": "Offer",
+      price: trial.fee.toString(),
+      priceCurrency: "INR",
+      availability: "https://schema.org/InStock",
+      url: canonicalUrl,
+      validFrom: "2026-09-24",
+    },
+    image: [ogImageUrl],
+    isAccessibleForFree: trial.fee === 0,
+  };
+
   return (
     <main className="mx-auto max-w-5xl px-4 py-10 md:px-6 md:py-14">
+      {/* React Helmet for Dynamic SEO and Social Sharing (Open Graph & Twitter Cards) */}
+      <Helmet>
+        <title>{pageTitle}</title>
+        <meta name="description" content={pageDescription} />
+        <link rel="canonical" href={canonicalUrl} />
+        <meta
+          name="keywords"
+          content={`${trial.title}, ${trial.sport} trials, ${trial.city} sports selection, ${trial.academy}, SAI NCOE trials, Indian wrestling trials 2026, sports selection trials Mumbai`}
+        />
+        <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large" />
+
+        {/* Open Graph Meta Tags for Facebook, WhatsApp, LinkedIn, Discord */}
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content={DEFAULT_SITE_NAME} />
+        <meta property="og:title" content={`${trial.title} · ${trial.city}`} />
+        <meta property="og:description" content={pageDescription} />
+        <meta property="og:url" content={canonicalUrl} />
+        <meta property="og:image" content={ogImageUrl} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content={`${trial.title} - Official Selection Trials`} />
+        <meta property="og:locale" content="en_IN" />
+
+        {/* Twitter Card Meta Tags */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content={TWITTER_HANDLE} />
+        <meta name="twitter:creator" content={TWITTER_HANDLE} />
+        <meta name="twitter:title" content={`${trial.title} · ${trial.city}`} />
+        <meta name="twitter:description" content={pageDescription} />
+        <meta name="twitter:image" content={ogImageUrl} />
+        <meta name="twitter:image:alt" content={`${trial.title} - ${trial.sport}`} />
+
+        {/* Specific SportsEvent JSON-LD Structured Data */}
+        <script type="application/ld+json">{JSON.stringify(sportsEventSchema)}</script>
+      </Helmet>
+
       <Link to="/search" className="text-sm text-muted-foreground hover:text-foreground">
         ← Back to search
       </Link>

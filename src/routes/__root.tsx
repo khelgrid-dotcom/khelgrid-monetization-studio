@@ -18,6 +18,7 @@ import { NotificationProvider } from "@/context/NotificationContext";
 import { SavedOpportunityProvider } from "@/context/SavedOpportunityContext";
 import { ThemeProvider, useTheme } from "@/context/ThemeContext";
 import { LanguageProvider } from "@/context/LanguageContext";
+import { HelmetProvider } from "react-helmet-async";
 import { Navbar } from "@/components/Navbar";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { BottomTabBar } from "@/components/BottomTabBar";
@@ -194,39 +195,41 @@ function ThemedToaster() {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider>
-        <LanguageProvider>
-          <AuthProvider>
-            <BlogProvider>
-              <SavedOpportunityProvider>
-                <FollowedAcademyProvider>
-                  <NotificationProvider>
-                    <AdConsentProvider requireConsent={false}>
-                      <GoogleTagLoader />
-                      <SEOHead />
-                      <AdSenseLoader />
+    <HelmetProvider>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider>
+          <LanguageProvider>
+            <AuthProvider>
+              <BlogProvider>
+                <SavedOpportunityProvider>
+                  <FollowedAcademyProvider>
+                    <NotificationProvider>
+                      <AdConsentProvider requireConsent={false}>
+                        <GoogleTagLoader />
+                        <SEOHead />
+                        <AdSenseLoader />
 
-                      <Navbar />
-                      <Breadcrumbs />
-                      <div className="pb-20 xl:pb-0">
-                        <Outlet />
-                        <SiteFooter />
-                      </div>
-                      <BottomTabBar />
+                        <Navbar />
+                        <Breadcrumbs />
+                        <div className="pb-20 xl:pb-0">
+                          <Outlet />
+                          <SiteFooter />
+                        </div>
+                        <BottomTabBar />
 
-                      <StickyMobileAdSlot />
-                      <AdConsentBanner />
-                      <ThemedToaster />
-                      <HydrationDiagnostics />
-                    </AdConsentProvider>
-                  </NotificationProvider>
-                </FollowedAcademyProvider>
-              </SavedOpportunityProvider>
-            </BlogProvider>
-          </AuthProvider>
-        </LanguageProvider>
-      </ThemeProvider>
-    </QueryClientProvider>
+                        <StickyMobileAdSlot />
+                        <AdConsentBanner />
+                        <ThemedToaster />
+                        <HydrationDiagnostics />
+                      </AdConsentProvider>
+                    </NotificationProvider>
+                  </FollowedAcademyProvider>
+                </SavedOpportunityProvider>
+              </BlogProvider>
+            </AuthProvider>
+          </LanguageProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
+    </HelmetProvider>
   );
 }

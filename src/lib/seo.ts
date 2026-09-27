@@ -382,6 +382,31 @@ export function generateRouteSpecificSchema(
     };
   }
 
+  if (cleanPath.startsWith("/trial/")) {
+    return {
+      "@type": "SportsEvent",
+      "@id": `${canonicalUrl}#event`,
+      name: title,
+      description,
+      url: canonicalUrl,
+      eventStatus: "https://schema.org/EventScheduled",
+      eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+      organizer: {
+        "@type": "SportsOrganization",
+        name: options?.author || DEFAULT_SITE_NAME,
+        url: canonicalUrl,
+      },
+      offers: {
+        "@type": "Offer",
+        price: "0",
+        priceCurrency: "INR",
+        availability: "https://schema.org/InStock",
+        url: canonicalUrl,
+        validFrom: "2026-09-24",
+      },
+    };
+  }
+
   if (cleanPath === "/pricing" || cleanPath === "/memberships") {
     return {
       "@type": "WebPage",
