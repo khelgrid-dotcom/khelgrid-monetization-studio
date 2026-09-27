@@ -30,6 +30,7 @@ import { adsConfig, hasValidPublisherId } from "@/config/ads";
 import { GoogleTagLoader } from "@/components/GoogleTagLoader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { HydrationDiagnostics } from "@/components/HydrationDiagnostics";
+import { SEOManager } from "@/components/SEOManager";
 
 function NotFoundComponent() {
   return (
@@ -168,6 +169,7 @@ function RootComponent() {
             <FollowedAcademyProvider>
               <NotificationProvider>
                 <AdConsentProvider requireConsent>
+                  <SEOManager />
                   <GoogleTagLoader />
                   <AdSenseLoader />
 
