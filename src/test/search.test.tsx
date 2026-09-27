@@ -141,7 +141,7 @@ describe("Search Trials Page & SEO Optimization", () => {
       const html = renderToString(<SearchPage />);
 
       expect(html).toContain(TRIALS[0].title);
-      expect(html).toContain(TRIALS[0].academy);
+      expect(html).toContain(TRIALS[0].academy.replace(/&/g, "&amp;"));
     });
 
     it("renders compact list view when view parameter is list", () => {
