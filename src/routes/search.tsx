@@ -5,6 +5,7 @@ import { Fragment, useMemo, useState } from "react";
 import { BannerAd, InFeedAd } from "@/components/ads";
 import { TRIALS, SPORTS, CITIES, type Trial } from "@/data/trials";
 import { TrialCard } from "@/components/TrialCard";
+import { TrialNewsletterSignup } from "@/components/TrialNewsletterSignup";
 import { CheckoutModal } from "@/components/CheckoutModal";
 import { BoostModal } from "@/components/BoostModal";
 import { useAuth } from "@/context/AuthContext";
@@ -1045,6 +1046,18 @@ function SearchPage() {
           <div className="pt-4">
             <BannerAd adSlot="listingInline" minHeight={100} />
           </div>
+
+          {/* Automatic Trial Alerts Newsletter Subscription */}
+          <section className="mt-8" aria-label="Subscribe to Trial Alerts">
+            <TrialNewsletterSignup
+              defaultSport={params.sport}
+              defaultCity={params.city}
+              title={`Get Instant Notifications for ${
+                params.sport !== ALL_SPORT ? params.sport : "Sports"
+              } Trials${params.city !== ALL_CITY ? ` in ${params.city}` : ""}`}
+              subtitle="Never miss an upcoming selection camp or registration deadline. Set your email alert to receive new trial notifications automatically."
+            />
+          </section>
 
           {/* SEO Structured Content & FAQ Section */}
           <section className="mt-10 rounded-2xl border border-border/80 bg-card p-6 sm:p-8 space-y-6">

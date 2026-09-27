@@ -8,6 +8,7 @@ import { getRealtimeOpportunityBadge } from "@/lib/opportunity-badge";
 import { buildSeoHead, SITE_URL, DEFAULT_SITE_NAME, TWITTER_HANDLE } from "@/lib/seo";
 import { FitIndiaFAQ, FIT_INDIA_FAQS } from "@/components/FitIndiaFAQ";
 import { TrialSocialShare } from "@/components/TrialSocialShare";
+import { TrialNewsletterSignup } from "@/components/TrialNewsletterSignup";
 
 export const Route = createFileRoute("/trial/$id")({
   loader: ({ params }) => {
@@ -397,6 +398,16 @@ function TrialDetailPage() {
       {/* Bottom Social Share callout */}
       <section className="mt-10" aria-label="Share this opportunity">
         <TrialSocialShare trial={trial} variant="banner" />
+      </section>
+
+      {/* Trial Alert Newsletter Signup */}
+      <section className="mt-10" aria-label="Trial Alerts Newsletter">
+        <TrialNewsletterSignup
+          defaultSport={trial.sport}
+          defaultCity={trial.city}
+          title={`Get Automatic Alerts for ${trial.sport} Trials in ${trial.city}`}
+          subtitle={`Never miss new selection dates or announcements from ${trial.academy} and other verified sports organizations.`}
+        />
       </section>
 
       <div className="mt-10 rounded-2xl border border-border bg-gradient-card p-6">

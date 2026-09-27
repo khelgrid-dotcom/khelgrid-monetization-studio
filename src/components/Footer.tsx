@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { PRIMARY_ITEMS, FEATURE_ITEMS } from "@/config/nav";
 import { Facebook, Twitter, Instagram, Linkedin, Mail, MapPin, Phone } from "lucide-react";
+import { TrialNewsletterSignup } from "@/components/TrialNewsletterSignup";
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -8,6 +9,14 @@ export function Footer() {
   return (
     <footer className="border-t border-border/60 bg-background/95 backdrop-blur-xl">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+        {/* Newsletter Signup for Automatic Trial Notifications */}
+        <div className="mb-12">
+          <TrialNewsletterSignup
+            title="Get Automatic Notifications Whenever a Sports Trial is Posted"
+            subtitle="Subscribe to free email alerts tailored to your sport and state. Be the first to apply to official trials, academy scoutings, and SAI selection camps."
+          />
+        </div>
+
         {/* Main Footer Content */}
         <div className="grid grid-cols-1 md:grid-cols-5 gap-8 mb-8">
           {/* Brand Section */}
