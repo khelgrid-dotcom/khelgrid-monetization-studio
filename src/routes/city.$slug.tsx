@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight, MapPin, Building2 } from "lucide-react";
 import { buildSeoHead } from "@/lib/seo";
+import { FitIndiaFAQ } from "@/components/FitIndiaFAQ";
 
 export const Route = createFileRoute("/city/$slug")({
   loader: ({ params }) => {
@@ -123,6 +124,13 @@ function CityPage() {
               </Link>
             ))}
           </div>
+        </section>
+      )}
+
+      {/* Fit India School Games Official FAQ for Namchi Hub */}
+      {city.slug === "namchi" && (
+        <section className="mt-12">
+          <FitIndiaFAQ />
         </section>
       )}
 

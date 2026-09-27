@@ -6,6 +6,7 @@ import { Calendar, CheckCircle2, FileText, MapPin, ShieldCheck, Users } from "lu
 import { TRIALS } from "@/data/trials";
 import { getRealtimeOpportunityBadge } from "@/lib/opportunity-badge";
 import { buildSeoHead, SITE_URL, DEFAULT_SITE_NAME, TWITTER_HANDLE } from "@/lib/seo";
+import { FitIndiaFAQ, FIT_INDIA_FAQS } from "@/components/FitIndiaFAQ";
 
 export const Route = createFileRoute("/trial/$id")({
   loader: ({ params }) => {
@@ -151,6 +152,26 @@ function TrialDetailPage() {
 
         {/* Specific SportsEvent JSON-LD Structured Data */}
         <script type="application/ld+json">{JSON.stringify(sportsEventSchema)}</script>
+
+        {/* Specific FAQPage JSON-LD Structured Data for Fit India Trials */}
+        {(trial.id === "t-fit-india-namchi-sikkim-2026" ||
+          trial.title.toLowerCase().includes("fit india") ||
+          trial.city.toLowerCase() === "namchi") && (
+          <script type="application/ld+json">
+            {JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              mainEntity: FIT_INDIA_FAQS.map((faq) => ({
+                "@type": "Question",
+                name: faq.question,
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: faq.answer,
+                },
+              })),
+            })}
+          </script>
+        )}
       </Helmet>
 
       <Link to="/search" className="text-sm text-muted-foreground hover:text-foreground">
@@ -331,6 +352,15 @@ function TrialDetailPage() {
           />
         </div>
       </section>
+
+      {/* Fit India School Games Dedicated FAQ Section */}
+      {(trial.id === "t-fit-india-namchi-sikkim-2026" ||
+        trial.title.toLowerCase().includes("fit india") ||
+        trial.city.toLowerCase() === "namchi") && (
+        <div className="mt-10">
+          <FitIndiaFAQ sourceUrl={trial.sourceUrl} />
+        </div>
+      )}
 
       {related.length > 0 && (
         <section className="mt-10">
