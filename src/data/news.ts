@@ -31,6 +31,43 @@ export interface SportsNewsArticle {
 
 export const SPORTS_NEWS_CATALOG: SportsNewsArticle[] = [
   {
+    id: "news-fit-india-school-games-namchi-2026",
+    slug: "fit-india-school-games-district-level-selection-trials-namchi-sikkim-2026",
+    title:
+      "District-Level Competition cum Selection Trials for Fit India School Games 2026 Held in Namchi",
+    headline:
+      "Sports & Youth Affairs Department, Government of Sikkim organizes U-17 selection trials across 8 disciplines at Bhaichung Stadium and Namchi sports complexes.",
+    excerpt:
+      "Official government announcement: Over 890 student-athletes from 8 Block Administrative Centers compete in track & field, archery, boxing, kabaddi, and martial arts for qualification to the State-Level School Games in Gangtok.",
+    content:
+      "The Sports & Youth Affairs Department, Government of Sikkim, successfully conducted the District-Level Competition cum Selection Trials for Fit India School Games 2026 in Namchi. The comprehensive event brought together Under-17 boys and girls from eight Block Administrative Centers (BACs) across Namchi district. Venues included the renowned Bhaichung Stadium, Namchi Indoor Stadium, Namchi Public School, and Boxing Hall Car Plaza. Student-athletes competed across eight premier disciplines including Archery, Boxing, Kabaddi, Karate, Kho-Kho, Table Tennis, Taekwondo, and Track & Field (100m, 400m, 800m, 1500m, Relay, Shot Put, and Long Jump). Winners were awarded official state medals, merit certificates, and earned direct berths to represent Namchi in the upcoming State-Level School Games in Gangtok under the Fit India Mission.",
+    sport: "Athletics",
+    category: "Trials & Selection",
+    publishedAt: "2026-09-24T12:00:00.000Z",
+    readTime: "4 min read",
+    imageUrl:
+      "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=1200&q=80",
+    author: {
+      name: "Government of Sikkim / Sports & Youth Affairs Dept",
+      role: "Official Government Release",
+    },
+    tags: [
+      "Fit India",
+      "Sikkim",
+      "Namchi",
+      "School Games",
+      "Bhaichung Stadium",
+      "Selection Trials",
+      "Athletics",
+      "Boxing",
+      "Archery",
+      "U-17",
+      "Grassroots",
+    ],
+    featured: true,
+    trending: true,
+  },
+  {
     id: "news-sai-mumbai-wrestling-trials-2026",
     slug: "sai-ncoe-mumbai-wrestling-selection-trials-september-30-2026",
     title:

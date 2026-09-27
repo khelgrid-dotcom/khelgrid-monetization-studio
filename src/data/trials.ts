@@ -25,6 +25,40 @@ export interface Trial {
 
 export const TRIALS: Trial[] = [
   {
+    id: "t-fit-india-namchi-sikkim-2026",
+    title: "Fit India School Games District Selection Trials (Namchi, Sikkim)",
+    academy: "Sports & Youth Affairs Department, Government of Sikkim",
+    sport: "Athletics",
+    city: "Namchi",
+    date: "Sep 23 - Sep 28, 2026",
+    registrationDeadline: "Sep 28, 2026",
+    fee: 0,
+    spots: 120,
+    tag: "Government Official",
+    ageCategory: "Under-17 (Boys & Girls)",
+    gender: "Boys & Girls",
+    verifiedLabel: "Government of Sikkim Verified",
+    urgencyText: "District Selection for State School Games Gangtok · Free Entry",
+    badge: "New",
+    sourceUrl:
+      "https://www.sikkim.gov.in/media/news-announcement/news-info?name=District-Level+Competition+cum+Selection+Trials+for+Fit+India+School+Games+2026+Held+in+Namchi",
+    sourceLabel: "Government of Sikkim Official Portal Release",
+    lastVerified: "Sep 24, 2026",
+    venue:
+      "Bhaichung Stadium, Namchi Indoor Stadium, Boxing Hall Car Plaza & Namchi Public School, Namchi, Sikkim",
+    eligibility:
+      "Under-17 school students representing the 8 Block Administrative Centers (BACs) across Namchi district. Disciplines include Athletics (Track: 100m, 400m, 800m, 1500m, Relay; Field: Shot Put, Long Jump), Archery, Boxing, Kabaddi, Karate, Kho-Kho, Table Tennis, and Taekwondo.",
+    requiredDocuments: [
+      "School identity card / bonafide student certificate",
+      "Government-issued Date of Birth certificate or Aadhaar",
+      "Block Administrative Center (BAC) qualification slip / certificate",
+      "Medical fitness certificate signed by a registered medical practitioner",
+      "Sports kit / track gear according to chosen discipline",
+    ],
+    selectionProcess:
+      "Competition-cum-selection trials organized across 4 major sporting hubs in Namchi (Bhaichung Stadium, Indoor Stadium, Car Plaza Boxing Hall, Namchi Public School). Winners and top medalists qualify directly for the State-Level School Games in Gangtok.",
+  },
+  {
     id: "t-sai-wrestling-mumbai-2026",
     title: "SAI NCOE Wrestling Selection Trials (Men & Women)",
     academy: "Sports Authority of India (SAI) NCOE",

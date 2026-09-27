@@ -379,6 +379,27 @@ export const CITIES_CATALOG: City[] = [
     venueNote: "Football, beach-sport and community hubs",
     hubs: ["GMC Stadium Bambolim", "Tilak Maidan", "Nehru Stadium Fatorda"],
   },
+  {
+    slug: "namchi",
+    name: "Namchi",
+    state: "Sikkim",
+    tagline: "Fit India School Games district trials & grassroots sports hub",
+    venueNote: "Bhaichung Stadium, Indoor Stadium, Boxing Hall Car Plaza and Namchi Public School",
+    hubs: [
+      "Bhaichung Stadium",
+      "Indoor Stadium Namchi",
+      "Boxing Hall Car Plaza",
+      "Namchi Public School Ground",
+    ],
+  },
+  {
+    slug: "gangtok",
+    name: "Gangtok",
+    state: "Sikkim",
+    tagline: "State-level championships and Himalayan high-altitude training",
+    venueNote: "Paljor Stadium, Mining Ground and Sikkim State Sports Complex",
+    hubs: ["Paljor Stadium", "TNA Ground", "Sikkim Sports Complex"],
+  },
 ];
 
 const GUIDE_ENTRIES: Guide[] = [

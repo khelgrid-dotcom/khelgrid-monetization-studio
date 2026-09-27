@@ -76,13 +76,17 @@ function TrialDetailPage() {
   const ogImageUrl = `${SITE_URL}/og-image.png`;
 
   // Specific Open Graph & Schema.org event structured data for rich previews
+  const startDateIso = trial.date.includes("Sep 30")
+    ? "2026-09-30T08:00:00+05:30"
+    : "2026-09-23T09:00:00+05:30";
+
   const sportsEventSchema = {
     "@context": "https://schema.org",
     "@type": "SportsEvent",
     name: trial.title,
     description: pageDescription,
     url: canonicalUrl,
-    startDate: "2026-09-30T08:00:00+05:30",
+    startDate: startDateIso,
     eventStatus: "https://schema.org/EventScheduled",
     eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
     location: {
@@ -120,7 +124,7 @@ function TrialDetailPage() {
         <link rel="canonical" href={canonicalUrl} />
         <meta
           name="keywords"
-          content={`${trial.title}, ${trial.sport} trials, ${trial.city} sports selection, ${trial.academy}, SAI NCOE trials, Indian wrestling trials 2026, sports selection trials Mumbai`}
+          content={`${trial.title}, ${trial.sport} trials ${trial.city}, ${trial.academy}, Fit India school games, selection trials ${trial.city}, youth sports competition India, government trials 2026`}
         />
         <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large" />
 
