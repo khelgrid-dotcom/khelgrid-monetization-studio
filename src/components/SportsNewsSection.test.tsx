@@ -12,7 +12,9 @@ vi.mock("@tanstack/react-router", () => ({
 }));
 
 vi.mock("@/components/blog/AsianGamesAnalytics", () => ({
-  AsianGamesAnalytics: () => <div data-testid="asian-games-analytics">Asian Games 2026 Medal Tally</div>,
+  AsianGamesAnalytics: () => (
+    <div data-testid="asian-games-analytics">Asian Games 2026 Medal Tally</div>
+  ),
 }));
 
 vi.mock("@/components/blog/MatchOutcomePredictor", () => ({
@@ -92,6 +94,7 @@ describe("SportsNewsSection", () => {
     const html = renderToString(<SportsNewsSection />);
 
     expect(html).toContain("All Sports");
+    expect(html).toContain("Wrestling");
     expect(html).toContain("Asian Games");
     expect(html).toContain("Cricket");
     expect(html).toContain("Football");
@@ -103,5 +106,12 @@ describe("SportsNewsSection", () => {
     expect(html).toContain("High-Performance Analytics Hub");
     expect(html).toContain("Asian Games 2026");
     expect(html).toContain("Asian Games 2026 Medal Tally");
+  });
+
+  it("displays the official SAI NCOE Wrestling Trials (PIB PRID: 2314372)", () => {
+    const html = renderToString(<SportsNewsSection />);
+
+    expect(html).toContain("SAI to Conduct Selection Trials for Men");
+    expect(html).toContain("Kandivali");
   });
 });

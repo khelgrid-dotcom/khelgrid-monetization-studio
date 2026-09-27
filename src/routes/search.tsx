@@ -230,7 +230,7 @@ function SearchPage() {
       if (params.sport !== ALL_SPORT && t.sport !== params.sport) return false;
       if (params.city !== ALL_CITY && t.city !== params.city) return false;
       if (params.free && t.fee > 0) return false;
-      if (params.officialOnly && t.tag !== "Official") return false;
+      if (params.officialOnly && !t.tag.toLowerCase().includes("official")) return false;
 
       // Category filter matching
       if (params.category !== ALL_CATEGORY) {

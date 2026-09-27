@@ -12,6 +12,7 @@ export interface SportsNewsArticle {
     | "Tennis"
     | "Badminton"
     | "Athletics"
+    | "Wrestling"
     | "Kabaddi"
     | "Grassroots"
     | "Multi-Sport";
@@ -29,6 +30,41 @@ export interface SportsNewsArticle {
 }
 
 export const SPORTS_NEWS_CATALOG: SportsNewsArticle[] = [
+  {
+    id: "news-sai-mumbai-wrestling-trials-2026",
+    slug: "sai-ncoe-mumbai-wrestling-selection-trials-september-30-2026",
+    title:
+      "SAI to Conduct Selection Trials for Men's and Women's Wrestling in Mumbai on September 30",
+    headline:
+      "Sports Authority of India (SAI) NCOE Kandivali invites U-17, U-20 and U-23 wrestlers across Freestyle, Greco-Roman, and Women's divisions.",
+    excerpt:
+      "Official notification from the Ministry of Youth Affairs and Sports: SAI Shri Atal Bihari Vajpayee NCOE Mumbai will host open selection trials on September 30, 2026 at 8:00 AM for residential athlete induction.",
+    content:
+      "The Sports Authority of India (SAI), National Centre of Excellence (NCOE), Mumbai, under the Ministry of Youth Affairs & Sports, Government of India, will conduct selection trials for Men's and Women's Wrestling on September 30, 2026. The trials will take place at the SAI Shri Atal Bihari Vajpayee National Centre of Excellence, Akurli Road, Kandivali (East), Mumbai. The selection trials are open to eligible boys and girls in the Under-17, Under-20, and Under-23 age brackets across Women's Wrestling (50 kg & above), Freestyle (57 kg & above), and Greco-Roman (55 kg to 130 kg). Reporting time is 8:00 AM with valid age verification, Aadhaar, and sports achievement documentation.",
+    sport: "Wrestling",
+    category: "Trials & Selection",
+    publishedAt: "2026-09-24T15:30:00.000Z",
+    readTime: "4 min read",
+    imageUrl:
+      "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=1200&q=80",
+    author: {
+      name: "PIB Mumbai / Sports Authority of India",
+      role: "Official Government Release (PRID: 2314372)",
+    },
+    tags: [
+      "Wrestling",
+      "SAI NCOE",
+      "Selection Trials",
+      "Mumbai",
+      "Kandivali",
+      "Ministry of Youth Affairs and Sports",
+      "U-17",
+      "U-20",
+      "U-23",
+    ],
+    featured: true,
+    trending: true,
+  },
   {
     id: "news-asian-games-2026-sept-23-live",
     slug: "asian-games-2026-live-updates-september-23-india-medal-tally-analysis",

@@ -69,7 +69,16 @@ export const Route = createFileRoute("/")({
   component: Home,
 });
 
-const SPORTS = ["All Sports", "Cricket", "Football", "Badminton", "Athletics", "Hockey", "Tennis"];
+const SPORTS = [
+  "All Sports",
+  "Cricket",
+  "Football",
+  "Badminton",
+  "Athletics",
+  "Hockey",
+  "Tennis",
+  "Wrestling",
+];
 const LOCATIONS = [
   "All Locations",
   "Delhi",
@@ -102,6 +111,7 @@ const SPORT_FILTER_CHIPS = [
   { id: "Athletics", label: "Athletics" },
   { id: "Hockey", label: "Hockey" },
   { id: "Tennis", label: "Tennis" },
+  { id: "Wrestling", label: "Wrestling" },
 ] as const;
 
 function getSportBadgeStyle(sport: string) {
@@ -118,6 +128,8 @@ function getSportBadgeStyle(sport: string) {
       return "bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20";
     case "tennis":
       return "bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border-cyan-500/20";
+    case "wrestling":
+      return "bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-500/20";
     default:
       return "bg-primary/10 text-primary border-primary/20";
   }

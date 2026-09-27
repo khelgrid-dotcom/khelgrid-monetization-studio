@@ -25,7 +25,7 @@ export const Route = createFileRoute("/trial/$id")({
 
     return buildSeoHead({
       title: `${trial.title} · ${trial.sport} Trial in ${trial.city}`,
-      description: `${trial.title} hosted by ${trial.academy} in ${trial.city}. Eligibility age ${trial.age}, entry fee ${trial.fee === 0 ? "Free" : `₹${trial.fee}`}, reporting date ${trial.date}. Apply through KhelGrid.`,
+      description: `${trial.title} hosted by ${trial.academy} in ${trial.city}. Eligibility age ${trial.ageCategory || "all eligible age groups"}, entry fee ${trial.fee === 0 ? "Free" : `₹${trial.fee}`}, reporting date ${trial.date}. Apply through KhelGrid.`,
       canonicalPath: `/trial/${trial.id}`,
       keywords: `${trial.title}, ${trial.sport} trial ${trial.city}, ${trial.academy}, youth sports selection, ${trial.sport} scholarship`,
       type: "website",

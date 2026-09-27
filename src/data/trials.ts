@@ -25,6 +25,39 @@ export interface Trial {
 
 export const TRIALS: Trial[] = [
   {
+    id: "t-sai-wrestling-mumbai-2026",
+    title: "SAI NCOE Wrestling Selection Trials (Men & Women)",
+    academy: "Sports Authority of India (SAI) NCOE",
+    sport: "Wrestling",
+    city: "Mumbai",
+    date: "Sep 30, 2026",
+    registrationDeadline: "Sep 30, 2026",
+    fee: 0,
+    spots: 60,
+    tag: "Official SAI",
+    ageCategory: "U-17, U-20 & U-23",
+    gender: "Boys & Girls (Men & Women)",
+    verifiedLabel: "Ministry of Youth Affairs & Sports Verified",
+    urgencyText: "Reporting 8:00 AM on Sep 30 · Free Entry",
+    badge: "New",
+    sourceUrl: "https://www.pib.gov.in/PressReleasePage.aspx?PRID=2314372&reg=48&lang=2",
+    sourceLabel: "PIB Mumbai Official Release (PRID: 2314372)",
+    lastVerified: "Sep 24, 2026",
+    venue:
+      "SAI Shri Atal Bihari Vajpayee National Centre of Excellence, Akurli Road, Kandivali (East), Mumbai",
+    eligibility:
+      "Eligible boys and girls in U-17, U-20 and U-23 age groups. Weight categories: Women's Wrestling (Girls: 50 kg & above), Freestyle (Boys: 57 kg & above), Greco-Roman (Boys: 55 kg to 130 kg).",
+    requiredDocuments: [
+      "Government-issued Date of Birth Proof (Birth Certificate or Aadhaar)",
+      "Identity Proof (Aadhaar / Voter ID / Passport / School ID)",
+      "Sports achievement certificates & state/national records",
+      "Medical fitness certificate and age records",
+      "Wrestling costume / singlet and wrestling shoes",
+    ],
+    selectionProcess:
+      "Reporting at 8:00 AM on September 30, 2026 at SAI NCOE Kandivali East. Physical fitness assessment, official weigh-in according to UWW/WFI weight classes, followed by bout-based trials observed by SAI coaches for residential induction.",
+  },
+  {
     id: "t-1",
     title: "U-19 Cricket Selection Camp",
     academy: "Capital Cricket Academy",
@@ -339,5 +372,6 @@ export const SPORTS = [
   "Athletics",
   "Hockey",
   "Tennis",
+  "Wrestling",
 ] as const;
 export const CITIES = ["Delhi", "Mumbai", "Bengaluru", "Hyderabad", "Chandigarh", "Pune"] as const;

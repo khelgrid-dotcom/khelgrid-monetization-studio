@@ -33,13 +33,50 @@ import { MatchOutcomePredictor } from "@/components/blog/MatchOutcomePredictor";
 
 const SPORT_TABS_CONFIG = [
   { id: "All Sports", label: "All", fullLabel: "All Sports", key: "allSports", fallback: "All" },
+  {
+    id: "Wrestling",
+    label: "Wrestling",
+    fullLabel: "Wrestling",
+    key: "wrestling",
+    fallback: "Wrestling",
+  },
   { id: "Cricket", label: "Cricket", fullLabel: "Cricket", key: "cricket", fallback: "Cricket" },
-  { id: "Football", label: "Football", fullLabel: "Football", key: "football", fallback: "Football" },
+  {
+    id: "Football",
+    label: "Football",
+    fullLabel: "Football",
+    key: "football",
+    fallback: "Football",
+  },
   { id: "Tennis", label: "Tennis", fullLabel: "Tennis", key: "tennis", fallback: "Tennis" },
-  { id: "Badminton", label: "Badminton", fullLabel: "Badminton", key: "badminton", fallback: "Badminton" },
-  { id: "Athletics", label: "Athletics", fullLabel: "Athletics", key: "athletics", fallback: "Athletics" },
-  { id: "Asian Games", label: "Asian Games", fullLabel: "Asian Games", key: "asianGames", fallback: "Asian Games" },
-  { id: "Grassroots", label: "Grassroots", fullLabel: "Grassroots", key: "grassroots", fallback: "Grassroots" },
+  {
+    id: "Badminton",
+    label: "Badminton",
+    fullLabel: "Badminton",
+    key: "badminton",
+    fallback: "Badminton",
+  },
+  {
+    id: "Athletics",
+    label: "Athletics",
+    fullLabel: "Athletics",
+    key: "athletics",
+    fallback: "Athletics",
+  },
+  {
+    id: "Asian Games",
+    label: "Asian Games",
+    fullLabel: "Asian Games",
+    key: "asianGames",
+    fallback: "Asian Games",
+  },
+  {
+    id: "Grassroots",
+    label: "Grassroots",
+    fullLabel: "Grassroots",
+    key: "grassroots",
+    fallback: "Grassroots",
+  },
 ] as const;
 
 const SAVED_NEWS_STORAGE_KEY = "khelgrid-saved-news-v1";
@@ -470,11 +507,7 @@ export function SportsNewsSection() {
 
       {/* --- SMALL SCREEN HORIZONTALLY MOVABLE CAROUSEL --- */}
       {/* Active on screens < sm when mobileViewMode === 'carousel' */}
-      <div
-        className={`${
-          mobileViewMode === "carousel" ? "block sm:hidden" : "hidden"
-        } mt-2`}
-      >
+      <div className={`${mobileViewMode === "carousel" ? "block sm:hidden" : "hidden"} mt-2`}>
         {/* Movable Controls & Swipe Affordance */}
         <div className="mb-3 flex items-center justify-between px-1">
           <div className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
@@ -534,117 +567,117 @@ export function SportsNewsSection() {
                 itemType="https://schema.org/NewsArticle"
                 className="group relative flex w-[82vw] min-w-[260px] max-w-[340px] shrink-0 snap-center sm:snap-start flex-col justify-between overflow-hidden rounded-2xl border border-border bg-gradient-card p-4 transition-all hover:border-primary/50 shadow-xs"
               >
-              <div>
-                {/* Image Container with Responsive Aspect Ratio */}
-                <div className="relative aspect-[16/10] w-full overflow-hidden rounded-xl bg-muted">
-                  <img
-                    src={article.imageUrl}
-                    alt={`${article.title} - ${article.sport} Sports Wire`}
-                    loading="lazy"
-                    decoding="async"
-                    itemProp="image"
-                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent" />
-                  <div className="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between text-white">
-                    <span className="rounded-full bg-primary/95 px-2 py-0.5 text-[10px] font-bold tracking-wide uppercase">
-                      {article.sport}
-                    </span>
-                    <span className="flex items-center gap-1 text-[11px] font-medium text-white/90">
-                      <Clock className="h-3 w-3" />
-                      {article.readTime}
-                    </span>
+                <div>
+                  {/* Image Container with Responsive Aspect Ratio */}
+                  <div className="relative aspect-[16/10] w-full overflow-hidden rounded-xl bg-muted">
+                    <img
+                      src={article.imageUrl}
+                      alt={`${article.title} - ${article.sport} Sports Wire`}
+                      loading="lazy"
+                      decoding="async"
+                      itemProp="image"
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent" />
+                    <div className="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between text-white">
+                      <span className="rounded-full bg-primary/95 px-2 py-0.5 text-[10px] font-bold tracking-wide uppercase">
+                        {article.sport}
+                      </span>
+                      <span className="flex items-center gap-1 text-[11px] font-medium text-white/90">
+                        <Clock className="h-3 w-3" />
+                        {article.readTime}
+                      </span>
+                    </div>
+                    {article.featured && (
+                      <span className="absolute top-2.5 left-2.5 flex items-center gap-1 rounded-full bg-amber-500/90 px-2 py-0.5 text-[10px] font-bold text-white shadow-xs">
+                        <Sparkles className="h-2.5 w-2.5" /> Featured Story
+                      </span>
+                    )}
                   </div>
-                  {article.featured && (
-                    <span className="absolute top-2.5 left-2.5 flex items-center gap-1 rounded-full bg-amber-500/90 px-2 py-0.5 text-[10px] font-bold text-white shadow-xs">
-                      <Sparkles className="h-2.5 w-2.5" /> Featured Story
-                    </span>
+
+                  {/* Article Headline & Meta */}
+                  <div className="mt-3">
+                    <div className="flex items-center justify-between text-[11px] text-muted-foreground">
+                      <span className="font-semibold text-primary">{article.category}</span>
+                      <time dateTime={article.publishedAt} itemProp="datePublished">
+                        {formatDate(article.publishedAt)}
+                      </time>
+                    </div>
+
+                    <h3
+                      itemProp="headline"
+                      className="mt-1.5 line-clamp-2 text-base font-bold leading-snug text-foreground transition-colors group-hover:text-primary"
+                    >
+                      {article.title}
+                    </h3>
+
+                    <p
+                      itemProp="description"
+                      className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-muted-foreground"
+                    >
+                      {article.excerpt}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Bottom Actions */}
+                <div className="mt-4 border-t border-border/60 pt-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/15 text-primary text-[10px] font-bold">
+                        {article.author.name.charAt(0)}
+                      </div>
+                      <span
+                        itemProp="author"
+                        className="line-clamp-1 text-xs font-medium text-foreground max-w-[130px]"
+                      >
+                        {article.author.name}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-1">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => toggleSave(article.id)}
+                        className="h-7 w-7 rounded-full"
+                        aria-label={`Bookmark ${article.title}`}
+                      >
+                        <Bookmark
+                          className={`h-3.5 w-3.5 ${
+                            savedArticles.has(article.id)
+                              ? "fill-primary text-primary"
+                              : "text-muted-foreground"
+                          }`}
+                        />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleShare(article)}
+                        className="h-7 w-7 rounded-full"
+                        aria-label={`Share ${article.title}`}
+                      >
+                        <Share2 className="h-3.5 w-3.5 text-muted-foreground" />
+                      </Button>
+                    </div>
+                  </div>
+
+                  {article.blogSlug && (
+                    <Link
+                      to="/blog/$slug"
+                      params={{ slug: article.blogSlug }}
+                      className="mt-2.5 flex items-center justify-center gap-1.5 rounded-xl bg-primary/10 py-1.5 text-xs font-semibold text-primary transition hover:bg-primary/20"
+                    >
+                      <span>Read Analysis & Stats</span>
+                      <ArrowRight className="h-3 w-3" />
+                    </Link>
                   )}
                 </div>
-
-                {/* Article Headline & Meta */}
-                <div className="mt-3">
-                  <div className="flex items-center justify-between text-[11px] text-muted-foreground">
-                    <span className="font-semibold text-primary">{article.category}</span>
-                    <time dateTime={article.publishedAt} itemProp="datePublished">
-                      {formatDate(article.publishedAt)}
-                    </time>
-                  </div>
-
-                  <h3
-                    itemProp="headline"
-                    className="mt-1.5 line-clamp-2 text-base font-bold leading-snug text-foreground transition-colors group-hover:text-primary"
-                  >
-                    {article.title}
-                  </h3>
-
-                  <p
-                    itemProp="description"
-                    className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-muted-foreground"
-                  >
-                    {article.excerpt}
-                  </p>
-                </div>
-              </div>
-
-              {/* Bottom Actions */}
-              <div className="mt-4 border-t border-border/60 pt-3">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/15 text-primary text-[10px] font-bold">
-                      {article.author.name.charAt(0)}
-                    </div>
-                    <span
-                      itemProp="author"
-                      className="line-clamp-1 text-xs font-medium text-foreground max-w-[130px]"
-                    >
-                      {article.author.name}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center gap-1">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => toggleSave(article.id)}
-                      className="h-7 w-7 rounded-full"
-                      aria-label={`Bookmark ${article.title}`}
-                    >
-                      <Bookmark
-                        className={`h-3.5 w-3.5 ${
-                          savedArticles.has(article.id)
-                            ? "fill-primary text-primary"
-                            : "text-muted-foreground"
-                        }`}
-                      />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleShare(article)}
-                      className="h-7 w-7 rounded-full"
-                      aria-label={`Share ${article.title}`}
-                    >
-                      <Share2 className="h-3.5 w-3.5 text-muted-foreground" />
-                    </Button>
-                  </div>
-                </div>
-
-                {article.blogSlug && (
-                  <Link
-                    to="/blog/$slug"
-                    params={{ slug: article.blogSlug }}
-                    className="mt-2.5 flex items-center justify-center gap-1.5 rounded-xl bg-primary/10 py-1.5 text-xs font-semibold text-primary transition hover:bg-primary/20"
-                  >
-                    <span>Read Analysis & Stats</span>
-                    <ArrowRight className="h-3 w-3" />
-                  </Link>
-                )}
-              </div>
-            </article>
-          ))}
+              </article>
+            ))}
+          </div>
         </div>
-      </div>
 
         {/* Carousel Pagination Dots Indicator */}
         <div
@@ -706,7 +739,8 @@ export function SportsNewsSection() {
 
               <div className="mt-3 flex items-center justify-between text-xs text-muted-foreground">
                 <span className="flex items-center gap-1 font-semibold text-primary">
-                  <Sparkles className="h-3.5 w-3.5" /> {t("featuredLeadStory", "Featured Lead Story")}
+                  <Sparkles className="h-3.5 w-3.5" />{" "}
+                  {t("featuredLeadStory", "Featured Lead Story")}
                 </span>
                 <time dateTime={featuredArticle.publishedAt} itemProp="datePublished">
                   {formatDate(featuredArticle.publishedAt)}
@@ -734,7 +768,8 @@ export function SportsNewsSection() {
                     params={{ slug: featuredArticle.blogSlug }}
                     className="inline-flex items-center gap-1.5 rounded-full bg-primary px-3.5 py-1.5 text-xs font-semibold text-primary-foreground shadow-sm transition hover:bg-primary/90"
                   >
-                    {t("readFullAnalysis", "Read Tactical Analysis")} <ArrowRight className="h-3.5 w-3.5" />
+                    {t("readFullAnalysis", "Read Tactical Analysis")}{" "}
+                    <ArrowRight className="h-3.5 w-3.5" />
                   </Link>
                   <button
                     type="button"
