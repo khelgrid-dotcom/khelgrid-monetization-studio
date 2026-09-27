@@ -1,8 +1,26 @@
-import { Calendar, MapPin, Users, Flame, Check, Zap, Bookmark, Bell } from "lucide-react";
+import {
+  Calendar,
+  MapPin,
+  Users,
+  Flame,
+  Check,
+  Zap,
+  Bookmark,
+  Bell,
+  Share2,
+  Copy,
+  MessageCircle,
+} from "lucide-react";
 import type { Trial } from "@/data/trials";
 import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/context/AuthContext";
 import { useSavedOpportunities } from "@/context/SavedOpportunityContext";
 import { useFollowedAcademies } from "@/context/FollowedAcademyContext";
@@ -124,6 +142,78 @@ export function TrialCard({ trial, boosted, onApply, onBoost, showBoostAction }:
         >
           <Bell className={`h-4 w-4 ${followingAcademy ? "fill-current" : ""}`} />
         </Button>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              type="button"
+              variant="outline"
+              size="icon"
+              title="Share trial announcement"
+              aria-label={`Share ${trial.title}`}
+            >
+              <Share2 className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-48">
+            <DropdownMenuItem
+              className="cursor-pointer gap-2 text-emerald-600 focus:text-emerald-700 font-medium"
+              onClick={() => {
+                const origin =
+                  typeof window !== "undefined" ? window.location.origin : "https://khelgrid.com";
+                const shareUrl = `${origin}/trial/${trial.id}`;
+                const text = encodeURIComponent(
+                  `🏆 *${trial.title}* (${trial.sport})\n📍 ${trial.city} · 📅 ${trial.date}\n🔗 View on KhelGrid: ${shareUrl}`,
+                );
+                window.open(
+                  `https://api.whatsapp.com/send?text=${text}`,
+                  "_blank",
+                  "noopener,noreferrer",
+                );
+              }}
+            >
+              <MessageCircle className="h-4 w-4 fill-emerald-500/20" />
+              <span>Share on WhatsApp</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              className="cursor-pointer gap-2 font-medium"
+              onClick={() => {
+                const origin =
+                  typeof window !== "undefined" ? window.location.origin : "https://khelgrid.com";
+                const shareUrl = `${origin}/trial/${trial.id}`;
+                const text = encodeURIComponent(
+                  `Official ${trial.sport} selection trial: ${trial.title} in ${trial.city} on ${trial.date}. Verified on @KhelGrid:`,
+                );
+                window.open(
+                  `https://twitter.com/intent/tweet?text=${text}&url=${encodeURIComponent(shareUrl)}`,
+                  "_blank",
+                  "noopener,noreferrer",
+                );
+              }}
+            >
+              <span className="font-bold text-xs">𝕏</span>
+              <span>Share on X</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              className="cursor-pointer gap-2"
+              onClick={async () => {
+                const origin =
+                  typeof window !== "undefined" ? window.location.origin : "https://khelgrid.com";
+                const shareUrl = `${origin}/trial/${trial.id}`;
+                try {
+                  if (navigator.clipboard?.writeText) {
+                    await navigator.clipboard.writeText(shareUrl);
+                  }
+                  toast.success("Link copied to clipboard!");
+                } catch {
+                  toast.error("Could not copy link");
+                }
+              }}
+            >
+              <Copy className="h-4 w-4" />
+              <span>Copy Link</span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
         <Button
           onClick={onApply}
           disabled={applied || statusBadge?.isExpired}

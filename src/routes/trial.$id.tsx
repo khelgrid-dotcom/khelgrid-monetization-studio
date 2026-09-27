@@ -7,6 +7,7 @@ import { TRIALS } from "@/data/trials";
 import { getRealtimeOpportunityBadge } from "@/lib/opportunity-badge";
 import { buildSeoHead, SITE_URL, DEFAULT_SITE_NAME, TWITTER_HANDLE } from "@/lib/seo";
 import { FitIndiaFAQ, FIT_INDIA_FAQS } from "@/components/FitIndiaFAQ";
+import { TrialSocialShare } from "@/components/TrialSocialShare";
 
 export const Route = createFileRoute("/trial/$id")({
   loader: ({ params }) => {
@@ -215,6 +216,11 @@ function TrialDetailPage() {
         />
       </section>
 
+      {/* Social Media Sharing Section */}
+      <section className="mt-6" aria-label="Share trial announcement">
+        <TrialSocialShare trial={trial} variant="banner" />
+      </section>
+
       <section className="mt-8 rounded-2xl border border-border bg-gradient-card p-6">
         <h2 className="text-xl font-semibold">What this opportunity is</h2>
         <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
@@ -387,6 +393,11 @@ function TrialDetailPage() {
           </div>
         </section>
       )}
+
+      {/* Bottom Social Share callout */}
+      <section className="mt-10" aria-label="Share this opportunity">
+        <TrialSocialShare trial={trial} variant="banner" />
+      </section>
 
       <div className="mt-10 rounded-2xl border border-border bg-gradient-card p-6">
         <h2 className="font-semibold">Ready to compare?</h2>
