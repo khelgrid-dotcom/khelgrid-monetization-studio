@@ -1,9 +1,22 @@
 import { supabase, isSupabaseConfigured } from "./supabase";
 import { VENUES, type Venue } from "@/data/playo";
+import type { Database } from "@/types/database";
+
+export interface CourtRecord {
+  id: string;
+  venue_id: string;
+  name: string;
+  sport: string;
+  surface_type?: string | null;
+  price_per_hour?: number | null;
+  is_active: boolean;
+}
 
 export interface BookingRecord {
   id: string;
   venue_id: string;
+  court_id?: string | null;
+  court_name?: string;
   venue_name: string;
   venue_area: string;
   venue_city: string;
@@ -16,6 +29,8 @@ export interface BookingRecord {
   price_per_hour: number;
   total_price: number;
   status: "pending" | "confirmed" | "cancelled" | "completed";
+  idempotency_key?: string;
+  held_until?: string;
   user_email: string;
   user_phone?: string;
   created_at: string;
@@ -25,6 +40,7 @@ export interface BookingRecord {
 interface SupabaseBookingJoinedRow {
   id: string;
   venue_id: string;
+  court_id?: string | null;
   venues?: {
     name?: string;
     area?: string;
@@ -37,6 +53,8 @@ interface SupabaseBookingJoinedRow {
   end_time: string;
   total_price: number | string;
   status: "pending" | "confirmed" | "cancelled" | "completed";
+  idempotency_key?: string | null;
+  held_until?: string | null;
   user_email?: string;
   user_phone?: string;
   created_at?: string;
@@ -83,6 +101,44 @@ export function calculateEndTimeSQL(timeStr: string, durationHours: number = 1):
 }
 
 /**
+ * Fetch courts for a given venue, with sensible fallback for offline/unconfigured environments.
+ */
+export async function getVenueCourts(venueId: string, sport?: string): Promise<CourtRecord[]> {
+  if (isSupabaseConfigured) {
+    try {
+      let query = supabase
+        .from("venue_courts")
+        .select("*")
+        .eq("venue_id", venueId)
+        .eq("is_active", true);
+
+      if (sport) {
+        query = query.eq("sport", sport);
+      }
+
+      const { data, error } = await query;
+      if (!error && data && data.length > 0) {
+        return data as CourtRecord[];
+      }
+    } catch (e) {
+      console.warn("Could not fetch venue courts from database", e);
+    }
+  }
+
+  // Fallback default court
+  return [
+    {
+      id: `${venueId}-court-1`,
+      venue_id: venueId,
+      name: "Court 1 / Main Pitch",
+      sport: sport || "Multi-Sport",
+      surface_type: "Standard Pro Surface",
+      is_active: true,
+    },
+  ];
+}
+
+/**
  * Retrieves all user venue bookings. Merges Supabase remote records with local storage.
  */
 export async function getVenueBookings(): Promise<BookingRecord[]> {
@@ -106,14 +162,15 @@ export async function getVenueBookings(): Promise<BookingRecord[]> {
       const { data, error } = await supabase
         .from("venue_bookings")
         .select("*, venues(name, area, city, image_url)")
+        .is("deleted_at", null)
         .order("created_at", { ascending: false });
 
       if (!error && data) {
         const rows = data as unknown as SupabaseBookingJoinedRow[];
-        // Map database records
         const dbBookings: BookingRecord[] = rows.map((item) => ({
           id: item.id,
           venue_id: item.venue_id,
+          court_id: item.court_id,
           venue_name: item.venues?.name || "Sports Venue",
           venue_area: item.venues?.area || "Area",
           venue_city: item.venues?.city || "City",
@@ -126,6 +183,8 @@ export async function getVenueBookings(): Promise<BookingRecord[]> {
           price_per_hour: Number(item.total_price),
           total_price: Number(item.total_price),
           status: item.status,
+          idempotency_key: item.idempotency_key || undefined,
+          held_until: item.held_until || undefined,
           user_email: item.user_email || "guest@khelgrid.com",
           user_phone: item.user_phone || "",
           created_at: item.created_at || new Date().toISOString(),
@@ -152,7 +211,65 @@ export async function getVenueBookings(): Promise<BookingRecord[]> {
 }
 
 /**
- * Persists a new booking to Supabase and localStorage
+ * Checks if a specific slot is currently booked or held by an active user.
+ */
+export async function checkSlotAvailability(params: {
+  venue_id: string;
+  court_id?: string;
+  booking_date: string;
+  start_time: string;
+  duration_hours?: number;
+}): Promise<{ available: boolean; conflictReason?: string }> {
+  if (!isSupabaseConfigured) {
+    return { available: true };
+  }
+
+  try {
+    const startTimeSQL = formatTimeToSQL(params.start_time);
+    const endTimeSQL = calculateEndTimeSQL(params.start_time, params.duration_hours || 1);
+
+    const { data: existingBookings, error } = await supabase
+      .from("venue_bookings")
+      .select("id, start_time, end_time, status, held_until")
+      .eq("venue_id", params.venue_id)
+      .eq("booking_date", params.booking_date)
+      .in("status", ["confirmed", "pending"])
+      .is("deleted_at", null);
+
+    if (error || !existingBookings) {
+      return { available: true };
+    }
+
+    const now = new Date();
+
+    for (const b of existingBookings) {
+      // If pending but held_until has expired, ignore
+      if (b.status === "pending" && b.held_until) {
+        if (new Date(b.held_until) < now) continue;
+      }
+
+      // Check time overlap: (startA < endB) and (endA > startB)
+      const isOverlap = startTimeSQL < b.end_time && endTimeSQL > b.start_time;
+      if (isOverlap) {
+        return {
+          available: false,
+          conflictReason:
+            b.status === "confirmed"
+              ? "This slot is already booked."
+              : "This slot is temporarily held by another customer completing payment.",
+        };
+      }
+    }
+
+    return { available: true };
+  } catch (err) {
+    console.warn("Error checking slot availability:", err);
+    return { available: true };
+  }
+}
+
+/**
+ * Persists a new booking to Supabase and localStorage with double-booking safety and idempotency.
  */
 export async function createVenueBooking(params: {
   venue: {
@@ -164,15 +281,18 @@ export async function createVenueBooking(params: {
     sports: string[];
     image_url?: string;
   };
+  court_id?: string;
+  court_name?: string;
   sport: string;
   booking_date: string;
   start_time: string;
   duration_hours?: number;
   user_email?: string;
   user_phone?: string;
+  idempotency_key?: string;
 }): Promise<{
   success: boolean;
-  booking: BookingRecord;
+  booking?: BookingRecord;
   message: string;
 }> {
   const duration = params.duration_hours || 1;
@@ -180,11 +300,38 @@ export async function createVenueBooking(params: {
   const startTimeSQL = formatTimeToSQL(params.start_time);
   const endTimeSQL = calculateEndTimeSQL(params.start_time, duration);
 
+  // Generate an idempotency key if not supplied
+  const idempotencyKey =
+    params.idempotency_key ||
+    (typeof crypto !== "undefined" && crypto.randomUUID
+      ? crypto.randomUUID()
+      : `key-${Date.now()}-${Math.random().toString(36).slice(2)}`);
+
+  // Verify availability before proceeding
+  const availability = await checkSlotAvailability({
+    venue_id: params.venue.id,
+    court_id: params.court_id,
+    booking_date: params.booking_date,
+    start_time: params.start_time,
+    duration_hours: duration,
+  });
+
+  if (!availability.available) {
+    return {
+      success: false,
+      message:
+        availability.conflictReason ||
+        "The selected court slot is no longer available. Please pick another time.",
+    };
+  }
+
   const bookingId = `KG-BK-${Date.now()}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
 
   const bookingRecord: BookingRecord = {
     id: bookingId,
     venue_id: params.venue.id,
+    court_id: params.court_id || null,
+    court_name: params.court_name || "Main Court",
     venue_name: params.venue.name,
     venue_area: params.venue.area,
     venue_city: params.venue.city,
@@ -197,16 +344,17 @@ export async function createVenueBooking(params: {
     price_per_hour: params.venue.price_per_hour,
     total_price: totalPrice,
     status: "confirmed",
+    idempotency_key: idempotencyKey,
     user_email: params.user_email || "guest@khelgrid.com",
     user_phone: params.user_phone || "",
     created_at: new Date().toISOString(),
     synced_to_db: false,
   };
 
-  // 1. Try to sync to Supabase if configured
+  // 1. Persist to Supabase if configured
   if (isSupabaseConfigured) {
     try {
-      // First ensure the venue exists in the database to satisfy foreign keys
+      // First ensure the venue exists in the database
       const { data: existingVenue } = await supabase
         .from("venues")
         .select("id")
@@ -214,7 +362,6 @@ export async function createVenueBooking(params: {
         .maybeSingle();
 
       if (!existingVenue) {
-        // Upsert the venue definition
         await supabase.from("venues").upsert({
           id: params.venue.id,
           name: params.venue.name,
@@ -229,28 +376,48 @@ export async function createVenueBooking(params: {
         });
       }
 
-      // Insert the booking
+      // Insert booking record with exclusion constraint protection
       const { data: inserted, error } = await supabase
         .from("venue_bookings")
         .insert({
           id: bookingId,
           venue_id: params.venue.id,
+          court_id: params.court_id || null,
           sport: bookingRecord.sport,
           booking_date: bookingRecord.booking_date,
           start_time: startTimeSQL,
           end_time: endTimeSQL,
           total_price: totalPrice,
           status: "confirmed",
+          idempotency_key: idempotencyKey,
           user_email: bookingRecord.user_email,
           user_phone: bookingRecord.user_phone,
         })
         .select()
         .single();
 
-      if (!error && inserted) {
+      if (error) {
+        // Check for double booking exclusion violation (Postgres error 23P01)
+        if (error.code === "23P01" || error.message.includes("no_overlapping_bookings")) {
+          return {
+            success: false,
+            message:
+              "Conflict detected: This slot was just reserved by another player. Please select another slot.",
+          };
+        }
+        console.warn("Supabase booking insert error:", error);
+      } else if (inserted) {
         bookingRecord.synced_to_db = true;
       }
-    } catch (dbErr) {
+    } catch (dbErr: unknown) {
+      const errObj = dbErr as { code?: string; message?: string } | null;
+      if (errObj?.code === "23P01") {
+        return {
+          success: false,
+          message:
+            "Conflict detected: This slot was just reserved by another player. Please select another slot.",
+        };
+      }
       console.warn("Supabase booking insert warning:", dbErr);
     }
   }
@@ -278,7 +445,7 @@ export async function createVenueBooking(params: {
 }
 
 /**
- * Cancel an existing booking
+ * Cancel an existing booking (soft delete / status change)
  */
 export async function cancelVenueBooking(bookingId: string): Promise<boolean> {
   if (typeof window !== "undefined") {
@@ -299,7 +466,13 @@ export async function cancelVenueBooking(bookingId: string): Promise<boolean> {
 
   if (isSupabaseConfigured) {
     try {
-      await supabase.from("venue_bookings").update({ status: "cancelled" }).eq("id", bookingId);
+      await supabase
+        .from("venue_bookings")
+        .update({
+          status: "cancelled",
+          deleted_at: new Date().toISOString(),
+        })
+        .eq("id", bookingId);
     } catch (e) {
       console.warn(e);
     }
@@ -309,7 +482,42 @@ export async function cancelVenueBooking(bookingId: string): Promise<boolean> {
 }
 
 /**
- * Helper to seed all default Playo venues directly into the connected Supabase database
+ * Lightweight real-time slot subscription (Supabase Free Tier friendly).
+ * Listens only to bookings for a specific venue on a specific date to conserve message quotas.
+ */
+export function subscribeToVenueSlots(
+  venueId: string,
+  bookingDate: string,
+  onSlotChanged: () => void,
+): () => void {
+  if (!isSupabaseConfigured) {
+    return () => {};
+  }
+
+  const channelName = `venue_slots_${venueId.slice(0, 8)}_${bookingDate}`;
+  const channel = supabase
+    .channel(channelName)
+    .on(
+      "postgres_changes",
+      {
+        event: "*",
+        schema: "public",
+        table: "venue_bookings",
+        filter: `venue_id=eq.${venueId}`,
+      },
+      () => {
+        onSlotChanged();
+      },
+    )
+    .subscribe();
+
+  return () => {
+    supabase.removeChannel(channel);
+  };
+}
+
+/**
+ * Helper to seed all default Playo venues and courts directly into the connected Supabase database
  */
 export async function seedAllVenuesToDatabase(): Promise<{
   success: boolean;
@@ -338,66 +546,32 @@ export async function seedAllVenuesToDatabase(): Promise<{
       image_url: v.image,
       contact_phone: "+91 98765 43210",
       contact_email: "support@khelgrid.com",
-      operating_hours: {
-        regular_hours: "6:00 AM – 11:00 PM (Monday to Sunday)",
-        weekend_hours: "5:30 AM – 11:30 PM (Saturday & Sunday)",
-        peak_hours: "6:00 PM – 10:00 PM (Weekdays) & All Day (Weekends)",
-        floodlight_hours: "6:30 PM – 11:00 PM (Tournament grade 500-lux LED lighting included)",
-        maintenance_window: "11:00 PM – 5:30 AM (Daily ground rolling & sanitation)",
-        last_entry: "10:15 PM",
-      },
-      booking_policies: {
-        advance_booking:
-          "Book up to 14 days in advance with real-time slot locking and instant confirmation.",
-        cancellation_full_refund:
-          "100% full refund for cancellations initiated at least 4 hours prior to slot start.",
-        cancellation_partial_refund:
-          "50% refund processed for cancellations initiated 2 to 4 hours prior to game start.",
-        cancellation_no_refund: "Under 2 hours before slot start or no-shows are non-refundable.",
-        rescheduling:
-          "1 complimentary slot reschedule permitted up to 4 hours prior to match time directly from My Bookings.",
-        slot_duration:
-          "Standard 60-minute increments with a 10-minute transition buffer between back-to-back games.",
-        weather_policy:
-          "100% weather disruption guarantee: automatic reschedule token or full refund if rain renders surface unplayable.",
-        id_verification:
-          "Digital booking voucher or reference ID on mobile required at check-in desk.",
-      },
-      rules_restrictions: {
-        footwear_indoor:
-          "Non-marking gum sole shoes strictly mandatory on indoor wooden and synthetic courts.",
-        footwear_turf:
-          "Rubber studs, multi-ground turf boots, or flat sneakers required; metal cleats strictly banned.",
-        dress_code:
-          "Athletic sportswear, team jerseys, shorts, or dry-fit tracksuits required. Bare-chested play prohibited.",
-        prohibited_items: [
-          "Metal cleats / spikes",
-          "Chewing gum & outside cooked food on playing surface",
-          "Smoking, tobacco, paan, and vaping on premises",
-          "Alcoholic beverages and banned substances",
-          "Glass bottles & sharp items",
-          "Pets on playing turf or court enclosures",
-        ],
-        age_guidelines:
-          "Open to all age categories. Minors aged 14 and under must be accompanied by an adult or coach.",
-        spectators:
-          "Dedicated viewing gallery accommodates up to 20 non-playing spectators per court.",
-        equipment:
-          "Bring your personal sports gear or rent tournament-grade racquets and balls at reception from ₹50.",
-      },
     }));
 
-    const { data, error } = await supabase
+    const { error: venueError } = await supabase
       .from("venues")
-      .upsert(venuesToInsert, { onConflict: "id" })
-      .select("id");
+      .upsert(venuesToInsert, { onConflict: "id" });
 
-    if (error) {
-      return { success: false, count: 0, error: error.message };
+    if (venueError) {
+      return { success: false, count: 0, error: venueError.message };
     }
 
-    const insertedRows = data as unknown as { id: string }[] | null;
-    return { success: true, count: insertedRows?.length || venuesToInsert.length };
+    // Also populate default courts for all seeded venues
+    const courtsToInsert = VENUES.flatMap((v) =>
+      v.sports.slice(0, 2).map((sport, index) => ({
+        id: `${v.id}-court-${index + 1}`,
+        venue_id: v.id,
+        name: `${v.name} - ${sport} Court ${index + 1}`,
+        sport: sport,
+        surface_type: "Tournament Grade Turf / Wooden",
+        price_per_hour: v.pricePerHour,
+        is_active: true,
+      })),
+    );
+
+    await supabase.from("venue_courts").upsert(courtsToInsert, { onConflict: "id" });
+
+    return { success: true, count: venuesToInsert.length };
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Failed to seed venues";
     return { success: false, count: 0, error: message };

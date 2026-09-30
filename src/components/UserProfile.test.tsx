@@ -1,6 +1,18 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { renderToString } from "react-dom/server";
 import { UserProfile } from "./UserProfile";
+
+// Mock router for Link and useNavigate
+vi.mock("@tanstack/react-router", () => ({
+  useNavigate: () => vi.fn(),
+  useRouter: () => ({ state: { location: { pathname: "/profile" } } }),
+  Link: ({ to, children, ...props }: any) => (
+    <a href={to} {...props}>
+      {children}
+    </a>
+  ),
+}));
+
 import {
   DEFAULT_USER_PROFILE,
   DEFAULT_ACHIEVEMENTS,
@@ -104,5 +116,22 @@ describe("UserProfile Component and Supabase Service", () => {
     expect(html).toContain('id="user-profile-root"');
     expect(html).toContain('id="section-membership-status"');
     expect(html).toContain("TIER");
+  });
+
+  it("renders UserProfile component with sports-cv initial tab", () => {
+    const html = renderToString(<UserProfile initialTab="sports-cv" />);
+    expect(html).toContain('id="user-profile-root"');
+    expect(html).toContain('id="section-sports-cv"');
+  });
+
+  it("renders UserProfile component with notifications initial tab for trial push alerts worker", () => {
+    const html = renderToString(<UserProfile initialTab="notifications" />);
+    expect(html).toContain('id="user-profile-root"');
+    expect(html).toContain('id="tab-trial-alerts"');
+    expect(html).toContain('id="section-trial-alerts"');
+    expect(html).toContain("Automated Trial Push Alerts");
+    expect(html).toContain("notification_subscriptions");
+    expect(html).toContain("Simulate New Trial Published");
+    expect(html).toContain("Run Worker Batch Processor");
   });
 });

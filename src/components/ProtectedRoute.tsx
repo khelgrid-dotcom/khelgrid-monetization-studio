@@ -220,4 +220,29 @@ export function ProtectedRoute({
   return <>{children}</>;
 }
 
+/**
+ * Higher-Order Component (HOC) to protect sensitive dashboard components and pages.
+ *
+ * @example
+ * export const ProtectedDashboard = withProtectedRoute(DashboardPage, {
+ *   message: "Sign in required to view your athlete dashboard",
+ *   allowedRoles: ["user", "coach"]
+ * });
+ */
+export function withProtectedRoute<P extends object>(
+  Component: React.ComponentType<P>,
+  options?: Omit<ProtectedRouteProps, "children">,
+): React.FC<P> {
+  const AuthenticatedRouteWrapper: React.FC<P> = (props: P) => (
+    <ProtectedRoute {...options}>
+      <Component {...props} />
+    </ProtectedRoute>
+  );
+
+  const displayName = Component.displayName || Component.name || "Component";
+  AuthenticatedRouteWrapper.displayName = `withProtectedRoute(${displayName})`;
+
+  return AuthenticatedRouteWrapper;
+}
+
 export default ProtectedRoute;

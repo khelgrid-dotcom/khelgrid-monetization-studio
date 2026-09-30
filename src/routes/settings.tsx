@@ -32,7 +32,7 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { useTheme } from "@/context/ThemeContext";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth, withProtectedRoute } from "@/hooks/use-auth";
 import { useLanguage, type LanguageCode } from "@/context/LanguageContext";
 import { toast } from "sonner";
 import { buildSeoHead } from "@/lib/seo";
@@ -48,7 +48,9 @@ export const Route = createFileRoute("/settings")({
       noindex: true,
       type: "website",
     }),
-  component: SettingsPage,
+  component: withProtectedRoute(SettingsPage, {
+    message: "Sign in to manage your account settings, privacy, and preferences.",
+  }),
 });
 
 interface SettingsState {

@@ -273,11 +273,25 @@ export async function getUserProfile(email: string = "arjun.mehta@khelgrid.com")
 
   if (isSupabaseConfigured) {
     try {
-      const { data, error } = await supabase
-        .from("user_profiles")
+      // 1. First attempt to query 'profiles' table in Supabase
+      let { data, error } = await supabase
+        .from("profiles")
         .select("*")
         .or(`email.eq.${email},full_name.ilike.%${cached.fullName}%`)
         .limit(1);
+
+      // 2. If 'profiles' returned nothing or error, fall back to 'user_profiles'
+      if (error || !data || data.length === 0) {
+        const fallbackRes = await supabase
+          .from("user_profiles")
+          .select("*")
+          .or(`email.eq.${email},full_name.ilike.%${cached.fullName}%`)
+          .limit(1);
+        if (!fallbackRes.error && fallbackRes.data && fallbackRes.data.length > 0) {
+          data = fallbackRes.data;
+          error = null;
+        }
+      }
 
       if (!error && data && data.length > 0) {
         const row = data[0];
@@ -306,7 +320,7 @@ export async function getUserProfile(email: string = "arjun.mehta@khelgrid.com")
         return { profile, isSupabaseLive: true };
       }
     } catch (err) {
-      console.warn("Supabase user_profiles table query failed, falling back to local state", err);
+      console.warn("Supabase profiles table query failed, falling back to local state", err);
     }
   }
 

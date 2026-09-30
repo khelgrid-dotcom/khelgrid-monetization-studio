@@ -1,5 +1,7 @@
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 
+export type AppRole = "athlete" | "coach" | "academy_owner" | "scout" | "admin";
+
 export interface Database {
   public: {
     Tables: {
@@ -26,6 +28,7 @@ export interface Database {
           operating_hours?: Json | null;
           booking_policies?: Json | null;
           rules_restrictions?: Json | null;
+          deleted_at?: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -38,6 +41,28 @@ export interface Database {
           updated_at?: string;
         };
         Update: Partial<Database["public"]["Tables"]["venues"]["Insert"]>;
+      };
+      venue_courts: {
+        Row: {
+          id: string;
+          venue_id: string;
+          name: string;
+          sport: string;
+          surface_type: string | null;
+          price_per_hour: number | null;
+          is_active: boolean;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: Omit<
+          Database["public"]["Tables"]["venue_courts"]["Row"],
+          "id" | "created_at" | "updated_at"
+        > & {
+          id?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["venue_courts"]["Insert"]>;
       };
       trials: {
         Row: {
@@ -62,6 +87,8 @@ export interface Database {
           source_label: string | null;
           last_verified: string;
           status: "active" | "upcoming" | "completed" | "cancelled";
+          deleted_at?: string | null;
+          fts?: unknown | null;
           created_at: string;
           updated_at: string;
         };
@@ -90,6 +117,7 @@ export interface Database {
           reviews_count: number;
           image_url: string | null;
           schedule_details: Json;
+          deleted_at?: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -107,6 +135,7 @@ export interface Database {
         Row: {
           id: string;
           venue_id: string;
+          court_id: string | null;
           user_id: string | null;
           user_email: string | null;
           user_phone: string | null;
@@ -116,6 +145,10 @@ export interface Database {
           end_time: string;
           total_price: number;
           status: "pending" | "confirmed" | "cancelled" | "completed";
+          idempotency_key?: string | null;
+          held_until?: string | null;
+          booking_range?: string | null;
+          deleted_at?: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -192,6 +225,7 @@ export interface Database {
           bio: string | null;
           skill_level: string;
           membership_tier: string;
+          role: AppRole;
           created_at: string;
           updated_at: string;
         };
@@ -261,6 +295,23 @@ export interface Database {
           updated_at?: string;
         };
         Update: Partial<Database["public"]["Tables"]["user_memberships"]["Insert"]>;
+      };
+      audit_logs: {
+        Row: {
+          id: string;
+          table_name: string;
+          record_id: string;
+          action: "INSERT" | "UPDATE" | "DELETE";
+          old_data: Json | null;
+          new_data: Json | null;
+          performed_by: string | null;
+          created_at: string;
+        };
+        Insert: Omit<Database["public"]["Tables"]["audit_logs"]["Row"], "id" | "created_at"> & {
+          id?: string;
+          created_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["audit_logs"]["Insert"]>;
       };
     };
   };

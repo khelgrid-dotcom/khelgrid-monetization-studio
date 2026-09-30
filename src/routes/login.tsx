@@ -20,6 +20,7 @@ import {
   Database,
   LogOut,
   UserCheck,
+  UserPlus,
 } from "lucide-react";
 import { toast } from "sonner";
 import { buildSeoHead, SITE_URL } from "@/lib/seo";
@@ -107,14 +108,24 @@ function LoginPage() {
   // Selected target role
   const [selectedRole, setSelectedRole] = useState<"user" | "coach" | "academy">("user");
   const [authMode, setAuthMode] = useState<AuthMode>("otp");
+  const [activeTab, setActiveTab] = useState<"signin" | "signup">("signin");
 
-  // Form states
+  // Sign in form states
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [otpCode, setOtpCode] = useState("");
   const [otpSent, setOtpSent] = useState(false);
   const [resendTimer, setResendTimer] = useState(0);
+
+  // Sign up form states
+  const [signUpFullName, setSignUpFullName] = useState("");
+  const [signUpEmail, setSignUpEmail] = useState("");
+  const [signUpPassword, setSignUpPassword] = useState("");
+  const [signUpPhone, setSignUpPhone] = useState("");
+  const [signUpSport, setSignUpSport] = useState("Cricket");
+  const [signUpCity, setSignUpCity] = useState("Bengaluru");
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [lastSyncResult, setLastSyncResult] = useState<{
     syncedToDb: boolean;
@@ -155,12 +166,30 @@ function LoginPage() {
     toast.success(`OTP sent to ${phone}! Demo code 123456 auto-filled.`);
   };
 
-  // Submit / Verify Login
+  // Submit / Verify Sign In
   const handleCompleteLogin = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     setIsSubmitting(true);
 
     try {
+      // If user is attempting real Supabase Password authentication
+      if (authMode === "password" && isSupabaseConfigured && email.trim() && password.trim()) {
+        const supabaseRes = await auth.signInWithSupabase({ email, password });
+        if (supabaseRes.success) {
+          toast.success("Signed in with Supabase Authentication!");
+          const dest =
+            redirectTarget && redirectTarget.startsWith("/")
+              ? redirectTarget
+              : resolveTargetRoute(selectedRole);
+          navigate({ to: dest as unknown as "/" });
+          return;
+        } else if (supabaseRes.error && !email.includes("khelgrid.com")) {
+          toast.error(supabaseRes.error);
+          setIsSubmitting(false);
+          return;
+        }
+      }
+
       const identifier = authMode === "otp" ? phone : email;
       const result = await login({
         identifier: identifier || demoPreset.phone,
@@ -193,6 +222,58 @@ function LoginPage() {
     } catch (err) {
       console.error("Login failed:", err);
       toast.error("Sign-in encountered an issue. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // Submit Sign Up
+  const handleSignUpSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!signUpFullName.trim()) {
+      toast.error("Please enter your full name");
+      return;
+    }
+    if (!signUpEmail.trim() || !signUpEmail.includes("@")) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
+    if (signUpPassword.length < 6) {
+      toast.error("Password must be at least 6 characters long");
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const res = await auth.signUpWithSupabase({
+        fullName: signUpFullName,
+        email: signUpEmail,
+        password: signUpPassword,
+        phone: signUpPhone || undefined,
+        role: selectedRole,
+        primarySport: signUpSport || "Cricket",
+        city: signUpCity || "Bengaluru",
+      });
+
+      if (!res.success) {
+        toast.error(res.error || "Failed to create account");
+        return;
+      }
+
+      if (res.requiresEmailConfirmation) {
+        toast.success(
+          "Account created! Please check your email to verify your address before logging in."
+        );
+        setActiveTab("signin");
+      } else {
+        toast.success("Welcome to KhelGrid! Your account has been provisioned.");
+        const dest =
+          redirectTarget && redirectTarget.startsWith("/") ? redirectTarget : "/profile";
+        navigate({ to: dest as unknown as "/" });
+      }
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Account registration failed";
+      toast.error(msg);
     } finally {
       setIsSubmitting(false);
     }
@@ -419,223 +500,409 @@ function LoginPage() {
 
           {/* Right Column: Interactive Login Form */}
           <div className="flex flex-col rounded-2xl border border-border bg-card p-6 sm:p-8 lg:col-span-7 shadow-sm">
-            {/* Header with Role Pill & Method Switcher */}
-            <div className="flex flex-col gap-4 border-b border-border/60 pb-6 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <div className="flex items-center gap-2">
-                  <h2 className="text-xl font-bold text-foreground">
-                    Sign in as {activeRoleConfig.shortLabel}
-                  </h2>
-                  <Badge variant="secondary" className="text-xs">
-                    {activeRoleConfig.badge}
-                  </Badge>
-                </div>
-                <p className="mt-0.5 text-xs text-muted-foreground">
-                  Access your profile, trials, and administrative dashboard
-                </p>
-              </div>
-
-              {/* Mode toggle (OTP vs Password) */}
-              <div className="inline-flex rounded-lg border border-border bg-muted/40 p-1">
-                <button
-                  type="button"
-                  onClick={() => setAuthMode("otp")}
-                  className={`rounded-md px-3 py-1 text-xs font-semibold transition-all ${
-                    authMode === "otp"
-                      ? "bg-background text-foreground shadow-sm"
-                      : "text-muted-foreground hover:text-foreground"
-                  }`}
-                >
-                  <Smartphone className="mr-1 inline-block h-3 w-3" /> Mobile OTP
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setAuthMode("password")}
-                  className={`rounded-md px-3 py-1 text-xs font-semibold transition-all ${
-                    authMode === "password"
-                      ? "bg-background text-foreground shadow-sm"
-                      : "text-muted-foreground hover:text-foreground"
-                  }`}
-                >
-                  <KeyRound className="mr-1 inline-block h-3 w-3" /> Password
-                </button>
-              </div>
+            {/* Top Tab Switcher: Sign In vs Sign Up */}
+            <div className="flex border-b border-border/60 mb-6 gap-2">
+              <button
+                type="button"
+                onClick={() => setActiveTab("signin")}
+                className={`pb-3 px-3 sm:px-4 font-bold text-sm border-b-2 transition-all flex items-center gap-1.5 ${
+                  activeTab === "signin"
+                    ? "border-primary text-primary"
+                    : "border-transparent text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                <Lock className="h-4 w-4" />
+                Sign In
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveTab("signup")}
+                className={`pb-3 px-3 sm:px-4 font-bold text-sm border-b-2 transition-all flex items-center gap-1.5 ${
+                  activeTab === "signup"
+                    ? "border-primary text-primary"
+                    : "border-transparent text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                <UserPlus className="h-4 w-4" />
+                Create Account (Sign Up)
+              </button>
             </div>
 
-            {/* OTP Mode Form */}
-            {authMode === "otp" ? (
-              <form
-                onSubmit={otpSent ? handleCompleteLogin : handleSendOtp}
-                className="mt-6 space-y-4"
-              >
+            {activeTab === "signup" ? (
+              /* Supabase Native Sign Up Form */
+              <div className="space-y-6">
                 <div>
-                  <Label htmlFor="phone-input" className="text-xs font-semibold">
-                    Registered Mobile Number
-                  </Label>
-                  <div className="relative mt-1.5">
-                    <Smartphone className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                    <Input
-                      id="phone-input"
-                      type="tel"
-                      inputMode="tel"
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      placeholder="+91 98765 43210"
-                      className="pl-9 h-11 text-sm font-medium"
-                      required
-                    />
+                  <div className="flex items-center gap-2">
+                    <h2 className="text-xl font-bold text-foreground">
+                      Create {activeRoleConfig.label} Account
+                    </h2>
+                    <Badge variant="secondary" className="text-xs">
+                      {activeRoleConfig.badge}
+                    </Badge>
                   </div>
-                  <p className="mt-1 text-[11px] text-muted-foreground">
-                    Indian mobile format (+91). Used for instant trial notifications and
-                    verifications.
+                  <p className="mt-0.5 text-xs text-muted-foreground">
+                    Register with Supabase Authentication to unlock your sports CV, trials, and bookings.
                   </p>
                 </div>
 
-                {otpSent && (
-                  <div className="rounded-xl border border-primary/30 bg-primary/5 p-4 space-y-3">
-                    <div className="flex items-center justify-between">
-                      <Label htmlFor="otp-input" className="text-xs font-semibold text-foreground">
-                        Enter 6-Digit Verification Code
-                      </Label>
-                      {resendTimer > 0 ? (
-                        <span className="text-[11px] text-muted-foreground">
-                          Resend in {resendTimer}s
-                        </span>
-                      ) : (
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setResendTimer(45);
-                            toast.success("New OTP sent! Demo code: 123456");
-                          }}
-                          className="text-[11px] font-semibold text-primary hover:underline"
-                        >
-                          Resend Code
-                        </button>
-                      )}
-                    </div>
-                    <div className="relative">
-                      <Lock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                      <Input
-                        id="otp-input"
-                        type="text"
-                        inputMode="numeric"
-                        maxLength={6}
-                        value={otpCode}
-                        onChange={(e) => setOtpCode(e.target.value)}
-                        placeholder="123456"
-                        className="pl-9 h-11 text-base tracking-widest font-mono"
-                        required
-                      />
-                    </div>
-                    <div className="flex items-center justify-between text-[11px] text-muted-foreground">
-                      <span>
-                        Demo test code: <strong>123456</strong>
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() => setOtpCode("123456")}
-                        className="text-primary hover:underline font-semibold"
-                      >
-                        Auto-fill test OTP
-                      </button>
-                    </div>
-                  </div>
-                )}
-
-                <Button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="h-11 w-full bg-primary font-bold text-primary-foreground hover:bg-primary/90 text-sm shadow-sm"
-                >
-                  {isSubmitting ? (
-                    <span className="flex items-center gap-2">
-                      <RefreshCw className="h-4 w-4 animate-spin" />
-                      Updating database & authenticating…
-                    </span>
-                  ) : otpSent ? (
-                    <span className="flex items-center gap-2">
-                      Verify & Log In as {activeRoleConfig.shortLabel}
-                      <ArrowRight className="h-4 w-4" />
-                    </span>
-                  ) : (
-                    <span className="flex items-center gap-2">
-                      Send Verification OTP
-                      <ArrowRight className="h-4 w-4" />
-                    </span>
-                  )}
-                </Button>
-              </form>
-            ) : (
-              /* Password / Email Mode Form */
-              <form onSubmit={handleCompleteLogin} className="mt-6 space-y-4">
-                <div>
-                  <Label htmlFor="email-input" className="text-xs font-semibold">
-                    Email Address
-                  </Label>
-                  <div className="relative mt-1.5">
-                    <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <form onSubmit={handleSignUpSubmit} className="space-y-4">
+                  <div>
+                    <Label htmlFor="signup-name" className="text-xs font-semibold">
+                      Full Name *
+                    </Label>
                     <Input
-                      id="email-input"
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder={demoPreset.email}
-                      className="pl-9 h-11 text-sm"
+                      id="signup-name"
+                      type="text"
+                      value={signUpFullName}
+                      onChange={(e) => setSignUpFullName(e.target.value)}
+                      placeholder="e.g. Rahul Verma"
+                      className="mt-1 h-11 text-sm font-medium"
                       required
                     />
                   </div>
-                </div>
 
-                <div>
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="password-input" className="text-xs font-semibold">
-                      Password / Access PIN
-                    </Label>
-                    <a
-                      href="#forgot"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        toast.info(
-                          "Demo mode: Any password accepted or use 1-click test drive below.",
-                        );
-                      }}
-                      className="text-[11px] text-primary hover:underline"
-                    >
-                      Forgot?
-                    </a>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="signup-email" className="text-xs font-semibold">
+                        Email Address *
+                      </Label>
+                      <Input
+                        id="signup-email"
+                        type="email"
+                        value={signUpEmail}
+                        onChange={(e) => setSignUpEmail(e.target.value)}
+                        placeholder="athlete@khelgrid.com"
+                        className="mt-1 h-11 text-sm font-medium"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="signup-phone" className="text-xs font-semibold">
+                        Mobile Number
+                      </Label>
+                      <Input
+                        id="signup-phone"
+                        type="tel"
+                        value={signUpPhone}
+                        onChange={(e) => setSignUpPhone(e.target.value)}
+                        placeholder="+91 98765 43210"
+                        className="mt-1 h-11 text-sm font-medium"
+                      />
+                    </div>
                   </div>
-                  <div className="relative mt-1.5">
-                    <Lock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+
+                  <div>
+                    <Label htmlFor="signup-password" className="text-xs font-semibold">
+                      Password * (Min 6 characters)
+                    </Label>
                     <Input
-                      id="password-input"
+                      id="signup-password"
                       type="password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      placeholder="••••••••••••"
-                      className="pl-9 h-11 text-sm"
+                      value={signUpPassword}
+                      onChange={(e) => setSignUpPassword(e.target.value)}
+                      placeholder="Create a secure password"
+                      className="mt-1 h-11 text-sm font-medium"
+                      minLength={6}
+                      required
                     />
                   </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="signup-sport" className="text-xs font-semibold">
+                        Primary Sport
+                      </Label>
+                      <select
+                        id="signup-sport"
+                        value={signUpSport}
+                        onChange={(e) => setSignUpSport(e.target.value)}
+                        className="mt-1 flex h-11 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background"
+                      >
+                        <option value="Cricket">Cricket</option>
+                        <option value="Football">Football</option>
+                        <option value="Badminton">Badminton</option>
+                        <option value="Tennis">Tennis</option>
+                        <option value="Athletics">Athletics</option>
+                        <option value="Kabaddi">Kabaddi</option>
+                        <option value="Basketball">Basketball</option>
+                        <option value="Swimming">Swimming</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <Label htmlFor="signup-city" className="text-xs font-semibold">
+                        City / Base
+                      </Label>
+                      <select
+                        id="signup-city"
+                        value={signUpCity}
+                        onChange={(e) => setSignUpCity(e.target.value)}
+                        className="mt-1 flex h-11 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background"
+                      >
+                        <option value="Bengaluru">Bengaluru</option>
+                        <option value="Delhi NCR">Delhi NCR</option>
+                        <option value="Mumbai">Mumbai</option>
+                        <option value="Hyderabad">Hyderabad</option>
+                        <option value="Kolkata">Kolkata</option>
+                        <option value="Chennai">Chennai</option>
+                        <option value="Pune">Pune</option>
+                        <option value="Chandigarh">Chandigarh</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <Button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="h-11 w-full bg-primary font-bold text-primary-foreground hover:bg-primary/90 text-sm shadow-sm"
+                  >
+                    {isSubmitting ? (
+                      <span className="flex items-center gap-2">
+                        <RefreshCw className="h-4 w-4 animate-spin" />
+                        Provisioning account in Supabase…
+                      </span>
+                    ) : (
+                      <span className="flex items-center gap-2">
+                        <UserPlus className="h-4 w-4" />
+                        Create {activeRoleConfig.shortLabel} Account
+                      </span>
+                    )}
+                  </Button>
+                </form>
+
+                <p className="text-center text-xs text-muted-foreground">
+                  Already have an account?{" "}
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab("signin")}
+                    className="font-semibold text-primary hover:underline"
+                  >
+                    Sign in here
+                  </button>
+                </p>
+              </div>
+            ) : (
+              /* Sign In Flow */
+              <>
+                {/* Header with Role Pill & Method Switcher */}
+                <div className="flex flex-col gap-4 border-b border-border/60 pb-6 sm:flex-row sm:items-center sm:justify-between">
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h2 className="text-xl font-bold text-foreground">
+                        Sign in as {activeRoleConfig.shortLabel}
+                      </h2>
+                      <Badge variant="secondary" className="text-xs">
+                        {activeRoleConfig.badge}
+                      </Badge>
+                    </div>
+                    <p className="mt-0.5 text-xs text-muted-foreground">
+                      Access your profile, trials, and administrative dashboard
+                    </p>
+                  </div>
+
+                  {/* Mode toggle (OTP vs Password) */}
+                  <div className="inline-flex rounded-lg border border-border bg-muted/40 p-1">
+                    <button
+                      type="button"
+                      onClick={() => setAuthMode("otp")}
+                      className={`rounded-md px-3 py-1 text-xs font-semibold transition-all ${
+                        authMode === "otp"
+                          ? "bg-background text-foreground shadow-sm"
+                          : "text-muted-foreground hover:text-foreground"
+                      }`}
+                    >
+                      <Smartphone className="mr-1 inline-block h-3 w-3" /> Mobile OTP
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setAuthMode("password")}
+                      className={`rounded-md px-3 py-1 text-xs font-semibold transition-all ${
+                        authMode === "password"
+                          ? "bg-background text-foreground shadow-sm"
+                          : "text-muted-foreground hover:text-foreground"
+                      }`}
+                    >
+                      <KeyRound className="mr-1 inline-block h-3 w-3" /> Password
+                    </button>
+                  </div>
                 </div>
 
-                <Button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="h-11 w-full bg-primary font-bold text-primary-foreground hover:bg-primary/90 text-sm shadow-sm"
-                >
-                  {isSubmitting ? (
-                    <span className="flex items-center gap-2">
-                      <RefreshCw className="h-4 w-4 animate-spin" />
-                      Authenticating & syncing profile…
-                    </span>
-                  ) : (
-                    <span className="flex items-center gap-2">
-                      Sign In with Password
-                      <ArrowRight className="h-4 w-4" />
-                    </span>
-                  )}
-                </Button>
-              </form>
+                {/* OTP Mode Form */}
+                {authMode === "otp" ? (
+                  <form
+                    onSubmit={otpSent ? handleCompleteLogin : handleSendOtp}
+                    className="mt-6 space-y-4"
+                  >
+                    <div>
+                      <Label htmlFor="phone-input" className="text-xs font-semibold">
+                        Registered Mobile Number
+                      </Label>
+                      <div className="relative mt-1.5">
+                        <Smartphone className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                        <Input
+                          id="phone-input"
+                          type="tel"
+                          inputMode="tel"
+                          value={phone}
+                          onChange={(e) => setPhone(e.target.value)}
+                          placeholder="+91 98765 43210"
+                          className="pl-9 h-11 text-sm font-medium"
+                          required
+                        />
+                      </div>
+                      <p className="mt-1 text-[11px] text-muted-foreground">
+                        Indian mobile format (+91). Used for instant trial notifications and
+                        verifications.
+                      </p>
+                    </div>
+
+                    {otpSent && (
+                      <div className="rounded-xl border border-primary/30 bg-primary/5 p-4 space-y-3">
+                        <div className="flex items-center justify-between">
+                          <Label htmlFor="otp-input" className="text-xs font-semibold text-foreground">
+                            Enter 6-Digit Verification Code
+                          </Label>
+                          {resendTimer > 0 ? (
+                            <span className="text-[11px] text-muted-foreground">
+                              Resend in {resendTimer}s
+                            </span>
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setResendTimer(45);
+                                toast.success("New OTP sent! Demo code: 123456");
+                              }}
+                              className="text-[11px] font-semibold text-primary hover:underline"
+                            >
+                              Resend Code
+                            </button>
+                          )}
+                        </div>
+                        <div className="relative">
+                          <Lock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                          <Input
+                            id="otp-input"
+                            type="text"
+                            inputMode="numeric"
+                            maxLength={6}
+                            value={otpCode}
+                            onChange={(e) => setOtpCode(e.target.value)}
+                            placeholder="123456"
+                            className="pl-9 h-11 text-base tracking-widest font-mono"
+                            required
+                          />
+                        </div>
+                        <div className="flex items-center justify-between text-[11px] text-muted-foreground">
+                          <span>
+                            Demo test code: <strong>123456</strong>
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => setOtpCode("123456")}
+                            className="text-primary hover:underline font-semibold"
+                          >
+                            Auto-fill test OTP
+                          </button>
+                        </div>
+                      </div>
+                    )}
+
+                    <Button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="h-11 w-full bg-primary font-bold text-primary-foreground hover:bg-primary/90 text-sm shadow-sm"
+                    >
+                      {isSubmitting ? (
+                        <span className="flex items-center gap-2">
+                          <RefreshCw className="h-4 w-4 animate-spin" />
+                          Updating database & authenticating…
+                        </span>
+                      ) : otpSent ? (
+                        <span className="flex items-center gap-2">
+                          Verify & Log In as {activeRoleConfig.shortLabel}
+                          <ArrowRight className="h-4 w-4" />
+                        </span>
+                      ) : (
+                        <span className="flex items-center gap-2">
+                          Send Verification OTP
+                          <ArrowRight className="h-4 w-4" />
+                        </span>
+                      )}
+                    </Button>
+                  </form>
+                ) : (
+                  /* Password / Email Mode Form */
+                  <form onSubmit={handleCompleteLogin} className="mt-6 space-y-4">
+                    <div>
+                      <Label htmlFor="email-input" className="text-xs font-semibold">
+                        Email Address
+                      </Label>
+                      <div className="relative mt-1.5">
+                        <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                        <Input
+                          id="email-input"
+                          type="email"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          placeholder={demoPreset.email}
+                          className="pl-9 h-11 text-sm"
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <div className="flex items-center justify-between">
+                        <Label htmlFor="password-input" className="text-xs font-semibold">
+                          Password / Access PIN
+                        </Label>
+                        <a
+                          href="#forgot"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            toast.info(
+                              "Demo mode: Any password accepted or use 1-click test drive below.",
+                            );
+                          }}
+                          className="text-[11px] text-primary hover:underline"
+                        >
+                          Forgot?
+                        </a>
+                      </div>
+                      <div className="relative mt-1.5">
+                        <Lock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                        <Input
+                          id="password-input"
+                          type="password"
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          placeholder="••••••••••••"
+                          className="pl-9 h-11 text-sm"
+                        />
+                      </div>
+                    </div>
+
+                    <Button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="h-11 w-full bg-primary font-bold text-primary-foreground hover:bg-primary/90 text-sm shadow-sm"
+                    >
+                      {isSubmitting ? (
+                        <span className="flex items-center gap-2">
+                          <RefreshCw className="h-4 w-4 animate-spin" />
+                          Authenticating & syncing profile…
+                        </span>
+                      ) : (
+                        <span className="flex items-center gap-2">
+                          Sign In with Password
+                          <ArrowRight className="h-4 w-4" />
+                        </span>
+                      )}
+                    </Button>
+                  </form>
+                )}
+              </>
             )}
 
             {/* Database Sync Notification pill */}

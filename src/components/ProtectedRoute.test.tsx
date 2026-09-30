@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { renderToString } from "react-dom/server";
-import { ProtectedRoute } from "./ProtectedRoute";
+import { ProtectedRoute, withProtectedRoute } from "./ProtectedRoute";
 
 // Mock hooks & modules
 vi.mock("@tanstack/react-router", () => ({
@@ -153,5 +153,52 @@ describe("ProtectedRoute component", () => {
     expect(html).not.toContain("recruiter-content");
     expect(html).toContain("custom-fallback");
     expect(html).toContain("Custom Access Denied Notice");
+  });
+
+  it("withProtectedRoute HOC wraps and protects a component when authenticated", () => {
+    mockAuthState = {
+      isAuthenticated: true,
+      isLoading: false,
+      role: "user",
+      user: {
+        id: "user-1",
+        name: "Test Athlete",
+        email: "test@khelgrid.com",
+        phone: "+919876543210",
+        role: "user",
+      },
+    };
+
+    const SensitiveDashboard = (props: { title: string }) => (
+      <div id="sensitive-dashboard-inner">{props.title}</div>
+    );
+
+    const ProtectedDashboard = withProtectedRoute(SensitiveDashboard);
+    const html = renderToString(<ProtectedDashboard title="Athlete Control Room" />);
+
+    expect(html).toContain("sensitive-dashboard-inner");
+    expect(html).toContain("Athlete Control Room");
+  });
+
+  it("withProtectedRoute HOC blocks unauthenticated visitors", () => {
+    mockAuthState = {
+      isAuthenticated: false,
+      isLoading: false,
+      role: "user",
+      user: null as any,
+    };
+
+    const SensitiveDashboard = (props: { title: string }) => (
+      <div id="sensitive-dashboard-inner">{props.title}</div>
+    );
+
+    const ProtectedDashboard = withProtectedRoute(SensitiveDashboard, {
+      message: "Please login to access this dashboard",
+    });
+    const html = renderToString(<ProtectedDashboard title="Athlete Control Room" />);
+
+    expect(html).not.toContain("sensitive-dashboard-inner");
+    expect(html).toContain("Sign In Required");
+    expect(html).toContain("Please login to access this dashboard");
   });
 });

@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { useAuth } from "@/context/AuthContext";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
+import { useAuth, ProtectedRoute } from "@/hooks/use-auth";
 import { TRIALS } from "@/data/trials";
 import { SportsCV } from "@/components/SportsCV";
 import { DashboardCommunityWall } from "@/components/DashboardCommunityWall";
