@@ -90,7 +90,7 @@ describe("SportsNewsSection", () => {
     expect(html.toLowerCase()).toContain('itemprop="author"');
   });
 
-  it("renders sport category filter pills and interactive analytics hub", () => {
+  it("renders sport category filter pills and renders the analytics hub on the home page", () => {
     const html = renderToString(<SportsNewsSection />);
 
     expect(html).toContain("All Sports");
@@ -102,10 +102,9 @@ describe("SportsNewsSection", () => {
     expect(html).toContain("Athletics");
     expect(html).toContain("Grassroots");
 
-    // Live analytics hub
+    // Analytics hub is rendered on the home page
     expect(html).toContain("High-Performance Analytics Hub");
-    expect(html).toContain("Asian Games 2026");
-    expect(html).toContain("Asian Games 2026 Medal Tally");
+    expect(html).toContain("Live Wire Data");
   });
 
   it("displays the official SAI NCOE Wrestling Trials (PIB PRID: 2314372)", () => {

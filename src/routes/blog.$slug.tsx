@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import {
   ArrowLeft,
   CalendarDays,
@@ -7,6 +7,7 @@ import {
   ListFilter,
   PenLine,
   ShieldCheck,
+  Sparkles,
 } from "lucide-react";
 import { Link, useParams, createFileRoute } from "@tanstack/react-router";
 import { InArticleAd } from "@/components/ads";
@@ -110,6 +111,13 @@ function BlogArticle() {
   const { slug } = useParams({ from: "/blog/$slug" });
   const { posts } = useBlog();
   const post = posts.find((item) => item.slug === slug);
+  const [activeAnalyticsHub, setActiveAnalyticsHub] = useState<"asiad" | "cricket" | "predictor">(
+    slug === "asian-games-2026-live-updates-september-23-india-medal-tally-analysis"
+      ? "asiad"
+      : slug === "india-vs-japan-cricket-match-tactical-analysis"
+        ? "cricket"
+        : "predictor",
+  );
 
   const wordCount = useMemo(() => {
     if (!post) return 0;
@@ -232,22 +240,97 @@ function BlogArticle() {
             })}
           </div>
 
-          {/* Recharts Analytics for India vs Japan or matches with stats */}
-          {post.slug === "india-vs-japan-cricket-match-tactical-analysis" && (
-            <>
-              <MatchStatisticsCharts />
-              <MatchOutcomePredictor />
-            </>
-          )}
+          {/* High-Performance Analytics Hub: Live Wire Data (Real-time telemetry and match analysis) */}
+          <section
+            id="high-performance-analytics-hub"
+            aria-labelledby="analytics-hub-heading"
+            className="mt-12 space-y-6 rounded-2xl border border-primary/25 bg-gradient-to-b from-card/90 via-card/70 to-background p-5 sm:p-7 shadow-xs"
+          >
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-border/60 pb-5">
+              <div>
+                <div className="flex flex-wrap items-center gap-2">
+                  <Badge variant="outline" className="border-primary/40 bg-primary/10 text-primary font-semibold">
+                    <Sparkles className="mr-1.5 h-3.5 w-3.5" /> High-Performance Analytics Hub
+                  </Badge>
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/15 px-2.5 py-0.5 text-[10px] font-bold text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                    <span className="relative flex h-1.5 w-1.5">
+                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+                      <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                    </span>
+                    Live Wire Data
+                  </span>
+                </div>
+                <h3
+                  id="analytics-hub-heading"
+                  className="mt-2 text-xl font-bold tracking-tight text-foreground sm:text-2xl"
+                >
+                  {activeAnalyticsHub === "asiad"
+                    ? "Asian Games 2026: Live Medal Tally & Discipline Breakdown"
+                    : activeAnalyticsHub === "predictor"
+                      ? "Match Outcome Predictor: Dynamic Win Probability Engine"
+                      : "Match Intelligence: Recharts Analytics & Tactical Breakdown"}
+                </h3>
+                <p className="mt-1 text-xs text-muted-foreground sm:text-sm">
+                  {activeAnalyticsHub === "asiad"
+                    ? "Real-time medal tallies, shotgun skeet hit rates, and discipline leaderboards."
+                    : activeAnalyticsHub === "predictor"
+                      ? "Dynamic win probability forecasting computed from current run rates (CRR vs RRR), wickets in hand, and historical win rates."
+                      : "Real-time tactical wire featuring bowling economy rates, run rate progression, and community match buzz."}
+                </p>
+              </div>
 
-          {/* Asian Games 2026 Medal Analytics & Live Updates Hub */}
-          {post.slug ===
-            "asian-games-2026-live-updates-september-23-india-medal-tally-analysis" && (
-            <>
-              <AsianGamesAnalytics />
-              <MatchOutcomePredictor />
-            </>
-          )}
+              {/* Hub View Switcher */}
+              <div className="flex items-center overflow-x-auto max-w-full rounded-full border border-border bg-background p-1 text-xs no-scrollbar shrink-0 self-start sm:self-center">
+                <button
+                  type="button"
+                  onClick={() => setActiveAnalyticsHub("asiad")}
+                  className={`shrink-0 rounded-full px-3 py-1 font-medium transition-colors cursor-pointer ${
+                    activeAnalyticsHub === "asiad"
+                      ? "bg-primary text-primary-foreground shadow-xs"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  Asian Games 2026
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveAnalyticsHub("cricket")}
+                  className={`shrink-0 rounded-full px-3 py-1 font-medium transition-colors cursor-pointer ${
+                    activeAnalyticsHub === "cricket"
+                      ? "bg-primary text-primary-foreground shadow-xs"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  Match Charts & Buzz
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveAnalyticsHub("predictor")}
+                  className={`shrink-0 rounded-full px-3 py-1 font-medium transition-colors cursor-pointer ${
+                    activeAnalyticsHub === "predictor"
+                      ? "bg-primary text-primary-foreground shadow-xs"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  Outcome Predictor
+                </button>
+              </div>
+            </div>
+
+            {/* Active Analytics Tool */}
+            <div className="pt-1">
+              {activeAnalyticsHub === "asiad" ? (
+                <AsianGamesAnalytics />
+              ) : activeAnalyticsHub === "predictor" ? (
+                <MatchOutcomePredictor />
+              ) : (
+                <div className="space-y-6">
+                  <MatchStatisticsCharts />
+                  <IndiaJapanSocialFeed />
+                </div>
+              )}
+            </div>
+          </section>
 
           {/* FAQs section if present */}
           {post.faqs && post.faqs.length > 0 && (
@@ -278,11 +361,6 @@ function BlogArticle() {
                 ))}
               </div>
             </section>
-          )}
-
-          {/* Social Feed Component for trending India vs Japan community discussion */}
-          {post.slug === "india-vs-japan-cricket-match-tactical-analysis" && (
-            <IndiaJapanSocialFeed />
           )}
 
           {/* Monetization & Scouting Intelligence Newsletter Subscription Lead Capture */}
@@ -353,53 +431,18 @@ function BlogArticle() {
                   </a>
                 );
               })}
-              {post.slug === "india-vs-japan-cricket-match-tactical-analysis" && (
-                <>
-                  <a
-                    href="#match-statistics-recharts-section"
-                    className="block text-muted-foreground hover:text-primary transition-colors truncate"
-                  >
-                    • Recharts Match Analytics
-                  </a>
-                  <a
-                    href="#match-outcome-predictor-section"
-                    className="block text-muted-foreground hover:text-primary transition-colors truncate"
-                  >
-                    • Match Outcome Predictor (Live Engine)
-                  </a>
-                </>
-              )}
-              {post.slug ===
-                "asian-games-2026-live-updates-september-23-india-medal-tally-analysis" && (
-                <>
-                  <a
-                    href="#asian-games-2026-analytics-hub"
-                    className="block text-muted-foreground hover:text-primary transition-colors truncate"
-                  >
-                    • Asiad Medal Analytics & Live Hub
-                  </a>
-                  <a
-                    href="#match-outcome-predictor-section"
-                    className="block text-muted-foreground hover:text-primary transition-colors truncate"
-                  >
-                    • Match Outcome Predictor (Live Engine)
-                  </a>
-                </>
-              )}
+              <a
+                href="#high-performance-analytics-hub"
+                className="block font-medium text-primary hover:underline transition-colors truncate"
+              >
+                • High-Performance Analytics Hub (Live Wire Data)
+              </a>
               {post.faqs && post.faqs.length > 0 && (
                 <a
                   href="#frequently-asked-questions"
                   className="block text-muted-foreground hover:text-primary transition-colors truncate"
                 >
                   • Frequently Asked Questions
-                </a>
-              )}
-              {post.slug === "india-vs-japan-cricket-match-tactical-analysis" && (
-                <a
-                  href="#india-japan-social-feed-section"
-                  className="block text-muted-foreground hover:text-primary transition-colors truncate"
-                >
-                  • Trending Social Wire & Buzz
                 </a>
               )}
               <a
