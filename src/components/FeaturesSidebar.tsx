@@ -5,6 +5,7 @@ import { FEATURE_ITEMS, isActivePath, type NavItem } from "@/config/nav";
 import { NavLink } from "@/components/NavLink";
 import { PlayNavLink } from "@/components/PlayNavLink";
 import { SidebarAd } from "@/components/ads";
+import { SidebarLiveScoreWidget } from "@/components/SidebarLiveScoreWidget";
 
 // Re-exported for tests and any callers that imported the array directly.
 export const FEATURES: readonly NavItem[] = FEATURE_ITEMS;
@@ -60,24 +61,26 @@ export function FeaturesSidebar() {
       )}
 
       <nav className="flex flex-1 flex-col gap-0.5 overflow-y-auto px-2 pb-4">
-        {filtered.map((f) =>
-          f.to === "/play" ? (
-            <PlayNavLink
-              key={f.to}
-              active={isActivePath(path, f.to)}
-              source="sidebar_desktop"
-              showLabel={!collapsed}
-            />
-          ) : (
-            <NavLink
-              key={f.to}
-              item={f}
-              active={isActivePath(path, f.to)}
-              source="sidebar_desktop"
-              showLabel={!collapsed}
-            />
-          ),
-        )}
+        {filtered.map((f) => (
+          <div key={f.to} className="flex flex-col">
+            {f.to === "/play" ? (
+              <PlayNavLink
+                active={isActivePath(path, f.to)}
+                source="sidebar_desktop"
+                showLabel={!collapsed}
+              />
+            ) : (
+              <NavLink
+                item={f}
+                active={isActivePath(path, f.to)}
+                source="sidebar_desktop"
+                showLabel={!collapsed}
+              />
+            )}
+            {/* Live Sports / Games Widget directly after Search trials */}
+            {f.to === "/search" && !collapsed && !query && <SidebarLiveScoreWidget />}
+          </div>
+        ))}
         {filtered.length === 0 && !collapsed && (
           <p className="px-3 py-2 text-xs text-muted-foreground">No matches found</p>
         )}

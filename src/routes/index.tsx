@@ -38,6 +38,7 @@ import { GUIDES_CATALOG, SPORTS_CATALOG } from "@/data/catalog";
 import { TRIALS, type Trial } from "@/data/trials";
 import { getRealtimeOpportunityBadge } from "@/lib/opportunity-badge";
 import { SportsNewsSection } from "@/components/SportsNewsSection";
+import { LiveScoreSection } from "@/components/LiveScoreSection";
 import { HomeFaqSection } from "@/components/HomeFaqSection";
 import { HOME_FAQ_ITEMS } from "@/data/home-faq";
 import { buildSeoHead } from "@/lib/seo";
@@ -428,9 +429,18 @@ function Home() {
                   </span>
                 </div>
                 <p className="mt-1.5 text-sm text-muted-foreground">
-                  Review eligibility, age cutoffs & verified organizer badges before you apply,
-                  travel or pay.
+                  Official athlete tryouts, trial applications, age cutoffs & verified organizer
+                  badges across India.
                 </p>
+                <div className="mt-1.5 flex items-center gap-2">
+                  <a
+                    href="#sports-news-section"
+                    className="inline-flex items-center gap-1 text-xs font-semibold text-primary/85 hover:text-primary transition-colors"
+                  >
+                    <span>Follow live match scores & tournament wire on KhelWire</span>
+                    <span aria-hidden="true">↓</span>
+                  </a>
+                </div>
               </div>
 
               <div className="flex items-center gap-2">
@@ -790,6 +800,9 @@ function Home() {
               </div>
             </div>
           </section>
+
+          {/* In-Play Real-time Live Match Scores (Cricket, Football, National Games) */}
+          <LiveScoreSection />
 
           {/* Real-time Sports Wire & National Updates (SEO Optimized News Section) */}
           <SportsNewsSection />

@@ -25,7 +25,7 @@ export function NavLink({ item, active, source, showLabel = true, className }: N
 
   return (
     <Link
-      to={item.to}
+      to={item.to as any}
       title={item.label}
       aria-current={active ? "page" : undefined}
       onClick={onClick}
@@ -39,7 +39,17 @@ export function NavLink({ item, active, source, showLabel = true, className }: N
       )}
     >
       <item.icon className={cn("h-4 w-4 shrink-0", active && "text-primary")} />
-      {showLabel && <span className="truncate">{item.label}</span>}
+      {showLabel && (
+        <span className="flex flex-1 items-center justify-between min-w-0">
+          <span className="truncate">{item.label}</span>
+          {item.label === "Live Scores" && (
+            <span className="ml-1.5 inline-flex items-center gap-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 px-1.5 py-0.2 text-[9px] font-bold text-emerald-500 shrink-0">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-ping" />
+              LIVE
+            </span>
+          )}
+        </span>
+      )}
     </Link>
   );
 }
