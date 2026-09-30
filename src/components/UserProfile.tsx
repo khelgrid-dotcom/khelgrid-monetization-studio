@@ -81,6 +81,7 @@ import {
   type NotificationSubscription,
 } from "@/services/notification-worker-service";
 import { SPORTS, CITIES } from "@/data/trials";
+import { NotificationPreferences } from "@/components/NotificationPreferences";
 
 interface UserProfileProps {
   initialTab?: "achievements" | "programs" | "membership" | "sports-cv" | "notifications";
@@ -1186,6 +1187,23 @@ export function UserProfile({
       {/* ========================================================================= */}
       {activeTab === "notifications" && (
         <div id="section-trial-alerts" className="space-y-6">
+          {/* Dedicated Notification Preferences Card (Toggles Alert Categories & City) */}
+          <NotificationPreferences
+            userId={profile.userId}
+            initialCity={profile.city}
+            initialSports={
+              profile.secondarySports?.length
+                ? [profile.primarySport, ...profile.secondarySports]
+                : [profile.primarySport]
+            }
+            onSaved={(newPrefs) => {
+              setWorkerLogs((prev) => [
+                `[${new Date().toLocaleTimeString()}] Saved preferences: ${newPrefs.preferredSports.join(", ")} in ${newPrefs.city} (Live Trials: ${newPrefs.notifyLiveTrials ? "ON" : "OFF"}, Deadlines: ${newPrefs.notifyDeadlines ? "ON" : "OFF"}).`,
+                ...prev.slice(0, 19),
+              ]);
+            }}
+          />
+
           {/* Header Card: Challenge & Architecture Solution */}
           <div className="relative overflow-hidden rounded-2xl border border-primary/30 bg-gradient-to-br from-card via-card to-primary/5 p-6 shadow-sm sm:p-8">
             <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
