@@ -9,6 +9,14 @@ import { TrialNewsletterSignup } from "@/components/TrialNewsletterSignup";
 import { CheckoutModal } from "@/components/CheckoutModal";
 import { BoostModal } from "@/components/BoostModal";
 import { useAuth } from "@/context/AuthContext";
+import {
+  TrialsSearchFilter,
+  REGIONS,
+  SPORT_TYPES,
+  DATE_RANGE_OPTIONS,
+  parseTrialDate,
+  type DateRangeOption,
+} from "@/components/TrialsSearchFilter";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -95,6 +103,9 @@ const searchSchema = z.object({
   q: fallback(z.string(), "").default(""),
   sport: fallback(z.string(), ALL_SPORT).default(ALL_SPORT),
   city: fallback(z.string(), ALL_CITY).default(ALL_CITY),
+  region: fallback(z.string(), "all").default("all"),
+  sportType: fallback(z.string(), "all").default("all"),
+  dateRange: fallback(z.string(), "all").default("all"),
   category: fallback(z.string(), ALL_CATEGORY).default(ALL_CATEGORY),
   sort: fallback(z.enum(SORTS), "Soonest").default("Soonest"),
   free: fallback(z.boolean(), false).default(false),
@@ -233,6 +244,59 @@ function SearchPage() {
       if (params.free && t.fee > 0) return false;
       if (params.officialOnly && !t.tag.toLowerCase().includes("official")) return false;
 
+      // Region Filter
+      if (params.region && params.region !== "all") {
+        const reg = REGIONS.find((r) => r.id === params.region);
+        if (reg && reg.cities.length > 0) {
+          const matchCity = reg.cities.some((c) => t.city.toLowerCase().includes(c.toLowerCase()));
+          if (!matchCity) return false;
+        }
+      }
+
+      // Sport Type Filter
+      if (params.sportType && params.sportType !== "all") {
+        const st = SPORT_TYPES.find((s) => s.id === params.sportType);
+        if (st && st.sports.length > 0) {
+          const matchSport = st.sports.some((s) => s.toLowerCase() === t.sport.toLowerCase());
+          if (!matchSport) return false;
+        }
+      }
+
+      // Upcoming Dates Filter
+      if (params.dateRange && params.dateRange !== "all") {
+        const trialDate = parseTrialDate(t.date);
+        const regDeadline = t.registrationDeadline ? parseTrialDate(t.registrationDeadline) : trialDate;
+        const targetDate = trialDate || regDeadline;
+
+        if (targetDate) {
+          const now = new Date("2026-09-29T21:00:00Z");
+          const diffMs = targetDate.getTime() - now.getTime();
+          const diffHours = diffMs / (1000 * 60 * 60);
+          const diffDays = diffHours / 24;
+
+          if (params.dateRange === "closing_soon") {
+            const hasClosingBadge =
+              t.badge === "Closing Soon" ||
+              (t.urgencyText && t.urgencyText.toLowerCase().includes("closing"));
+            if (!hasClosingBadge && (diffHours < 0 || diffHours > 48)) return false;
+          } else if (params.dateRange === "this_week") {
+            if (diffDays < 0 || diffDays > 7) return false;
+          } else if (params.dateRange === "this_month") {
+            if (diffDays < 0 || diffDays > 30) return false;
+          } else if (params.dateRange === "next_quarter") {
+            if (diffDays < 0 || diffDays > 90) return false;
+          } else if (params.dateRange === "sep_2026") {
+            if (targetDate.getMonth() !== 8 || targetDate.getFullYear() !== 2026) return false;
+          } else if (params.dateRange === "oct_2026") {
+            if (targetDate.getMonth() !== 9 || targetDate.getFullYear() !== 2026) return false;
+          } else if (params.dateRange === "nov_2026") {
+            if (targetDate.getMonth() !== 10 || targetDate.getFullYear() !== 2026) return false;
+          } else if (params.dateRange === "dec_2026") {
+            if (targetDate.getMonth() !== 11 || targetDate.getFullYear() !== 2026) return false;
+          }
+        }
+      }
+
       // Category filter matching
       if (params.category !== ALL_CATEGORY) {
         const catStr = params.category.toLowerCase();
@@ -320,6 +384,39 @@ function SearchPage() {
       icon: <MapPin className="h-3 w-3" />,
       onClear: () => update({ city: ALL_CITY }),
     });
+  if (params.region && params.region !== "all") {
+    const reg = REGIONS.find((r) => r.id === params.region);
+    if (reg) {
+      activePills.push({
+        key: "region",
+        label: `Region: ${reg.name}`,
+        icon: <MapPin className="h-3 w-3" />,
+        onClear: () => update({ region: "all" }),
+      });
+    }
+  }
+  if (params.sportType && params.sportType !== "all") {
+    const st = SPORT_TYPES.find((s) => s.id === params.sportType);
+    if (st) {
+      activePills.push({
+        key: "sportType",
+        label: `Type: ${st.name}`,
+        icon: <Trophy className="h-3 w-3" />,
+        onClear: () => update({ sportType: "all" }),
+      });
+    }
+  }
+  if (params.dateRange && params.dateRange !== "all") {
+    const dOpt = DATE_RANGE_OPTIONS.find((d) => d.id === params.dateRange);
+    if (dOpt) {
+      activePills.push({
+        key: "dateRange",
+        label: `Date: ${dOpt.label}`,
+        icon: <Calendar className="h-3 w-3" />,
+        onClear: () => update({ dateRange: "all" }),
+      });
+    }
+  }
   if (params.category !== ALL_CATEGORY)
     activePills.push({
       key: "category",
@@ -355,6 +452,9 @@ function SearchPage() {
         q: "",
         sport: ALL_SPORT,
         city: ALL_CITY,
+        region: "all",
+        sportType: "all",
+        dateRange: "all",
         category: ALL_CATEGORY,
         sort: "Soonest",
         free: false,
@@ -413,6 +513,33 @@ function SearchPage() {
             </Link>
           </Button>
         </div>
+      </div>
+
+      {/* Featured Search & Filter Component for Specific Regions, Sport Types & Upcoming Dates */}
+      <div className="mt-6">
+        <TrialsSearchFilter
+          initialCriteria={{
+            query: params.q,
+            sport: params.sport === ALL_SPORT ? "all" : params.sport,
+            city: params.city === ALL_CITY ? "all" : params.city,
+            region: params.region || "all",
+            sportType: params.sportType || "all",
+            dateRange: (params.dateRange as DateRangeOption) || "all",
+            freeOnly: params.free,
+          }}
+          onFilterChange={(newCrit) => {
+            update({
+              q: newCrit.query,
+              sport: newCrit.sport === "all" ? ALL_SPORT : newCrit.sport,
+              city: newCrit.city === "all" ? ALL_CITY : newCrit.city,
+              region: newCrit.region,
+              sportType: newCrit.sportType,
+              dateRange: newCrit.dateRange,
+              free: newCrit.freeOnly,
+            });
+          }}
+          totalResultsCount={results.total}
+        />
       </div>
 
       {/* Main Responsive Grid Layout: Filter Sidebar (Desktop) + Results Content */}
