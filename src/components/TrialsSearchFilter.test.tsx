@@ -41,7 +41,7 @@ describe("TrialsSearchFilter Component & Filtering Engine", () => {
           dateRange: "this_month",
         }}
         totalResultsCount={14}
-      />
+      />,
     );
 
     // Root element & Search input

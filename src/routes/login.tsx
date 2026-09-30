@@ -262,13 +262,12 @@ function LoginPage() {
 
       if (res.requiresEmailConfirmation) {
         toast.success(
-          "Account created! Please check your email to verify your address before logging in."
+          "Account created! Please check your email to verify your address before logging in.",
         );
         setActiveTab("signin");
       } else {
         toast.success("Welcome to KhelGrid! Your account has been provisioned.");
-        const dest =
-          redirectTarget && redirectTarget.startsWith("/") ? redirectTarget : "/profile";
+        const dest = redirectTarget && redirectTarget.startsWith("/") ? redirectTarget : "/profile";
         navigate({ to: dest as unknown as "/" });
       }
     } catch (err: unknown) {
@@ -541,7 +540,8 @@ function LoginPage() {
                     </Badge>
                   </div>
                   <p className="mt-0.5 text-xs text-muted-foreground">
-                    Register with Supabase Authentication to unlock your sports CV, trials, and bookings.
+                    Register with Supabase Authentication to unlock your sports CV, trials, and
+                    bookings.
                   </p>
                 </div>
 
@@ -759,7 +759,10 @@ function LoginPage() {
                     {otpSent && (
                       <div className="rounded-xl border border-primary/30 bg-primary/5 p-4 space-y-3">
                         <div className="flex items-center justify-between">
-                          <Label htmlFor="otp-input" className="text-xs font-semibold text-foreground">
+                          <Label
+                            htmlFor="otp-input"
+                            className="text-xs font-semibold text-foreground"
+                          >
                             Enter 6-Digit Verification Code
                           </Label>
                           {resendTimer > 0 ? (

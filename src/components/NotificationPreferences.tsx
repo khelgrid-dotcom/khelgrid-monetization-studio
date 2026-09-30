@@ -73,7 +73,7 @@ export function NotificationPreferences({
   const [notifyDeadlines, setNotifyDeadlines] = useState<boolean>(true);
   const [city, setCity] = useState<string>(initialCity || auth.user?.city || "Bengaluru");
   const [preferredSports, setPreferredSports] = useState<string[]>(
-    initialSports || [auth.user?.primarySport || "Cricket", "Football"]
+    initialSports || [auth.user?.primarySport || "Cricket", "Football"],
   );
 
   // Status & UI State
@@ -90,7 +90,7 @@ export function NotificationPreferences({
       try {
         const { preferences, isSupabaseLive: live } = await getNotificationPreferences(
           fcmToken,
-          effectiveUserId
+          effectiveUserId,
         );
         if (isMounted) {
           setNotifyLiveTrials(preferences.notifyLiveTrials);
@@ -216,7 +216,7 @@ export function NotificationPreferences({
             </div>
           </div>
         ),
-        { duration: 4500 }
+        { duration: 4500 },
       );
     }, 600);
   };
@@ -288,7 +288,8 @@ export function NotificationPreferences({
                   )}
                 </div>
                 <p className="text-[11px] text-muted-foreground leading-normal">
-                  Immediate alerts when new scouting trials or academy selection camps are published.
+                  Immediate alerts when new scouting trials or academy selection camps are
+                  published.
                 </p>
               </div>
               <Switch
@@ -314,7 +315,8 @@ export function NotificationPreferences({
                   <span className="font-semibold text-xs text-foreground">Deadlines</span>
                 </div>
                 <p className="text-[11px] text-muted-foreground leading-normal">
-                  Urgent alerts when registration for trials in your city is closing in under 48 hours.
+                  Urgent alerts when registration for trials in your city is closing in under 48
+                  hours.
                 </p>
               </div>
               <Switch
@@ -427,7 +429,8 @@ export function NotificationPreferences({
           </div>
 
           <p className="text-[11px] text-muted-foreground">
-            Selected: <span className="font-semibold text-foreground">{preferredSports.join(", ")}</span>
+            Selected:{" "}
+            <span className="font-semibold text-foreground">{preferredSports.join(", ")}</span>
           </p>
         </div>
 

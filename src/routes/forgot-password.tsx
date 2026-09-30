@@ -5,7 +5,9 @@ import { ShieldCheck, Trophy, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/forgot-password")({
-  validateSearch: (search: Record<string, unknown>): { mode?: "request" | "reset"; email?: string } => ({
+  validateSearch: (
+    search: Record<string, unknown>,
+  ): { mode?: "request" | "reset"; email?: string } => ({
     mode: search.mode === "reset" ? "reset" : "request",
     email: typeof search.email === "string" ? search.email : undefined,
   }),
@@ -41,10 +43,7 @@ function ForgotPasswordPage() {
       </div>
 
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <ForgotPasswordForm
-          initialMode={search.mode}
-          defaultEmail={search.email}
-        />
+        <ForgotPasswordForm initialMode={search.mode} defaultEmail={search.email} />
 
         <div className="mt-6 text-center">
           <Button asChild variant="ghost" size="sm" className="text-xs text-muted-foreground">

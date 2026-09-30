@@ -82,7 +82,9 @@ export function NotificationsDashboardTab({ className = "" }: NotificationsDashb
     }
     return DEFAULT_ALERT_HISTORY;
   });
-  const [filterCategory, setFilterCategory] = useState<"all" | "live_trials" | "deadlines" | "unread">("all");
+  const [filterCategory, setFilterCategory] = useState<
+    "all" | "live_trials" | "deadlines" | "unread"
+  >("all");
   const [isRealtimeSyncing, setIsRealtimeSyncing] = useState<boolean>(false);
   const [isSupabaseLive, setIsSupabaseLive] = useState<boolean>(false);
   const [lastSyncStatus, setLastSyncStatus] = useState<string>("Synced in real-time");
@@ -147,14 +149,16 @@ export function NotificationsDashboardTab({ className = "" }: NotificationsDashb
       });
 
       setIsSupabaseLive(res.isSupabaseLive);
-      setLastSyncStatus(`Live Trials alerts ${checked ? "enabled" : "disabled"} (real-time synced)`);
+      setLastSyncStatus(
+        `Live Trials alerts ${checked ? "enabled" : "disabled"} (real-time synced)`,
+      );
       toast.success(
         checked
           ? "Live Trials alerts turned ON in real-time."
           : "Live Trials alerts paused in real-time.",
         {
           description: "Database preferences updated instantly.",
-        }
+        },
       );
     } catch {
       toast.error("Failed to sync preference to database.");
@@ -189,7 +193,7 @@ export function NotificationsDashboardTab({ className = "" }: NotificationsDashb
           : "Deadlines warnings paused in real-time.",
         {
           description: "Database preferences updated instantly.",
-        }
+        },
       );
     } catch {
       toast.error("Failed to sync preference to database.");
@@ -267,7 +271,11 @@ export function NotificationsDashboardTab({ className = "" }: NotificationsDashb
       () => (
         <div className="flex items-start gap-3 rounded-xl border border-primary/40 bg-zinc-950 p-4 text-white shadow-2xl">
           <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/20 text-primary">
-            {isTrial ? <Radio className="h-5 w-5 animate-pulse" /> : <Clock className="h-5 w-5 animate-spin" />}
+            {isTrial ? (
+              <Radio className="h-5 w-5 animate-pulse" />
+            ) : (
+              <Clock className="h-5 w-5 animate-spin" />
+            )}
           </div>
           <div className="space-y-1 text-xs">
             <div className="flex items-center gap-2">
@@ -281,7 +289,7 @@ export function NotificationsDashboardTab({ className = "" }: NotificationsDashb
           </div>
         </div>
       ),
-      { duration: 4000 }
+      { duration: 4000 },
     );
   };
 
@@ -369,7 +377,11 @@ export function NotificationsDashboardTab({ className = "" }: NotificationsDashb
             </span>
           </div>
           <CardDescription className="text-xs">
-            Toggles instantly update the <code className="bg-muted px-1 py-0.5 rounded text-primary font-mono text-[11px]">notification_subscriptions</code> table in Supabase.
+            Toggles instantly update the{" "}
+            <code className="bg-muted px-1 py-0.5 rounded text-primary font-mono text-[11px]">
+              notification_subscriptions
+            </code>{" "}
+            table in Supabase.
           </CardDescription>
         </CardHeader>
 
@@ -403,7 +415,8 @@ export function NotificationsDashboardTab({ className = "" }: NotificationsDashb
                   </Badge>
                 </div>
                 <p className="text-[11px] text-muted-foreground leading-relaxed">
-                  Real-time push alerts the moment new sports trials, academy screenings, or scout dates are announced.
+                  Real-time push alerts the moment new sports trials, academy screenings, or scout
+                  dates are announced.
                 </p>
               </div>
 
@@ -429,7 +442,9 @@ export function NotificationsDashboardTab({ className = "" }: NotificationsDashb
                   <div className="flex h-6 w-6 items-center justify-center rounded-md bg-amber-500/15 text-amber-600 dark:text-amber-400">
                     <Clock className="h-3.5 w-3.5" />
                   </div>
-                  <span className="font-semibold text-xs text-foreground">Deadlines Urgency Alerts</span>
+                  <span className="font-semibold text-xs text-foreground">
+                    Deadlines Urgency Alerts
+                  </span>
                   <Badge
                     variant="outline"
                     className={`text-[10px] px-1.5 py-0 ${
@@ -442,7 +457,8 @@ export function NotificationsDashboardTab({ className = "" }: NotificationsDashb
                   </Badge>
                 </div>
                 <p className="text-[11px] text-muted-foreground leading-relaxed">
-                  Urgent alerts when registration for trials in {targetCity} closes within 48 hours to prevent missed opportunities.
+                  Urgent alerts when registration for trials in {targetCity} closes within 48 hours
+                  to prevent missed opportunities.
                 </p>
               </div>
 
@@ -605,7 +621,8 @@ export function NotificationsDashboardTab({ className = "" }: NotificationsDashb
             </div>
             <h4 className="font-semibold text-sm text-foreground">No alerts matching filter</h4>
             <p className="text-xs text-muted-foreground mt-1 max-w-sm mx-auto">
-              You haven&apos;t received alerts for this category yet. When new trials or deadlines arrive in {targetCity}, they will appear here.
+              You haven&apos;t received alerts for this category yet. When new trials or deadlines
+              arrive in {targetCity}, they will appear here.
             </p>
             <div className="mt-4 flex justify-center gap-2">
               <Button
@@ -648,9 +665,7 @@ export function NotificationsDashboardTab({ className = "" }: NotificationsDashb
 
                     <div className="space-y-1">
                       <div className="flex flex-wrap items-center gap-2">
-                        <span className="font-bold text-sm text-foreground">
-                          {alert.title}
-                        </span>
+                        <span className="font-bold text-sm text-foreground">{alert.title}</span>
                         {!alert.isRead && (
                           <span className="h-2 w-2 rounded-full bg-primary inline-block" />
                         )}

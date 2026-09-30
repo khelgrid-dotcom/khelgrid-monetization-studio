@@ -20,7 +20,8 @@ export const DEFAULT_ALERT_HISTORY: AlertHistoryItem[] = [
     id: "alert-hist-1",
     category: "live_trials",
     title: "🎯 New Cricket Trial: BCCI State U-19 Screening Camp",
-    message: "Karnataka State Cricket Association announced trials for top-order batsmen and seam bowlers in Bengaluru.",
+    message:
+      "Karnataka State Cricket Association announced trials for top-order batsmen and seam bowlers in Bengaluru.",
     sport: "Cricket",
     city: "Bengaluru",
     trialId: "t-1",
@@ -32,7 +33,8 @@ export const DEFAULT_ALERT_HISTORY: AlertHistoryItem[] = [
     id: "alert-hist-2",
     category: "deadlines",
     title: "⏰ Deadline Warning: 24 Hours Left for Fit India Namchi Athletics Selection",
-    message: "Online registration for Namchi District Athletics trials closes tomorrow. Only 14 spots left.",
+    message:
+      "Online registration for Namchi District Athletics trials closes tomorrow. Only 14 spots left.",
     sport: "Athletics",
     city: "Namchi",
     trialId: "t-fit-india-namchi-sikkim-2026",
@@ -44,7 +46,8 @@ export const DEFAULT_ALERT_HISTORY: AlertHistoryItem[] = [
     id: "alert-hist-3",
     category: "live_trials",
     title: "🎯 New Football Scout Trial: BFC Youth Residential Academy",
-    message: "Bengaluru FC is hosting open screening for U-17 and U-19 athletes at Bangalore Football Stadium.",
+    message:
+      "Bengaluru FC is hosting open screening for U-17 and U-19 athletes at Bangalore Football Stadium.",
     sport: "Football",
     city: "Bengaluru",
     trialId: "t-3",
@@ -56,7 +59,8 @@ export const DEFAULT_ALERT_HISTORY: AlertHistoryItem[] = [
     id: "alert-hist-4",
     category: "deadlines",
     title: "⏰ Deadline Warning: Badminton State Super League",
-    message: "Registration for Smash Point Shuttle Open closes in 36 hours. Secure your spot before cutoff.",
+    message:
+      "Registration for Smash Point Shuttle Open closes in 36 hours. Secure your spot before cutoff.",
     sport: "Badminton",
     city: "Bengaluru",
     trialId: "t-4",
@@ -104,7 +108,8 @@ export async function getAlertHistory(userId?: string | null): Promise<{
         isSupabaseLive = true;
         const mapped: AlertHistoryItem[] = data.map((row: any) => ({
           id: row.id,
-          category: (row.payload?.type === "deadline_warning" ? "deadlines" : "live_trials") as "live_trials" | "deadlines",
+          category: (row.payload?.type === "deadline_warning" ? "deadlines" : "live_trials") as
+            "live_trials" | "deadlines",
           title: row.title || "KhelGrid Trial Alert",
           message: row.body || "New alert from sports selection network.",
           sport: row.payload?.sport || "Multi-Sport",
@@ -146,7 +151,9 @@ export function saveAlertHistory(alerts: AlertHistoryItem[]) {
 /**
  * Adds a new alert to history (e.g. simulated or received live)
  */
-export function addAlertToHistory(newAlert: Omit<AlertHistoryItem, "id" | "timestamp">): AlertHistoryItem {
+export function addAlertToHistory(
+  newAlert: Omit<AlertHistoryItem, "id" | "timestamp">,
+): AlertHistoryItem {
   const item: AlertHistoryItem = {
     ...newAlert,
     id: `alert-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,

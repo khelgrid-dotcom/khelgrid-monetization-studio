@@ -108,7 +108,8 @@ export class SupabaseAuthService {
     if (!this.isConfigured()) {
       return {
         success: false,
-        error: "Supabase authentication is not configured. Please ensure VITE_SUPABASE_ANON_KEY is provided in your environment.",
+        error:
+          "Supabase authentication is not configured. Please ensure VITE_SUPABASE_ANON_KEY is provided in your environment.",
       };
     }
 
@@ -218,7 +219,8 @@ export class SupabaseAuthService {
     if (!this.isConfigured()) {
       return {
         success: false,
-        error: "Supabase authentication is not configured. Please ensure VITE_SUPABASE_ANON_KEY is set.",
+        error:
+          "Supabase authentication is not configured. Please ensure VITE_SUPABASE_ANON_KEY is set.",
       };
     }
 
@@ -314,7 +316,9 @@ export class SupabaseAuthService {
     try {
       const targetRedirect =
         redirectTo ||
-        (typeof window !== "undefined" ? `${window.location.origin}/forgot-password?mode=reset` : undefined);
+        (typeof window !== "undefined"
+          ? `${window.location.origin}/forgot-password?mode=reset`
+          : undefined);
 
       const { error } = await supabase.auth.resetPasswordForEmail(email.trim().toLowerCase(), {
         redirectTo: targetRedirect,
@@ -354,9 +358,7 @@ export class SupabaseAuthService {
   /**
    * Subscribes to Supabase authentication state changes (SIGNED_IN, SIGNED_OUT, TOKEN_REFRESHED, etc.)
    */
-  public onAuthStateChange(
-    callback: (event: string, session: Session | null) => void,
-  ): () => void {
+  public onAuthStateChange(callback: (event: string, session: Session | null) => void): () => void {
     if (!this.isConfigured()) {
       return () => {};
     }

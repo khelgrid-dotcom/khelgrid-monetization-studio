@@ -183,7 +183,7 @@ export async function subscribeToTrialAlerts(params: {
             notify_deadlines: newSub.notifyDeadlines,
             updated_at: newSub.updatedAt,
           },
-          { onConflict: "fcm_token,sport,city" }
+          { onConflict: "fcm_token,sport,city" },
         )
         .select()
         .single();
@@ -201,11 +201,15 @@ export async function subscribeToTrialAlerts(params: {
   // Save to local cache
   const localSubs = getLocalSubscriptions();
   const existingIdx = localSubs.findIndex(
-    (s) => s.fcmToken === newSub.fcmToken && s.sport === newSub.sport && s.city === newSub.city
+    (s) => s.fcmToken === newSub.fcmToken && s.sport === newSub.sport && s.city === newSub.city,
   );
 
   if (existingIdx >= 0) {
-    localSubs[existingIdx] = { ...localSubs[existingIdx], ...newSub, id: localSubs[existingIdx].id };
+    localSubs[existingIdx] = {
+      ...localSubs[existingIdx],
+      ...newSub,
+      id: localSubs[existingIdx].id,
+    };
   } else {
     localSubs.unshift(newSub);
   }
@@ -219,12 +223,12 @@ export async function subscribeToTrialAlerts(params: {
  */
 export async function getNotificationSubscriptions(
   fcmToken?: string,
-  userId?: string
+  userId?: string,
 ): Promise<{
   subscriptions: NotificationSubscription[];
   isSupabaseLive: boolean;
 }> {
-  let isSupabaseLive = false;
+  const isSupabaseLive = false;
   const localList = getLocalSubscriptions();
 
   if (isSupabaseConfigured && (fcmToken || userId)) {
@@ -273,7 +277,7 @@ export async function getNotificationSubscriptions(
  * Unsubscribes or deactivates alert preference
  */
 export async function unsubscribeFromTrialAlerts(
-  subscriptionId: string
+  subscriptionId: string,
 ): Promise<{ success: boolean; isSupabaseLive: boolean }> {
   let isSupabaseLive = false;
 
@@ -291,7 +295,7 @@ export async function unsubscribeFromTrialAlerts(
   }
 
   const localSubs = getLocalSubscriptions().map((s) =>
-    s.id === subscriptionId ? { ...s, isActive: false, updatedAt: new Date().toISOString() } : s
+    s.id === subscriptionId ? { ...s, isActive: false, updatedAt: new Date().toISOString() } : s,
   );
   saveLocalSubscriptions(localSubs);
 
@@ -302,9 +306,7 @@ export async function unsubscribeFromTrialAlerts(
  * Background Worker: Dispatches push notifications whenever a new trial is published.
  * Finds all active matching subscriptions and enqueues push payloads.
  */
-export async function dispatchTrialPublishedNotification(
-  trial: TrialNotificationPayload
-): Promise<{
+export async function dispatchTrialPublishedNotification(trial: TrialNotificationPayload): Promise<{
   enqueuedCount: number;
   matchingSubscribers: number;
   isSupabaseLive: boolean;
@@ -367,7 +369,7 @@ export async function dispatchTrialPublishedNotification(
       s.isActive &&
       s.notifyNewTrials &&
       (s.sport === trial.sport || s.sport === "All") &&
-      (s.city === trial.city || s.city === "All")
+      (s.city === trial.city || s.city === "All"),
   );
 
   if (localSubs.length > 0) {
@@ -405,9 +407,7 @@ export async function dispatchTrialPublishedNotification(
  * Background Worker: Processes pending notification queue items and marks them sent.
  * Represents the worker execution step (called via cron, webhooks, or scheduled intervals).
  */
-export async function processNotificationQueue(
-  batchSize: number = 20
-): Promise<{
+export async function processNotificationQueue(batchSize: number = 20): Promise<{
   processedCount: number;
   successfulCount: number;
   failedCount: number;

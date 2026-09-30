@@ -25,6 +25,13 @@ import {
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import { useLanguage } from "@/context/LanguageContext";
 import { MatchStatisticsCharts } from "@/components/blog/MatchStatisticsCharts";
 import { IndiaJapanSocialFeed } from "@/components/blog/IndiaJapanSocialFeed";
@@ -85,7 +92,8 @@ export function SportsNewsSection() {
   const { t } = useLanguage();
   const [selectedSportTab, setSelectedSportTab] = useState<string>("All Sports");
   const [savedArticles, setSavedArticles] = useState<Set<string>>(new Set());
-  const [showMatchAnalytics, setShowMatchAnalytics] = useState<boolean>(true);
+  const [isAnalyticsModalOpen, setIsAnalyticsModalOpen] = useState<boolean>(false);
+  const [isInlineExpanded, setIsInlineExpanded] = useState<boolean>(false);
   const [activeAnalyticsHub, setActiveAnalyticsHub] = useState<"asiad" | "cricket" | "predictor">(
     "asiad",
   );
@@ -773,20 +781,15 @@ export function SportsNewsSection() {
                   </Link>
                   <button
                     type="button"
-                    onClick={() => setShowMatchAnalytics(!showMatchAnalytics)}
-                    className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background/80 px-3.5 py-1.5 text-xs font-medium text-foreground hover:bg-muted"
+                    onClick={() => {
+                      setActiveAnalyticsHub("asiad");
+                      setIsAnalyticsModalOpen(true);
+                    }}
+                    className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background/80 px-3.5 py-1.5 text-xs font-medium text-foreground hover:bg-muted focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary"
                   >
                     <BarChart3 className="h-3.5 w-3.5 text-primary" />
-                    <span>
-                      {showMatchAnalytics
-                        ? t("hideAnalytics", "Hide Recharts & Social Feed")
-                        : t("viewAnalytics", "View Recharts & Social Feed")}
-                    </span>
-                    {showMatchAnalytics ? (
-                      <ChevronUp className="h-3 w-3 text-muted-foreground" />
-                    ) : (
-                      <ChevronDown className="h-3 w-3 text-muted-foreground" />
-                    )}
+                    <span>{t("viewAnalytics", "View Recharts & Social Feed")}</span>
+                    <ArrowRight className="h-3 w-3 text-muted-foreground" />
                   </button>
                 </div>
               )}
@@ -1083,46 +1086,158 @@ export function SportsNewsSection() {
         )}
       </div>
 
-      {/* Embedded Live Match Intelligence Hub (Recharts & Trending Social Feed) */}
-      {showMatchAnalytics && (
-        <div
-          className="mt-10 space-y-8 border-t border-border/70 pt-8"
-          id="live-match-wire-intelligence"
-        >
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <div className="flex items-center gap-2">
-                <Badge variant="outline" className="border-primary/40 bg-primary/10 text-primary">
-                  <Sparkles className="mr-1.5 h-3.5 w-3.5" />{" "}
-                  {t("analyticsHub", "High-Performance Analytics Hub")}
-                </Badge>
-                <span className="rounded-full bg-emerald-500/15 px-2 py-0.5 text-[10px] font-bold text-emerald-500">
-                  {t("liveWireData", "Live Wire Data")}
-                </span>
-              </div>
-              <h3 className="mt-1 text-xl font-bold tracking-tight text-foreground sm:text-2xl">
-                {activeAnalyticsHub === "asiad"
-                  ? "Asian Games 2026: Live Medal Tally & Discipline Breakdown"
-                  : activeAnalyticsHub === "predictor"
-                    ? "Match Outcome Predictor: Dynamic Win Probability Engine"
-                    : "Match Intelligence: Recharts Analytics & Community Buzz"}
-              </h3>
-              <p className="text-xs text-muted-foreground sm:text-sm">
-                {activeAnalyticsHub === "asiad"
-                  ? "Live updates on September 23, 2026: Mirabai Chanu's silver, shotgun skeet hit rates, and Asian Games leaderboard."
-                  : activeAnalyticsHub === "predictor"
-                    ? "Real-time win probability forecasting based on current run rates (CRR vs RRR), wickets in hand, and historical win rates."
-                    : "Real-time cricket wire featuring bowling economy rates, run rate progression, and social buzz."}
-              </p>
+      {/* Decoupled High-Performance Analytics Hub Preview (Prevents ~1400px page bloat while keeping instant access) */}
+      <div
+        className="mt-8 rounded-2xl border border-border/80 bg-gradient-card p-5 sm:p-6"
+        id="live-match-wire-intelligence"
+      >
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div className="space-y-1.5">
+            <div className="flex items-center gap-2">
+              <Badge variant="outline" className="border-primary/40 bg-primary/10 text-primary">
+                <Sparkles className="mr-1.5 h-3.5 w-3.5" />{" "}
+                {t("analyticsHub", "High-Performance Analytics Hub")}
+              </Badge>
+              <span className="rounded-full bg-emerald-500/15 px-2 py-0.5 text-[10px] font-bold text-emerald-500">
+                {t("liveWireData", "Live Wire Data")}
+              </span>
             </div>
+            <h3 className="text-lg sm:text-xl font-bold tracking-tight text-foreground">
+              Asian Games 2026, Match Recharts & Win Outcome Predictor
+            </h3>
+            <p className="text-xs text-muted-foreground max-w-2xl leading-relaxed">
+              Real-time medal tallies, bowling economy rates, run-rate progression, and win
+              probability forecasting decoupled into an on-demand interactive analytical workspace.
+            </p>
+          </div>
 
-            <div className="flex flex-wrap items-center gap-2">
-              {/* Horizontally scrollable switcher between Asiad, Cricket and Predictor */}
+          <div className="flex flex-wrap items-center gap-2">
+            <Button
+              type="button"
+              onClick={() => setIsAnalyticsModalOpen(true)}
+              className="gap-2 text-xs font-semibold shadow-xs"
+            >
+              <BarChart3 className="h-4 w-4" />
+              <span>Open Analytics Studio</span>
+            </Button>
+
+            <Link
+              to="/blog/$slug"
+              params={{
+                slug:
+                  activeAnalyticsHub === "asiad"
+                    ? "asian-games-2026-live-updates-september-23-india-medal-tally-analysis"
+                    : "india-vs-japan-cricket-match-tactical-analysis",
+              }}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-background px-3.5 py-2 text-xs font-medium text-foreground hover:bg-muted transition-colors"
+            >
+              <span>Dedicated Blog Hub</span>
+              <ArrowRight className="h-3.5 w-3.5 text-muted-foreground" />
+            </Link>
+
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={() => setIsInlineExpanded(!isInlineExpanded)}
+              className="text-xs text-muted-foreground hover:text-foreground"
+            >
+              <span>{isInlineExpanded ? "Collapse Inline" : "Preview Inline"}</span>
+              {isInlineExpanded ? (
+                <ChevronUp className="ml-1 h-3.5 w-3.5" />
+              ) : (
+                <ChevronDown className="ml-1 h-3.5 w-3.5" />
+              )}
+            </Button>
+          </div>
+        </div>
+
+        {/* Compact Quick Summary Metrics */}
+        <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3 border-t border-border/60 pt-4">
+          <div className="flex items-center justify-between rounded-xl border border-border/60 bg-background/60 p-3">
+            <div>
+              <span className="text-[10px] font-semibold uppercase text-muted-foreground">
+                Asian Games 2026
+              </span>
+              <p className="text-sm font-bold text-foreground">19 Medals · 4 Gold</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                setActiveAnalyticsHub("asiad");
+                setIsAnalyticsModalOpen(true);
+              }}
+              className="text-xs font-semibold text-primary hover:underline cursor-pointer"
+            >
+              View Tally →
+            </button>
+          </div>
+
+          <div className="flex items-center justify-between rounded-xl border border-border/60 bg-background/60 p-3">
+            <div>
+              <span className="text-[10px] font-semibold uppercase text-muted-foreground">
+                IND vs JPN Cricket
+              </span>
+              <p className="text-sm font-bold text-foreground">184/5 (20.0) · RRR 9.25</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                setActiveAnalyticsHub("cricket");
+                setIsAnalyticsModalOpen(true);
+              }}
+              className="text-xs font-semibold text-primary hover:underline cursor-pointer"
+            >
+              Recharts →
+            </button>
+          </div>
+
+          <div className="flex items-center justify-between rounded-xl border border-border/60 bg-background/60 p-3">
+            <div>
+              <span className="text-[10px] font-semibold uppercase text-muted-foreground">
+                Win Predictor Engine
+              </span>
+              <p className="text-sm font-bold text-foreground">78.4% Win Chance IND</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                setActiveAnalyticsHub("predictor");
+                setIsAnalyticsModalOpen(true);
+              }}
+              className="text-xs font-semibold text-primary hover:underline cursor-pointer"
+            >
+              Predictor →
+            </button>
+          </div>
+        </div>
+
+        {/* Optional Inline Expansion (only when explicitly requested by user) */}
+        {isInlineExpanded && (
+          <div className="mt-6 border-t border-border/70 pt-6 space-y-6">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <h4 className="text-base font-bold text-foreground">
+                  {activeAnalyticsHub === "asiad"
+                    ? "Asian Games 2026: Live Medal Tally & Discipline Breakdown"
+                    : activeAnalyticsHub === "predictor"
+                      ? "Match Outcome Predictor: Dynamic Win Probability Engine"
+                      : "Match Intelligence: Recharts Analytics & Community Buzz"}
+                </h4>
+                <p className="text-xs text-muted-foreground">
+                  {activeAnalyticsHub === "asiad"
+                    ? "Live updates on September 23, 2026: Mirabai Chanu's silver, shotgun skeet hit rates, and Asian Games leaderboard."
+                    : activeAnalyticsHub === "predictor"
+                      ? "Real-time win probability forecasting based on current run rates (CRR vs RRR), wickets in hand, and historical win rates."
+                      : "Real-time cricket wire featuring bowling economy rates, run rate progression, and social buzz."}
+                </p>
+              </div>
+
               <div className="flex items-center overflow-x-auto max-w-full rounded-full border border-border bg-background p-1 text-xs no-scrollbar">
                 <button
                   type="button"
                   onClick={() => setActiveAnalyticsHub("asiad")}
-                  className={`shrink-0 rounded-full px-3 py-1 font-medium transition-colors ${
+                  className={`shrink-0 rounded-full px-3 py-1 font-medium transition-colors cursor-pointer ${
                     activeAnalyticsHub === "asiad"
                       ? "bg-primary text-primary-foreground shadow-xs"
                       : "text-muted-foreground hover:text-foreground"
@@ -1133,7 +1248,7 @@ export function SportsNewsSection() {
                 <button
                   type="button"
                   onClick={() => setActiveAnalyticsHub("cricket")}
-                  className={`shrink-0 rounded-full px-3 py-1 font-medium transition-colors ${
+                  className={`shrink-0 rounded-full px-3 py-1 font-medium transition-colors cursor-pointer ${
                     activeAnalyticsHub === "cricket"
                       ? "bg-primary text-primary-foreground shadow-xs"
                       : "text-muted-foreground hover:text-foreground"
@@ -1144,7 +1259,7 @@ export function SportsNewsSection() {
                 <button
                   type="button"
                   onClick={() => setActiveAnalyticsHub("predictor")}
-                  className={`shrink-0 rounded-full px-3 py-1 font-medium transition-colors ${
+                  className={`shrink-0 rounded-full px-3 py-1 font-medium transition-colors cursor-pointer ${
                     activeAnalyticsHub === "predictor"
                       ? "bg-primary text-primary-foreground shadow-xs"
                       : "text-muted-foreground hover:text-foreground"
@@ -1153,46 +1268,102 @@ export function SportsNewsSection() {
                   Match Outcome Predictor
                 </button>
               </div>
-
-              <Link
-                to="/blog/$slug"
-                params={{
-                  slug:
-                    activeAnalyticsHub === "asiad"
-                      ? "asian-games-2026-live-updates-september-23-india-medal-tally-analysis"
-                      : "india-vs-japan-cricket-match-tactical-analysis",
-                }}
-                className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3.5 py-1.5 text-xs font-semibold text-primary hover:bg-primary/20 transition-colors"
-              >
-                Read Full Blog <ArrowRight className="h-3.5 w-3.5" />
-              </Link>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setShowMatchAnalytics(false)}
-                className="text-xs text-muted-foreground hover:text-foreground"
-              >
-                Hide <ChevronUp className="ml-1 h-3.5 w-3.5" />
-              </Button>
             </div>
+
+            {activeAnalyticsHub === "asiad" ? (
+              <AsianGamesAnalytics />
+            ) : activeAnalyticsHub === "predictor" ? (
+              <MatchOutcomePredictor />
+            ) : (
+              <>
+                <MatchStatisticsCharts />
+                <IndiaJapanSocialFeed />
+              </>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Dedicated Analytics Studio Modal Dialog (Decoupled, Focused Workspace) */}
+      <Dialog open={isAnalyticsModalOpen} onOpenChange={setIsAnalyticsModalOpen}>
+        <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto p-4 sm:p-6 rounded-2xl">
+          <DialogHeader className="text-left space-y-1">
+            <div className="flex items-center gap-2">
+              <Badge variant="outline" className="border-primary/40 bg-primary/10 text-primary">
+                <Sparkles className="mr-1.5 h-3.5 w-3.5" /> High-Performance Analytics Studio
+              </Badge>
+              <span className="rounded-full bg-emerald-500/15 px-2 py-0.5 text-[10px] font-bold text-emerald-500">
+                Live Data
+              </span>
+            </div>
+            <DialogTitle className="text-xl sm:text-2xl font-bold tracking-tight">
+              {activeAnalyticsHub === "asiad"
+                ? "Asian Games 2026: Live Medal Tally & Discipline Breakdown"
+                : activeAnalyticsHub === "predictor"
+                  ? "Match Outcome Predictor: Dynamic Win Probability Engine"
+                  : "Match Intelligence: Recharts Analytics & Community Buzz"}
+            </DialogTitle>
+            <DialogDescription className="text-xs text-muted-foreground sm:text-sm">
+              {activeAnalyticsHub === "asiad"
+                ? "Live medal tallies, shooting skeet hit rates, and weightlifting leaderboard from the 2026 Asian Games."
+                : activeAnalyticsHub === "predictor"
+                  ? "Real-time win probability forecasting based on current run rates (CRR vs RRR), wickets in hand, and historical win rates."
+                  : "Real-time cricket wire featuring bowling economy rates, run rate progression, and social buzz."}
+            </DialogDescription>
+          </DialogHeader>
+
+          {/* Segmented Switcher inside Dialog */}
+          <div className="my-4 flex items-center overflow-x-auto max-w-full rounded-xl border border-border bg-muted/40 p-1 text-xs no-scrollbar">
+            <button
+              type="button"
+              onClick={() => setActiveAnalyticsHub("asiad")}
+              className={`flex-1 shrink-0 rounded-lg px-3 py-1.5 font-medium transition-colors cursor-pointer text-center ${
+                activeAnalyticsHub === "asiad"
+                  ? "bg-background text-foreground shadow-xs"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              Asian Games 2026
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveAnalyticsHub("cricket")}
+              className={`flex-1 shrink-0 rounded-lg px-3 py-1.5 font-medium transition-colors cursor-pointer text-center ${
+                activeAnalyticsHub === "cricket"
+                  ? "bg-background text-foreground shadow-xs"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              India vs Japan Cricket
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveAnalyticsHub("predictor")}
+              className={`flex-1 shrink-0 rounded-lg px-3 py-1.5 font-medium transition-colors cursor-pointer text-center ${
+                activeAnalyticsHub === "predictor"
+                  ? "bg-background text-foreground shadow-xs"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              Match Outcome Predictor
+            </button>
           </div>
 
-          {/* Render Active Analytics Dashboard */}
-          {activeAnalyticsHub === "asiad" ? (
-            <AsianGamesAnalytics />
-          ) : activeAnalyticsHub === "predictor" ? (
-            <MatchOutcomePredictor />
-          ) : (
-            <>
-              {/* Recharts Component */}
-              <MatchStatisticsCharts />
-
-              {/* Social Media Feed Component */}
-              <IndiaJapanSocialFeed />
-            </>
-          )}
-        </div>
-      )}
+          {/* Render Active Analytics Dashboard inside modal */}
+          <div className="space-y-6 pt-2">
+            {activeAnalyticsHub === "asiad" ? (
+              <AsianGamesAnalytics />
+            ) : activeAnalyticsHub === "predictor" ? (
+              <MatchOutcomePredictor />
+            ) : (
+              <>
+                <MatchStatisticsCharts />
+                <IndiaJapanSocialFeed />
+              </>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </section>
   );
 }

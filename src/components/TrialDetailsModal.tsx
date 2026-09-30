@@ -55,7 +55,10 @@ export interface OrganizerContact {
 export function getOrganizerContact(trial: Partial<Trial | TrialDiscoveryItem>): OrganizerContact {
   const academy = trial.academy || "Sports Authority & Talent Board";
   const city = trial.city || "Pan-India";
-  const slug = academy.toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 15);
+  const slug = academy
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, "")
+    .slice(0, 15);
 
   if (academy.includes("Sikkim") || academy.includes("Government of Sikkim")) {
     return {
@@ -131,15 +134,15 @@ export function TrialDetailsModal({
   onRegister,
   inline = false,
 }: TrialDetailsModalProps) {
-  if (!trial || !isOpen) return null;
-
   const [copied, setCopied] = useState(false);
   const [isAdDismissed, setIsAdDismissed] = useState(false);
+
+  if (!trial || !isOpen) return null;
 
   const organizer = getOrganizerContact(trial);
   const venueLocation = trial.venue || `${trial.city} District Sports Arena, ${trial.city}`;
   const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-    `${venueLocation}, ${trial.city}, India`
+    `${venueLocation}, ${trial.city}, India`,
   )}`;
 
   const getShareUrl = () => {
@@ -186,7 +189,7 @@ export function TrialDetailsModal({
   const handleWhatsAppShare = () => {
     const shareUrl = getShareUrl();
     const text = encodeURIComponent(
-      `🏆 *${trial.title}* (${trial.sport})\n📍 ${trial.city} · 📅 ${trial.date}\n🔗 View & Register on KhelGrid: ${shareUrl}`
+      `🏆 *${trial.title}* (${trial.sport})\n📍 ${trial.city} · 📅 ${trial.date}\n🔗 View & Register on KhelGrid: ${shareUrl}`,
     );
     window.open(`https://api.whatsapp.com/send?text=${text}`, "_blank", "noopener,noreferrer");
   };
@@ -194,12 +197,12 @@ export function TrialDetailsModal({
   const handleTwitterShare = () => {
     const shareUrl = getShareUrl();
     const text = encodeURIComponent(
-      `Official ${trial.sport} selection trial: ${trial.title} in ${trial.city} on ${trial.date}. Verified on @KhelGrid:`
+      `Official ${trial.sport} selection trial: ${trial.title} in ${trial.city} on ${trial.date}. Verified on @KhelGrid:`,
     );
     window.open(
       `https://twitter.com/intent/tweet?text=${text}&url=${encodeURIComponent(shareUrl)}`,
       "_blank",
-      "noopener,noreferrer"
+      "noopener,noreferrer",
     );
   };
 
@@ -467,7 +470,8 @@ export function TrialDetailsModal({
               >
                 <ExternalLink className="h-3.5 w-3.5" />
                 <span>
-                  View Official Press Release ({trial.sourceLabel || "Government/Association Circular"})
+                  View Official Press Release (
+                  {trial.sourceLabel || "Government/Association Circular"})
                 </span>
               </a>
             </div>
@@ -541,7 +545,8 @@ export function TrialDetailsModal({
                   </span>
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  Get 20% off authentic bats, football boots, badminton racquets, and track spikes for this trial.
+                  Get 20% off authentic bats, football boots, badminton racquets, and track spikes
+                  for this trial.
                 </p>
               </div>
 

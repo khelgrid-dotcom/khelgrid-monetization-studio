@@ -1,11 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import React from "react";
 import { renderToString } from "react-dom/server";
-import {
-  TrialDetailsModal,
-  getOrganizerContact,
-  type OrganizerContact,
-} from "./TrialDetailsModal";
+import { TrialDetailsModal, getOrganizerContact, type OrganizerContact } from "./TrialDetailsModal";
 import { TRIALS, type Trial } from "@/data/trials";
 
 describe("TrialDetailsModal Component & Organizer Contact Resolver", () => {
@@ -59,7 +55,7 @@ describe("TrialDetailsModal Component & Organizer Contact Resolver", () => {
         inline={true}
         onClose={() => {}}
         isRegistered={false}
-      />
+      />,
     );
 
     // Modal title & sport
@@ -112,7 +108,7 @@ describe("TrialDetailsModal Component & Organizer Contact Resolver", () => {
         inline={true}
         onClose={() => {}}
         isRegistered={true}
-      />
+      />,
     );
 
     expect(html).toContain("Already Registered");
@@ -121,7 +117,7 @@ describe("TrialDetailsModal Component & Organizer Contact Resolver", () => {
 
   it("returns null when trial is null", () => {
     const html = renderToString(
-      <TrialDetailsModal trial={null} isOpen={true} onClose={() => {}} />
+      <TrialDetailsModal trial={null} isOpen={true} onClose={() => {}} />,
     );
     expect(html).toBe("");
   });

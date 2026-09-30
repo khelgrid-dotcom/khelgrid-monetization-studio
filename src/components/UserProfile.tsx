@@ -1224,8 +1224,15 @@ export function UserProfile({
                   Automated Trial Push Alerts
                 </h3>
                 <p className="text-xs text-muted-foreground sm:text-sm leading-relaxed">
-                  <strong className="text-foreground">Challenge Solved:</strong> Athletes subscribing to trial alerts previously relied on local storage and manual browsing. 
-                  Now, Firebase Cloud Messaging (FCM) device tokens are stored in the <code className="bg-muted px-1.5 py-0.5 rounded text-primary font-mono text-xs">notification_subscriptions</code> table in Supabase. A lightweight background worker triggers targeted push notifications to athletes matching that sport and city whenever a trial is published or registration deadlines approach.
+                  <strong className="text-foreground">Challenge Solved:</strong> Athletes
+                  subscribing to trial alerts previously relied on local storage and manual
+                  browsing. Now, Firebase Cloud Messaging (FCM) device tokens are stored in the{" "}
+                  <code className="bg-muted px-1.5 py-0.5 rounded text-primary font-mono text-xs">
+                    notification_subscriptions
+                  </code>{" "}
+                  table in Supabase. A lightweight background worker triggers targeted push
+                  notifications to athletes matching that sport and city whenever a trial is
+                  published or registration deadlines approach.
                 </p>
               </div>
 
@@ -1344,7 +1351,10 @@ export function UserProfile({
                 {subscriptions.map((sub) => (
                   <Card key={sub.id} className="p-4 border-border/80 bg-card/60 space-y-3">
                     <div className="flex items-center justify-between">
-                      <Badge variant="outline" className="text-xs font-semibold border-primary/30 text-primary">
+                      <Badge
+                        variant="outline"
+                        className="text-xs font-semibold border-primary/30 text-primary"
+                      >
                         {sub.sport}
                       </Badge>
                       <span className="inline-flex items-center gap-1 text-[11px] text-emerald-600 font-medium">
@@ -1361,11 +1371,16 @@ export function UserProfile({
                         Token: {sub.fcmToken.slice(0, 18)}...
                       </div>
                       <div className="text-[10px] text-muted-foreground">
-                        Last notified: {sub.lastNotifiedAt ? new Date(sub.lastNotifiedAt).toLocaleDateString() : "Never"}
+                        Last notified:{" "}
+                        {sub.lastNotifiedAt
+                          ? new Date(sub.lastNotifiedAt).toLocaleDateString()
+                          : "Never"}
                       </div>
                     </div>
                     <div className="flex items-center justify-between pt-1 border-t border-border/40 text-xs">
-                      <span className="text-[10px] text-muted-foreground">Device: {sub.deviceType}</span>
+                      <span className="text-[10px] text-muted-foreground">
+                        Device: {sub.deviceType}
+                      </span>
                       <button
                         type="button"
                         onClick={() => handleUnsubscribe(sub.id)}

@@ -265,7 +265,9 @@ function SearchPage() {
       // Upcoming Dates Filter
       if (params.dateRange && params.dateRange !== "all") {
         const trialDate = parseTrialDate(t.date);
-        const regDeadline = t.registrationDeadline ? parseTrialDate(t.registrationDeadline) : trialDate;
+        const regDeadline = t.registrationDeadline
+          ? parseTrialDate(t.registrationDeadline)
+          : trialDate;
         const targetDate = trialDate || regDeadline;
 
         if (targetDate) {

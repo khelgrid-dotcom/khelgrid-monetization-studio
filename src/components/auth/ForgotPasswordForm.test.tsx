@@ -52,9 +52,7 @@ describe("ForgotPasswordForm Component & Supabase Auth Reset Flow", () => {
   });
 
   it("renders with a prefilled email address", () => {
-    const html = renderToString(
-      <ForgotPasswordForm defaultEmail="champion@khelgrid.com" />,
-    );
+    const html = renderToString(<ForgotPasswordForm defaultEmail="champion@khelgrid.com" />);
 
     expect(html).toContain("champion@khelgrid.com");
   });

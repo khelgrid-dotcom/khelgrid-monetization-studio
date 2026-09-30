@@ -22,7 +22,7 @@ export const DEFAULT_NOTIFICATION_PREFERENCES: NotificationPreferencesInput = {
  */
 export async function getNotificationPreferences(
   fcmToken: string,
-  userId?: string | null
+  userId?: string | null,
 ): Promise<{
   preferences: NotificationPreferencesInput;
   isSupabaseLive: boolean;
@@ -88,9 +88,7 @@ export async function getNotificationPreferences(
  * Saves notification preferences to the notification_subscriptions table in Supabase.
  * Stores user_id, fcm_token, preferred_sports (array), and city (string).
  */
-export async function saveNotificationPreferences(
-  prefs: NotificationPreferencesInput
-): Promise<{
+export async function saveNotificationPreferences(prefs: NotificationPreferencesInput): Promise<{
   success: boolean;
   subscription?: NotificationSubscription;
   isSupabaseLive: boolean;

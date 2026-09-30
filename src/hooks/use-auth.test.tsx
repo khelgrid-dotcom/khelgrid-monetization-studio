@@ -172,7 +172,11 @@ describe("use-auth hook and AuthProvider context", () => {
       </AuthProvider>,
     );
 
-    const result = await capturedAuth.signUpWithEmail("short@khelgrid.com", "Password123!", "Short Name");
+    const result = await capturedAuth.signUpWithEmail(
+      "short@khelgrid.com",
+      "Password123!",
+      "Short Name",
+    );
     expect(supabaseAuthService.signUp).toHaveBeenCalledWith(
       expect.objectContaining({
         email: "short@khelgrid.com",

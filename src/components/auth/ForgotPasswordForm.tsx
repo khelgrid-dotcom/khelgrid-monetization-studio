@@ -125,7 +125,9 @@ export function ForgotPasswordForm({
         setErrorMessage(res.error || "Failed to send password reset email. Please try again.");
       }
     } catch (err: any) {
-      setErrorMessage(err.message || "An unexpected error occurred while requesting password reset.");
+      setErrorMessage(
+        err.message || "An unexpected error occurred while requesting password reset.",
+      );
     } finally {
       setLoading(false);
     }

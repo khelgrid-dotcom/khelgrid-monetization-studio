@@ -249,7 +249,10 @@ function BlogArticle() {
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-border/60 pb-5">
               <div>
                 <div className="flex flex-wrap items-center gap-2">
-                  <Badge variant="outline" className="border-primary/40 bg-primary/10 text-primary font-semibold">
+                  <Badge
+                    variant="outline"
+                    className="border-primary/40 bg-primary/10 text-primary font-semibold"
+                  >
                     <Sparkles className="mr-1.5 h-3.5 w-3.5" /> High-Performance Analytics Hub
                   </Badge>
                   <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/15 px-2.5 py-0.5 text-[10px] font-bold text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">

@@ -52,7 +52,15 @@ export const REGIONS: RegionDefinition[] = [
   {
     id: "south",
     name: "South Zone",
-    cities: ["Bengaluru", "Hyderabad", "Chennai", "Kochi", "Mysuru", "Coimbatore", "Thiruvananthapuram"],
+    cities: [
+      "Bengaluru",
+      "Hyderabad",
+      "Chennai",
+      "Kochi",
+      "Mysuru",
+      "Coimbatore",
+      "Thiruvananthapuram",
+    ],
   },
   {
     id: "west",
@@ -62,7 +70,16 @@ export const REGIONS: RegionDefinition[] = [
   {
     id: "east_ne",
     name: "East & North-East Zone",
-    cities: ["Kolkata", "Namchi", "Gangtok", "Guwahati", "Bhubaneswar", "Patna", "Ranchi", "Shillong"],
+    cities: [
+      "Kolkata",
+      "Namchi",
+      "Gangtok",
+      "Guwahati",
+      "Bhubaneswar",
+      "Patna",
+      "Ranchi",
+      "Shillong",
+    ],
   },
   {
     id: "central",
@@ -114,9 +131,21 @@ export const SPORT_TYPES: SportTypeDefinition[] = [
 
 export const DATE_RANGE_OPTIONS: { id: DateRangeOption; label: string; description: string }[] = [
   { id: "all", label: "All Upcoming Dates", description: "All scheduled trial fixtures" },
-  { id: "closing_soon", label: "Closing Soon (< 48 Hours)", description: "Registration cutoff approaching" },
-  { id: "this_week", label: "This Week (Next 7 Days)", description: "Immediate upcoming screenings" },
-  { id: "this_month", label: "This Month (Next 30 Days)", description: "Screenings within 30 days" },
+  {
+    id: "closing_soon",
+    label: "Closing Soon (< 48 Hours)",
+    description: "Registration cutoff approaching",
+  },
+  {
+    id: "this_week",
+    label: "This Week (Next 7 Days)",
+    description: "Immediate upcoming screenings",
+  },
+  {
+    id: "this_month",
+    label: "This Month (Next 30 Days)",
+    description: "Screenings within 30 days",
+  },
   { id: "next_quarter", label: "Next 90 Days", description: "Next 3 months calendar" },
   { id: "sep_2026", label: "September 2026", description: "Trials in September 2026" },
   { id: "oct_2026", label: "October 2026", description: "Trials in October 2026" },
@@ -168,7 +197,8 @@ export function filterTrials(trials: Trial[], criteria: TrialsFilterCriteria): T
   return trials.filter((t) => {
     // 1. Text Query Filter
     if (q) {
-      const matchText = `${t.title} ${t.academy} ${t.sport} ${t.city} ${t.tag || ""} ${t.venue || ""} ${t.eligibility || ""}`.toLowerCase();
+      const matchText =
+        `${t.title} ${t.academy} ${t.sport} ${t.city} ${t.tag || ""} ${t.venue || ""} ${t.eligibility || ""}`.toLowerCase();
       if (!matchText.includes(q)) return false;
     }
 
@@ -177,7 +207,7 @@ export function filterTrials(trials: Trial[], criteria: TrialsFilterCriteria): T
       const regionDef = REGIONS.find((r) => r.id === criteria.region);
       if (regionDef && regionDef.cities.length > 0) {
         const matchesCityInRegion = regionDef.cities.some((c) =>
-          t.city.toLowerCase().includes(c.toLowerCase())
+          t.city.toLowerCase().includes(c.toLowerCase()),
         );
         if (!matchesCityInRegion) return false;
       }
@@ -193,7 +223,7 @@ export function filterTrials(trials: Trial[], criteria: TrialsFilterCriteria): T
       const typeDef = SPORT_TYPES.find((st) => st.id === criteria.sportType);
       if (typeDef && typeDef.sports.length > 0) {
         const matchesSportInType = typeDef.sports.some(
-          (s) => s.toLowerCase() === t.sport.toLowerCase()
+          (s) => s.toLowerCase() === t.sport.toLowerCase(),
         );
         if (!matchesSportInType) return false;
       }
@@ -207,7 +237,9 @@ export function filterTrials(trials: Trial[], criteria: TrialsFilterCriteria): T
     // 4. Upcoming Dates Filter
     if (criteria.dateRange !== "all") {
       const trialDate = parseTrialDate(t.date);
-      const regDeadline = t.registrationDeadline ? parseTrialDate(t.registrationDeadline) : trialDate;
+      const regDeadline = t.registrationDeadline
+        ? parseTrialDate(t.registrationDeadline)
+        : trialDate;
       const targetDate = trialDate || regDeadline;
 
       if (!targetDate) return true; // If unparseable, don't drop
@@ -218,7 +250,9 @@ export function filterTrials(trials: Trial[], criteria: TrialsFilterCriteria): T
 
       if (criteria.dateRange === "closing_soon") {
         // Closing soon if badge says Closing Soon or deadline within 48h
-        const hasClosingBadge = t.badge === "Closing Soon" || (t.urgencyText && t.urgencyText.toLowerCase().includes("closing"));
+        const hasClosingBadge =
+          t.badge === "Closing Soon" ||
+          (t.urgencyText && t.urgencyText.toLowerCase().includes("closing"));
         if (!hasClosingBadge && (diffHours < 0 || diffHours > 48)) return false;
       } else if (criteria.dateRange === "this_week") {
         if (diffDays < 0 || diffDays > 7) return false;
@@ -274,7 +308,9 @@ export function TrialsSearchFilter({
     ...initialCriteria,
   });
 
-  const [expandedSection, setExpandedSection] = useState<"none" | "regions" | "sports" | "dates">("none");
+  const [expandedSection, setExpandedSection] = useState<"none" | "regions" | "sports" | "dates">(
+    "none",
+  );
 
   // Sync external changes
   useEffect(() => {

@@ -62,10 +62,7 @@ describe("NotificationPreferences Component & TypeScript Interface", () => {
 
   it("renders NotificationPreferences component with alert categories, city input, and sports selection", () => {
     const html = renderToString(
-      <NotificationPreferences
-        initialCity="Bengaluru"
-        initialSports={["Cricket", "Badminton"]}
-      />
+      <NotificationPreferences initialCity="Bengaluru" initialSports={["Cricket", "Badminton"]} />,
     );
 
     // Card and title

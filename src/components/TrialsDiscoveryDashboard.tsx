@@ -26,10 +26,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { useAuth } from "@/context/AuthContext";
-import {
-  fetchAvailableTrialsFromSupabase,
-  type TrialDiscoveryItem,
-} from "@/lib/trials-service";
+import { fetchAvailableTrialsFromSupabase, type TrialDiscoveryItem } from "@/lib/trials-service";
 import { SPORTS, CITIES } from "@/data/trials";
 import { TrialDetailsModal } from "@/components/TrialDetailsModal";
 
@@ -74,13 +71,17 @@ export function TrialsDiscoveryDashboard({
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [freeOnly, setFreeOnly] = useState<boolean>(false);
   const [lastRefreshedAt, setLastRefreshedAt] = useState<Date>(new Date());
-  const [selectedTrialForModal, setSelectedTrialForModal] = useState<TrialDiscoveryItem | null>(null);
+  const [selectedTrialForModal, setSelectedTrialForModal] = useState<TrialDiscoveryItem | null>(
+    null,
+  );
   const [savedTrialIds, setSavedTrialIds] = useState<Set<string>>(() => {
     if (typeof window !== "undefined") {
       try {
         const stored = localStorage.getItem("khelgrid_saved_trials_v1");
         if (stored) return new Set(JSON.parse(stored));
-      } catch {}
+      } catch (err) {
+        console.debug("Failed reading saved trials from localStorage", err);
+      }
     }
     return new Set<string>();
   });
@@ -123,7 +124,9 @@ export function TrialsDiscoveryDashboard({
       if (typeof window !== "undefined") {
         try {
           localStorage.setItem("khelgrid_saved_trials_v1", JSON.stringify(Array.from(next)));
-        } catch {}
+        } catch (err) {
+          console.debug("Failed writing saved trials to localStorage", err);
+        }
       }
       return next;
     });
@@ -151,7 +154,8 @@ export function TrialsDiscoveryDashboard({
     return trials.filter((t) => {
       if (freeOnly && t.fee > 0) return false;
       if (q) {
-        const text = `${t.title} ${t.academy} ${t.sport} ${t.city} ${t.venue || ""} ${t.eligibility || ""}`.toLowerCase();
+        const text =
+          `${t.title} ${t.academy} ${t.sport} ${t.city} ${t.venue || ""} ${t.eligibility || ""}`.toLowerCase();
         if (!text.includes(q)) return false;
       }
       return true;
@@ -166,10 +170,7 @@ export function TrialsDiscoveryDashboard({
   };
 
   return (
-    <div
-      id="trials-discovery-dashboard-component"
-      className={`space-y-6 ${className}`}
-    >
+    <div id="trials-discovery-dashboard-component" className={`space-y-6 ${className}`}>
       {/* ========================================================================= */}
       {/* 1. HEADER & SUPABASE CLIENT STATUS BAR */}
       {/* ========================================================================= */}
@@ -188,7 +189,8 @@ export function TrialsDiscoveryDashboard({
               </Badge>
             </div>
             <p className="text-xs text-muted-foreground">
-              Official scouting combines, academy screening camps, and talent trials fetched via Supabase client.
+              Official scouting combines, academy screening camps, and talent trials fetched via
+              Supabase client.
             </p>
           </div>
         </div>
@@ -223,7 +225,11 @@ export function TrialsDiscoveryDashboard({
             <span>Refresh</span>
           </Button>
 
-          <Button asChild size="sm" className="h-8 text-xs px-3 bg-primary text-primary-foreground font-semibold">
+          <Button
+            asChild
+            size="sm"
+            className="h-8 text-xs px-3 bg-primary text-primary-foreground font-semibold"
+          >
             <Link to="/search">
               <span>Full Portal</span>
               <ArrowRight className="h-3 w-3 ml-1" />
@@ -338,7 +344,10 @@ export function TrialsDiscoveryDashboard({
               </button>
             ))}
 
-            {(selectedSport !== "All Sports" || selectedCity !== "All Locations" || searchQuery || freeOnly) && (
+            {(selectedSport !== "All Sports" ||
+              selectedCity !== "All Locations" ||
+              searchQuery ||
+              freeOnly) && (
               <button
                 type="button"
                 onClick={handleResetFilters}
@@ -381,7 +390,8 @@ export function TrialsDiscoveryDashboard({
           </div>
           <h3 className="text-base font-bold text-foreground">No trials matched your criteria</h3>
           <p className="text-xs text-muted-foreground max-w-md mx-auto">
-            Try adjusting your sport discipline, location, or search keywords to explore all open scouting fixtures.
+            Try adjusting your sport discipline, location, or search keywords to explore all open
+            scouting fixtures.
           </p>
           <Button
             variant="outline"
@@ -461,9 +471,7 @@ export function TrialsDiscoveryDashboard({
                     {/* Academy & Venue */}
                     <div className="text-xs text-muted-foreground space-y-0.5">
                       <div className="font-medium text-foreground/90">{trial.academy}</div>
-                      {trial.venue && (
-                        <div className="line-clamp-1 opacity-75">{trial.venue}</div>
-                      )}
+                      {trial.venue && <div className="line-clamp-1 opacity-75">{trial.venue}</div>}
                     </div>
                   </CardHeader>
 

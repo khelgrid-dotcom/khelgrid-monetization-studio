@@ -72,10 +72,7 @@ export async function fetchAvailableTrialsFromSupabase(options?: {
 
   if (isSupabaseConfigured) {
     try {
-      let query = supabase
-        .from("trials")
-        .select("*")
-        .in("status", ["active", "upcoming"]);
+      let query = supabase.from("trials").select("*").in("status", ["active", "upcoming"]);
 
       if (options?.sport && options.sport !== "All Sports" && options.sport !== "all") {
         query = query.eq("sport", options.sport);
@@ -85,9 +82,7 @@ export async function fetchAvailableTrialsFromSupabase(options?: {
         query = query.eq("city", options.city);
       }
 
-      const { data, error } = await query
-        .order("trial_date", { ascending: true })
-        .limit(limit);
+      const { data, error } = await query.order("trial_date", { ascending: true }).limit(limit);
 
       if (!error && data && data.length > 0) {
         isSupabaseLive = true;
@@ -111,14 +106,12 @@ export async function fetchAvailableTrialsFromSupabase(options?: {
 
   if (options?.sport && options.sport !== "All Sports" && options.sport !== "all") {
     fallbackList = fallbackList.filter(
-      (t) => t.sport.toLowerCase() === options.sport?.toLowerCase()
+      (t) => t.sport.toLowerCase() === options.sport?.toLowerCase(),
     );
   }
 
   if (options?.city && options.city !== "All Locations" && options.city !== "all") {
-    fallbackList = fallbackList.filter(
-      (t) => t.city.toLowerCase() === options.city?.toLowerCase()
-    );
+    fallbackList = fallbackList.filter((t) => t.city.toLowerCase() === options.city?.toLowerCase());
   }
 
   return {

@@ -78,12 +78,16 @@ export interface AuthContextValue extends AuthState {
   signInWithEmail: (
     email: string,
     password: string,
-  ) => Promise<AuthResponse<{ user: unknown; session: unknown; profile?: SupabaseUserProfile | null }>>;
+  ) => Promise<
+    AuthResponse<{ user: unknown; session: unknown; profile?: SupabaseUserProfile | null }>
+  >;
   signUpWithEmail: (
     email: string,
     password: string,
     metadata?: SignUpMetadata | string,
-  ) => Promise<AuthResponse<{ user: unknown; session: unknown; profile?: SupabaseUserProfile | null }>>;
+  ) => Promise<
+    AuthResponse<{ user: unknown; session: unknown; profile?: SupabaseUserProfile | null }>
+  >;
   signOut: () => Promise<void>;
   resetPassword: (email: string, redirectTo?: string) => Promise<AuthResponse<void | null>>;
   updatePassword: (newPassword: string) => Promise<AuthResponse<void>>;
@@ -91,10 +95,14 @@ export interface AuthContextValue extends AuthState {
   // Supabase aliases
   signUpWithSupabase: (
     params: SupabaseSignUpParams,
-  ) => Promise<AuthResponse<{ user: unknown; session: unknown; profile?: SupabaseUserProfile | null }>>;
+  ) => Promise<
+    AuthResponse<{ user: unknown; session: unknown; profile?: SupabaseUserProfile | null }>
+  >;
   signInWithSupabase: (
     params: SupabaseSignInParams,
-  ) => Promise<AuthResponse<{ user: unknown; session: unknown; profile?: SupabaseUserProfile | null }>>;
+  ) => Promise<
+    AuthResponse<{ user: unknown; session: unknown; profile?: SupabaseUserProfile | null }>
+  >;
   logout: () => Promise<void>;
 
   // KhelGrid athlete actions & simulator tools
@@ -437,17 +445,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
    */
   const signUpWithSupabase = async (
     params: SupabaseSignUpParams,
-  ): Promise<AuthResponse<{ user: unknown; session: unknown; profile?: SupabaseUserProfile | null }>> => {
+  ): Promise<
+    AuthResponse<{ user: unknown; session: unknown; profile?: SupabaseUserProfile | null }>
+  > => {
     const res = await supabaseAuthService.signUp(params);
     if (res.success && res.data?.user) {
       const user = res.data.user as User;
       const profile = res.data.profile;
       const role = (
-        profile?.role === "coach"
-          ? "coach"
-          : profile?.role === "academy_owner"
-            ? "academy"
-            : "user"
+        profile?.role === "coach" ? "coach" : profile?.role === "academy_owner" ? "academy" : "user"
       ) as UserRole;
 
       if (res.data.session) {
@@ -486,17 +492,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
    */
   const signInWithSupabase = async (
     params: SupabaseSignInParams,
-  ): Promise<AuthResponse<{ user: unknown; session: unknown; profile?: SupabaseUserProfile | null }>> => {
+  ): Promise<
+    AuthResponse<{ user: unknown; session: unknown; profile?: SupabaseUserProfile | null }>
+  > => {
     const res = await supabaseAuthService.signInWithPassword(params);
     if (res.success && res.data) {
       const user = res.data.user as User;
       const profile = res.data.profile;
       const role = (
-        profile?.role === "coach"
-          ? "coach"
-          : profile?.role === "academy_owner"
-            ? "academy"
-            : "user"
+        profile?.role === "coach" ? "coach" : profile?.role === "academy_owner" ? "academy" : "user"
       ) as UserRole;
 
       const userAcc: UserAccount = {
