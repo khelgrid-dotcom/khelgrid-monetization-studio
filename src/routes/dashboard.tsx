@@ -20,10 +20,12 @@ import {
   Wand2,
   Bell,
   LayoutDashboard,
+  Compass,
 } from "lucide-react";
 import { getVenueBookings, type BookingRecord } from "@/lib/booking-service";
 import { UserProfile } from "@/components/UserProfile";
 import { NotificationsDashboardTab } from "@/components/NotificationsDashboardTab";
+import { TrialsDiscoveryDashboard } from "@/components/TrialsDiscoveryDashboard";
 import { toast } from "sonner";
 import { buildSeoHead } from "@/lib/seo";
 
@@ -56,7 +58,7 @@ function Dashboard() {
   const applied = TRIALS.filter((t) => applications.includes(t.id));
   const [venueBookings, setVenueBookings] = useState<BookingRecord[]>([]);
   const [activeDashboardTab, setActiveDashboardTab] = useState<
-    "overview" | "notifications" | "applications" | "bookings" | "profile"
+    "overview" | "trials" | "notifications" | "applications" | "bookings" | "profile"
   >("overview");
 
   useEffect(() => {
@@ -126,6 +128,30 @@ function Dashboard() {
           </button>
 
           <button
+            id="tab-btn-trials-discovery"
+            type="button"
+            onClick={() => setActiveDashboardTab("trials")}
+            className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all cursor-pointer ${
+              activeDashboardTab === "trials"
+                ? "bg-primary text-primary-foreground shadow-xs font-semibold"
+                : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+            }`}
+          >
+            <Compass className="h-4 w-4" />
+            <span>Trials Discovery</span>
+            <Badge
+              variant="outline"
+              className={`text-[10px] px-1.5 py-0 ${
+                activeDashboardTab === "trials"
+                  ? "bg-primary-foreground/20 text-primary-foreground border-transparent"
+                  : "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20"
+              }`}
+            >
+              Supabase
+            </Badge>
+          </button>
+
+          <button
             id="tab-btn-notifications"
             type="button"
             onClick={() => setActiveDashboardTab("notifications")}
@@ -190,6 +216,15 @@ function Dashboard() {
             <span>Athlete Profile</span>
           </button>
         </div>
+
+        {/* ======================================================================= */}
+        {/* TAB: TRIALS DISCOVERY (SUPABASE CLIENT GRID VIEW) */}
+        {/* ======================================================================= */}
+        {activeDashboardTab === "trials" && (
+          <div id="dashboard-tab-content-trials-discovery" className="mt-6">
+            <TrialsDiscoveryDashboard />
+          </div>
+        )}
 
         {/* ======================================================================= */}
         {/* TAB 1: NOTIFICATIONS DASHBOARD TAB */}
