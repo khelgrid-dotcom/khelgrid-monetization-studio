@@ -31,6 +31,7 @@ import {
   type TrialDiscoveryItem,
 } from "@/lib/trials-service";
 import { SPORTS, CITIES } from "@/data/trials";
+import { TrialDetailsModal } from "@/components/TrialDetailsModal";
 
 export interface TrialsDiscoveryDashboardProps {
   className?: string;
@@ -73,6 +74,7 @@ export function TrialsDiscoveryDashboard({
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [freeOnly, setFreeOnly] = useState<boolean>(false);
   const [lastRefreshedAt, setLastRefreshedAt] = useState<Date>(new Date());
+  const [selectedTrialForModal, setSelectedTrialForModal] = useState<TrialDiscoveryItem | null>(null);
   const [savedTrialIds, setSavedTrialIds] = useState<Set<string>>(() => {
     if (typeof window !== "undefined") {
       try {
@@ -404,7 +406,8 @@ export function TrialsDiscoveryDashboard({
               <Card
                 key={trial.id}
                 id={`trial-card-${trial.id}`}
-                className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border-border/80 bg-card hover:border-primary/50 transition-all duration-200 hover:shadow-md"
+                onClick={() => setSelectedTrialForModal(trial)}
+                className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border-border/80 bg-card hover:border-primary/50 transition-all duration-200 hover:shadow-md cursor-pointer"
               >
                 <div>
                   {/* Card Header: Sport, City & Bookmark */}
@@ -426,7 +429,10 @@ export function TrialsDiscoveryDashboard({
 
                       <button
                         type="button"
-                        onClick={() => handleToggleSave(trial.id, trial.title)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleToggleSave(trial.id, trial.title);
+                        }}
                         className={`rounded-lg p-1.5 transition-colors cursor-pointer ${
                           isSaved
                             ? "bg-primary/10 text-primary"
@@ -440,9 +446,16 @@ export function TrialsDiscoveryDashboard({
 
                     {/* Trial Title */}
                     <h3 className="font-bold text-base text-foreground leading-snug line-clamp-2 pt-1 group-hover:text-primary transition-colors">
-                      <Link to="/trials">
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedTrialForModal(trial);
+                        }}
+                        className="text-left font-bold hover:text-primary transition-colors cursor-pointer"
+                      >
                         {trial.title}
-                      </Link>
+                      </button>
                     </h3>
 
                     {/* Academy & Venue */}
@@ -502,20 +515,25 @@ export function TrialsDiscoveryDashboard({
                 {/* Card Footer: Apply & Action Buttons */}
                 <CardFooter className="p-4 pt-2 border-t border-border/50 flex items-center justify-between gap-2">
                   <Button
-                    asChild
+                    type="button"
                     variant="ghost"
                     size="sm"
-                    className="h-8 text-xs px-2.5 text-muted-foreground hover:text-foreground gap-1"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedTrialForModal(trial);
+                    }}
+                    className="h-8 text-xs px-2.5 text-muted-foreground hover:text-foreground gap-1 cursor-pointer"
                   >
-                    <Link to="/trials">
-                      <span>Details</span>
-                      <ExternalLink className="h-3 w-3" />
-                    </Link>
+                    <span>View Venue &amp; Contacts</span>
+                    <ExternalLink className="h-3 w-3" />
                   </Button>
 
                   <Button
                     size="sm"
-                    onClick={() => handleApply(trial)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleApply(trial);
+                    }}
                     disabled={isApplied}
                     className={`h-8 text-xs font-semibold px-3.5 gap-1.5 cursor-pointer ${
                       isApplied
@@ -541,6 +559,17 @@ export function TrialsDiscoveryDashboard({
           })}
         </div>
       )}
+
+      {/* Interactive Modal for Expanded Information, Venue Location, Organizer Contact & Direct Registration */}
+      <TrialDetailsModal
+        trial={selectedTrialForModal}
+        isOpen={!!selectedTrialForModal}
+        onClose={() => setSelectedTrialForModal(null)}
+        isRegistered={
+          selectedTrialForModal ? auth.applications?.includes(selectedTrialForModal.id) : false
+        }
+        onRegister={(t) => handleApply(t as TrialDiscoveryItem)}
+      />
     </div>
   );
 }
