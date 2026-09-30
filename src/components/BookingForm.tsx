@@ -39,9 +39,9 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { useBookings, type CreateBookingParams } from "@/hooks/useBookings";
+import { useToast } from "@/hooks/useToast";
 import { VENUES, type Venue } from "@/data/playo";
 import { type BookingRecord } from "@/lib/booking-service";
-import { toast } from "sonner";
 
 export interface BookingFormProps {
   /**
@@ -153,6 +153,7 @@ export function BookingForm({
   const { createBooking, isCreating, error, clearError } = useBookings({
     autoFetch: false,
   });
+  const { toast } = useToast();
 
   // Calculate pricing
   const hourlyRate = venue.pricePerHour || 600;
@@ -183,6 +184,12 @@ export function BookingForm({
     clearError();
 
     if (!validate()) {
+      toast({
+        title: "Incomplete Booking Details",
+        description:
+          "Please fill in all mandatory fields (Name, Email, 10-digit Phone, Slot) to proceed.",
+        variant: "destructive",
+      });
       return;
     }
 
@@ -209,12 +216,21 @@ export function BookingForm({
 
     if (res.success && res.booking) {
       setConfirmedBooking(res.booking);
-      toast.success(res.message || "Court slot booked successfully!");
+      toast({
+        title: "Slot Reserved Successfully!",
+        description: `Confirmed for ${payload.booking_date} at ${payload.start_time} (${venue.name}).`,
+        variant: "success",
+      });
       if (onSuccess) {
         onSuccess(res.booking);
       }
     } else {
-      toast.error(res.message || "Failed to confirm court reservation.");
+      toast({
+        title: "Booking Failed",
+        description:
+          res.message || "Failed to confirm court reservation. Please try another time slot.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -222,6 +238,11 @@ export function BookingForm({
     setConfirmedBooking(null);
     clearError();
     setFieldErrors({});
+    toast({
+      title: "Form Cleared",
+      description: "Ready to schedule a new court booking.",
+      variant: "default",
+    });
   };
 
   // Success view
