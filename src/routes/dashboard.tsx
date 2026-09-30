@@ -18,9 +18,12 @@ import {
   CheckCircle2,
   User,
   Wand2,
+  Bell,
+  LayoutDashboard,
 } from "lucide-react";
 import { getVenueBookings, type BookingRecord } from "@/lib/booking-service";
 import { UserProfile } from "@/components/UserProfile";
+import { NotificationsDashboardTab } from "@/components/NotificationsDashboardTab";
 import { toast } from "sonner";
 import { buildSeoHead } from "@/lib/seo";
 
@@ -52,6 +55,9 @@ function Dashboard() {
   } = useAuth();
   const applied = TRIALS.filter((t) => applications.includes(t.id));
   const [venueBookings, setVenueBookings] = useState<BookingRecord[]>([]);
+  const [activeDashboardTab, setActiveDashboardTab] = useState<
+    "overview" | "notifications" | "applications" | "bookings" | "profile"
+  >("overview");
 
   useEffect(() => {
     getVenueBookings()
@@ -100,8 +106,107 @@ function Dashboard() {
           </div>
         </div>
 
-        {/* Onboarding Wizard Callout */}
-        <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between rounded-2xl border border-primary/25 bg-primary/5 p-4 shadow-sm">
+        {/* Dashboard Navigation Tabs Bar */}
+        <div
+          id="dashboard-navigation-tabs"
+          className="mt-6 flex items-center gap-2 overflow-x-auto border-b border-border/80 pb-3"
+        >
+          <button
+            id="tab-btn-overview"
+            type="button"
+            onClick={() => setActiveDashboardTab("overview")}
+            className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all cursor-pointer ${
+              activeDashboardTab === "overview"
+                ? "bg-primary text-primary-foreground shadow-xs font-semibold"
+                : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+            }`}
+          >
+            <LayoutDashboard className="h-4 w-4" />
+            <span>Overview</span>
+          </button>
+
+          <button
+            id="tab-btn-notifications"
+            type="button"
+            onClick={() => setActiveDashboardTab("notifications")}
+            className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all cursor-pointer ${
+              activeDashboardTab === "notifications"
+                ? "bg-primary text-primary-foreground shadow-xs font-semibold"
+                : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+            }`}
+          >
+            <Bell className="h-4 w-4" />
+            <span>Notifications</span>
+            <span
+              className={`rounded-full px-1.5 py-0.2 text-[10px] font-semibold ${
+                activeDashboardTab === "notifications"
+                  ? "bg-primary-foreground/20 text-primary-foreground"
+                  : "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400"
+              }`}
+            >
+              Real-Time
+            </span>
+          </button>
+
+          <button
+            id="tab-btn-applications"
+            type="button"
+            onClick={() => setActiveDashboardTab("applications")}
+            className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all cursor-pointer ${
+              activeDashboardTab === "applications"
+                ? "bg-primary text-primary-foreground shadow-xs font-semibold"
+                : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+            }`}
+          >
+            <Trophy className="h-4 w-4" />
+            <span>Applications ({applications.length})</span>
+          </button>
+
+          <button
+            id="tab-btn-bookings"
+            type="button"
+            onClick={() => setActiveDashboardTab("bookings")}
+            className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all cursor-pointer ${
+              activeDashboardTab === "bookings"
+                ? "bg-primary text-primary-foreground shadow-xs font-semibold"
+                : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+            }`}
+          >
+            <Calendar className="h-4 w-4" />
+            <span>Bookings ({venueBookings.length})</span>
+          </button>
+
+          <button
+            id="tab-btn-profile"
+            type="button"
+            onClick={() => setActiveDashboardTab("profile")}
+            className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all cursor-pointer ${
+              activeDashboardTab === "profile"
+                ? "bg-primary text-primary-foreground shadow-xs font-semibold"
+                : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+            }`}
+          >
+            <User className="h-4 w-4" />
+            <span>Athlete Profile</span>
+          </button>
+        </div>
+
+        {/* ======================================================================= */}
+        {/* TAB 1: NOTIFICATIONS DASHBOARD TAB */}
+        {/* ======================================================================= */}
+        {activeDashboardTab === "notifications" && (
+          <div id="dashboard-tab-content-notifications" className="mt-6">
+            <NotificationsDashboardTab />
+          </div>
+        )}
+
+        {/* ======================================================================= */}
+        {/* TAB 2: OVERVIEW */}
+        {/* ======================================================================= */}
+        {activeDashboardTab === "overview" && (
+          <>
+            {/* Onboarding Wizard Callout */}
+            <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between rounded-2xl border border-primary/25 bg-primary/5 p-4 shadow-sm">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
               <Wand2 className="h-5 w-5" />
@@ -307,6 +412,151 @@ function Dashboard() {
 
         <DashboardProgressShare name={name} />
         <DashboardCommunityWall />
+        </>
+        )}
+
+        {/* ======================================================================= */}
+        {/* TAB 3: APPLICATIONS */}
+        {/* ======================================================================= */}
+        {activeDashboardTab === "applications" && (
+          <div id="dashboard-tab-content-applications" className="mt-6 space-y-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-xl font-bold tracking-tight text-foreground">
+                  My Trial Applications ({applied.length})
+                </h2>
+                <p className="text-xs text-muted-foreground">
+                  Official screening registration and trial statuses
+                </p>
+              </div>
+              <Button asChild size="sm" className="bg-primary text-primary-foreground text-xs">
+                <Link to="/trials">Browse Live Trials →</Link>
+              </Button>
+            </div>
+
+            {applied.length === 0 ? (
+              <div className="rounded-2xl border border-dashed border-border p-12 text-center text-sm text-muted-foreground">
+                No applications yet.{" "}
+                <Link to="/trials" className="text-primary underline-offset-4 hover:underline font-semibold">
+                  Browse live trials →
+                </Link>
+              </div>
+            ) : (
+              <div className="grid gap-3 sm:grid-cols-2">
+                {applied.map((t) => (
+                  <div
+                    key={t.id}
+                    className="flex flex-col justify-between rounded-xl border border-border bg-card p-4 space-y-3"
+                  >
+                    <div>
+                      <div className="flex items-start justify-between gap-2">
+                        <span className="font-bold text-sm text-foreground">{t.title}</span>
+                        {paidApplications.includes(t.id) ? (
+                          <Badge className="bg-gradient-gold text-primary-foreground border-0 text-[10px]">
+                            Paid · ₹49
+                          </Badge>
+                        ) : (
+                          <Badge variant="secondary" className="text-[10px]">Free</Badge>
+                        )}
+                      </div>
+                      <div className="text-xs text-muted-foreground mt-1">
+                        {t.academy} · {t.city} · {t.date}
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between pt-2 border-t border-border/50 text-xs">
+                      <span className="text-emerald-600 font-medium">Status: Registered</span>
+                      <Button asChild variant="ghost" size="sm" className="h-7 text-xs text-primary">
+                        <Link to="/trials">View Details →</Link>
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <div className="pt-4">
+              <OpportunityInterviewAgent opportunities={TRIALS} />
+            </div>
+          </div>
+        )}
+
+        {/* ======================================================================= */}
+        {/* TAB 4: VENUE BOOKINGS */}
+        {/* ======================================================================= */}
+        {activeDashboardTab === "bookings" && (
+          <div id="dashboard-tab-content-bookings" className="mt-6 space-y-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-xl font-bold tracking-tight text-foreground flex items-center gap-2">
+                  <Calendar className="h-5 w-5 text-primary" /> My Venue Bookings ({venueBookings.length})
+                </h2>
+                <p className="text-xs text-muted-foreground">
+                  Turfs, indoor arenas, courts, and swimming complexes reserved
+                </p>
+              </div>
+              <Button asChild size="sm" className="bg-primary text-primary-foreground text-xs">
+                <Link to="/book">Book New Venue →</Link>
+              </Button>
+            </div>
+
+            {venueBookings.length === 0 ? (
+              <div className="rounded-2xl border border-dashed border-border p-12 text-center text-sm text-muted-foreground">
+                No venue bookings recorded yet.{" "}
+                <Link to="/book" className="text-primary underline font-semibold">
+                  Explore available turfs and courts
+                </Link>
+              </div>
+            ) : (
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {venueBookings.map((b) => (
+                  <div
+                    key={b.id}
+                    className="rounded-xl border border-border bg-card p-4 space-y-2 text-xs"
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <div>
+                        <span className="font-mono text-[10px] text-muted-foreground">
+                          Ref: {b.id.slice(-8)}
+                        </span>
+                        <div className="font-bold text-sm text-foreground">{b.venue_name}</div>
+                        <div className="text-muted-foreground">
+                          {b.venue_area}, {b.venue_city}
+                        </div>
+                      </div>
+                      <Badge
+                        variant={b.status === "cancelled" ? "outline" : "default"}
+                        className={
+                          b.status === "confirmed"
+                            ? "bg-emerald-500 text-white"
+                            : b.status === "cancelled"
+                              ? "border-destructive text-destructive"
+                              : ""
+                        }
+                      >
+                        {b.status.toUpperCase()}
+                      </Badge>
+                    </div>
+                    <div className="flex items-center justify-between pt-2 border-t border-border/40">
+                      <span>
+                        {b.booking_date} · {b.start_time}
+                      </span>
+                      <span className="font-bold text-primary">₹{b.total_price}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ======================================================================= */}
+        {/* TAB 5: PROFILE & ACHIEVEMENTS */}
+        {/* ======================================================================= */}
+        {activeDashboardTab === "profile" && (
+          <div id="dashboard-tab-content-profile" className="mt-6">
+            <UserProfile />
+          </div>
+        )}
       </main>
     </ProtectedRoute>
   );
