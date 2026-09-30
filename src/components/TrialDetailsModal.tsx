@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -26,9 +26,17 @@ import {
   Trophy,
   ArrowRight,
   Headphones,
+  Share2,
+  Copy,
+  Check,
+  MessageCircle,
+  Info,
+  Tag,
+  Sparkles,
 } from "lucide-react";
 import type { Trial } from "@/data/trials";
 import type { TrialDiscoveryItem } from "@/lib/trials-service";
+import { InFeedAd } from "@/components/ads/AdUnits";
 import { toast } from "sonner";
 
 export interface OrganizerContact {
@@ -125,11 +133,75 @@ export function TrialDetailsModal({
 }: TrialDetailsModalProps) {
   if (!trial || !isOpen) return null;
 
+  const [copied, setCopied] = useState(false);
+  const [isAdDismissed, setIsAdDismissed] = useState(false);
+
   const organizer = getOrganizerContact(trial);
   const venueLocation = trial.venue || `${trial.city} District Sports Arena, ${trial.city}`;
   const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
     `${venueLocation}, ${trial.city}, India`
   )}`;
+
+  const getShareUrl = () => {
+    const origin = typeof window !== "undefined" ? window.location.origin : "https://khelgrid.com";
+    return `${origin}/trial/${trial.id}`;
+  };
+
+  const handleCopyLink = async () => {
+    const shareUrl = getShareUrl();
+    try {
+      if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(shareUrl);
+      }
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+      toast.success("Trial link copied to clipboard!");
+    } catch {
+      toast.error("Could not copy link to clipboard");
+    }
+  };
+
+  const handleNativeShare = async () => {
+    const shareUrl = getShareUrl();
+    const shareData = {
+      title: trial.title,
+      text: `Official ${trial.sport} Selection Trial: ${trial.title} in ${trial.city} organized by ${trial.academy}. Check it out on KhelGrid!`,
+      url: shareUrl,
+    };
+
+    if (typeof navigator !== "undefined" && typeof navigator.share === "function") {
+      try {
+        await navigator.share(shareData);
+        toast.success("Shared successfully!");
+      } catch (err: any) {
+        if (err?.name !== "AbortError") {
+          await handleCopyLink();
+        }
+      }
+    } else {
+      await handleCopyLink();
+    }
+  };
+
+  const handleWhatsAppShare = () => {
+    const shareUrl = getShareUrl();
+    const text = encodeURIComponent(
+      `🏆 *${trial.title}* (${trial.sport})\n📍 ${trial.city} · 📅 ${trial.date}\n🔗 View & Register on KhelGrid: ${shareUrl}`
+    );
+    window.open(`https://api.whatsapp.com/send?text=${text}`, "_blank", "noopener,noreferrer");
+  };
+
+  const handleTwitterShare = () => {
+    const shareUrl = getShareUrl();
+    const text = encodeURIComponent(
+      `Official ${trial.sport} selection trial: ${trial.title} in ${trial.city} on ${trial.date}. Verified on @KhelGrid:`
+    );
+    window.open(
+      `https://twitter.com/intent/tweet?text=${text}&url=${encodeURIComponent(shareUrl)}`,
+      "_blank",
+      "noopener,noreferrer"
+    );
+  };
 
   const handleRegisterClick = () => {
     if (isRegistered) {
@@ -145,42 +217,96 @@ export function TrialDetailsModal({
 
   const modalInnerContent = (
     <>
-      {/* MODAL HEADER WITH BADGES & TITLE */}
-      <div className="border-b border-border/80 bg-muted/20 p-5 sm:p-6 space-y-3">
-        <div className="flex flex-wrap items-center gap-2">
-          <Badge
-            variant="outline"
-            className="bg-primary/10 text-primary border-primary/20 text-xs px-2.5 py-0.5 font-bold"
-          >
-            <Trophy className="h-3 w-3 mr-1" />
-            <span>{trial.sport}</span>
-          </Badge>
-
-          <Badge variant="secondary" className="text-xs px-2.5 py-0.5 font-medium">
-            <MapPin className="h-3 w-3 mr-1 text-muted-foreground" />
-            <span>{trial.city}</span>
-          </Badge>
-
-          <Badge
-            variant="outline"
-            className={
-              trial.fee === 0
-                ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold text-xs"
-                : "border-primary/30 text-primary font-bold text-xs"
-            }
-          >
-            {trial.fee === 0 ? "Free Entry (₹0)" : `₹${trial.fee}`}
-          </Badge>
-
-          {trial.verifiedLabel && (
+      {/* MODAL HEADER WITH BADGES, TITLE & SHARE TOOLBAR */}
+      <div className="border-b border-border/80 bg-muted/20 p-5 sm:p-6 space-y-3.5">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <Badge
               variant="outline"
-              className="border-emerald-500/30 bg-emerald-500/5 text-emerald-600 dark:text-emerald-400 text-xs"
+              className="bg-primary/10 text-primary border-primary/20 text-xs px-2.5 py-0.5 font-bold"
             >
-              <ShieldCheck className="h-3 w-3 mr-1" />
-              <span>{trial.verifiedLabel}</span>
+              <Trophy className="h-3 w-3 mr-1" />
+              <span>{trial.sport}</span>
             </Badge>
-          )}
+
+            <Badge variant="secondary" className="text-xs px-2.5 py-0.5 font-medium">
+              <MapPin className="h-3 w-3 mr-1 text-muted-foreground" />
+              <span>{trial.city}</span>
+            </Badge>
+
+            <Badge
+              variant="outline"
+              className={
+                trial.fee === 0
+                  ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold text-xs"
+                  : "border-primary/30 text-primary font-bold text-xs"
+              }
+            >
+              {trial.fee === 0 ? "Free Entry (₹0)" : `₹${trial.fee}`}
+            </Badge>
+
+            {trial.verifiedLabel && (
+              <Badge
+                variant="outline"
+                className="border-emerald-500/30 bg-emerald-500/5 text-emerald-600 dark:text-emerald-400 text-xs"
+              >
+                <ShieldCheck className="h-3 w-3 mr-1" />
+                <span>{trial.verifiedLabel}</span>
+              </Badge>
+            )}
+          </div>
+
+          {/* SHARE CONTROLS (NATIVE WEB SHARE & COPY LINK) */}
+          <div id="modal-share-toolbar" className="flex items-center gap-1.5">
+            <Button
+              id="btn-modal-native-share"
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={handleNativeShare}
+              className="h-8 text-xs font-semibold gap-1.5 border-border bg-background hover:bg-secondary cursor-pointer"
+              title="Share via native apps or device share sheet"
+            >
+              <Share2 className="h-3.5 w-3.5 text-primary" />
+              <span>Share</span>
+            </Button>
+
+            <Button
+              id="btn-modal-copy-link"
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={handleCopyLink}
+              className={`h-8 text-xs font-medium gap-1.5 border-border transition-colors cursor-pointer ${
+                copied ? "border-emerald-500 text-emerald-600 bg-emerald-500/10" : "bg-background"
+              }`}
+              title="Copy trial link to clipboard"
+            >
+              {copied ? (
+                <>
+                  <Check className="h-3.5 w-3.5 text-emerald-500" />
+                  <span className="font-semibold">Copied!</span>
+                </>
+              ) : (
+                <>
+                  <Copy className="h-3.5 w-3.5 text-muted-foreground" />
+                  <span className="hidden sm:inline">Copy Link</span>
+                </>
+              )}
+            </Button>
+
+            <Button
+              id="btn-modal-whatsapp-share"
+              type="button"
+              variant="outline"
+              size="icon"
+              onClick={handleWhatsAppShare}
+              className="h-8 w-8 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-500/10 border-border cursor-pointer hidden sm:inline-flex"
+              title="Share directly to WhatsApp"
+            >
+              <MessageCircle className="h-3.5 w-3.5" />
+            </Button>
+          </div>
         </div>
 
         <DialogHeader className="text-left space-y-1">
@@ -369,6 +495,82 @@ export function TrialDetailsModal({
                 {(trial as Trial).selectionProcess}
               </div>
             )}
+          </div>
+        )}
+
+        {/* 4. ADVERTISEMENT & SPONSORED PARTNER SECTION */}
+        {!isAdDismissed && (
+          <div
+            id="modal-advertisement-section"
+            className="rounded-xl border border-dashed border-border/80 bg-secondary/15 p-4 space-y-3"
+          >
+            <div className="flex items-center justify-between text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+              <span className="flex items-center gap-1.5">
+                <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+                <span>Advertisement · Sponsored Equipment Partner</span>
+              </span>
+              <div className="flex items-center gap-2">
+                <a
+                  href="/privacy#advertising"
+                  className="hover:underline flex items-center gap-0.5 text-muted-foreground hover:text-foreground"
+                >
+                  <Info className="h-3 w-3" />
+                  <span>Ad Choices</span>
+                </a>
+                <button
+                  type="button"
+                  onClick={() => setIsAdDismissed(true)}
+                  className="text-muted-foreground hover:text-foreground text-xs cursor-pointer"
+                  title="Dismiss advertisement"
+                  aria-label="Dismiss advertisement"
+                >
+                  ✕
+                </button>
+              </div>
+            </div>
+
+            {/* Exclusive Athlete Partner Discount Card */}
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 rounded-lg border border-primary/20 bg-primary/5 p-3">
+              <div className="space-y-1">
+                <div className="flex items-center gap-1.5">
+                  <Badge className="bg-primary text-primary-foreground text-[10px] px-2 py-0">
+                    Exclusive Trial Discount
+                  </Badge>
+                  <span className="text-xs font-bold text-foreground">
+                    SG, Yonex &amp; Nivia Official Gear
+                  </span>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Get 20% off authentic bats, football boots, badminton racquets, and track spikes for this trial.
+                </p>
+              </div>
+
+              <div className="flex items-center gap-2 shrink-0">
+                <div className="rounded border border-dashed border-primary px-2.5 py-1 text-xs font-mono font-bold text-primary bg-background">
+                  KHELGRID20
+                </div>
+                <Button
+                  asChild
+                  size="sm"
+                  variant="outline"
+                  className="h-8 text-xs font-semibold border-primary/40 hover:bg-primary/10 text-primary"
+                >
+                  <a
+                    href="https://www.google.com/search?q=buy+sports+equipment+india"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <span>Claim Offer</span>
+                    <ExternalLink className="h-3 w-3 ml-1" />
+                  </a>
+                </Button>
+              </div>
+            </div>
+
+            {/* Embedded AdSense Ad Unit */}
+            <div className="w-full overflow-hidden">
+              <InFeedAd adSlot="modalSponsored" minHeight={90} className="my-0" />
+            </div>
           </div>
         )}
       </div>

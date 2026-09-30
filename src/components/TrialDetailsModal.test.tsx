@@ -86,6 +86,22 @@ describe("TrialDetailsModal Component & Organizer Contact Resolver", () => {
     // Direct Register Button
     expect(html).toContain('id="btn-modal-register-trial"');
     expect(html).toContain("Register for Trial");
+
+    // Share Toolbar & Controls
+    expect(html).toContain('id="modal-share-toolbar"');
+    expect(html).toContain('id="btn-modal-native-share"');
+    expect(html).toContain("Share");
+    expect(html).toContain('id="btn-modal-copy-link"');
+    expect(html).toContain("Copy Link");
+    expect(html).toContain('id="btn-modal-whatsapp-share"');
+
+    // Advertisement & Sponsored Partner Section
+    expect(html).toContain('id="modal-advertisement-section"');
+    expect(html).toContain("Advertisement · Sponsored Equipment Partner");
+    expect(html).toContain("KHELGRID20");
+    expect(html).toContain("Exclusive Trial Discount");
+    expect(html).toContain("Claim Offer");
+    expect(html).toContain("Ad Choices");
   });
 
   it("renders 'Already Registered' state when isRegistered is true", () => {
