@@ -106,7 +106,18 @@ export async function getAlertHistory(userId?: string | null): Promise<{
 
       if (!error && data && data.length > 0) {
         isSupabaseLive = true;
-        const mapped: AlertHistoryItem[] = data.map((row: any) => ({
+        const mapped: AlertHistoryItem[] = (
+          data as Array<{
+            id: string;
+            payload?: { type?: string; sport?: string; city?: string; trial_id?: string };
+            title?: string;
+            body?: string;
+            trial_id?: string;
+            sent_at?: string;
+            created_at?: string;
+            status?: string;
+          }>
+        ).map((row) => ({
           id: row.id,
           category: (row.payload?.type === "deadline_warning" ? "deadlines" : "live_trials") as
             "live_trials" | "deadlines",

@@ -65,7 +65,7 @@ export interface AuthFormProps {
   /**
    * Callback fired on successful sign in or sign up.
    */
-  onSuccess?: (user: any) => void;
+  onSuccess?: (user: unknown) => void;
   /**
    * Additional CSS classes for the root container.
    */
@@ -230,8 +230,10 @@ export function AuthForm({
           setErrorMessage(result.message || "Invalid OTP code.");
         }
       }
-    } catch (err: any) {
-      setErrorMessage(err.message || "An unexpected authentication error occurred.");
+    } catch (err: unknown) {
+      setErrorMessage(
+        err instanceof Error ? err.message : "An unexpected authentication error occurred.",
+      );
     } finally {
       setLoading(false);
     }
@@ -272,7 +274,7 @@ export function AuthForm({
         city: signUpCity,
       };
 
-      const res = await signUpWithEmail(email, password, metadata as any);
+      const res = await signUpWithEmail(email, password, metadata);
 
       if (res.success) {
         if (res.requiresEmailConfirmation) {
@@ -306,8 +308,10 @@ export function AuthForm({
           navigate({ to: target });
         }
       }
-    } catch (err: any) {
-      setErrorMessage(err.message || "Failed to create account. Please try again.");
+    } catch (err: unknown) {
+      setErrorMessage(
+        err instanceof Error ? err.message : "Failed to create account. Please try again.",
+      );
     } finally {
       setLoading(false);
     }

@@ -314,5 +314,85 @@ export interface Database {
         Update: Partial<Database["public"]["Tables"]["audit_logs"]["Insert"]>;
       };
     };
+    Functions: {
+      get_venue_slot_availability: {
+        Args: {
+          p_venue_id: string;
+          p_booking_date: string;
+          p_court_id?: string | null;
+        };
+        Returns: Array<{
+          court_id: string | null;
+          start_time: string;
+          end_time: string;
+          status: string;
+          is_held: boolean;
+        }>;
+      };
+      book_venue_slot_atomic: {
+        Args: {
+          p_venue_id: string;
+          p_court_id?: string | null;
+          p_sport?: string;
+          p_booking_date?: string;
+          p_start_time?: string;
+          p_end_time?: string;
+          p_total_price?: number;
+          p_user_email?: string | null;
+          p_user_phone?: string | null;
+          p_idempotency_key?: string | null;
+          p_user_id?: string | null;
+          p_status?: string;
+          p_hold_duration_minutes?: number | null;
+          p_custom_booking_id?: string | null;
+        };
+        Returns: {
+          success: boolean;
+          already_processed?: boolean;
+          booking_id?: string;
+          status?: string;
+          total_price?: number;
+          held_until?: string | null;
+          error_code?: string;
+          message: string;
+        };
+      };
+      hold_venue_slot_atomic: {
+        Args: {
+          p_venue_id: string;
+          p_court_id?: string | null;
+          p_sport?: string;
+          p_booking_date?: string;
+          p_start_time?: string;
+          p_end_time?: string;
+          p_total_price?: number;
+          p_user_email?: string | null;
+          p_user_phone?: string | null;
+          p_idempotency_key?: string | null;
+          p_hold_duration_minutes?: number;
+        };
+        Returns: {
+          success: boolean;
+          booking_id?: string;
+          status?: string;
+          total_price?: number;
+          held_until?: string | null;
+          error_code?: string;
+          message: string;
+        };
+      };
+      cancel_venue_booking_atomic: {
+        Args: {
+          p_booking_id: string;
+          p_reason?: string | null;
+        };
+        Returns: {
+          success: boolean;
+          booking_id?: string;
+          error_code?: string;
+          message: string;
+        };
+      };
+    };
   };
 }

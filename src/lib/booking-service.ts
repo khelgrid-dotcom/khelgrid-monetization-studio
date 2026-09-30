@@ -61,6 +61,14 @@ interface SupabaseBookingJoinedRow {
 }
 
 const STORAGE_KEY = "khelgrid_venue_bookings";
+let memoryBookings: BookingRecord[] = [];
+
+/**
+ * Resets memory bookings (primarily for test isolation)
+ */
+export function resetLocalBookingsForTesting(): void {
+  memoryBookings = [];
+}
 
 /**
  * Converts 12-hour time (e.g. "6:00 PM") to 24-hour SQL format (e.g. "18:00:00")
@@ -144,16 +152,21 @@ export async function getVenueCourts(venueId: string, sport?: string): Promise<C
 export async function getVenueBookings(): Promise<BookingRecord[]> {
   const localList: BookingRecord[] = [];
 
-  // Load from localStorage first
+  // Load from localStorage first, falling back to memoryBookings
   if (typeof window !== "undefined") {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) {
         localList.push(...JSON.parse(stored));
+      } else {
+        localList.push(...memoryBookings);
       }
     } catch (e) {
       console.warn("Failed to load bookings from localStorage", e);
+      localList.push(...memoryBookings);
     }
+  } else {
+    localList.push(...memoryBookings);
   }
 
   // If Supabase is configured, fetch live records and merge
@@ -210,8 +223,35 @@ export async function getVenueBookings(): Promise<BookingRecord[]> {
   return localList;
 }
 
+interface SlotAvailabilityRpcRow {
+  court_id: string | null;
+  start_time: string;
+  end_time: string;
+  status: string;
+  is_held: boolean;
+}
+
+interface AtomicBookingRpcResponse {
+  success: boolean;
+  already_processed?: boolean;
+  booking_id?: string;
+  status?: string;
+  total_price?: number;
+  held_until?: string | null;
+  error_code?: string;
+  message: string;
+}
+
+interface CancelBookingRpcResponse {
+  success: boolean;
+  booking_id?: string;
+  error_code?: string;
+  message: string;
+}
+
 /**
  * Checks if a specific slot is currently booked or held by an active user.
+ * Prioritizes privacy-preserving atomic availability RPC; falls back to direct query.
  */
 export async function checkSlotAvailability(params: {
   venue_id: string;
@@ -224,10 +264,43 @@ export async function checkSlotAvailability(params: {
     return { available: true };
   }
 
-  try {
-    const startTimeSQL = formatTimeToSQL(params.start_time);
-    const endTimeSQL = calculateEndTimeSQL(params.start_time, params.duration_hours || 1);
+  const startTimeSQL = formatTimeToSQL(params.start_time);
+  const endTimeSQL = calculateEndTimeSQL(params.start_time, params.duration_hours || 1);
 
+  try {
+    // 1. First attempt privacy-preserving RPC (doesn't expose customer PII to other users)
+    const { data: rpcData, error: rpcError } = await (
+      supabase.rpc as unknown as (
+        fn: string,
+        args: Record<string, unknown>,
+      ) => Promise<{ data: SlotAvailabilityRpcRow[] | null; error: { message: string } | null }>
+    )("get_venue_slot_availability", {
+      p_venue_id: params.venue_id,
+      p_booking_date: params.booking_date,
+      p_court_id: params.court_id || null,
+    });
+
+    if (!rpcError && rpcData) {
+      for (const slot of rpcData) {
+        const isOverlap = startTimeSQL < slot.end_time && endTimeSQL > slot.start_time;
+        if (isOverlap) {
+          return {
+            available: false,
+            conflictReason:
+              slot.status === "confirmed"
+                ? "This slot is already booked."
+                : "This slot is temporarily held by another customer completing payment.",
+          };
+        }
+      }
+      return { available: true };
+    }
+  } catch (rpcErr) {
+    console.warn("Availability RPC check fallback to query:", rpcErr);
+  }
+
+  try {
+    // 2. Fallback to direct table query
     const { data: existingBookings, error } = await supabase
       .from("venue_bookings")
       .select("id, start_time, end_time, status, held_until")
@@ -376,38 +449,82 @@ export async function createVenueBooking(params: {
         });
       }
 
-      // Insert booking record with exclusion constraint protection
-      const { data: inserted, error } = await supabase
-        .from("venue_bookings")
-        .insert({
-          id: bookingId,
-          venue_id: params.venue.id,
-          court_id: params.court_id || null,
-          sport: bookingRecord.sport,
-          booking_date: bookingRecord.booking_date,
-          start_time: startTimeSQL,
-          end_time: endTimeSQL,
-          total_price: totalPrice,
-          status: "confirmed",
-          idempotency_key: idempotencyKey,
-          user_email: bookingRecord.user_email,
-          user_phone: bookingRecord.user_phone,
-        })
-        .select()
-        .single();
+      // 1A. Attempt Atomic RPC Booking with Advisory Lock & Pessimistic Concurrency
+      let atomicCompleted = false;
+      try {
+        const { data: rpcRes, error: rpcError } = await (
+          supabase.rpc as unknown as (
+            fn: string,
+            args: Record<string, unknown>,
+          ) => Promise<{ data: AtomicBookingRpcResponse | null; error: { message: string } | null }>
+        )("book_venue_slot_atomic", {
+          p_venue_id: params.venue.id,
+          p_court_id: params.court_id || null,
+          p_sport: bookingRecord.sport,
+          p_booking_date: bookingRecord.booking_date,
+          p_start_time: startTimeSQL,
+          p_end_time: endTimeSQL,
+          p_total_price: totalPrice,
+          p_user_email: bookingRecord.user_email,
+          p_user_phone: bookingRecord.user_phone,
+          p_idempotency_key: idempotencyKey,
+          p_status: "confirmed",
+          p_custom_booking_id: bookingId,
+        });
 
-      if (error) {
-        // Check for double booking exclusion violation (Postgres error 23P01)
-        if (error.code === "23P01" || error.message.includes("no_overlapping_bookings")) {
-          return {
-            success: false,
-            message:
-              "Conflict detected: This slot was just reserved by another player. Please select another slot.",
-          };
+        if (!rpcError && rpcRes) {
+          atomicCompleted = true;
+          if (!rpcRes.success) {
+            return {
+              success: false,
+              message:
+                rpcRes.message ||
+                "Conflict detected: This slot was just reserved by another player. Please select another slot.",
+            };
+          }
+          if (rpcRes.booking_id) {
+            bookingRecord.id = rpcRes.booking_id;
+          }
+          bookingRecord.synced_to_db = true;
         }
-        console.warn("Supabase booking insert error:", error);
-      } else if (inserted) {
-        bookingRecord.synced_to_db = true;
+      } catch (rpcErr) {
+        console.warn("Atomic RPC booking invocation fallback:", rpcErr);
+      }
+
+      // 1B. Fallback to direct insertion if atomic RPC is unavailable
+      if (!atomicCompleted) {
+        const { data: inserted, error } = await supabase
+          .from("venue_bookings")
+          .insert({
+            id: bookingId,
+            venue_id: params.venue.id,
+            court_id: params.court_id || null,
+            sport: bookingRecord.sport,
+            booking_date: bookingRecord.booking_date,
+            start_time: startTimeSQL,
+            end_time: endTimeSQL,
+            total_price: totalPrice,
+            status: "confirmed",
+            idempotency_key: idempotencyKey,
+            user_email: bookingRecord.user_email,
+            user_phone: bookingRecord.user_phone,
+          })
+          .select()
+          .single();
+
+        if (error) {
+          // Check for double booking exclusion violation (Postgres error 23P01)
+          if (error.code === "23P01" || error.message.includes("no_overlapping_bookings")) {
+            return {
+              success: false,
+              message:
+                "Conflict detected: This slot was just reserved by another player. Please select another slot.",
+            };
+          }
+          console.warn("Supabase booking insert error:", error);
+        } else if (inserted) {
+          bookingRecord.synced_to_db = true;
+        }
       }
     } catch (dbErr: unknown) {
       const errObj = dbErr as { code?: string; message?: string } | null;
@@ -422,7 +539,8 @@ export async function createVenueBooking(params: {
     }
   }
 
-  // 2. Always persist to localStorage for instant client durability
+  // 2. Always persist to memoryBookings and localStorage for instant client durability
+  memoryBookings = [bookingRecord, ...memoryBookings.filter((b) => b.id !== bookingRecord.id)];
   if (typeof window !== "undefined") {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
@@ -445,9 +563,86 @@ export async function createVenueBooking(params: {
 }
 
 /**
- * Cancel an existing booking (soft delete / status change)
+ * Holds a venue slot atomically for checkout (temporary lock with auto-expiry).
  */
-export async function cancelVenueBooking(bookingId: string): Promise<boolean> {
+export async function holdVenueSlot(params: {
+  venue_id: string;
+  court_id?: string;
+  sport?: string;
+  booking_date: string;
+  start_time: string;
+  duration_hours?: number;
+  price_per_hour?: number;
+  user_email?: string;
+  user_phone?: string;
+  idempotency_key?: string;
+  hold_duration_minutes?: number;
+}): Promise<{
+  success: boolean;
+  booking_id?: string;
+  held_until?: string | null;
+  message: string;
+}> {
+  const duration = params.duration_hours || 1;
+  const totalPrice = (params.price_per_hour || 500) * duration;
+  const startTimeSQL = formatTimeToSQL(params.start_time);
+  const endTimeSQL = calculateEndTimeSQL(params.start_time, duration);
+  const idempotencyKey =
+    params.idempotency_key ||
+    (typeof crypto !== "undefined" && crypto.randomUUID
+      ? crypto.randomUUID()
+      : `hold-${Date.now()}-${Math.random().toString(36).slice(2)}`);
+
+  if (isSupabaseConfigured) {
+    try {
+      const { data: rpcRes, error: rpcError } = await (
+        supabase.rpc as unknown as (
+          fn: string,
+          args: Record<string, unknown>,
+        ) => Promise<{ data: AtomicBookingRpcResponse | null; error: { message: string } | null }>
+      )("hold_venue_slot_atomic", {
+        p_venue_id: params.venue_id,
+        p_court_id: params.court_id || null,
+        p_sport: params.sport || "Multi-Sport",
+        p_booking_date: params.booking_date,
+        p_start_time: startTimeSQL,
+        p_end_time: endTimeSQL,
+        p_total_price: totalPrice,
+        p_user_email: params.user_email || null,
+        p_user_phone: params.user_phone || null,
+        p_idempotency_key: idempotencyKey,
+        p_hold_duration_minutes: params.hold_duration_minutes || 10,
+      });
+
+      if (!rpcError && rpcRes) {
+        return {
+          success: rpcRes.success,
+          booking_id: rpcRes.booking_id,
+          held_until: rpcRes.held_until,
+          message: rpcRes.message,
+        };
+      }
+    } catch (err) {
+      console.warn("Hold slot RPC error:", err);
+    }
+  }
+
+  // Local fallback
+  return {
+    success: true,
+    booking_id: `KG-HOLD-${Date.now()}`,
+    held_until: new Date(Date.now() + (params.hold_duration_minutes || 10) * 60000).toISOString(),
+    message: "Slot held locally for checkout.",
+  };
+}
+
+/**
+ * Cancel an existing booking (soft delete / status change with atomic RPC support)
+ */
+export async function cancelVenueBooking(bookingId: string, reason?: string): Promise<boolean> {
+  memoryBookings = memoryBookings.map((b) =>
+    b.id === bookingId ? { ...b, status: "cancelled" as const } : b,
+  );
   if (typeof window !== "undefined") {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
@@ -460,21 +655,43 @@ export async function cancelVenueBooking(bookingId: string): Promise<boolean> {
         window.dispatchEvent(new CustomEvent("khelgrid_booking_created"));
       }
     } catch (e) {
-      console.warn(e);
+      console.warn("LocalStorage cancel update error:", e);
     }
   }
 
   if (isSupabaseConfigured) {
+    // 1. Attempt atomic cancellation RPC
+    let rpcSuccess = false;
     try {
-      await supabase
-        .from("venue_bookings")
-        .update({
-          status: "cancelled",
-          deleted_at: new Date().toISOString(),
-        })
-        .eq("id", bookingId);
-    } catch (e) {
-      console.warn(e);
+      const { data, error } = await (
+        supabase.rpc as unknown as (
+          fn: string,
+          args: Record<string, unknown>,
+        ) => Promise<{ data: CancelBookingRpcResponse | null; error: { message: string } | null }>
+      )("cancel_venue_booking_atomic", {
+        p_booking_id: bookingId,
+        p_reason: reason || null,
+      });
+
+      if (!error && data?.success) {
+        rpcSuccess = true;
+      }
+    } catch (rpcErr) {
+      console.warn("Cancel atomic RPC failed, falling back to direct update:", rpcErr);
+    }
+
+    if (!rpcSuccess) {
+      try {
+        await supabase
+          .from("venue_bookings")
+          .update({
+            status: "cancelled",
+            deleted_at: new Date().toISOString(),
+          })
+          .eq("id", bookingId);
+      } catch (e) {
+        console.warn("Direct cancel update error:", e);
+      }
     }
   }
 

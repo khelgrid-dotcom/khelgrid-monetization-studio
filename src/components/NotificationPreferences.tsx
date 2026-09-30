@@ -175,8 +175,10 @@ export function NotificationPreferences({
       });
 
       if (onSaved) onSaved(payload);
-    } catch (err: any) {
-      toast.error("Failed to save preferences: " + (err.message || "Unknown error"));
+    } catch (err: unknown) {
+      toast.error(
+        "Failed to save preferences: " + (err instanceof Error ? err.message : "Unknown error"),
+      );
     } finally {
       setLoading(false);
     }

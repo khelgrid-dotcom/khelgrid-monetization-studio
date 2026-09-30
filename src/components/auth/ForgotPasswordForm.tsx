@@ -124,9 +124,11 @@ export function ForgotPasswordForm({
       } else {
         setErrorMessage(res.error || "Failed to send password reset email. Please try again.");
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       setErrorMessage(
-        err.message || "An unexpected error occurred while requesting password reset.",
+        err instanceof Error
+          ? err.message
+          : "An unexpected error occurred while requesting password reset.",
       );
     } finally {
       setLoading(false);
@@ -166,8 +168,12 @@ export function ForgotPasswordForm({
       } else {
         setErrorMessage(res.error || "Failed to update password. Recovery link may have expired.");
       }
-    } catch (err: any) {
-      setErrorMessage(err.message || "An unexpected error occurred while updating your password.");
+    } catch (err: unknown) {
+      setErrorMessage(
+        err instanceof Error
+          ? err.message
+          : "An unexpected error occurred while updating your password.",
+      );
     } finally {
       setLoading(false);
     }

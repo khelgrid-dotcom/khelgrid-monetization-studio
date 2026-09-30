@@ -93,8 +93,11 @@ export async function fetchAvailableTrialsFromSupabase(options?: {
           totalCount: normalized.length,
         };
       }
-    } catch (err: any) {
-      console.warn("Supabase trials query failed, falling back to cached trials:", err?.message);
+    } catch (err: unknown) {
+      console.warn(
+        "Supabase trials query failed, falling back to cached trials:",
+        err instanceof Error ? err.message : String(err),
+      );
     }
   }
 

@@ -156,8 +156,11 @@ export async function saveNotificationPreferences(prefs: NotificationPreferences
           console.warn("Supabase upsert/insert warning:", error.message);
         }
       }
-    } catch (err: any) {
-      console.warn("Supabase save preferences failed, caching locally:", err.message);
+    } catch (err: unknown) {
+      console.warn(
+        "Supabase save preferences failed, caching locally:",
+        err instanceof Error ? err.message : String(err),
+      );
     }
   }
 

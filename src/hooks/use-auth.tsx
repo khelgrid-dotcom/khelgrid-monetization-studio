@@ -701,7 +701,7 @@ const fallbackAuthContext: AuthContextValue = {
   }),
   signInWithSupabase: async () => ({
     success: true,
-    data: { user: null as unknown as any, session: null as unknown as any },
+    data: { user: null as unknown as User, session: null as unknown as Session },
   }),
   logout: async () => {},
   switchRole: async () => {},

@@ -23,7 +23,7 @@ export interface QueuedNotification {
   fcmToken: string;
   title: string;
   body: string;
-  payload: Record<string, any>;
+  payload: Record<string, unknown>;
   status: "pending" | "processing" | "sent" | "failed";
   attempts: number;
   errorMessage?: string | null;
@@ -242,7 +242,22 @@ export async function getNotificationSubscriptions(
 
       const { data, error } = await query;
       if (!error && data && data.length > 0) {
-        const mapped: NotificationSubscription[] = data.map((row: any) => ({
+        const mapped: NotificationSubscription[] = (
+          data as Array<{
+            id: string;
+            user_id?: string;
+            fcm_token?: string;
+            sport?: string;
+            city?: string;
+            device_type?: "web" | "android" | "ios";
+            is_active?: boolean;
+            notify_new_trials?: boolean;
+            notify_deadlines?: boolean;
+            last_notified_at?: string;
+            created_at?: string;
+            updated_at?: string;
+          }>
+        ).map((row) => ({
           id: row.id,
           userId: row.user_id,
           fcmToken: row.fcm_token,
@@ -332,7 +347,13 @@ export async function dispatchTrialPublishedNotification(trial: TrialNotificatio
 
       if (!error && subs && subs.length > 0) {
         matchingSubscribers = subs.length;
-        const queueRows = subs.map((sub: any) => ({
+        const queueRows = (
+          subs as Array<{
+            id: string;
+            fcm_token?: string;
+            user_id?: string;
+          }>
+        ).map((sub) => ({
           subscription_id: sub.id,
           trial_id: trial.id,
           fcm_token: sub.fcm_token,
@@ -429,7 +450,7 @@ export async function processNotificationQueue(batchSize: number = 20): Promise<
 
       if (!error && pendingRows && pendingRows.length > 0) {
         processedCount = pendingRows.length;
-        const ids = pendingRows.map((r: any) => r.id);
+        const ids = (pendingRows as Array<{ id: string }>).map((r) => r.id);
 
         // Mark as sent
         const { error: updateErr } = await supabase

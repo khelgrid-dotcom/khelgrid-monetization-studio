@@ -79,8 +79,8 @@ export function TrialsDiscoveryDashboard({
       try {
         const stored = localStorage.getItem("khelgrid_saved_trials_v1");
         if (stored) return new Set(JSON.parse(stored));
-      } catch (err) {
-        console.debug("Failed reading saved trials from localStorage", err);
+      } catch {
+        // ignore storage access errors
       }
     }
     return new Set<string>();
@@ -98,8 +98,8 @@ export function TrialsDiscoveryDashboard({
       setTrials(res.trials);
       setIsSupabaseLive(res.isSupabaseLive);
       setLastRefreshedAt(new Date());
-    } catch (err: any) {
-      console.warn("Failed fetching trials:", err?.message);
+    } catch (err: unknown) {
+      console.warn("Failed fetching trials:", err instanceof Error ? err.message : String(err));
     } finally {
       setIsLoading(false);
     }
@@ -124,8 +124,8 @@ export function TrialsDiscoveryDashboard({
       if (typeof window !== "undefined") {
         try {
           localStorage.setItem("khelgrid_saved_trials_v1", JSON.stringify(Array.from(next)));
-        } catch (err) {
-          console.debug("Failed writing saved trials to localStorage", err);
+        } catch {
+          // ignore storage write errors
         }
       }
       return next;

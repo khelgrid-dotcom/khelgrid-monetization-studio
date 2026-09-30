@@ -176,8 +176,8 @@ export function TrialDetailsModal({
       try {
         await navigator.share(shareData);
         toast.success("Shared successfully!");
-      } catch (err: any) {
-        if (err?.name !== "AbortError") {
+      } catch (err: unknown) {
+        if ((err as { name?: string })?.name !== "AbortError") {
           await handleCopyLink();
         }
       }
