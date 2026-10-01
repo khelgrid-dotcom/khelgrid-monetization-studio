@@ -31,7 +31,6 @@ import {
   UserCheck,
 } from "lucide-react";
 import { toast } from "sonner";
-import { FeaturesSidebar } from "@/components/FeaturesSidebar";
 import { InFeedAd, ResponsiveAd } from "@/components/ads";
 import type { EnrichedGame, PlayerRosterItem, PlayDateFilter } from "@/components/play/types";
 import { HostGameModal } from "@/components/play/HostGameModal";
@@ -267,399 +266,382 @@ function PlayPage() {
   }, []);
 
   return (
-    <div className="flex">
+    <div id="play-main-content" className="min-w-0 flex-1">
       {/* Schema.org Structured Data */}
       <PlaySEO games={filteredGames} />
 
-      <FeaturesSidebar />
-
-      <main id="play-main-content" className="min-w-0 flex-1">
-        <div className="mx-auto max-w-7xl px-4 py-6 sm:py-10">
-          {/* Header Section */}
-          <header className="space-y-4">
-            <div className="flex flex-wrap items-end justify-between gap-4">
-              <div>
-                <div className="flex items-center gap-2">
-                  <Badge variant="outline" className="text-primary border-primary/30">
-                    Community Sports Matches
-                  </Badge>
-                  <span className="text-xs text-muted-foreground">
-                    Real-time amateur player matching
-                  </span>
-                </div>
-                <h1 className="mt-2 text-2xl sm:text-4xl font-extrabold tracking-tight text-foreground">
-                  Find Players. Join Pickup Games.
-                </h1>
-                <p className="mt-1 text-sm sm:text-base text-muted-foreground max-w-2xl">
-                  Connect with nearby athletes for recreational football, badminton, box cricket,
-                  and pickleball games. Verified skill matching, fair court cost splitting, and zero
-                  markups.
-                </p>
-              </div>
-
+      <div className="mx-auto max-w-7xl px-4 py-6 sm:py-10">
+        {/* Header Section */}
+        <header className="space-y-4">
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <div>
               <div className="flex items-center gap-2">
-                <Button
-                  id="play-host-game-btn"
-                  className="rounded-full font-medium shadow-sm gap-1.5"
-                  onClick={() => setHostModalOpen(true)}
-                >
-                  <Plus className="h-4 w-4" /> Host a Game
-                </Button>
-              </div>
-            </div>
-
-            {/* Tab Navigation: All Games vs My RSVPs */}
-            <div className="flex items-center gap-2 border-b border-border/70 pt-2" role="tablist">
-              <button
-                id="play-tab-all"
-                role="tab"
-                aria-selected={activeTab === "all"}
-                onClick={() => setActiveTab("all")}
-                className={`pb-2.5 px-3 text-sm font-semibold border-b-2 transition-colors flex items-center gap-2 ${
-                  activeTab === "all"
-                    ? "border-primary text-primary"
-                    : "border-transparent text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                <span>All Open Games</span>
-                <span className="rounded-full bg-secondary px-2 py-0.5 text-[11px] font-normal">
-                  {games.length}
+                <Badge variant="outline" className="text-primary border-primary/30">
+                  Community Sports Matches
+                </Badge>
+                <span className="text-xs text-muted-foreground">
+                  Real-time amateur player matching
                 </span>
-              </button>
+              </div>
+              <h1 className="mt-2 text-2xl sm:text-4xl font-extrabold tracking-tight text-foreground">
+                Find Players. Join Pickup Games.
+              </h1>
+              <p className="mt-1 text-sm sm:text-base text-muted-foreground max-w-2xl">
+                Connect with nearby athletes for recreational football, badminton, box cricket, and
+                pickleball games. Verified skill matching, fair court cost splitting, and zero
+                markups.
+              </p>
+            </div>
 
-              <button
-                id="play-tab-my-games"
-                role="tab"
-                aria-selected={activeTab === "my-games"}
-                onClick={() => setActiveTab("my-games")}
-                className={`pb-2.5 px-3 text-sm font-semibold border-b-2 transition-colors flex items-center gap-2 ${
-                  activeTab === "my-games"
-                    ? "border-primary text-primary"
-                    : "border-transparent text-muted-foreground hover:text-foreground"
-                }`}
+            <div className="flex items-center gap-2">
+              <Button
+                id="play-host-game-btn"
+                className="rounded-full font-medium shadow-sm gap-1.5"
+                onClick={() => setHostModalOpen(true)}
               >
-                <span>My Hosted & Joined Slots</span>
-                {joinedGameIds.length > 0 && (
-                  <span className="rounded-full bg-primary/20 text-primary px-2 py-0.5 text-[11px] font-bold">
-                    {joinedGameIds.length}
-                  </span>
-                )}
-              </button>
+                <Plus className="h-4 w-4" /> Host a Game
+              </Button>
             </div>
-          </header>
+          </div>
 
-          {/* Search & Filter Controls */}
-          <section id="play-filter-controls" className="mt-5 space-y-3">
-            <div className="flex flex-col sm:flex-row gap-2.5">
-              {/* Search input */}
-              <div className="relative flex-1">
-                <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <Input
-                  id="play-search-input"
-                  placeholder="Search by venue name, area, or host..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-9 h-10 text-sm bg-card/60"
-                />
-                {searchQuery && (
-                  <button
-                    onClick={() => setSearchQuery("")}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                  >
-                    <X className="h-3.5 w-3.5" />
-                  </button>
-                )}
-              </div>
+          {/* Tab Navigation: All Games vs My RSVPs */}
+          <div className="flex items-center gap-2 border-b border-border/70 pt-2" role="tablist">
+            <button
+              id="play-tab-all"
+              role="tab"
+              aria-selected={activeTab === "all"}
+              onClick={() => setActiveTab("all")}
+              className={`pb-2.5 px-3 text-sm font-semibold border-b-2 transition-colors flex items-center gap-2 ${
+                activeTab === "all"
+                  ? "border-primary text-primary"
+                  : "border-transparent text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <span>All Open Games</span>
+              <span className="rounded-full bg-secondary px-2 py-0.5 text-[11px] font-normal">
+                {games.length}
+              </span>
+            </button>
 
-              {/* City Filter */}
-              <Select value={city} onValueChange={setCity}>
-                <SelectTrigger
-                  id="play-city-select"
-                  className="h-10 w-full sm:w-[160px] bg-card/60"
-                >
-                  <MapPin className="mr-1.5 h-3.5 w-3.5 text-primary shrink-0" />
-                  <SelectValue placeholder="City" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="All">All Cities</SelectItem>
-                  {PLAYO_CITIES.map((c) => (
-                    <SelectItem key={c} value={c}>
-                      {c}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+            <button
+              id="play-tab-my-games"
+              role="tab"
+              aria-selected={activeTab === "my-games"}
+              onClick={() => setActiveTab("my-games")}
+              className={`pb-2.5 px-3 text-sm font-semibold border-b-2 transition-colors flex items-center gap-2 ${
+                activeTab === "my-games"
+                  ? "border-primary text-primary"
+                  : "border-transparent text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <span>My Hosted & Joined Slots</span>
+              {joinedGameIds.length > 0 && (
+                <span className="rounded-full bg-primary/20 text-primary px-2 py-0.5 text-[11px] font-bold">
+                  {joinedGameIds.length}
+                </span>
+              )}
+            </button>
+          </div>
+        </header>
 
-              {/* Sport Filter */}
-              <Select value={sport} onValueChange={setSport}>
-                <SelectTrigger
-                  id="play-sport-select"
-                  className="h-10 w-full sm:w-[160px] bg-card/60"
-                >
-                  <Trophy className="mr-1.5 h-3.5 w-3.5 text-primary shrink-0" />
-                  <SelectValue placeholder="Sport" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="All">All Sports</SelectItem>
-                  {PLAYO_SPORTS.map((s) => (
-                    <SelectItem key={s} value={s}>
-                      {s} ({categoryCounts[s] || 0})
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              {/* Level Filter */}
-              <Select value={level} onValueChange={setLevel}>
-                <SelectTrigger
-                  id="play-level-select"
-                  className="h-10 w-full sm:w-[160px] bg-card/60"
-                >
-                  <Zap className="mr-1.5 h-3.5 w-3.5 text-primary shrink-0" />
-                  <SelectValue placeholder="Skill" />
-                </SelectTrigger>
-                <SelectContent>
-                  {LEVELS.map((l) => (
-                    <SelectItem key={l} value={l}>
-                      {l} {l !== "All" ? "Level" : "Levels"}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Quick Filter Chips */}
-            <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
-              <div className="flex flex-wrap items-center gap-1.5 text-xs">
-                <span className="text-muted-foreground font-medium mr-1">Quick Filter:</span>
+        {/* Search & Filter Controls */}
+        <section id="play-filter-controls" className="mt-5 space-y-3">
+          <div className="flex flex-col sm:flex-row gap-2.5">
+            {/* Search input */}
+            <div className="relative flex-1">
+              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                id="play-search-input"
+                placeholder="Search by venue name, area, or host..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-9 h-10 text-sm bg-card/60"
+              />
+              {searchQuery && (
                 <button
-                  id="quick-filter-all"
-                  onClick={() => setDateFilter("all")}
-                  className={`px-3 py-1 rounded-full border transition-colors ${
-                    dateFilter === "all"
-                      ? "bg-primary text-primary-foreground border-primary font-medium"
-                      : "border-border/70 text-muted-foreground hover:bg-secondary"
-                  }`}
+                  onClick={() => setSearchQuery("")}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                 >
-                  All Matches
-                </button>
-                <button
-                  id="quick-filter-open"
-                  onClick={() => setDateFilter("open")}
-                  className={`px-3 py-1 rounded-full border transition-colors ${
-                    dateFilter === "open"
-                      ? "bg-primary text-primary-foreground border-primary font-medium"
-                      : "border-border/70 text-muted-foreground hover:bg-secondary"
-                  }`}
-                >
-                  Spots Available Only
-                </button>
-              </div>
-
-              {hasActiveFilters && (
-                <button
-                  id="play-clear-filters-btn"
-                  onClick={clearAllFilters}
-                  className="text-xs text-primary hover:underline font-medium flex items-center gap-1"
-                >
-                  <X className="h-3 w-3" /> Reset Filters
+                  <X className="h-3.5 w-3.5" />
                 </button>
               )}
             </div>
-          </section>
 
-          {/* Games Counter Banner */}
-          <div className="mt-5 flex items-center justify-between text-xs text-muted-foreground border-t border-border/50 pt-3">
-            <span>
-              Showing <strong>{filteredGames.length}</strong> pickup game
-              {filteredGames.length === 1 ? "" : "s"}
-              {city !== "All" ? ` in ${city}` : ""}
-              {sport !== "All" ? ` for ${sport}` : ""}
-            </span>
-            <span className="hidden sm:inline">
-              Click any game to inspect roster & confirm spot
-            </span>
+            {/* City Filter */}
+            <Select value={city} onValueChange={setCity}>
+              <SelectTrigger id="play-city-select" className="h-10 w-full sm:w-[160px] bg-card/60">
+                <MapPin className="mr-1.5 h-3.5 w-3.5 text-primary shrink-0" />
+                <SelectValue placeholder="City" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="All">All Cities</SelectItem>
+                {PLAYO_CITIES.map((c) => (
+                  <SelectItem key={c} value={c}>
+                    {c}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            {/* Sport Filter */}
+            <Select value={sport} onValueChange={setSport}>
+              <SelectTrigger id="play-sport-select" className="h-10 w-full sm:w-[160px] bg-card/60">
+                <Trophy className="mr-1.5 h-3.5 w-3.5 text-primary shrink-0" />
+                <SelectValue placeholder="Sport" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="All">All Sports</SelectItem>
+                {PLAYO_SPORTS.map((s) => (
+                  <SelectItem key={s} value={s}>
+                    {s} ({categoryCounts[s] || 0})
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            {/* Level Filter */}
+            <Select value={level} onValueChange={setLevel}>
+              <SelectTrigger id="play-level-select" className="h-10 w-full sm:w-[160px] bg-card/60">
+                <Zap className="mr-1.5 h-3.5 w-3.5 text-primary shrink-0" />
+                <SelectValue placeholder="Skill" />
+              </SelectTrigger>
+              <SelectContent>
+                {LEVELS.map((l) => (
+                  <SelectItem key={l} value={l}>
+                    {l} {l !== "All" ? "Level" : "Levels"}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
-          {/* Games Card Grid */}
-          <section id="play-games-grid" className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {filteredGames.map((g, idx) => {
-              const isJoined = joinedGameIds.includes(g.id);
-              const full = g.joined >= g.capacity;
-              const spotsLeft = Math.max(0, g.capacity - g.joined);
-              const pct = Math.min(100, Math.round((g.joined / g.capacity) * 100));
+          {/* Quick Filter Chips */}
+          <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
+            <div className="flex flex-wrap items-center gap-1.5 text-xs">
+              <span className="text-muted-foreground font-medium mr-1">Quick Filter:</span>
+              <button
+                id="quick-filter-all"
+                onClick={() => setDateFilter("all")}
+                className={`px-3 py-1 rounded-full border transition-colors ${
+                  dateFilter === "all"
+                    ? "bg-primary text-primary-foreground border-primary font-medium"
+                    : "border-border/70 text-muted-foreground hover:bg-secondary"
+                }`}
+              >
+                All Matches
+              </button>
+              <button
+                id="quick-filter-open"
+                onClick={() => setDateFilter("open")}
+                className={`px-3 py-1 rounded-full border transition-colors ${
+                  dateFilter === "open"
+                    ? "bg-primary text-primary-foreground border-primary font-medium"
+                    : "border-border/70 text-muted-foreground hover:bg-secondary"
+                }`}
+              >
+                Spots Available Only
+              </button>
+            </div>
 
-              return (
-                <div key={g.id} className="flex flex-col">
-                  <div
-                    id={`game-card-${g.id}`}
-                    className={`flex flex-col justify-between rounded-2xl border bg-gradient-card p-4 transition-all hover:border-primary/40 hover:-translate-y-0.5 shadow-sm h-full ${
-                      isJoined
-                        ? "border-emerald-500/40 ring-1 ring-emerald-500/20"
-                        : "border-border"
-                    }`}
-                  >
-                    <div>
-                      {/* Top Badges & Cost */}
-                      <div className="flex items-start justify-between gap-2">
-                        <div className="flex items-center gap-1.5 flex-wrap">
-                          <Badge className="bg-primary/15 border-primary/40 text-primary font-semibold text-xs">
-                            {g.sport}
+            {hasActiveFilters && (
+              <button
+                id="play-clear-filters-btn"
+                onClick={clearAllFilters}
+                className="text-xs text-primary hover:underline font-medium flex items-center gap-1"
+              >
+                <X className="h-3 w-3" /> Reset Filters
+              </button>
+            )}
+          </div>
+        </section>
+
+        {/* Games Counter Banner */}
+        <div className="mt-5 flex items-center justify-between text-xs text-muted-foreground border-t border-border/50 pt-3">
+          <span>
+            Showing <strong>{filteredGames.length}</strong> pickup game
+            {filteredGames.length === 1 ? "" : "s"}
+            {city !== "All" ? ` in ${city}` : ""}
+            {sport !== "All" ? ` for ${sport}` : ""}
+          </span>
+          <span className="hidden sm:inline">Click any game to inspect roster & confirm spot</span>
+        </div>
+
+        {/* Games Card Grid */}
+        <section id="play-games-grid" className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {filteredGames.map((g, idx) => {
+            const isJoined = joinedGameIds.includes(g.id);
+            const full = g.joined >= g.capacity;
+            const spotsLeft = Math.max(0, g.capacity - g.joined);
+            const pct = Math.min(100, Math.round((g.joined / g.capacity) * 100));
+
+            return (
+              <div key={g.id} className="flex flex-col">
+                <div
+                  id={`game-card-${g.id}`}
+                  className={`flex flex-col justify-between rounded-2xl border bg-gradient-card p-4 transition-all hover:border-primary/40 hover:-translate-y-0.5 shadow-sm h-full ${
+                    isJoined ? "border-emerald-500/40 ring-1 ring-emerald-500/20" : "border-border"
+                  }`}
+                >
+                  <div>
+                    {/* Top Badges & Cost */}
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <Badge className="bg-primary/15 border-primary/40 text-primary font-semibold text-xs">
+                          {g.sport}
+                        </Badge>
+                        <Badge variant="outline" className="border-border text-[10px]">
+                          {g.skillLevel}
+                        </Badge>
+                        {isJoined && (
+                          <Badge className="bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/30 text-[10px] gap-1">
+                            <CheckCircle2 className="h-3 w-3" /> Joined
                           </Badge>
-                          <Badge variant="outline" className="border-border text-[10px]">
-                            {g.skillLevel}
+                        )}
+                        {g.isUserHosted && (
+                          <Badge className="bg-primary/15 text-primary border-primary/30 text-[10px]">
+                            Your Slot
                           </Badge>
-                          {isJoined && (
-                            <Badge className="bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/30 text-[10px] gap-1">
-                              <CheckCircle2 className="h-3 w-3" /> Joined
-                            </Badge>
-                          )}
-                          {g.isUserHosted && (
-                            <Badge className="bg-primary/15 text-primary border-primary/30 text-[10px]">
-                              Your Slot
-                            </Badge>
-                          )}
-                        </div>
-                        <div className="text-right shrink-0">
-                          <div className="text-base font-bold text-foreground">
-                            ₹{g.costPerPlayer}
-                          </div>
-                          <div className="text-[10px] text-muted-foreground">per player</div>
-                        </div>
+                        )}
                       </div>
-
-                      {/* Venue & Host Title */}
-                      <h3 className="mt-3 text-base font-bold tracking-tight text-foreground line-clamp-1">
-                        {g.venue}
-                      </h3>
-                      <p className="text-xs text-muted-foreground mt-0.5">
-                        Hosted by <span className="font-medium text-foreground">{g.host}</span>
-                      </p>
-
-                      {/* Match Meta Information */}
-                      <div className="mt-3 grid grid-cols-2 gap-2 text-xs text-muted-foreground bg-secondary/30 p-2.5 rounded-xl border border-border/40">
-                        <div className="flex items-center gap-1.5 truncate">
-                          <Calendar className="h-3.5 w-3.5 text-primary shrink-0" />
-                          <span className="truncate">{g.date}</span>
+                      <div className="text-right shrink-0">
+                        <div className="text-base font-bold text-foreground">
+                          ₹{g.costPerPlayer}
                         </div>
-                        <div className="flex items-center gap-1.5 truncate">
-                          <Clock className="h-3.5 w-3.5 text-primary shrink-0" />
-                          <span className="truncate">{g.time}</span>
-                        </div>
-                        <div className="col-span-2 flex items-center gap-1.5 truncate">
-                          <MapPin className="h-3.5 w-3.5 text-primary shrink-0" />
-                          <span className="truncate">
-                            {g.area ? `${g.area}, ` : ""}
-                            {g.city}
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* Capacity & Progress Bar */}
-                      <div className="mt-3 space-y-1">
-                        <div className="flex items-center justify-between text-xs">
-                          <span className="flex items-center gap-1 text-muted-foreground">
-                            <Users className="h-3.5 w-3.5" />
-                            <strong>{g.joined}</strong>/{g.capacity} joined
-                          </span>
-                          <span
-                            className={`font-medium ${
-                              full
-                                ? "text-amber-600 dark:text-amber-400"
-                                : "text-emerald-600 dark:text-emerald-400"
-                            }`}
-                          >
-                            {full ? "Roster Full" : `${spotsLeft} spots open`}
-                          </span>
-                        </div>
-                        <div className="h-1.5 w-full overflow-hidden rounded-full bg-secondary">
-                          <div
-                            className={`h-full transition-all duration-300 ${
-                              full ? "bg-amber-500" : "bg-primary"
-                            }`}
-                            style={{ width: `${pct}%` }}
-                          />
-                        </div>
+                        <div className="text-[10px] text-muted-foreground">per player</div>
                       </div>
                     </div>
 
-                    {/* Action Buttons */}
-                    <div className="mt-4 pt-2 border-t border-border/60 flex items-center gap-2">
-                      <Button
-                        id={`game-view-roster-btn-${g.id}`}
-                        variant="outline"
-                        size="sm"
-                        className="flex-1 text-xs"
-                        onClick={() => setSelectedGameForDetails(g)}
-                      >
-                        Inspect Roster
-                      </Button>
-                      <Button
-                        id={`game-join-btn-${g.id}`}
-                        size="sm"
-                        className={`flex-1 text-xs font-medium ${
-                          isJoined ? "bg-emerald-600 hover:bg-emerald-700 text-white" : ""
-                        }`}
-                        onClick={() => setSelectedGameForDetails(g)}
-                      >
-                        {isJoined ? "Manage RSVP" : full ? "View Slot" : "Join Game"}
-                      </Button>
+                    {/* Venue & Host Title */}
+                    <h3 className="mt-3 text-base font-bold tracking-tight text-foreground line-clamp-1">
+                      {g.venue}
+                    </h3>
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      Hosted by <span className="font-medium text-foreground">{g.host}</span>
+                    </p>
+
+                    {/* Match Meta Information */}
+                    <div className="mt-3 grid grid-cols-2 gap-2 text-xs text-muted-foreground bg-secondary/30 p-2.5 rounded-xl border border-border/40">
+                      <div className="flex items-center gap-1.5 truncate">
+                        <Calendar className="h-3.5 w-3.5 text-primary shrink-0" />
+                        <span className="truncate">{g.date}</span>
+                      </div>
+                      <div className="flex items-center gap-1.5 truncate">
+                        <Clock className="h-3.5 w-3.5 text-primary shrink-0" />
+                        <span className="truncate">{g.time}</span>
+                      </div>
+                      <div className="col-span-2 flex items-center gap-1.5 truncate">
+                        <MapPin className="h-3.5 w-3.5 text-primary shrink-0" />
+                        <span className="truncate">
+                          {g.area ? `${g.area}, ` : ""}
+                          {g.city}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Capacity & Progress Bar */}
+                    <div className="mt-3 space-y-1">
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="flex items-center gap-1 text-muted-foreground">
+                          <Users className="h-3.5 w-3.5" />
+                          <strong>{g.joined}</strong>/{g.capacity} joined
+                        </span>
+                        <span
+                          className={`font-medium ${
+                            full
+                              ? "text-amber-600 dark:text-amber-400"
+                              : "text-emerald-600 dark:text-emerald-400"
+                          }`}
+                        >
+                          {full ? "Roster Full" : `${spotsLeft} spots open`}
+                        </span>
+                      </div>
+                      <div className="h-1.5 w-full overflow-hidden rounded-full bg-secondary">
+                        <div
+                          className={`h-full transition-all duration-300 ${
+                            full ? "bg-amber-500" : "bg-primary"
+                          }`}
+                          style={{ width: `${pct}%` }}
+                        />
+                      </div>
                     </div>
                   </div>
 
-                  {/* AdSense InFeed Ad Placement after index 2 and index 5 */}
-                  {(idx === 2 || idx === 5) && (
-                    <div className="mt-4">
-                      <InFeedAd adSlot="play-grid-infeed" minHeight={240} />
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-
-            {/* Empty State */}
-            {filteredGames.length === 0 && (
-              <div
-                id="play-empty-state"
-                className="col-span-full rounded-2xl border border-dashed border-border bg-card/40 p-12 text-center space-y-3"
-              >
-                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-                  <Trophy className="h-6 w-6" />
-                </div>
-                <div className="space-y-1">
-                  <h3 className="text-base font-semibold">No pickup games found</h3>
-                  <p className="text-xs text-muted-foreground max-w-sm mx-auto">
-                    {activeTab === "my-games"
-                      ? "You have not joined or hosted any pickup games yet. Browse all games to reserve your first slot!"
-                      : "No games matched your current filters. Be the first to host an open game at your local turf!"}
-                  </p>
-                </div>
-                <div className="flex flex-wrap justify-center gap-2 pt-2">
-                  {hasActiveFilters && (
-                    <Button variant="outline" size="sm" onClick={clearAllFilters}>
-                      Reset Filters
+                  {/* Action Buttons */}
+                  <div className="mt-4 pt-2 border-t border-border/60 flex items-center gap-2">
+                    <Button
+                      id={`game-view-roster-btn-${g.id}`}
+                      variant="outline"
+                      size="sm"
+                      className="flex-1 text-xs"
+                      onClick={() => setSelectedGameForDetails(g)}
+                    >
+                      Inspect Roster
                     </Button>
-                  )}
-                  <Button size="sm" onClick={() => setHostModalOpen(true)}>
-                    <Plus className="mr-1 h-3.5 w-3.5" /> Host a Game
-                  </Button>
+                    <Button
+                      id={`game-join-btn-${g.id}`}
+                      size="sm"
+                      className={`flex-1 text-xs font-medium ${
+                        isJoined ? "bg-emerald-600 hover:bg-emerald-700 text-white" : ""
+                      }`}
+                      onClick={() => setSelectedGameForDetails(g)}
+                    >
+                      {isJoined ? "Manage RSVP" : full ? "View Slot" : "Join Game"}
+                    </Button>
+                  </div>
                 </div>
+
+                {/* AdSense InFeed Ad Placement after index 2 and index 5 */}
+                {(idx === 2 || idx === 5) && (
+                  <div className="mt-4">
+                    <InFeedAd adSlot="play-grid-infeed" minHeight={240} />
+                  </div>
+                )}
               </div>
-            )}
-          </section>
+            );
+          })}
 
-          {/* AdSense Responsive Unit Before Editorial Section */}
-          <div className="mt-12">
-            <ResponsiveAd adSlot="play-mid-responsive" minHeight={120} />
-          </div>
+          {/* Empty State */}
+          {filteredGames.length === 0 && (
+            <div
+              id="play-empty-state"
+              className="col-span-full rounded-2xl border border-dashed border-border bg-card/40 p-12 text-center space-y-3"
+            >
+              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+                <Trophy className="h-6 w-6" />
+              </div>
+              <div className="space-y-1">
+                <h3 className="text-base font-semibold">No pickup games found</h3>
+                <p className="text-xs text-muted-foreground max-w-sm mx-auto">
+                  {activeTab === "my-games"
+                    ? "You have not joined or hosted any pickup games yet. Browse all games to reserve your first slot!"
+                    : "No games matched your current filters. Be the first to host an open game at your local turf!"}
+                </p>
+              </div>
+              <div className="flex flex-wrap justify-center gap-2 pt-2">
+                {hasActiveFilters && (
+                  <Button variant="outline" size="sm" onClick={clearAllFilters}>
+                    Reset Filters
+                  </Button>
+                )}
+                <Button size="sm" onClick={() => setHostModalOpen(true)}>
+                  <Plus className="mr-1 h-3.5 w-3.5" /> Host a Game
+                </Button>
+              </div>
+            </div>
+          )}
+        </section>
 
-          {/* High-Value Comprehensive Editorial Guide (Eliminating Thin Content) */}
-          <PlayEditorialGuide />
-
-          {/* Frequently Asked Questions with Schema.org FAQPage */}
-          <PlayFAQ />
+        {/* AdSense Responsive Unit Before Editorial Section */}
+        <div className="mt-12">
+          <ResponsiveAd adSlot="play-mid-responsive" minHeight={120} />
         </div>
-      </main>
+
+        {/* High-Value Comprehensive Editorial Guide (Eliminating Thin Content) */}
+        <PlayEditorialGuide />
+
+        {/* Frequently Asked Questions with Schema.org FAQPage */}
+        <PlayFAQ />
+      </div>
 
       {/* Host Game Dialog */}
       <HostGameModal

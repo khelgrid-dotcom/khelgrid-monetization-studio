@@ -33,6 +33,7 @@ import { adsConfig, hasValidPublisherId } from "@/config/ads";
 import { GoogleTagLoader } from "@/components/GoogleTagLoader";
 import { SEOHead } from "@/components/SEOHead";
 import { SiteFooter } from "@/components/SiteFooter";
+import { FeaturesSidebar } from "@/components/FeaturesSidebar";
 import { HydrationDiagnostics } from "@/components/HydrationDiagnostics";
 
 function NotFoundComponent() {
@@ -211,9 +212,14 @@ function RootComponent() {
 
                         <Navbar />
                         <Breadcrumbs />
-                        <div className="pb-20 xl:pb-0">
-                          <Outlet />
-                          <SiteFooter />
+                        <div className="flex min-h-[calc(100vh-4rem)]">
+                          <FeaturesSidebar />
+                          <div className="flex min-w-0 flex-1 flex-col pb-20 lg:pb-0">
+                            <main className="flex-1 min-w-0">
+                              <Outlet />
+                            </main>
+                            <SiteFooter />
+                          </div>
                         </div>
                         <BottomTabBar />
 
