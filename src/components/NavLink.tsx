@@ -25,7 +25,7 @@ export function NavLink({ item, active, source, showLabel = true, className }: N
 
   return (
     <Link
-      to={item.to as any}
+      to={item.to as string}
       title={item.label}
       aria-current={active ? "page" : undefined}
       onClick={onClick}
