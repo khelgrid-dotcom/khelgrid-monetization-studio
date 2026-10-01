@@ -14,7 +14,7 @@ import {
   Crown,
   Keyboard,
 } from "lucide-react";
-import { FEATURE_ITEMS, isActivePath, type NavItem } from "@/config/nav";
+import { PRIMARY_ITEMS, FEATURE_ITEMS, isActivePath, type NavItem } from "@/config/nav";
 import { NavLink } from "@/components/NavLink";
 import { PlayNavLink } from "@/components/PlayNavLink";
 import { SidebarAd } from "@/components/ads";
@@ -23,10 +23,27 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import { cn } from "@/lib/utils";
 
-// Re-exported for tests and any callers that imported the array directly.
-export const FEATURES: readonly NavItem[] = FEATURE_ITEMS;
+// All features and core navigation items for desktop sidebar, strictly deduplicated
+export const FEATURES: readonly NavItem[] = (() => {
+  const seen = new Set<string>();
+  const items: NavItem[] = [];
+  // Quick overview navigation routes
+  for (const item of PRIMARY_ITEMS.filter((i) => i.to === "/" || i.to === "/dashboard")) {
+    if (!seen.has(item.to)) {
+      seen.add(item.to);
+      items.push(item);
+    }
+  }
+  for (const item of FEATURE_ITEMS) {
+    if (!seen.has(item.to)) {
+      seen.add(item.to);
+      items.push(item);
+    }
+  }
+  return items;
+})();
 
-export type NavCategory = "all" | "action" | "scouting" | "community" | "platform";
+export type NavCategory = "all" | "core" | "action" | "scouting" | "community" | "platform";
 
 export interface CategoryMeta {
   id: NavCategory;
@@ -44,6 +61,9 @@ export const NAV_CATEGORIES: CategoryMeta[] = [
 ];
 
 export function getItemCategory(to: string): NavCategory {
+  if (to === "/" || to === "/dashboard" || to === "/cities") {
+    return "core";
+  }
   if (
     to === "/search" ||
     to === "/#live-scores" ||
@@ -79,8 +99,9 @@ export function getItemCategory(to: string): NavCategory {
   return "platform";
 }
 
-const SECTION_HEADERS: Record<NavCategory, { title: string; subtitle: string }> = {
+export const SECTION_HEADERS: Record<NavCategory, { title: string; subtitle: string }> = {
   all: { title: "Features", subtitle: "Full directory" },
+  core: { title: "Overview", subtitle: "Quick navigation" },
   action: { title: "Play & Match Center", subtitle: "Live action & bookings" },
   scouting: { title: "Scouting & Athlete Pipeline", subtitle: "CV, scans & talent" },
   community: { title: "Knowledge & Community", subtitle: "Hub, guides & discussions" },
@@ -163,12 +184,14 @@ export function FeaturesSidebar() {
     if (query.trim() || activeCategory !== "all") {
       return null;
     }
-    const categories: NavCategory[] = ["action", "scouting", "community", "platform"];
-    return categories.map((cat) => ({
-      category: cat,
-      meta: SECTION_HEADERS[cat],
-      items: FEATURES.filter((f) => getItemCategory(f.to) === cat),
-    }));
+    const categories: NavCategory[] = ["core", "action", "scouting", "community", "platform"];
+    return categories
+      .map((cat) => ({
+        category: cat,
+        meta: SECTION_HEADERS[cat],
+        items: FEATURES.filter((f) => getItemCategory(f.to) === cat),
+      }))
+      .filter((sec) => sec.items.length > 0);
   }, [query, activeCategory]);
 
   return (

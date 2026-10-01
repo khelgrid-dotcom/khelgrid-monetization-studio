@@ -26,13 +26,37 @@ import { useLanguage } from "@/context/LanguageContext";
 import { NavLink } from "@/components/NavLink";
 import { PlayNavLink } from "@/components/PlayNavLink";
 import { PRIMARY_ITEMS, FEATURE_ITEMS, isActivePath, type NavItem } from "@/config/nav";
-import { getItemCategory, type NavCategory, NAV_CATEGORIES } from "@/components/FeaturesSidebar";
+import {
+  getItemCategory,
+  type NavCategory,
+  NAV_CATEGORIES,
+  SECTION_HEADERS,
+} from "@/components/FeaturesSidebar";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import { cn } from "@/lib/utils";
 
 // Re-exported for tests and any callers that imported the array directly.
 export const PRIMARY: readonly NavItem[] = PRIMARY_ITEMS;
-const FEATURES: readonly NavItem[] = FEATURE_ITEMS;
+
+// Strictly deduplicated list of all unique navigation items across primary and features
+export const DRAWER_ITEMS: readonly NavItem[] = (() => {
+  const seen = new Set<string>();
+  const items: NavItem[] = [];
+  // Overview routes first
+  for (const item of PRIMARY_ITEMS) {
+    if (!seen.has(item.to)) {
+      seen.add(item.to);
+      items.push(item);
+    }
+  }
+  for (const item of FEATURE_ITEMS) {
+    if (!seen.has(item.to)) {
+      seen.add(item.to);
+      items.push(item);
+    }
+  }
+  return items;
+})();
 
 export function NavDrawer() {
   const [open, setOpen] = useState(false);
@@ -68,25 +92,30 @@ export function NavDrawer() {
     setActiveCategory("all");
   }, [path]);
 
-  const filteredPrimary = useMemo(() => {
+  const filteredItems = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return PRIMARY.filter((i) => {
+    return DRAWER_ITEMS.filter((i) => {
       const matchesQ = !q || i.label.toLowerCase().includes(q);
       const matchesCat = activeCategory === "all" || getItemCategory(i.to) === activeCategory;
       return matchesQ && matchesCat;
     });
   }, [query, activeCategory]);
 
-  const filteredFeatures = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    return FEATURES.filter((i) => {
-      const matchesQ = !q || i.label.toLowerCase().includes(q);
-      const matchesCat = activeCategory === "all" || getItemCategory(i.to) === activeCategory;
-      return matchesQ && matchesCat;
-    });
+  const groupedDrawerSections = useMemo(() => {
+    if (query.trim() || activeCategory !== "all") {
+      return null;
+    }
+    const categories: NavCategory[] = ["core", "action", "scouting", "community", "platform"];
+    return categories
+      .map((cat) => ({
+        category: cat,
+        meta: SECTION_HEADERS[cat],
+        items: DRAWER_ITEMS.filter((i) => getItemCategory(i.to) === cat),
+      }))
+      .filter((sec) => sec.items.length > 0);
   }, [query, activeCategory]);
 
-  const totalResults = filteredPrimary.length + filteredFeatures.length;
+  const totalResults = filteredItems.length;
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -277,9 +306,32 @@ export function NavDrawer() {
             </div>
           )}
 
-          {filteredPrimary.length > 0 && (
-            <Section title={query ? "Core Results" : "Navigate"}>
-              {filteredPrimary.map((i) =>
+          {/* Unified Grouped Sections (When All is selected & not searching) */}
+          {groupedDrawerSections ? (
+            groupedDrawerSections.map((sec) => (
+              <Section key={sec.category} title={sec.meta.title}>
+                {sec.items.map((i) =>
+                  i.to === "/play" ? (
+                    <PlayNavLink
+                      key={i.to}
+                      active={isActivePath(path, i.to)}
+                      source="sidebar_mobile"
+                    />
+                  ) : (
+                    <NavLink
+                      key={i.to}
+                      item={i}
+                      active={isActivePath(path, i.to)}
+                      source="sidebar_mobile"
+                    />
+                  ),
+                )}
+              </Section>
+            ))
+          ) : (
+            /* Flat Filtered List (when searching or category chip selected) with Zero Duplication */
+            <div className="flex flex-col gap-0.5">
+              {filteredItems.map((i) =>
                 i.to === "/play" ? (
                   <PlayNavLink
                     key={i.to}
@@ -295,28 +347,7 @@ export function NavDrawer() {
                   />
                 ),
               )}
-            </Section>
-          )}
-
-          {filteredFeatures.length > 0 && (
-            <Section title={query ? "Feature Results" : "Features Directory"}>
-              {filteredFeatures.map((i) =>
-                i.to === "/play" ? (
-                  <PlayNavLink
-                    key={i.to}
-                    active={isActivePath(path, i.to)}
-                    source="sidebar_mobile"
-                  />
-                ) : (
-                  <NavLink
-                    key={i.to}
-                    item={i}
-                    active={isActivePath(path, i.to)}
-                    source="sidebar_mobile"
-                  />
-                ),
-              )}
-            </Section>
+            </div>
           )}
 
           {totalResults === 0 && (
