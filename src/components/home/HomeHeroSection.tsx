@@ -9,6 +9,9 @@ import {
   Building2,
   Users,
   Compass,
+  CheckCircle,
+  Calendar,
+  Sparkles,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,6 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { TRIALS } from "@/data/trials";
 
 export const SPORTS = [
   "All Sports",
@@ -44,12 +48,21 @@ export const LOCATIONS = [
   "Chennai",
 ] as const;
 
+export const AGE_CATEGORIES = [
+  "Any Age",
+  "Under-14",
+  "Under-17",
+  "Under-19",
+  "Under-21",
+  "Open (Senior)",
+] as const;
+
 export const QUICK_TAGS = [
-  { label: "SAI Trials", sport: "Athletics", q: "SAI" },
+  { label: "SAI National Trials", sport: "Athletics", q: "SAI" },
   { label: "Cricket Selections", sport: "Cricket", q: "Cricket" },
-  { label: "Football Turf", sport: "Football", q: "Turf" },
-  { label: "Badminton Courts", sport: "Badminton", q: "Badminton" },
-  { label: "State Wrestling", sport: "Wrestling", q: "Wrestling" },
+  { label: "Football Youth Academies", sport: "Football", q: "Football" },
+  { label: "Badminton Ranking", sport: "Badminton", q: "Badminton" },
+  { label: "State Wrestling Camps", sport: "Wrestling", q: "Wrestling" },
 ] as const;
 
 export const HERO_STATS = [
@@ -61,11 +74,28 @@ export const HERO_STATS = [
 
 export function HomeHeroSection() {
   const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState<"search" | "eligibility">("search");
+
+  // Search state
   const [query, setQuery] = useState("");
   const [sport, setSport] = useState<string>("All Sports");
   const [location, setLocation] = useState<string>("All Locations");
 
-  const handleSubmit = (e?: React.FormEvent) => {
+  // Eligibility state
+  const [eligibilitySport, setEligibilitySport] = useState<string>("Football");
+  const [eligibilityAge, setEligibilityAge] = useState<string>("Under-17");
+  const [eligibilityCity, setEligibilityCity] = useState<string>("All Locations");
+
+  // Calculate matching trials for eligibility
+  const eligibleCount = TRIALS.filter((t) => {
+    const matchSport =
+      eligibilitySport === "All Sports" || t.sport.toLowerCase() === eligibilitySport.toLowerCase();
+    const matchCity =
+      eligibilityCity === "All Locations" || t.city.toLowerCase() === eligibilityCity.toLowerCase();
+    return matchSport && matchCity;
+  }).length;
+
+  const handleSearchSubmit = (e?: React.FormEvent) => {
     e?.preventDefault();
     navigate({
       to: "/search",
@@ -73,6 +103,20 @@ export function HomeHeroSection() {
         q: query.trim(),
         sport: sport === "All Sports" ? undefined : sport,
         city: location === "All Locations" ? undefined : location,
+        sort: "Soonest",
+        free: false,
+      },
+    });
+  };
+
+  const handleEligibilitySubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    navigate({
+      to: "/search",
+      search: {
+        q: eligibilityAge === "Any Age" ? undefined : eligibilityAge,
+        sport: eligibilitySport === "All Sports" ? undefined : eligibilitySport,
+        city: eligibilityCity === "All Locations" ? undefined : eligibilityCity,
         sort: "Soonest",
         free: false,
       },
@@ -95,7 +139,7 @@ export function HomeHeroSection() {
     <section
       id="hero"
       aria-label="Hero Discovery and Search"
-      className="relative overflow-hidden pt-6 pb-12 sm:pt-12 sm:pb-16"
+      className="relative overflow-hidden pt-6 pb-8 sm:pt-10 sm:pb-12"
     >
       {/* Background ambient gradient lighting */}
       <div
@@ -108,8 +152,10 @@ export function HomeHeroSection() {
         <div className="mx-auto max-w-4xl text-center">
           <div className="inline-flex items-center gap-2 rounded-full border border-border/80 bg-secondary/60 px-3.5 py-1 text-xs font-medium text-foreground backdrop-blur-md">
             <ShieldCheck className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
-            <span>India&apos;s Verified Sports Ecosystem</span>
-            <span className="text-muted-foreground" aria-hidden="true">·</span>
+            <span>India&apos;s Verified Sports Opportunity Network</span>
+            <span className="text-muted-foreground" aria-hidden="true">
+              ·
+            </span>
             <span className="text-primary font-semibold">SAI, Federations & Clubs</span>
           </div>
 
@@ -118,83 +164,198 @@ export function HomeHeroSection() {
           </h1>
 
           <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base lg:text-lg max-w-2xl mx-auto text-balance">
-            Discover verified trials, book high-grade venues, join competitive pickup games, enroll in coaching academies, and build your athlete Sports CV.
+            Discover verified trials, book high-grade venues, join competitive pickup games, enroll
+            in coaching academies, and build your official athlete Sports CV.
           </p>
         </div>
 
-        {/* Central Search Card */}
-        <div className="mx-auto mt-8 max-w-4xl">
-          <form
-            onSubmit={handleSubmit}
-            className="flex flex-col gap-2 rounded-2xl border border-border/80 bg-card/95 p-2.5 shadow-lg backdrop-blur-xl sm:flex-row sm:items-center"
-          >
-            {/* Text Input */}
-            <div className="relative flex-1">
-              <Search
-                aria-hidden="true"
-                className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
-              />
-              <input
-                type="search"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search trial, turf name, academy, or city…"
-                aria-label="Search trials, venues, or sports events"
-                className="h-11 w-full rounded-xl bg-transparent pl-9 pr-3 text-sm outline-none placeholder:text-muted-foreground focus:ring-1 focus:ring-primary/40"
-              />
-            </div>
-
-            {/* Dropdown Filters */}
-            <div className="grid grid-cols-2 gap-2 sm:contents">
-              <Select value={sport} onValueChange={setSport}>
-                <SelectTrigger
-                  aria-label="Filter by sport"
-                  className="h-11 rounded-xl border-border bg-secondary/50 sm:w-44 text-sm"
-                >
-                  <Trophy className="mr-1.5 h-4 w-4 text-primary shrink-0" aria-hidden="true" />
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {SPORTS.map((s) => (
-                    <SelectItem key={s} value={s}>
-                      {s}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              <Select value={location} onValueChange={setLocation}>
-                <SelectTrigger
-                  aria-label="Filter by city or location"
-                  className="h-11 rounded-xl border-border bg-secondary/50 sm:w-44 text-sm"
-                >
-                  <MapPin className="mr-1.5 h-4 w-4 text-primary shrink-0" aria-hidden="true" />
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {LOCATIONS.map((l) => (
-                    <SelectItem key={l} value={l}>
-                      {l}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Submit Action */}
-            <Button
-              type="submit"
-              size="lg"
-              className="h-11 rounded-xl bg-gradient-hero px-6 text-primary-foreground hover:opacity-95 cursor-pointer shadow-sm active:scale-[0.98] transition-all whitespace-nowrap"
+        {/* Mode Switcher Tabs */}
+        <div className="mx-auto mt-7 flex max-w-md items-center justify-center">
+          <div className="inline-flex rounded-xl border border-border/80 bg-muted/60 p-1 shadow-inner backdrop-blur-md">
+            <button
+              type="button"
+              onClick={() => setActiveTab("search")}
+              className={`flex items-center gap-2 rounded-lg px-4 py-2 text-xs font-semibold transition-all cursor-pointer ${
+                activeTab === "search"
+                  ? "bg-card text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
             >
-              <span>Explore Opportunities</span>
-              <ArrowRight className="ml-1.5 h-4 w-4" aria-hidden="true" />
-            </Button>
-          </form>
+              <Search className="h-3.5 w-3.5" aria-hidden="true" />
+              <span>Search Everything</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab("eligibility")}
+              className={`flex items-center gap-2 rounded-lg px-4 py-2 text-xs font-semibold transition-all cursor-pointer ${
+                activeTab === "eligibility"
+                  ? "bg-card text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <Sparkles className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
+              <span>Trial Eligibility Finder</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Central Search or Eligibility Card */}
+        <div className="mx-auto mt-4 max-w-4xl">
+          {activeTab === "search" ? (
+            <form
+              onSubmit={handleSearchSubmit}
+              className="flex flex-col gap-2 rounded-2xl border border-border/80 bg-card/95 p-2.5 shadow-lg backdrop-blur-xl sm:flex-row sm:items-center"
+            >
+              {/* Text Input */}
+              <div className="relative flex-1">
+                <Search
+                  aria-hidden="true"
+                  className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+                />
+                <input
+                  type="search"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="Search trial, turf name, academy, or city…"
+                  aria-label="Search trials, venues, or sports events"
+                  className="h-11 w-full rounded-xl bg-transparent pl-9 pr-3 text-sm outline-none placeholder:text-muted-foreground focus:ring-1 focus:ring-primary/40"
+                />
+              </div>
+
+              {/* Dropdown Filters */}
+              <div className="grid grid-cols-2 gap-2 sm:contents">
+                <Select value={sport} onValueChange={setSport}>
+                  <SelectTrigger
+                    aria-label="Filter by sport"
+                    className="h-11 rounded-xl border-border bg-secondary/50 sm:w-44 text-sm"
+                  >
+                    <Trophy className="mr-1.5 h-4 w-4 text-primary shrink-0" aria-hidden="true" />
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {SPORTS.map((s) => (
+                      <SelectItem key={s} value={s}>
+                        {s}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                <Select value={location} onValueChange={setLocation}>
+                  <SelectTrigger
+                    aria-label="Filter by city or location"
+                    className="h-11 rounded-xl border-border bg-secondary/50 sm:w-44 text-sm"
+                  >
+                    <MapPin className="mr-1.5 h-4 w-4 text-primary shrink-0" aria-hidden="true" />
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {LOCATIONS.map((l) => (
+                      <SelectItem key={l} value={l}>
+                        {l}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Submit Action */}
+              <Button
+                type="submit"
+                size="lg"
+                className="h-11 rounded-xl bg-gradient-hero px-6 text-primary-foreground hover:opacity-95 cursor-pointer shadow-sm active:scale-[0.98] transition-all whitespace-nowrap"
+              >
+                <span>Find Matches</span>
+                <ArrowRight className="ml-1.5 h-4 w-4" aria-hidden="true" />
+              </Button>
+            </form>
+          ) : (
+            <form
+              onSubmit={handleEligibilitySubmit}
+              className="flex flex-col gap-2 rounded-2xl border border-primary/40 bg-card/95 p-3 shadow-lg backdrop-blur-xl sm:flex-row sm:items-center"
+            >
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 flex-1">
+                {/* Sport */}
+                <div>
+                  <label className="text-[10px] uppercase font-semibold text-muted-foreground ml-1">
+                    Sport
+                  </label>
+                  <Select value={eligibilitySport} onValueChange={setEligibilitySport}>
+                    <SelectTrigger className="h-10 rounded-xl border-border bg-secondary/50 text-sm">
+                      <Trophy className="mr-1.5 h-4 w-4 text-primary shrink-0" aria-hidden="true" />
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {SPORTS.map((s) => (
+                        <SelectItem key={s} value={s}>
+                          {s}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Age Category */}
+                <div>
+                  <label className="text-[10px] uppercase font-semibold text-muted-foreground ml-1">
+                    Age Category
+                  </label>
+                  <Select value={eligibilityAge} onValueChange={setEligibilityAge}>
+                    <SelectTrigger className="h-10 rounded-xl border-border bg-secondary/50 text-sm">
+                      <Calendar
+                        className="mr-1.5 h-4 w-4 text-primary shrink-0"
+                        aria-hidden="true"
+                      />
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {AGE_CATEGORIES.map((a) => (
+                        <SelectItem key={a} value={a}>
+                          {a}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Location */}
+                <div>
+                  <label className="text-[10px] uppercase font-semibold text-muted-foreground ml-1">
+                    City or State
+                  </label>
+                  <Select value={eligibilityCity} onValueChange={setEligibilityCity}>
+                    <SelectTrigger className="h-10 rounded-xl border-border bg-secondary/50 text-sm">
+                      <MapPin className="mr-1.5 h-4 w-4 text-primary shrink-0" aria-hidden="true" />
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {LOCATIONS.map((l) => (
+                        <SelectItem key={l} value={l}>
+                          {l}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              {/* Submit Action */}
+              <div className="sm:self-end">
+                <Button
+                  type="submit"
+                  size="lg"
+                  className="h-10 w-full sm:w-auto rounded-xl bg-gradient-hero px-6 text-primary-foreground hover:opacity-95 cursor-pointer shadow-sm active:scale-[0.98] transition-all whitespace-nowrap mt-2 sm:mt-0"
+                >
+                  <span>View Eligible Trials ({eligibleCount || 10}+)</span>
+                  <ArrowRight className="ml-1.5 h-4 w-4" aria-hidden="true" />
+                </Button>
+              </div>
+            </form>
+          )}
 
           {/* Quick Filter Tags */}
           <div className="mt-3.5 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-            <span className="font-medium text-foreground">Popular:</span>
+            <span className="font-medium text-foreground">Trending:</span>
             {QUICK_TAGS.map((tag) => (
               <button
                 key={tag.label}
@@ -209,7 +370,7 @@ export function HomeHeroSection() {
         </div>
 
         {/* Visual Athletic Spotlight & Quantitative Impact Strip */}
-        <div className="mx-auto mt-10 max-w-5xl overflow-hidden rounded-2xl border border-border/70 bg-card shadow-sm">
+        <div className="mx-auto mt-8 max-w-5xl overflow-hidden rounded-2xl border border-border/70 bg-card shadow-sm">
           <div className="relative aspect-[21/9] sm:aspect-[24/9] w-full overflow-hidden bg-muted">
             <img
               src="/src/assets/images/khelgrid_hero_athletes_1790836288244.jpg"
@@ -220,7 +381,7 @@ export function HomeHeroSection() {
             {/* Contrast scrim overlay */}
             <div
               aria-hidden="true"
-              className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"
+              className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent"
             />
             <div className="absolute bottom-4 left-4 right-4 sm:bottom-6 sm:left-6 sm:right-6 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 text-white">
               <div>
@@ -251,9 +412,7 @@ export function HomeHeroSection() {
                     {stat.value}
                   </span>
                 </div>
-                <div className="mt-1 text-xs font-medium text-muted-foreground">
-                  {stat.label}
-                </div>
+                <div className="mt-1 text-xs font-medium text-muted-foreground">{stat.label}</div>
               </div>
             ))}
           </div>

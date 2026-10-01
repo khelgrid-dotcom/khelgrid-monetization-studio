@@ -291,7 +291,7 @@ export function HomeOpportunitiesSection({ trials = TRIALS }: { trials?: readonl
               aria-label={`Opportunity ${index + 1} of ${filteredOpportunities.length}: ${trial.title}${statusBadge ? ` (${statusBadge.label})` : ""}`}
               aria-labelledby={cardTitleId}
               aria-describedby={cardDescId}
-              className={`group relative flex w-[285px] shrink-0 snap-start flex-col justify-between rounded-2xl border border-border/80 bg-gradient-card p-4 transition-all duration-200 hover:-translate-y-1 hover:border-primary/50 hover:shadow-lg active:scale-[0.99] sm:w-auto sm:shrink ${
+              className={`group relative flex w-[82vw] max-w-[310px] shrink-0 snap-start flex-col justify-between rounded-2xl border border-border/80 bg-gradient-card p-4 transition-all duration-200 hover:-translate-y-1 hover:border-primary/50 hover:shadow-lg active:scale-[0.99] sm:w-auto sm:shrink ${
                 statusBadge?.isExpired ? "opacity-80 grayscale-[0.25]" : ""
               }`}
             >

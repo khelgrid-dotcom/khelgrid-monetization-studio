@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import {
   HomeHeroSection,
+  HomeSectionNav,
   HomeQuickActionsSection,
   HomeOpportunitiesSection,
   HomeLiveCenterSection,
@@ -32,7 +33,7 @@ export const Route = createFileRoute("/")({
           name: faq.question,
           acceptedAnswer: {
             "@type": "Answer",
-          text: faq.answer,
+            text: faq.answer,
           },
         })),
       },
@@ -51,7 +52,10 @@ function Home() {
         <BannerAd adSlot="homeBelowHero" minHeight={100} />
       </div>
 
-      {/* 3. Core Action Pillars (Trials, Turfs, Pickup Games, Coaching, CV, Events) */}
+      {/* 3. Sticky Quick Jump Section Sub-Bar */}
+      <HomeSectionNav />
+
+      {/* 4. Core Action Pillars (Trials, Turfs, Pickup Games, Coaching, CV, Events) */}
       <HomeQuickActionsSection />
 
       {/* 4. Latest Selection Trials & Opportunities Carousel */}

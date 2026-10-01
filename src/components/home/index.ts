@@ -1,4 +1,5 @@
 export { HomeHeroSection } from "./HomeHeroSection";
+export { HomeSectionNav } from "./HomeSectionNav";
 export { HomeQuickActionsSection } from "./HomeQuickActionsSection";
 export { HomeOpportunitiesSection } from "./HomeOpportunitiesSection";
 export { HomeLiveCenterSection } from "./HomeLiveCenterSection";
