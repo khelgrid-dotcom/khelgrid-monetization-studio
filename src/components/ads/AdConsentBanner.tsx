@@ -24,7 +24,7 @@ export function AdConsentBanner() {
       role="dialog"
       aria-modal="false"
       aria-label="Cookie and advertising consent"
-      className="fixed inset-x-0 bottom-14 z-50 mx-auto max-w-3xl px-3 md:bottom-4"
+      className="fixed inset-x-0 bottom-[calc(3.75rem+env(safe-area-inset-bottom,0px))] z-50 mx-auto max-w-3xl px-3 md:bottom-4"
     >
       <div className="flex flex-col gap-3 rounded-2xl border border-border bg-card/95 p-4 shadow-lg backdrop-blur-xl sm:flex-row sm:items-center">
         <Cookie className="hidden h-5 w-5 shrink-0 text-primary sm:block" aria-hidden="true" />

@@ -100,9 +100,9 @@ export function NavDrawer() {
       </SheetTrigger>
       <SheetContent
         side="left"
-        className="flex w-[88vw] max-w-sm sm:max-w-md flex-col gap-0 p-0 pb-[env(safe-area-inset-bottom,16px)]"
+        className="flex h-[100dvh] max-h-[100dvh] w-[88vw] max-w-sm sm:max-w-md flex-col gap-0 overflow-hidden p-0 pb-[env(safe-area-inset-bottom,16px)]"
       >
-        <SheetHeader className="border-b border-border/60 px-5 py-4 text-left">
+        <SheetHeader className="border-b border-border/60 px-5 pr-14 py-4 text-left">
           <SheetTitle className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <div className="grid h-8 w-8 place-items-center rounded-lg bg-gradient-hero text-primary-foreground shadow-xs">
@@ -269,7 +269,7 @@ export function NavDrawer() {
         </div>
 
         {/* Scrollable Navigation List */}
-        <div className="flex-1 overflow-y-auto px-2 py-3">
+        <div className="flex-1 overflow-y-auto overscroll-contain px-2 py-3">
           {query && (
             <div className="px-3 pb-2 text-xs text-muted-foreground font-medium flex items-center justify-between">
               <span>Results for &ldquo;{query}&rdquo;</span>
