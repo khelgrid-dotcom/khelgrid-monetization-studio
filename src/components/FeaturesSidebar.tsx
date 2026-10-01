@@ -1,97 +1,496 @@
-import { useRouterState } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
-import { ChevronLeft, ChevronRight, Search } from "lucide-react";
+import { useRouterState, Link } from "@tanstack/react-router";
+import { useMemo, useState, useEffect, useRef } from "react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Search,
+  X,
+  Sparkles,
+  Swords,
+  GraduationCap,
+  BookOpen,
+  Globe,
+  SlidersHorizontal,
+  Crown,
+  Keyboard,
+} from "lucide-react";
 import { FEATURE_ITEMS, isActivePath, type NavItem } from "@/config/nav";
 import { NavLink } from "@/components/NavLink";
 import { PlayNavLink } from "@/components/PlayNavLink";
 import { SidebarAd } from "@/components/ads";
 import { SidebarLiveScoreWidget } from "@/components/SidebarLiveScoreWidget";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { ThemeSwitcher } from "@/components/ThemeSwitcher";
+import { cn } from "@/lib/utils";
 
 // Re-exported for tests and any callers that imported the array directly.
 export const FEATURES: readonly NavItem[] = FEATURE_ITEMS;
 
+export type NavCategory = "all" | "action" | "scouting" | "community" | "platform";
+
+export interface CategoryMeta {
+  id: NavCategory;
+  label: string;
+  shortLabel: string;
+  icon?: React.ComponentType<{ className?: string }>;
+}
+
+export const NAV_CATEGORIES: CategoryMeta[] = [
+  { id: "all", label: "All Features", shortLabel: "All" },
+  { id: "action", label: "Play & Action", shortLabel: "Action", icon: Swords },
+  { id: "scouting", label: "Scout & CV", shortLabel: "Scout", icon: Sparkles },
+  { id: "community", label: "Hub & Learn", shortLabel: "Hub", icon: BookOpen },
+  { id: "platform", label: "Network & Pro", shortLabel: "Network", icon: Globe },
+];
+
+export function getItemCategory(to: string): NavCategory {
+  if (
+    to === "/search" ||
+    to === "/#live-scores" ||
+    to === "/play" ||
+    to === "/book" ||
+    to === "/train" ||
+    to === "/events"
+  ) {
+    return "action";
+  }
+  if (
+    to === "/onboarding" ||
+    to === "/talent-scanner" ||
+    to === "/scout-portal" ||
+    to === "/my-stats" ||
+    to === "/start-from-zero" ||
+    to === "/verify"
+  ) {
+    return "scouting";
+  }
+  if (
+    to === "/community" ||
+    to === "/learning-hub" ||
+    to === "/guides" ||
+    to === "/sports" ||
+    to === "/blog" ||
+    to === "/tools" ||
+    to === "/ai-guide" ||
+    to === "/crawler"
+  ) {
+    return "community";
+  }
+  return "platform";
+}
+
+const SECTION_HEADERS: Record<NavCategory, { title: string; subtitle: string }> = {
+  all: { title: "Features", subtitle: "Full directory" },
+  action: { title: "Play & Match Center", subtitle: "Live action & bookings" },
+  scouting: { title: "Scouting & Athlete Pipeline", subtitle: "CV, scans & talent" },
+  community: { title: "Knowledge & Community", subtitle: "Hub, guides & discussions" },
+  platform: { title: "Network & Ecosystem", subtitle: "Academies, pro & partners" },
+};
+
 export function FeaturesSidebar() {
   const [collapsed, setCollapsed] = useState(false);
   const [query, setQuery] = useState("");
+  const [activeCategory, setActiveCategory] = useState<NavCategory>("all");
   const path = useRouterState({ select: (s) => s.location.pathname });
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
+  // Initialize collapse preference from localStorage or screen width (default compact on lg, expanded on xl)
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("khelgrid_sidebar_collapsed");
+      if (saved !== null) {
+        setCollapsed(saved === "true");
+      } else if (typeof window !== "undefined" && window.innerWidth < 1280) {
+        setCollapsed(true);
+      }
+    } catch (e) {
+      void e;
+    }
+  }, []);
+
+  // Save collapse state change
+  const toggleCollapse = () => {
+    setCollapsed((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem("khelgrid_sidebar_collapsed", String(next));
+      } catch (e) {
+        void e;
+      }
+      return next;
+    });
+  };
+
+  // Keyboard shortcut listener: '[' or Cmd/Ctrl+B to toggle, '/' to search, Esc to clear
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement | null;
+      const isInput =
+        target?.tagName === "INPUT" || target?.tagName === "TEXTAREA" || target?.isContentEditable;
+
+      if (isInput) {
+        if (e.key === "Escape" && target === searchInputRef.current) {
+          setQuery("");
+          searchInputRef.current?.blur();
+        }
+        return;
+      }
+
+      if (e.key === "[" || ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "b")) {
+        e.preventDefault();
+        toggleCollapse();
+      } else if (e.key === "/" && !collapsed) {
+        e.preventDefault();
+        searchInputRef.current?.focus();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [collapsed]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    if (!q) return FEATURES.slice();
-    return FEATURES.filter((f) => f.label.toLowerCase().includes(q));
-  }, [query]);
+    return FEATURES.filter((f) => {
+      const matchesQuery = !q || f.label.toLowerCase().includes(q);
+      const matchesCat = activeCategory === "all" || getItemCategory(f.to) === activeCategory;
+      return matchesQuery && matchesCat;
+    });
+  }, [query, activeCategory]);
+
+  // Grouped items when showing All and no search query active
+  const groupedSections = useMemo(() => {
+    if (query.trim() || activeCategory !== "all") {
+      return null;
+    }
+    const categories: NavCategory[] = ["action", "scouting", "community", "platform"];
+    return categories.map((cat) => ({
+      category: cat,
+      meta: SECTION_HEADERS[cat],
+      items: FEATURES.filter((f) => getItemCategory(f.to) === cat),
+    }));
+  }, [query, activeCategory]);
 
   return (
-    <aside
-      className={`sticky top-16 hidden h-[calc(100vh-4rem)] shrink-0 flex-col border-r border-border/60 bg-background/40 backdrop-blur-xl transition-all xl:flex ${
-        collapsed ? "w-16" : "w-60"
-      }`}
-    >
-      <div className="flex items-center justify-between px-4 py-4">
-        {!collapsed && (
-          <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-            Features
-          </span>
+    <TooltipProvider delayDuration={120}>
+      <aside
+        id="khelgrid-features-sidebar"
+        aria-label="Features and Services Sidebar"
+        className={cn(
+          "sticky top-16 hidden h-[calc(100vh-4rem)] shrink-0 flex-col border-r border-border/60 bg-background/60 backdrop-blur-xl transition-[width] duration-200 ease-in-out lg:flex",
+          collapsed ? "w-16" : "w-64",
         )}
-        <button
-          onClick={() => setCollapsed((c) => !c)}
-          className="ml-auto grid h-6 w-6 place-items-center rounded-md text-muted-foreground hover:bg-secondary hover:text-foreground"
-          title={collapsed ? "Expand" : "Collapse"}
-        >
-          {collapsed ? (
-            <ChevronRight className="h-3.5 w-3.5" />
+      >
+        {/* Top Header */}
+        <div className="flex items-center justify-between border-b border-border/40 px-3 py-3">
+          {!collapsed ? (
+            <div className="flex items-center gap-2">
+              <span className="text-[11px] font-bold uppercase tracking-[0.16em] text-foreground/80">
+                Features
+              </span>
+              <span className="rounded-full bg-secondary px-1.5 py-0.5 text-[10px] font-semibold text-muted-foreground">
+                {FEATURES.length}
+              </span>
+            </div>
           ) : (
-            <ChevronLeft className="h-3.5 w-3.5" />
+            <div className="mx-auto flex h-7 w-7 items-center justify-center rounded-lg bg-secondary/80 text-primary">
+              <Swords className="h-4 w-4" />
+            </div>
           )}
-        </button>
-      </div>
 
-      {!collapsed && (
-        <div className="px-3 pb-2">
-          <div className="relative">
-            <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
-            <input
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search features…"
-              className="w-full rounded-md border border-border bg-secondary/40 py-1.5 pl-8 pr-2.5 text-sm text-foreground placeholder:text-muted-foreground/70 focus:border-primary/40 focus:bg-background focus:outline-none focus:ring-1 focus:ring-primary/20"
-            />
-          </div>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                type="button"
+                onClick={toggleCollapse}
+                aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+                aria-expanded={!collapsed}
+                className={cn(
+                  "grid h-7 w-7 place-items-center rounded-lg text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none",
+                  collapsed && "mx-auto mt-2",
+                )}
+              >
+                {collapsed ? (
+                  <ChevronRight className="h-4 w-4" />
+                ) : (
+                  <ChevronLeft className="h-4 w-4" />
+                )}
+              </button>
+            </TooltipTrigger>
+            <TooltipContent side="right" sideOffset={10}>
+              <div className="flex items-center gap-1.5">
+                <span>{collapsed ? "Expand sidebar" : "Collapse sidebar"}</span>
+                <kbd className="rounded bg-muted px-1.5 py-0.5 text-[10px] font-mono text-muted-foreground">
+                  [
+                </kbd>
+              </div>
+            </TooltipContent>
+          </Tooltip>
         </div>
-      )}
 
-      <nav className="flex flex-1 flex-col gap-0.5 overflow-y-auto px-2 pb-4">
-        {filtered.map((f) => (
-          <div key={f.to} className="flex flex-col">
-            {f.to === "/play" ? (
-              <PlayNavLink
-                active={isActivePath(path, f.to)}
-                source="sidebar_desktop"
-                showLabel={!collapsed}
-              />
-            ) : (
-              <NavLink
-                item={f}
-                active={isActivePath(path, f.to)}
-                source="sidebar_desktop"
-                showLabel={!collapsed}
-              />
-            )}
-            {/* Live Sports / Games Widget directly after Search trials */}
-            {f.to === "/search" && !collapsed && !query && <SidebarLiveScoreWidget />}
-          </div>
-        ))}
-        {filtered.length === 0 && !collapsed && (
-          <p className="px-3 py-2 text-xs text-muted-foreground">No matches found</p>
-        )}
-
-        {/* Ad · desktop sidebar, hidden while collapsed */}
+        {/* Search Bar & Category Tabs (Expanded Only) */}
         {!collapsed && (
-          <div className="mt-auto px-1">
-            <SidebarAd adSlot="sidebarBottom" minHeight={250} />
+          <div className="space-y-2 border-b border-border/40 px-3 py-2.5">
+            <div className="relative">
+              <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
+              <input
+                ref={searchInputRef}
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search features…"
+                className="w-full rounded-lg border border-border/70 bg-secondary/50 py-1.5 pl-8 pr-8 text-xs text-foreground placeholder:text-muted-foreground/70 transition-all focus:border-primary/50 focus:bg-background focus:outline-none focus:ring-1 focus:ring-primary/20"
+              />
+              {query ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setQuery("");
+                    searchInputRef.current?.focus();
+                  }}
+                  aria-label="Clear search"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-0.5 text-muted-foreground hover:bg-secondary hover:text-foreground"
+                >
+                  <X className="h-3 w-3" />
+                </button>
+              ) : (
+                <kbd className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 rounded border border-border/60 bg-muted/70 px-1 py-0.2 text-[9px] font-mono text-muted-foreground">
+                  /
+                </kbd>
+              )}
+            </div>
+
+            {/* Category Segmented Filter Tabs */}
+            {!query && (
+              <div
+                role="tablist"
+                aria-label="Feature categories"
+                className="no-scrollbar flex items-center gap-1 overflow-x-auto rounded-lg bg-secondary/40 p-0.5"
+              >
+                {NAV_CATEGORIES.map((cat) => {
+                  const isSelected = activeCategory === cat.id;
+                  return (
+                    <button
+                      key={cat.id}
+                      role="tab"
+                      aria-selected={isSelected}
+                      onClick={() => setActiveCategory(cat.id)}
+                      className={cn(
+                        "shrink-0 rounded-md px-2 py-1 text-[11px] font-medium transition-all cursor-pointer",
+                        isSelected
+                          ? "bg-card text-foreground shadow-xs font-semibold"
+                          : "text-muted-foreground hover:text-foreground hover:bg-secondary/60",
+                      )}
+                    >
+                      {cat.shortLabel}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
           </div>
         )}
-      </nav>
-    </aside>
+
+        {/* Navigation Item Scrollable Area */}
+        <nav
+          aria-label="Sidebar navigation links"
+          className={cn(
+            "flex flex-1 flex-col overflow-y-auto pb-4",
+            collapsed ? "gap-1 px-1.5 pt-2" : "gap-0.5 px-2 pt-2",
+          )}
+        >
+          {/* A. Collapsed View: Compact Icon Rail with Tooltips */}
+          {collapsed && (
+            <div className="flex flex-col gap-1">
+              {FEATURES.map((f, idx) => {
+                const active = isActivePath(path, f.to);
+                const prevCat = idx > 0 ? getItemCategory(FEATURES[idx - 1].to) : null;
+                const currCat = getItemCategory(f.to);
+                const isNewGroup = prevCat && prevCat !== currCat;
+
+                return (
+                  <div key={f.to} className="flex flex-col">
+                    {isNewGroup && (
+                      <div className="my-1 border-t border-border/50 mx-2" aria-hidden="true" />
+                    )}
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div className="w-full">
+                          {f.to === "/play" ? (
+                            <PlayNavLink
+                              active={active}
+                              source="sidebar_desktop"
+                              showLabel={false}
+                            />
+                          ) : (
+                            <NavLink
+                              item={f}
+                              active={active}
+                              source="sidebar_desktop"
+                              showLabel={false}
+                            />
+                          )}
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent
+                        side="right"
+                        sideOffset={12}
+                        className="flex flex-col gap-0.5"
+                      >
+                        <span className="font-semibold text-xs text-primary-foreground">
+                          {f.label}
+                        </span>
+                        <div className="flex items-center gap-1.5 text-[10px] text-primary-foreground/70">
+                          <span>{SECTION_HEADERS[currCat]?.title}</span>
+                          {active && (
+                            <>
+                              <span>·</span>
+                              <span className="font-semibold text-emerald-300">Active</span>
+                            </>
+                          )}
+                        </div>
+                      </TooltipContent>
+                    </Tooltip>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          {/* B. Expanded View: Grouped Sections or Filtered Results */}
+          {!collapsed && groupedSections && (
+            <div className="space-y-4">
+              {groupedSections.map((sec) => (
+                <div key={sec.category} className="space-y-1">
+                  <div className="flex items-center justify-between px-2.5 pt-1.5 pb-1">
+                    <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground">
+                      {sec.meta.title}
+                    </span>
+                    <span className="text-[10px] text-muted-foreground/70 font-mono">
+                      {sec.items.length}
+                    </span>
+                  </div>
+
+                  <div className="flex flex-col gap-0.5">
+                    {sec.items.map((f) => (
+                      <div key={f.to} className="flex flex-col">
+                        {f.to === "/play" ? (
+                          <PlayNavLink
+                            active={isActivePath(path, f.to)}
+                            source="sidebar_desktop"
+                            showLabel={true}
+                          />
+                        ) : (
+                          <NavLink
+                            item={f}
+                            active={isActivePath(path, f.to)}
+                            source="sidebar_desktop"
+                            showLabel={true}
+                          />
+                        )}
+                        {/* Live score widget immediately after Search */}
+                        {f.to === "/search" && <SidebarLiveScoreWidget />}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* C. Expanded View: Filtered / Searched Flat List */}
+          {!collapsed && !groupedSections && (
+            <div className="flex flex-col gap-0.5">
+              {query && (
+                <div className="flex items-center justify-between px-2.5 py-1 text-[11px] text-muted-foreground">
+                  <span>Results for &ldquo;{query}&rdquo;</span>
+                  <span className="font-mono text-[10px]">{filtered.length} found</span>
+                </div>
+              )}
+
+              {filtered.map((f) => (
+                <div key={f.to} className="flex flex-col">
+                  {f.to === "/play" ? (
+                    <PlayNavLink
+                      active={isActivePath(path, f.to)}
+                      source="sidebar_desktop"
+                      showLabel={true}
+                    />
+                  ) : (
+                    <NavLink
+                      item={f}
+                      active={isActivePath(path, f.to)}
+                      source="sidebar_desktop"
+                      showLabel={true}
+                    />
+                  )}
+                  {f.to === "/search" && !query && <SidebarLiveScoreWidget />}
+                </div>
+              ))}
+
+              {filtered.length === 0 && (
+                <div className="px-3 py-8 text-center space-y-2">
+                  <p className="text-xs font-medium text-foreground">No features found</p>
+                  <p className="text-[11px] text-muted-foreground">
+                    Try searching for &quot;play&quot;, &quot;venues&quot;, or &quot;coaching&quot;
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setQuery("");
+                      setActiveCategory("all");
+                    }}
+                    className="inline-flex items-center justify-center rounded-md bg-secondary px-3 py-1.5 text-xs font-semibold text-foreground hover:bg-secondary/80 transition-colors"
+                  >
+                    Clear filter
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Ad slot in expanded state */}
+          {!collapsed && (
+            <div className="mt-auto pt-3 px-1">
+              <SidebarAd adSlot="sidebarBottom" minHeight={250} />
+            </div>
+          )}
+        </nav>
+
+        {/* Footer Quick Controls */}
+        <div
+          className={cn(
+            "border-t border-border/40 bg-card/40 p-2 backdrop-blur-md",
+            collapsed ? "flex flex-col items-center gap-2" : "space-y-2",
+          )}
+        >
+          {!collapsed ? (
+            <div className="flex items-center justify-between gap-2 px-1">
+              <div className="flex items-center gap-1.5 text-xs text-muted-foreground font-medium">
+                <ThemeSwitcher variant="icon" />
+                <span className="text-[11px]">Theme</span>
+              </div>
+              <Link
+                to="/pricing"
+                className="inline-flex items-center gap-1 rounded-full border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 text-[10px] font-bold text-amber-500 hover:bg-amber-500/20 transition-colors"
+              >
+                <Crown className="h-3 w-3" />
+                <span>Go Pro</span>
+              </Link>
+            </div>
+          ) : (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div>
+                  <ThemeSwitcher variant="icon" />
+                </div>
+              </TooltipTrigger>
+              <TooltipContent side="right" sideOffset={12}>
+                <span>Toggle theme</span>
+              </TooltipContent>
+            </Tooltip>
+          )}
+        </div>
+      </aside>
+    </TooltipProvider>
   );
 }

@@ -32,13 +32,22 @@ export function NavLink({ item, active, source, showLabel = true, className }: N
       className={cn(
         "flex items-center gap-3 rounded-lg px-3 py-3.5 text-sm transition-colors sm:py-2.5",
         "outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+        !showLabel && "justify-center px-0",
         active
           ? "bg-secondary text-foreground hover:bg-secondary"
           : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground",
         className,
       )}
     >
-      <item.icon className={cn("h-4 w-4 shrink-0", active && "text-primary")} />
+      <span className="relative flex shrink-0 items-center justify-center">
+        <item.icon className={cn("h-4 w-4 shrink-0", active && "text-primary")} />
+        {item.label === "Live Scores" && !showLabel && (
+          <span className="absolute -top-1 -right-1 flex h-2 w-2" aria-hidden="true">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+            <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+          </span>
+        )}
+      </span>
       {showLabel && (
         <span className="flex flex-1 items-center justify-between min-w-0">
           <span className="truncate">{item.label}</span>

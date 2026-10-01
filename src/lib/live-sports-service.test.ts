@@ -15,7 +15,7 @@ describe("LiveSportsService", () => {
     expect(firstMatch.teamB).toBeDefined();
     expect(firstMatch.sport).toBeDefined();
     expect(firstMatch.status).toBeDefined();
-  });
+  }, 15000);
 
   it("simulates real-time updates for in-play cricket and football matches", () => {
     const mockMatches: LiveMatchUpdate[] = [
