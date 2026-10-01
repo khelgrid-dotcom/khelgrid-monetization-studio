@@ -31,12 +31,21 @@ export const MONETIZATION_PLANS = [
 export function HomeMonetizationSection() {
   return (
     <section
+      id="plans-pricing"
       aria-label="Membership and Pricing Options"
-      className="mx-auto max-w-7xl px-4 pb-16 sm:pb-20"
+      className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"
     >
-      <h2 className="mb-5 text-center text-xl font-bold tracking-tight sm:mb-6 sm:text-2xl text-foreground">
-        Built for athletes. Powered by academies.
-      </h2>
+      <div className="text-center max-w-2xl mx-auto mb-8">
+        <p className="text-xs font-semibold uppercase tracking-wider text-primary">
+          Plans & Memberships
+        </p>
+        <h2 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl text-foreground">
+          Built for athletes. Powered by academies.
+        </h2>
+        <p className="mt-2 text-xs sm:text-sm text-muted-foreground">
+          Transparent pricing for grassroots athletes, verified sports passports, and academy trial visibility.
+        </p>
+      </div>
 
       <div className="grid gap-4 md:grid-cols-3">
         {MONETIZATION_PLANS.map((card) => (

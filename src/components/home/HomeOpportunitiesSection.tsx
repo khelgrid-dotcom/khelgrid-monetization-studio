@@ -128,7 +128,11 @@ export function HomeOpportunitiesSection({ trials = TRIALS }: { trials?: readonl
   };
 
   return (
-    <section aria-label="Latest sports trials and opportunities" className="mt-8">
+    <section
+      id="trials-opportunities"
+      aria-label="Latest sports trials and opportunities"
+      className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"
+    >
       {/* Section Header with Controls */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>

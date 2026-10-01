@@ -1,12 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
 import {
   HomeHeroSection,
+  HomeQuickActionsSection,
   HomeOpportunitiesSection,
+  HomeLiveCenterSection,
+  HomeNewsWireSection,
   HomeGuidesSection,
+  HomeCommunityImpactSection,
   HomeMonetizationSection,
+  HomeCtaBannerSection,
 } from "@/components/home";
-import { SportsNewsSection } from "@/components/SportsNewsSection";
-import { LiveScoreSection } from "@/components/LiveScoreSection";
 import { HomeFaqSection } from "@/components/HomeFaqSection";
 import { BannerAd, ResponsiveAd } from "@/components/ads";
 import { buildSeoHead } from "@/lib/seo";
@@ -29,7 +32,7 @@ export const Route = createFileRoute("/")({
           name: faq.question,
           acceptedAnswer: {
             "@type": "Answer",
-            text: faq.answer,
+          text: faq.answer,
           },
         })),
       },
@@ -39,57 +42,48 @@ export const Route = createFileRoute("/")({
 
 function Home() {
   return (
-    <div className="min-w-0 flex-1">
-      {/* 1. Hero Search, Filters & Fast Action Categories */}
+    <main className="min-w-0 flex-1 space-y-12 sm:space-y-16 pb-16">
+      {/* 1. Hero Search, Live Metrics & Quick Sport Tags */}
       <HomeHeroSection />
 
       {/* 2. Below-Hero Responsive Ad Slot */}
-      <div className="mx-auto max-w-7xl px-4">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <BannerAd adSlot="homeBelowHero" minHeight={100} />
       </div>
 
-      {/* 3. Core Editorial Discovery, Opportunities & Live Wire Match Center */}
-      <div className="mx-auto max-w-7xl px-4 pb-16 sm:pb-20">
-        <div className="max-w-3xl pt-8">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">
-            Sports opportunities in India
-          </p>
-          <h2 className="mt-2 text-2xl font-bold tracking-tight sm:text-3xl text-foreground">
-            Find the next practical step in your sports journey
-          </h2>
-          <p className="mt-3 text-sm leading-relaxed text-muted-foreground sm:text-base">
-            KhelGrid brings trials, camps, tournaments, scholarships, training resources and
-            preparation guidance together for athletes and families. Each listing shows what is
-            known, what still needs confirmation, and where to check the organizer&apos;s latest
-            instructions.
-          </p>
-        </div>
+      {/* 3. Core Action Pillars (Trials, Turfs, Pickup Games, Coaching, CV, Events) */}
+      <HomeQuickActionsSection />
 
-        {/* Latest Opportunities & Trials Carousel */}
-        <HomeOpportunitiesSection />
+      {/* 4. Latest Selection Trials & Opportunities Carousel */}
+      <HomeOpportunitiesSection />
 
-        {/* In-Play Real-time Live Match Scores (Cricket, Football, Badminton, etc.) */}
-        <LiveScoreSection />
+      {/* 5. In-Play Match Center (Cricket, Football, Badminton Scores) */}
+      <HomeLiveCenterSection />
 
-        {/* Real-time Sports Wire & National Updates */}
-        <SportsNewsSection />
+      {/* 6. National Sports Wire & Grassroots Updates */}
+      <HomeNewsWireSection />
 
-        {/* Sports Guides, Pathways & Trust Verification Notice */}
-        <HomeGuidesSection />
-      </div>
+      {/* 7. Sports Guides, Athlete Development Pathways & Trust Audit */}
+      <HomeGuidesSection />
 
-      {/* 4. Monetization & Value Plans (Athletes & Academies) */}
+      {/* 8. Verified Academies & Community Trust Guarantee */}
+      <HomeCommunityImpactSection />
+
+      {/* 9. Membership & Listing Plans (Athletes & Academies) */}
       <HomeMonetizationSection />
 
-      {/* 5. Comprehensive FAQ Accordion */}
-      <div className="mx-auto max-w-7xl px-4 pb-16">
+      {/* 10. Comprehensive FAQ Accordion */}
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <HomeFaqSection />
       </div>
 
-      {/* 6. Footer Ad Slot */}
-      <div className="mx-auto max-w-7xl px-4 pb-16">
+      {/* 11. Dual-Track Conversion CTA Banner */}
+      <HomeCtaBannerSection />
+
+      {/* 12. Footer Responsive Ad Slot */}
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <ResponsiveAd adSlot="homeFooter" minHeight={250} />
       </div>
-    </div>
+    </main>
   );
 }

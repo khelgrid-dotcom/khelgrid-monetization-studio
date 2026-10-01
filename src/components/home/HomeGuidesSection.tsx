@@ -17,7 +17,11 @@ export const FEATURED_SPORTS = SPORTS_CATALOG.filter((sport) =>
 
 export function HomeGuidesSection() {
   return (
-    <div className="space-y-12">
+    <section
+      id="pathways-and-guides"
+      aria-label="Sports Guides and Athletic Pathways"
+      className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-12"
+    >
       {/* 1. Sports Guides Grid */}
       <section aria-label="Featured Sports Guides" className="pt-8">
         <div className="flex items-end justify-between gap-4">
@@ -110,6 +114,6 @@ export function HomeGuidesSection() {
           Read the Trust Center →
         </Link>
       </section>
-    </div>
+    </section>
   );
 }
