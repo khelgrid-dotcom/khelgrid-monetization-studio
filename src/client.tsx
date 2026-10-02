@@ -2,6 +2,7 @@
 import { StrictMode, startTransition } from "react";
 import { hydrateRoot } from "react-dom/client";
 import { StartClient } from "@tanstack/react-start/client";
+import { inject } from "@vercel/analytics";
 
 // Browser safety polyfill for TanStack Start SSR client hydration
 if (typeof window !== "undefined") {
@@ -13,6 +14,8 @@ if (typeof window !== "undefined") {
     },
   };
 }
+
+inject();
 
 startTransition(() => {
   hydrateRoot(
