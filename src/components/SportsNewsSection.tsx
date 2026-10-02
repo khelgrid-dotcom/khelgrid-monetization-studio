@@ -363,6 +363,7 @@ export function SportsNewsSection() {
         month: "short",
         day: "numeric",
         year: "numeric",
+        timeZone: "Asia/Kolkata",
       });
     } catch {
       return isoString;
@@ -500,6 +501,7 @@ export function SportsNewsSection() {
       return new Date(isoString).toLocaleDateString("en-IN", {
         month: "short",
         day: "numeric",
+        timeZone: "Asia/Kolkata",
       });
     } catch {
       return "Recent";
@@ -817,7 +819,11 @@ export function SportsNewsSection() {
                           <ShieldCheck className="h-3 w-3 shrink-0" />
                           {issuer.issuer}
                         </span>
-                        <time dateTime={article.publishedAt} itemProp="datePublished">
+                        <time
+                          dateTime={article.publishedAt}
+                          itemProp="datePublished"
+                          suppressHydrationWarning
+                        >
                           {formatDate(article.publishedAt)}
                         </time>
                       </div>
@@ -991,7 +997,11 @@ export function SportsNewsSection() {
 
                 <div className="flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 font-medium">
                   <ShieldCheck className="h-3.5 w-3.5 shrink-0" />
-                  <time dateTime={featuredArticle.publishedAt} itemProp="datePublished">
+                  <time
+                    dateTime={featuredArticle.publishedAt}
+                    itemProp="datePublished"
+                    suppressHydrationWarning
+                  >
                     {formatDate(featuredArticle.publishedAt)}
                   </time>
                 </div>
@@ -1149,6 +1159,7 @@ export function SportsNewsSection() {
                         dateTime={article.publishedAt}
                         itemProp="datePublished"
                         className="text-muted-foreground/70 hidden sm:inline"
+                        suppressHydrationWarning
                       >
                         {formatDate(article.publishedAt)}
                       </time>
@@ -1318,7 +1329,11 @@ export function SportsNewsSection() {
                               {article.category}
                             </span>
                           </div>
-                          <time dateTime={article.publishedAt} itemProp="datePublished">
+                          <time
+                            dateTime={article.publishedAt}
+                            itemProp="datePublished"
+                            suppressHydrationWarning
+                          >
                             {formatDate(article.publishedAt)}
                           </time>
                         </div>
