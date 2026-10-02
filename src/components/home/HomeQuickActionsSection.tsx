@@ -16,7 +16,8 @@ export const ACTION_PILLARS = [
     desc: "Discover SAI, Khelo India, and verified club youth selections.",
     badge: "350+ Active",
     icon: Award,
-    accent: "from-amber-500/10 to-orange-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20",
+    accent:
+      "from-amber-500/10 to-orange-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20",
     actionLabel: "Browse Trials",
   },
   {
@@ -25,7 +26,8 @@ export const ACTION_PILLARS = [
     desc: "Reserve hourly slots for cricket turfs, football pitches & badminton courts.",
     badge: "Instant Confirm",
     icon: CalendarCheck,
-    accent: "from-emerald-500/10 to-teal-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
+    accent:
+      "from-emerald-500/10 to-teal-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
     actionLabel: "Find Turfs",
   },
   {
@@ -43,7 +45,8 @@ export const ACTION_PILLARS = [
     desc: "Train under certified coaches, high-performance academies & skill camps.",
     badge: "Verified Staff",
     icon: GraduationCap,
-    accent: "from-purple-500/10 to-violet-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20",
+    accent:
+      "from-purple-500/10 to-violet-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20",
     actionLabel: "Find Coaches",
   },
   {
@@ -83,7 +86,8 @@ export function HomeQuickActionsSection() {
           </h2>
         </div>
         <p className="max-w-md text-xs sm:text-sm text-muted-foreground">
-          Single-click entry into verified selection trials, venue bookings, pickup sports, and certified athlete development.
+          Single-click entry into verified selection trials, venue bookings, pickup sports, and
+          certified athlete development.
         </p>
       </div>
 
@@ -101,9 +105,7 @@ export function HomeQuickActionsSection() {
                 >
                   <pillar.icon className="h-5 w-5" aria-hidden="true" />
                 </div>
-                <span className="text-xs font-medium text-muted-foreground">
-                  {pillar.badge}
-                </span>
+                <span className="text-xs font-medium text-muted-foreground">{pillar.badge}</span>
               </div>
 
               <h3 className="mt-4 text-base font-bold text-foreground group-hover:text-primary transition-colors sm:text-lg">
@@ -116,7 +118,10 @@ export function HomeQuickActionsSection() {
 
             <div className="mt-5 flex items-center gap-1 text-xs font-semibold text-primary pt-3 border-t border-border/50">
               <span>{pillar.actionLabel}</span>
-              <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden="true" />
+              <ArrowUpRight
+                className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                aria-hidden="true"
+              />
             </div>
           </Link>
         ))}

@@ -43,7 +43,8 @@ export function HomeMonetizationSection() {
           Built for athletes. Powered by academies.
         </h2>
         <p className="mt-2 text-xs sm:text-sm text-muted-foreground">
-          Transparent pricing for grassroots athletes, verified sports passports, and academy trial visibility.
+          Transparent pricing for grassroots athletes, verified sports passports, and academy trial
+          visibility.
         </p>
       </div>
 
