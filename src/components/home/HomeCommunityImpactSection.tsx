@@ -68,7 +68,7 @@ export function HomeCommunityImpactSection() {
           <div className="relative lg:col-span-5 flex flex-col justify-between overflow-hidden bg-muted p-6 sm:p-8">
             <div className="absolute inset-0">
               <img
-                src="/src/assets/images/khelgrid_academy_showcase_1790836301666.jpg"
+                src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=1200&q=80"
                 alt="Modern Indian badminton and multi-sport training facility"
                 referrerPolicy="no-referrer"
                 className="h-full w-full object-cover object-center"
@@ -88,7 +88,9 @@ export function HomeCommunityImpactSection() {
                 India&apos;s most rigorous sports opportunity audit
               </h2>
               <p className="mt-2 text-xs sm:text-sm leading-relaxed text-white/80">
-                Thousands of young athletes lose time and money to unofficial trial scams. KhelGrid enforces a multi-point verification protocol across government, federation, and verified private selections.
+                Thousands of young athletes lose time and money to unofficial trial scams. KhelGrid
+                enforces a multi-point verification protocol across government, federation, and
+                verified private selections.
               </p>
             </div>
 
@@ -139,7 +141,10 @@ export function HomeCommunityImpactSection() {
                         <div className="font-semibold text-xs text-foreground sm:text-sm line-clamp-1">
                           {academy.name}
                         </div>
-                        <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0" aria-hidden="true" />
+                        <CheckCircle2
+                          className="h-4 w-4 text-emerald-500 shrink-0"
+                          aria-hidden="true"
+                        />
                       </div>
                       <div className="mt-1 flex items-center gap-1 text-[11px] text-muted-foreground">
                         <MapPin className="h-3 w-3 shrink-0" aria-hidden="true" />
@@ -165,9 +170,7 @@ export function HomeCommunityImpactSection() {
                   {VERIFICATION_PILLARS.map((p) => (
                     <div key={p.title} className="text-xs">
                       <div className="font-semibold text-foreground">{p.title}</div>
-                      <div className="mt-1 text-muted-foreground leading-relaxed">
-                        {p.desc}
-                      </div>
+                      <div className="mt-1 text-muted-foreground leading-relaxed">{p.desc}</div>
                     </div>
                   ))}
                 </div>
@@ -175,7 +178,9 @@ export function HomeCommunityImpactSection() {
             </div>
 
             <div className="mt-6 flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-border/60 text-xs">
-              <span className="text-muted-foreground">Are you a recognized sports academy or organizer?</span>
+              <span className="text-muted-foreground">
+                Are you a recognized sports academy or organizer?
+              </span>
               <Link
                 to="/partner"
                 className="inline-flex items-center gap-1.5 font-semibold text-primary hover:underline"
