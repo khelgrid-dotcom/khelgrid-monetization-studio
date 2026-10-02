@@ -3,7 +3,15 @@ import { Home, CalendarCheck, Swords, GraduationCap, Radio } from "lucide-react"
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 
-const TABS = [
+export interface NavTabItem {
+  to: string;
+  label: string;
+  icon: typeof Home;
+  exact: boolean;
+  isLive?: boolean;
+}
+
+export const BOTTOM_NAV_TABS: readonly NavTabItem[] = [
   { to: "/", label: "Home", icon: Home, exact: true },
   { to: "/play", label: "Play", icon: Swords, exact: false },
   { to: "/book", label: "Book", icon: CalendarCheck, exact: false },
@@ -72,11 +80,11 @@ export function BottomTabBar() {
   return (
     <nav
       aria-label="Mobile Bottom Navigation"
-      className="fixed inset-x-0 bottom-0 z-40 border-t border-border/70 bg-background/92 pt-1 pb-[max(env(safe-area-inset-bottom,0px),8px)] backdrop-blur-2xl shadow-[0_-4px_20px_rgba(0,0,0,0.06)] dark:shadow-[0_-4px_24px_rgba(0,0,0,0.45)] lg:hidden"
+      className="fixed inset-x-0 bottom-0 z-50 border-t border-border/80 bg-background/95 pt-1.5 pb-[max(env(safe-area-inset-bottom,0px),8px)] backdrop-blur-2xl shadow-[0_-4px_24px_rgba(0,0,0,0.06)] dark:shadow-[0_-4px_28px_rgba(0,0,0,0.5)] lg:hidden transition-transform select-none"
     >
       <ul className="grid grid-cols-5 items-center">
-        {TABS.map((t) => {
-          const isLiveTab = "isLive" in t && t.isLive;
+        {BOTTOM_NAV_TABS.map((t) => {
+          const isLiveTab = t.isLive;
           const active = isLiveTab
             ? path === "/" && isLiveActive
             : !isLiveActive &&
@@ -88,25 +96,26 @@ export function BottomTabBar() {
                 to={t.to}
                 onClick={isLiveTab ? handleLiveClick : t.to === "/" ? handleHomeClick : undefined}
                 className={cn(
-                  "relative flex min-h-[52px] w-full flex-col items-center justify-center gap-1 py-1 text-[11px] transition-all active:scale-90",
+                  "relative flex min-h-[54px] w-full flex-col items-center justify-center py-1 text-[11px] transition-all active:scale-95",
                   active
                     ? "font-semibold text-primary"
                     : "font-medium text-muted-foreground hover:text-foreground",
                 )}
                 aria-current={active ? "page" : undefined}
+                data-testid={`bottom-tab-${t.label.toLowerCase()}`}
               >
                 {/* Active Indicator Micro-pill */}
                 {active && (
                   <span
                     aria-hidden="true"
-                    className="absolute -top-1 h-0.5 w-6 rounded-full bg-primary shadow-xs"
+                    className="absolute -top-1.5 h-0.5 w-6 rounded-full bg-primary shadow-xs"
                   />
                 )}
 
                 {/* Tab Icon Container */}
                 <span
                   className={cn(
-                    "relative grid h-8 w-12 place-items-center rounded-full transition-colors",
+                    "relative grid h-7 w-12 place-items-center rounded-full transition-colors",
                     active
                       ? "bg-primary/15 text-primary shadow-xs"
                       : isLiveTab
@@ -114,9 +123,9 @@ export function BottomTabBar() {
                         : "text-muted-foreground group-hover:text-foreground",
                   )}
                 >
-                  <t.icon className="h-[19px] w-[19px] shrink-0" aria-hidden="true" />
+                  <t.icon className="h-5 w-5 shrink-0" aria-hidden="true" />
                   {isLiveTab && (
-                    <span className="absolute top-1 right-2.5 flex h-2 w-2">
+                    <span className="absolute top-0.5 right-2 flex h-2 w-2">
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                       <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
                     </span>
@@ -124,9 +133,7 @@ export function BottomTabBar() {
                 </span>
 
                 {/* Tab Label */}
-                <span className="leading-none tracking-tight flex items-center gap-0.5">
-                  {t.label}
-                </span>
+                <span className="leading-tight tracking-tight mt-0.5">{t.label}</span>
               </Link>
             </li>
           );
