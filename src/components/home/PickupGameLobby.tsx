@@ -79,7 +79,7 @@ export function PickupGameLobby({
             <div
               key={game.id}
               onClick={() => setSelectedGame(game)}
-              className="group flex flex-col justify-between rounded-2xl border border-border/80 bg-card p-4 shadow-xs transition-all hover:border-blue-500/50 hover:shadow-md cursor-pointer"
+              className="group flex flex-col justify-between min-h-[220px] rounded-2xl border border-border/80 bg-card p-4 shadow-xs transition-all hover:border-blue-500/50 hover:shadow-md cursor-pointer"
             >
               <div>
                 {/* Meta Header */}
@@ -93,7 +93,7 @@ export function PickupGameLobby({
                 </div>
 
                 {/* Title & Venue */}
-                <h3 className="mt-2 text-xs sm:text-sm font-bold text-foreground line-clamp-1 group-hover:text-primary transition-colors">
+                <h3 className="mt-2 text-xs sm:text-sm font-bold text-foreground line-clamp-1 group-hover:text-primary transition-colors min-h-[1.25rem]">
                   {game.title}
                 </h3>
                 <div className="mt-1 flex items-center gap-1 text-[11px] text-muted-foreground">

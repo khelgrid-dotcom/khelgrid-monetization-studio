@@ -62,10 +62,12 @@ export function QuickVenueRadar({
           >
             <div>
               {/* Venue Image / Fallback Container */}
-              <div className="relative h-32 w-full overflow-hidden rounded-xl bg-muted">
+              <div className="relative h-36 sm:h-32 w-full overflow-hidden rounded-xl bg-muted shrink-0">
                 <img
                   src={venue.image}
                   alt={venue.name}
+                  loading="lazy"
+                  decoding="async"
                   referrerPolicy="no-referrer"
                   className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                   onError={(e) => {
@@ -86,7 +88,7 @@ export function QuickVenueRadar({
 
               {/* Name & Location */}
               <div className="mt-2.5">
-                <h3 className="font-bold text-xs sm:text-sm text-foreground line-clamp-1 group-hover:text-primary transition-colors">
+                <h3 className="font-bold text-xs sm:text-sm text-foreground line-clamp-1 group-hover:text-primary transition-colors min-h-[1.25rem]">
                   {venue.name}
                 </h3>
                 <div className="mt-1 flex items-center gap-1 text-[11px] text-muted-foreground">

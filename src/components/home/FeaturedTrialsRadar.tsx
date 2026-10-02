@@ -135,7 +135,7 @@ export function FeaturedTrialsRadar({
                 </div>
 
                 {/* Trial Title */}
-                <h3 className="mt-2 text-sm font-bold text-foreground group-hover:text-primary transition-colors line-clamp-2">
+                <h3 className="mt-2 text-sm font-bold text-foreground group-hover:text-primary transition-colors line-clamp-2 min-h-[2.5rem]">
                   {trial.title}
                 </h3>
 

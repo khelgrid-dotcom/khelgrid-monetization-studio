@@ -29,7 +29,7 @@ export function HomeFaqSection() {
     <section
       id="faq"
       aria-labelledby="faq-section-heading"
-      className="mx-auto mt-8 max-w-5xl rounded-3xl border border-border/80 bg-gradient-card p-6 shadow-sm sm:p-10"
+      className="mx-auto mt-4 sm:mt-8 max-w-5xl rounded-2xl sm:rounded-3xl border border-border/80 bg-gradient-card p-4 sm:p-8 md:p-10 shadow-sm"
     >
       <div className="flex flex-col gap-3 text-center sm:items-center">
         <div className="inline-flex items-center gap-2 self-center rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">

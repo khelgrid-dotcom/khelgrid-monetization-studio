@@ -41,13 +41,13 @@ export function AppHeaderBanner({ selectedCity, onSelectCity }: AppHeaderBannerP
       <PWAInstallBanner />
 
       {/* App Top Greetings & City Switcher Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <div className="flex items-center gap-1.5 text-xs text-muted-foreground font-medium">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-            <span>{greeting}</span>
+      <div className="flex items-start sm:items-center justify-between gap-2.5">
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-1.5 text-xs text-muted-foreground font-medium h-5">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+            <span className="truncate">{greeting}</span>
           </div>
-          <h1 className="mt-0.5 text-xl sm:text-2xl lg:text-3xl font-extrabold tracking-tight text-foreground">
+          <h1 className="mt-0.5 text-lg sm:text-2xl lg:text-3xl font-extrabold tracking-tight text-foreground truncate min-h-[1.75rem] sm:min-h-[2.25rem]">
             {selectedCity === "All Cities" ? (
               <>
                 Sports Across <span className="text-primary">India</span>
@@ -61,16 +61,18 @@ export function AppHeaderBanner({ selectedCity, onSelectCity }: AppHeaderBannerP
         </div>
 
         {/* City Switcher Pill */}
-        <div className="relative">
+        <div className="relative shrink-0 pt-0.5 sm:pt-0">
           <button
             type="button"
             onClick={() => setCityDropdownOpen((prev) => !prev)}
-            className="flex items-center gap-1.5 rounded-full border border-border/80 bg-secondary/80 px-3.5 py-1.5 text-xs font-semibold text-foreground backdrop-blur-md transition hover:bg-secondary hover:border-primary/40 cursor-pointer min-h-[36px]"
+            className="flex items-center gap-1.5 rounded-full border border-border/80 bg-secondary/80 px-3 py-1.5 text-xs font-semibold text-foreground backdrop-blur-md transition hover:bg-secondary hover:border-primary/40 cursor-pointer min-h-[36px]"
             aria-expanded={cityDropdownOpen}
             aria-label="Select City"
           >
             <MapPin className="h-3.5 w-3.5 text-primary shrink-0" />
-            <span>{selectedCity === "All Cities" ? "All India" : selectedCity}</span>
+            <span className="max-w-[80px] sm:max-w-none truncate">
+              {selectedCity === "All Cities" ? "All India" : selectedCity}
+            </span>
             <ChevronDown className="h-3 w-3 text-muted-foreground shrink-0" />
           </button>
 

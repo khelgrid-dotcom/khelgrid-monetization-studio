@@ -15,7 +15,7 @@ export function PWAInstallBanner() {
 
   return (
     <>
-      <div className="relative overflow-hidden rounded-2xl border border-primary/30 bg-gradient-to-r from-primary/10 via-card to-card p-3 sm:p-4 shadow-sm">
+      <div className="relative overflow-hidden rounded-2xl border border-primary/30 bg-gradient-to-r from-primary/10 via-card to-card p-3 sm:p-4 shadow-xs animate-in fade-in slide-in-from-top-2 duration-300">
         <div className="flex items-center justify-between gap-3">
           {/* App Icon + Pitch */}
           <div className="flex items-center gap-3 min-w-0">

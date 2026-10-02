@@ -52,12 +52,12 @@ export function LiveMatchTicker({ selectedSport = "All" }: LiveMatchTickerProps)
       </div>
 
       {/* Horizontal Swipeable Match Cards */}
-      <div className="flex items-stretch gap-3 overflow-x-auto no-scrollbar scroll-smooth pb-2 pt-1 px-0.5">
+      <div className="flex items-stretch gap-3 overflow-x-auto no-scrollbar scroll-smooth pb-2 pt-1 px-0.5 overscroll-x-contain touch-pan-x snap-x snap-mandatory">
         {displayMatches.map((match) => (
           <div
             key={match.id}
             onClick={() => setSelectedMatch(match)}
-            className="flex-none w-[280px] sm:w-[320px] rounded-2xl border border-border/80 bg-card p-3.5 shadow-xs transition-all hover:border-primary/50 hover:shadow-md cursor-pointer active:scale-[0.99] flex flex-col justify-between"
+            className="snap-start flex-none w-[84vw] max-w-[320px] sm:w-[320px] min-h-[148px] rounded-2xl border border-border/80 bg-card p-3.5 shadow-xs transition-all hover:border-primary/50 hover:shadow-md cursor-pointer active:scale-[0.99] flex flex-col justify-between"
           >
             {/* Match Header */}
             <div className="flex items-center justify-between text-[11px] pb-2 border-b border-border/60">

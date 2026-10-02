@@ -60,7 +60,7 @@ export function HomeCommunityImpactSection() {
     <section
       id="community-impact"
       aria-label="Verified Sports Academy Network"
-      className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"
+      className="w-full py-1"
     >
       <div className="overflow-hidden rounded-3xl border border-border/80 bg-gradient-card shadow-sm">
         <div className="grid lg:grid-cols-12 gap-0 items-stretch">

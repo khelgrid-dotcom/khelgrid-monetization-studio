@@ -32,10 +32,10 @@ export function SportCategoryPills({ selectedSport, onSelectSport }: SportCatego
   };
 
   return (
-    <div className="relative py-1">
+    <div className="relative py-1 min-h-[46px]">
       <div
         ref={scrollContainerRef}
-        className="flex items-center gap-2 overflow-x-auto no-scrollbar scroll-smooth py-1 px-0.5"
+        className="flex items-center gap-2 overflow-x-auto no-scrollbar scroll-smooth py-1 px-0.5 overscroll-x-contain touch-pan-x snap-x snap-mandatory"
       >
         {SPORTS_LIST.map((sport) => {
           const isSelected =
@@ -46,7 +46,7 @@ export function SportCategoryPills({ selectedSport, onSelectSport }: SportCatego
               key={sport.id}
               type="button"
               onClick={() => onSelectSport(sport.id)}
-              className={`flex shrink-0 items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-semibold transition-all cursor-pointer whitespace-nowrap min-h-[38px] ${
+              className={`snap-start flex shrink-0 items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-semibold transition-all cursor-pointer whitespace-nowrap min-h-[40px] select-none ${
                 isSelected
                   ? "bg-primary text-primary-foreground shadow-xs ring-2 ring-primary/30"
                   : "bg-secondary/70 text-muted-foreground hover:bg-secondary hover:text-foreground border border-border/60"
