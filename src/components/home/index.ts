@@ -1,3 +1,14 @@
+export { AppHeaderBanner } from "./AppHeaderBanner";
+export { SportCategoryPills } from "./SportCategoryPills";
+export { AppLaunchpad } from "./AppLaunchpad";
+export { LiveMatchTicker } from "./LiveMatchTicker";
+export { FeaturedTrialsRadar } from "./FeaturedTrialsRadar";
+export { QuickVenueRadar } from "./QuickVenueRadar";
+export { PickupGameLobby } from "./PickupGameLobby";
+export { AthletePathwayCard } from "./AthletePathwayCard";
+export { NativeAppBanner } from "./NativeAppBanner";
+
+// Core home sections
 export { HomeHeroSection } from "./HomeHeroSection";
 export { HomeSectionNav } from "./HomeSectionNav";
 export { HomeQuickActionsSection } from "./HomeQuickActionsSection";

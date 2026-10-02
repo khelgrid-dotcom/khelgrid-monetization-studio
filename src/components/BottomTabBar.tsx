@@ -1,6 +1,5 @@
-import { Link, useRouterState } from "@tanstack/react-router";
-import { Home, CalendarCheck, Swords, GraduationCap, User } from "lucide-react";
-import { useAuth } from "@/context/AuthContext";
+import { Link, useRouterState, useNavigate } from "@tanstack/react-router";
+import { Home, CalendarCheck, Swords, GraduationCap, Radio } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const TABS = [
@@ -8,16 +7,23 @@ const TABS = [
   { to: "/play", label: "Play", icon: Swords, exact: false },
   { to: "/book", label: "Book", icon: CalendarCheck, exact: false },
   { to: "/train", label: "Train", icon: GraduationCap, exact: false },
-  { to: "/dashboard", label: "Me", icon: User, exact: false },
+  { to: "/#live-scores", label: "Live", icon: Radio, exact: false, isLive: true },
 ] as const;
 
 export function BottomTabBar() {
   const path = useRouterState({ select: (s) => s.location.pathname });
-  const auth = useAuth();
-  const { isAuthenticated, name, user } = auth;
-  const isAuth = Boolean(isAuthenticated);
-  const userName = name || user?.name;
-  const initial = isAuth && userName ? userName.trim()[0]?.toUpperCase() : null;
+  const navigate = useNavigate();
+
+  const handleLiveClick = (e: React.MouseEvent) => {
+    if (path === "/") {
+      e.preventDefault();
+      const el = document.getElementById("live-scores") || document.getElementById("match-center");
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth" });
+        return;
+      }
+    }
+  };
 
   return (
     <nav
@@ -26,11 +32,15 @@ export function BottomTabBar() {
     >
       <ul className="grid grid-cols-5 items-center">
         {TABS.map((t) => {
-          const active = t.exact ? path === t.to : path === t.to || path.startsWith(t.to + "/");
+          const isLiveTab = "isLive" in t && t.isLive;
+          const active =
+            !isLiveTab && (t.exact ? path === t.to : path === t.to || path.startsWith(t.to + "/"));
+
           return (
-            <li key={t.to} className="relative flex justify-center">
+            <li key={t.label} className="relative flex justify-center">
               <Link
                 to={t.to}
+                onClick={isLiveTab ? handleLiveClick : undefined}
                 className={cn(
                   "relative flex min-h-[52px] w-full flex-col items-center justify-center gap-1 py-1 text-[11px] transition-all active:scale-90",
                   active
@@ -53,20 +63,24 @@ export function BottomTabBar() {
                     "relative grid h-8 w-12 place-items-center rounded-full transition-colors",
                     active
                       ? "bg-primary/15 text-primary shadow-xs"
-                      : "text-muted-foreground group-hover:text-foreground",
+                      : isLiveTab
+                        ? "text-emerald-600 dark:text-emerald-400 group-hover:text-emerald-500"
+                        : "text-muted-foreground group-hover:text-foreground",
                   )}
                 >
-                  {t.to === "/dashboard" && initial ? (
-                    <span className="grid h-5 w-5 place-items-center rounded-full bg-primary/20 text-[10px] font-bold text-primary">
-                      {initial}
+                  <t.icon className="h-[19px] w-[19px] shrink-0" aria-hidden="true" />
+                  {isLiveTab && (
+                    <span className="absolute top-1 right-2.5 flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
                     </span>
-                  ) : (
-                    <t.icon className="h-[19px] w-[19px] shrink-0" aria-hidden="true" />
                   )}
                 </span>
 
                 {/* Tab Label */}
-                <span className="leading-none tracking-tight">{t.label}</span>
+                <span className="leading-none tracking-tight flex items-center gap-0.5">
+                  {t.label}
+                </span>
               </Link>
             </li>
           );

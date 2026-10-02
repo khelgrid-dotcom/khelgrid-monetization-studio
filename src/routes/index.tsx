@@ -1,15 +1,17 @@
+import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import {
-  HomeHeroSection,
-  HomeSectionNav,
-  HomeQuickActionsSection,
-  HomeOpportunitiesSection,
-  HomeLiveCenterSection,
+  AppHeaderBanner,
+  SportCategoryPills,
+  AppLaunchpad,
+  LiveMatchTicker,
+  FeaturedTrialsRadar,
+  QuickVenueRadar,
+  PickupGameLobby,
+  AthletePathwayCard,
+  NativeAppBanner,
   HomeNewsWireSection,
-  HomeGuidesSection,
   HomeCommunityImpactSection,
-  HomeMonetizationSection,
-  HomeCtaBannerSection,
 } from "@/components/home";
 import { HomeFaqSection } from "@/components/HomeFaqSection";
 import { BannerAd, ResponsiveAd } from "@/components/ads";
@@ -42,52 +44,60 @@ export const Route = createFileRoute("/")({
 });
 
 function Home() {
+  const [selectedSport, setSelectedSport] = useState<string>("All");
+  const [selectedCity, setSelectedCity] = useState<string>("Bengaluru");
+
   return (
-    <main className="min-w-0 flex-1 space-y-12 sm:space-y-16 pb-16">
-      {/* 1. Hero Search, Live Metrics & Quick Sport Tags */}
-      <HomeHeroSection />
+    <div className="min-w-0 flex-1 space-y-6 sm:space-y-8 pb-16">
+      <div className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8 space-y-5 sm:space-y-7">
+        {/* 1. App Header Greeting, City Switcher, Quick Search & PWA Install Bar */}
+        <AppHeaderBanner selectedCity={selectedCity} onSelectCity={setSelectedCity} />
 
-      {/* 2. Below-Hero Responsive Ad Slot */}
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <BannerAd adSlot="homeBelowHero" minHeight={100} />
+        {/* 2. Touch-First Horizontal Sport Selector */}
+        <SportCategoryPills selectedSport={selectedSport} onSelectSport={setSelectedSport} />
+
+        {/* 3. App Launchpad: 6 Iconic Touch-Friendly Tiles */}
+        <AppLaunchpad />
+
+        {/* 4. In-Play Live Match Center (Direct target for bottom thumb Live tab) */}
+        <LiveMatchTicker selectedSport={selectedSport} />
+
+        {/* 5. Sponsored Banner Ad */}
+        <div className="pt-1">
+          <BannerAd adSlot="homeBelowHero" minHeight={90} />
+        </div>
+
+        {/* 6. Selection Trials & Scouting Combines */}
+        <FeaturedTrialsRadar selectedSport={selectedSport} selectedCity={selectedCity} />
+
+        {/* 7. Instant Turf & Court Booking */}
+        <QuickVenueRadar selectedCity={selectedCity} selectedSport={selectedSport} />
+
+        {/* 8. Community Pickup Games Lobby */}
+        <PickupGameLobby selectedCity={selectedCity} selectedSport={selectedSport} />
+
+        {/* 9. Athlete Passport & Verified Sports CV Feature */}
+        <AthletePathwayCard />
+
+        {/* 10. National Sports Wire & Live Editorial */}
+        <HomeNewsWireSection />
+
+        {/* 11. Multi-Platform PWA, Android & iOS Native App Showcase */}
+        <NativeAppBanner />
+
+        {/* 12. Verified Academies & Community Trust Audit */}
+        <HomeCommunityImpactSection />
+
+        {/* 13. Frequently Asked Questions Accordion */}
+        <div className="pt-2">
+          <HomeFaqSection />
+        </div>
+
+        {/* 14. Responsive Footer Ad Unit */}
+        <div className="pt-2">
+          <ResponsiveAd adSlot="homeFooter" minHeight={200} />
+        </div>
       </div>
-
-      {/* 3. Sticky Quick Jump Section Sub-Bar */}
-      <HomeSectionNav />
-
-      {/* 4. Core Action Pillars (Trials, Turfs, Pickup Games, Coaching, CV, Events) */}
-      <HomeQuickActionsSection />
-
-      {/* 4. Latest Selection Trials & Opportunities Carousel */}
-      <HomeOpportunitiesSection />
-
-      {/* 5. In-Play Match Center (Cricket, Football, Badminton Scores) */}
-      <HomeLiveCenterSection />
-
-      {/* 6. National Sports Wire & Grassroots Updates */}
-      <HomeNewsWireSection />
-
-      {/* 7. Sports Guides, Athlete Development Pathways & Trust Audit */}
-      <HomeGuidesSection />
-
-      {/* 8. Verified Academies & Community Trust Guarantee */}
-      <HomeCommunityImpactSection />
-
-      {/* 9. Membership & Listing Plans (Athletes & Academies) */}
-      <HomeMonetizationSection />
-
-      {/* 10. Comprehensive FAQ Accordion */}
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <HomeFaqSection />
-      </div>
-
-      {/* 11. Dual-Track Conversion CTA Banner */}
-      <HomeCtaBannerSection />
-
-      {/* 12. Footer Responsive Ad Slot */}
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <ResponsiveAd adSlot="homeFooter" minHeight={250} />
-      </div>
-    </main>
+    </div>
   );
 }
