@@ -92,10 +92,10 @@ export function Navbar() {
           <NavDrawer />
         </div>
 
-        <button
-          onClick={() => setSportsLauncherOpen(true)}
+        <Link
+          to="/"
           className="flex shrink-0 items-center gap-2 transition hover:opacity-80"
-          title="Open Sports Selector"
+          title="KhelGrid Home"
         >
           <img
             src="https://cdn.builder.io/api/v1/image/assets%2Fbb0e1ceb11294a31a719df6ba93a7331%2Fc8513d4ae3bd4939b4defe6841f88dd7?format=webp&width=800&height=1200"
@@ -105,7 +105,7 @@ export function Navbar() {
           <span className="text-base font-bold tracking-tight sm:text-xl">
             Khel<span className="text-primary">Grid</span>
           </span>
-        </button>
+        </Link>
 
         {/* Desktop primary nav - Essential core features only */}
         <nav className="ml-2 hidden shrink-0 items-center gap-1 rounded-full border border-border/60 bg-card/60 p-1 lg:flex">

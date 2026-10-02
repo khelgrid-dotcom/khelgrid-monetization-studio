@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import {
   AppHeaderBanner,
@@ -45,13 +45,34 @@ export const Route = createFileRoute("/")({
 
 function Home() {
   const [selectedSport, setSelectedSport] = useState<string>("All");
-  const [selectedCity, setSelectedCity] = useState<string>("Bengaluru");
+  const [selectedCity, setSelectedCity] = useState<string>("All Cities");
+
+  // Read saved city preference on client after hydration
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("khelgrid_user_city");
+      if (saved) {
+        setSelectedCity(saved);
+      }
+    } catch {
+      // ignore
+    }
+  }, []);
+
+  const handleSelectCity = (city: string) => {
+    setSelectedCity(city);
+    try {
+      localStorage.setItem("khelgrid_user_city", city);
+    } catch {
+      // ignore
+    }
+  };
 
   return (
     <div className="min-w-0 flex-1 space-y-6 sm:space-y-8 pb-16">
       <div className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8 space-y-5 sm:space-y-7">
         {/* 1. App Header Greeting, City Switcher, Quick Search & PWA Install Bar */}
-        <AppHeaderBanner selectedCity={selectedCity} onSelectCity={setSelectedCity} />
+        <AppHeaderBanner selectedCity={selectedCity} onSelectCity={handleSelectCity} />
 
         {/* 2. Touch-First Horizontal Sport Selector */}
         <SportCategoryPills selectedSport={selectedSport} onSelectSport={setSelectedSport} />

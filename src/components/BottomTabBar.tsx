@@ -1,5 +1,6 @@
 import { Link, useRouterState, useNavigate } from "@tanstack/react-router";
 import { Home, CalendarCheck, Swords, GraduationCap, Radio } from "lucide-react";
+import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 
 const TABS = [
@@ -7,21 +8,64 @@ const TABS = [
   { to: "/play", label: "Play", icon: Swords, exact: false },
   { to: "/book", label: "Book", icon: CalendarCheck, exact: false },
   { to: "/train", label: "Train", icon: GraduationCap, exact: false },
-  { to: "/#live-scores", label: "Live", icon: Radio, exact: false, isLive: true },
+  { to: "/", label: "Live", icon: Radio, exact: false, isLive: true },
 ] as const;
 
 export function BottomTabBar() {
   const path = useRouterState({ select: (s) => s.location.pathname });
   const navigate = useNavigate();
+  const [isLiveActive, setIsLiveActive] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const checkHash = () => {
+      setIsLiveActive(window.location.hash === "#live-scores");
+    };
+    checkHash();
+    window.addEventListener("hashchange", checkHash);
+    return () => window.removeEventListener("hashchange", checkHash);
+  }, [path]);
 
   const handleLiveClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setIsLiveActive(true);
     if (path === "/") {
-      e.preventDefault();
       const el = document.getElementById("live-scores") || document.getElementById("match-center");
       if (el) {
         el.scrollIntoView({ behavior: "smooth" });
-        return;
+        try {
+          window.history.replaceState(null, "", "/#live-scores");
+        } catch {
+          // ignore
+        }
       }
+    } else {
+      navigate({ to: "/" }).then(() => {
+        setTimeout(() => {
+          const el =
+            document.getElementById("live-scores") || document.getElementById("match-center");
+          if (el) {
+            el.scrollIntoView({ behavior: "smooth" });
+            try {
+              window.history.replaceState(null, "", "/#live-scores");
+            } catch {
+              // ignore
+            }
+          }
+        }, 120);
+      });
+    }
+  };
+
+  const handleHomeClick = () => {
+    setIsLiveActive(false);
+    if (path === "/" && typeof window !== "undefined" && window.location.hash) {
+      try {
+        window.history.replaceState(null, "", "/");
+      } catch {
+        // ignore
+      }
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 
@@ -33,14 +77,16 @@ export function BottomTabBar() {
       <ul className="grid grid-cols-5 items-center">
         {TABS.map((t) => {
           const isLiveTab = "isLive" in t && t.isLive;
-          const active =
-            !isLiveTab && (t.exact ? path === t.to : path === t.to || path.startsWith(t.to + "/"));
+          const active = isLiveTab
+            ? path === "/" && isLiveActive
+            : !isLiveActive &&
+              (t.exact ? path === t.to : path === t.to || path.startsWith(t.to + "/"));
 
           return (
             <li key={t.label} className="relative flex justify-center">
               <Link
                 to={t.to}
-                onClick={isLiveTab ? handleLiveClick : undefined}
+                onClick={isLiveTab ? handleLiveClick : t.to === "/" ? handleHomeClick : undefined}
                 className={cn(
                   "relative flex min-h-[52px] w-full flex-col items-center justify-center gap-1 py-1 text-[11px] transition-all active:scale-90",
                   active
