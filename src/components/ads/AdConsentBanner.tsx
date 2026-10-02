@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Cookie } from "lucide-react";
+import { Cookie, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAdConsent } from "./AdConsent";
 import { trackAdEvent } from "@/lib/ad-analytics";
@@ -15,38 +15,55 @@ import { trackAdEvent } from "@/lib/ad-analytics";
 export function AdConsentBanner() {
   const { consent, ready, grant, deny } = useAdConsent();
   const [mounted, setMounted] = useState(false);
+  const [dismissed, setDismissed] = useState(false);
 
   useEffect(() => setMounted(true), []);
-  if (!mounted || !ready || consent !== "unknown") return null;
+  if (!mounted || !ready || consent !== "unknown" || dismissed) return null;
 
   return (
     <div
       role="dialog"
       aria-modal="false"
       aria-label="Cookie and advertising consent"
-      className="fixed inset-x-0 bottom-[calc(3.75rem+env(safe-area-inset-bottom,0px))] z-50 mx-auto max-w-3xl px-3 md:bottom-4"
+      className="fixed inset-x-0 bottom-[calc(4rem+env(safe-area-inset-bottom,0px))] z-50 mx-auto max-w-2xl px-3 md:bottom-4"
     >
-      <div className="flex flex-col gap-3 rounded-2xl border border-border bg-card/95 p-4 shadow-lg backdrop-blur-xl sm:flex-row sm:items-center">
-        <Cookie className="hidden h-5 w-5 shrink-0 text-primary sm:block" aria-hidden="true" />
-        <p className="flex-1 text-xs text-muted-foreground sm:text-sm">
-          We use cookies to show ads that keep KhelGrid free. Accept to see personalized sports
-          offers, or continue with non-personalized ads. You can change this anytime.
-        </p>
-        <div className="flex shrink-0 gap-2">
+      <div className="relative flex flex-col gap-2.5 rounded-2xl border border-border/80 bg-card/95 p-3 shadow-xl backdrop-blur-xl sm:flex-row sm:items-center sm:gap-3 sm:p-4">
+        {/* Dismiss Button */}
+        <button
+          type="button"
+          aria-label="Dismiss cookie notice"
+          onClick={() => {
+            setDismissed(true);
+            deny();
+          }}
+          className="absolute right-2 top-2 grid h-6 w-6 place-items-center rounded-full text-muted-foreground hover:bg-secondary hover:text-foreground cursor-pointer sm:hidden"
+        >
+          <X className="h-3.5 w-3.5" />
+        </button>
+
+        <div className="flex items-start gap-2.5 pr-6 sm:pr-0">
+          <Cookie className="h-4 w-4 shrink-0 text-primary mt-0.5" aria-hidden="true" />
+          <p className="flex-1 text-[11px] sm:text-xs text-muted-foreground leading-relaxed">
+            We use cookies to support sports trials and keep KhelGrid free. Accept personalized
+            offers or continue with standard mode.
+          </p>
+        </div>
+
+        <div className="flex shrink-0 gap-1.5 sm:gap-2">
           <Button
             size="sm"
             variant="outline"
-            className="min-h-11 flex-1 sm:flex-none"
+            className="h-8 px-2.5 text-xs flex-1 sm:flex-none cursor-pointer"
             onClick={() => {
               deny();
               trackAdEvent({ event: "ad_consent", value: "denied" });
             }}
           >
-            Non-personalized
+            Standard
           </Button>
           <Button
             size="sm"
-            className="min-h-11 flex-1 bg-gradient-hero text-primary-foreground hover:opacity-95 sm:flex-none"
+            className="h-8 px-3 text-xs flex-1 bg-gradient-hero text-primary-foreground font-semibold hover:opacity-95 sm:flex-none cursor-pointer"
             onClick={() => {
               grant();
               trackAdEvent({ event: "ad_consent", value: "granted" });

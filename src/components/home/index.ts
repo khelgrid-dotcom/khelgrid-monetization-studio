@@ -1,10 +1,5 @@
 export { HomeHeroSection } from "./HomeHeroSection";
-export { HomeSectionNav } from "./HomeSectionNav";
-export { HomeQuickActionsSection } from "./HomeQuickActionsSection";
 export { HomeOpportunitiesSection } from "./HomeOpportunitiesSection";
-export { HomeLiveCenterSection } from "./HomeLiveCenterSection";
-export { HomeNewsWireSection } from "./HomeNewsWireSection";
 export { HomeGuidesSection } from "./HomeGuidesSection";
-export { HomeCommunityImpactSection } from "./HomeCommunityImpactSection";
 export { HomeMonetizationSection } from "./HomeMonetizationSection";
-export { HomeCtaBannerSection } from "./HomeCtaBannerSection";
+export { MetroCityPickerModal } from "./MetroCityPickerModal";
