@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import { useRouterState } from "@tanstack/react-router";
 import {
   analyticsConfig,
@@ -32,17 +32,18 @@ export interface GoogleAnalyticsHookReturn {
 /**
  * Initializes Google Analytics 4 (GA4) and Google Tag using VITE_GA_MEASUREMENT_ID
  * and VITE_GOOGLE_TAG_ID. Tracks SPA page views and active user engagement
- * (engagement time and scroll milestones) without duplication.
+ * (engagement time and scroll milestones) safely without infinite re-renders.
  */
 export function useGoogleAnalytics(
   options: UseGoogleAnalyticsOptions = {},
 ): GoogleAnalyticsHookReturn {
   const isEnabled = options.enabled ?? analyticsConfig.enabled;
+  const isInitializedRef = useRef<boolean>(false);
   const [isInitialized, setIsInitialized] = useState<boolean>(false);
 
-  // TanStack Router location state
-  const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const search = useRouterState({ select: (s) => s.location.searchStr });
+  // TanStack Router location state with null-safe selectors
+  const pathname = useRouterState({ select: (s) => s?.location?.pathname ?? "/" });
+  const search = useRouterState({ select: (s) => s?.location?.searchStr ?? "" });
 
   // References for engagement calculations
   const routeStartTimeRef = useRef<number>(Date.now());
@@ -51,99 +52,118 @@ export function useGoogleAnalytics(
   const lastActiveTimestampRef = useRef<number>(Date.now());
   const scrollMilestonesHitRef = useRef<Set<number>>(new Set());
 
-  // IDs in use
-  const activeIds = googleTagIds();
+  // Stable IDs in use (memoized so reference never changes)
+  const activeIds = useMemo(() => googleTagIds(), []);
   const measurementId = analyticsConfig.measurementId;
   const googleTagId = analyticsConfig.googleTagId;
 
-  // 1. Script injection and gtag setup (executed once)
+  // 1. Script injection and gtag setup (executed strictly once on client mount)
   useEffect(() => {
-    if (!hasValidGoogleTag() || typeof window === "undefined") {
+    if (typeof window === "undefined" || !hasValidGoogleTag() || isInitializedRef.current) {
       return;
     }
 
-    // Prepare dataLayer and gtag shim
-    window.dataLayer = window.dataLayer ?? [];
-    if (!window.gtag) {
-      window.gtag = (...args: unknown[]) => {
-        window.dataLayer?.push(args as unknown as Record<string, unknown>);
-      };
-    }
+    try {
+      // Prepare dataLayer and gtag shim
+      window.dataLayer = window.dataLayer ?? [];
+      if (!window.gtag) {
+        window.gtag = (...args: unknown[]) => {
+          if (Array.isArray(window.dataLayer)) {
+            window.dataLayer.push(args as unknown as Record<string, unknown>);
+          }
+        };
+      }
 
-    // Config tags
-    window.gtag("js", new Date());
-    for (const id of activeIds) {
-      window.gtag("config", id, {
-        send_page_view: false, // Page views managed explicitly on route change to avoid double counting
-      });
-    }
+      // Config tags
+      window.gtag("js", new Date());
+      for (const id of activeIds) {
+        window.gtag("config", id, {
+          send_page_view: false, // Page views managed explicitly on route change to avoid double counting
+        });
+      }
 
-    // Inject Google Tag script if not present
-    let script = document.getElementById(SCRIPT_ID) as HTMLScriptElement | null;
-    if (!script) {
-      script = document.createElement("script");
-      script.id = SCRIPT_ID;
-      script.async = true;
-      script.src = gtagScriptSrc();
-      document.head.appendChild(script);
-    }
+      // Inject Google Tag script if not present
+      let script = document.getElementById(SCRIPT_ID) as HTMLScriptElement | null;
+      if (!script) {
+        script = document.createElement("script");
+        script.id = SCRIPT_ID;
+        script.async = true;
+        script.src = gtagScriptSrc();
+        document.head.appendChild(script);
+      }
 
-    setIsInitialized(true);
+      isInitializedRef.current = true;
+      setIsInitialized(true);
+    } catch (err) {
+      console.warn("[analytics] Google tag initialization error:", err);
+    }
   }, [activeIds]);
 
   // 2. Track SPA page views on route change
   useEffect(() => {
-    if (!hasValidGoogleTag() || !isEnabled || typeof window === "undefined") {
+    if (typeof window === "undefined" || !hasValidGoogleTag() || !isEnabled) {
       return;
     }
 
-    const currentPath = `${pathname}${search ?? ""}`;
-    libTrackPageView(currentPath, document.title);
+    try {
+      const currentPath = `${pathname}${search ?? ""}`;
+      libTrackPageView(currentPath, typeof document !== "undefined" ? document.title : "");
 
-    // Reset engagement timers & scroll milestones on page route change
-    routeStartTimeRef.current = Date.now();
-    activeTimeAccumulatorRef.current = 0;
-    lastActiveTimestampRef.current = Date.now();
-    scrollMilestonesHitRef.current.clear();
+      // Reset engagement timers & scroll milestones on page route change
+      routeStartTimeRef.current = Date.now();
+      activeTimeAccumulatorRef.current = 0;
+      lastActiveTimestampRef.current = Date.now();
+      scrollMilestonesHitRef.current.clear();
+    } catch (err) {
+      console.warn("[analytics] Page view tracking error:", err);
+    }
   }, [pathname, search, isEnabled]);
 
   // 3. User engagement tracking: active time and visibility changes
   useEffect(() => {
-    if (!hasValidGoogleTag() || !isEnabled || typeof window === "undefined") {
+    if (typeof window === "undefined" || !hasValidGoogleTag() || !isEnabled) {
       return;
     }
 
     const sendEngagementPulse = (reason: string) => {
-      const now = Date.now();
-      let totalElapsed = activeTimeAccumulatorRef.current;
-      if (isTabActiveRef.current) {
-        totalElapsed += now - lastActiveTimestampRef.current;
-      }
+      try {
+        const now = Date.now();
+        let totalElapsed = activeTimeAccumulatorRef.current;
+        if (isTabActiveRef.current) {
+          totalElapsed += now - lastActiveTimestampRef.current;
+        }
 
-      // Only send if user spent meaningful time (> 1000ms)
-      if (totalElapsed >= 1000) {
-        libTrackUserEngagement("active_time", {
-          engagement_time_msec: totalElapsed,
-          page_path: `${pathname}${search ?? ""}`,
-          reason,
-        });
-        // Reset accumulator after dispatch
-        activeTimeAccumulatorRef.current = 0;
-        lastActiveTimestampRef.current = now;
+        // Only send if user spent meaningful time (> 1000ms)
+        if (totalElapsed >= 1000) {
+          libTrackUserEngagement("active_time", {
+            engagement_time_msec: totalElapsed,
+            page_path: `${pathname}${search ?? ""}`,
+            reason,
+          });
+          // Reset accumulator after dispatch
+          activeTimeAccumulatorRef.current = 0;
+          lastActiveTimestampRef.current = now;
+        }
+      } catch {
+        // Suppress pulse error
       }
     };
 
     const handleVisibilityChange = () => {
-      const now = Date.now();
-      if (document.hidden) {
-        if (isTabActiveRef.current) {
-          activeTimeAccumulatorRef.current += now - lastActiveTimestampRef.current;
-          isTabActiveRef.current = false;
+      try {
+        const now = Date.now();
+        if (document.hidden) {
+          if (isTabActiveRef.current) {
+            activeTimeAccumulatorRef.current += now - lastActiveTimestampRef.current;
+            isTabActiveRef.current = false;
+          }
+          sendEngagementPulse("tab_hidden");
+        } else {
+          isTabActiveRef.current = true;
+          lastActiveTimestampRef.current = now;
         }
-        sendEngagementPulse("tab_hidden");
-      } else {
-        isTabActiveRef.current = true;
-        lastActiveTimestampRef.current = now;
+      } catch {
+        // Suppress
       }
     };
 
@@ -153,27 +173,34 @@ export function useGoogleAnalytics(
 
     // Scroll depth milestones: 25%, 50%, 75%, 90%
     const handleScroll = () => {
-      const docHeight = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
-      const winHeight = window.innerHeight;
-      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      try {
+        const docHeight = Math.max(
+          document.documentElement?.scrollHeight || 0,
+          document.body?.scrollHeight || 0,
+        );
+        const winHeight = window.innerHeight || 0;
+        const scrollTop = window.scrollY || document.documentElement?.scrollTop || 0;
 
-      if (docHeight <= winHeight) return;
+        if (docHeight <= winHeight || winHeight === 0) return;
 
-      const scrollPercent = Math.round(((scrollTop + winHeight) / docHeight) * 100);
-      const milestones = [25, 50, 75, 90];
+        const scrollPercent = Math.round(((scrollTop + winHeight) / docHeight) * 100);
+        const milestones = [25, 50, 75, 90];
 
-      for (const m of milestones) {
-        if (scrollPercent >= m && !scrollMilestonesHitRef.current.has(m)) {
-          scrollMilestonesHitRef.current.add(m);
-          sendGtagEvent(
-            "scroll",
-            {
-              percent_scrolled: m,
-              page_path: `${pathname}${search ?? ""}`,
-            },
-            "engagement",
-          );
+        for (const m of milestones) {
+          if (scrollPercent >= m && !scrollMilestonesHitRef.current.has(m)) {
+            scrollMilestonesHitRef.current.add(m);
+            sendGtagEvent(
+              "scroll",
+              {
+                percent_scrolled: m,
+                page_path: `${pathname}${search ?? ""}`,
+              },
+              "engagement",
+            );
+          }
         }
+      } catch {
+        // Suppress scroll calculation errors
       }
     };
 

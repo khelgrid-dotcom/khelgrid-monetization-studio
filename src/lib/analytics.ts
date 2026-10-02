@@ -20,6 +20,7 @@ declare global {
 /**
  * Single source of truth for sending events to Google Analytics gtag and dataLayer.
  * Removes duplication across core analytics, ad tracking, and user engagement.
+ * Hardened to prevent exceptions if ad-blockers stub or alter window globals.
  */
 export function sendGtagEvent(
   eventName: string,
@@ -28,12 +29,18 @@ export function sendGtagEvent(
 ) {
   if (typeof window === "undefined") return;
   try {
-    window.gtag?.("event", eventName, params);
-    window.dataLayer?.push({ event: eventName, ...params });
+    if (typeof window.gtag === "function") {
+      window.gtag("event", eventName, params);
+    }
+    if (Array.isArray(window.dataLayer)) {
+      window.dataLayer.push({ event: eventName, ...params });
+    }
   } catch {
-    // Graceful no-op when gtag fails or is blocked
+    // Graceful no-op when gtag fails or is blocked by privacy extensions
   }
-  console.debug(`[${debugNamespace}]`, eventName, params);
+  if (import.meta.env.DEV) {
+    console.debug(`[${debugNamespace}]`, eventName, params);
+  }
 }
 
 export function trackEvent(evt: AnalyticsEvent) {
