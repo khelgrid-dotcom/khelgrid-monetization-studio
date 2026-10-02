@@ -78,8 +78,10 @@ export default defineConfig({
   },
   vite: {
     define: {
+      "process.env": {},
       "process.env.TSS_ROUTER_BASEPATH": JSON.stringify(""),
       "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV || "development"),
+      global: "globalThis",
     },
     server: {
       host: "0.0.0.0",
