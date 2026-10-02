@@ -33,12 +33,13 @@ export const Route = createFileRoute("/venue/$id")({
       });
     }
 
+    const primarySport = venue.sports?.[0] || "Sports";
     return buildSeoHead({
-      title: `${venue.name} · ${venue.sport} Turf Booking in ${venue.city}`,
+      title: `${venue.name} · ${primarySport} Turf Booking in ${venue.city}`,
       description: `Book sports turf & courts at ${venue.name} in ${venue.area}, ${venue.city}. View available slots, pricing starting at ₹${venue.pricePerHour}/hr, amenities, cancellation policies, and player rules.`,
       canonicalPath: `/venue/${venue.id}`,
-      keywords: `${venue.name}, ${venue.sport} in ${venue.city}, turf booking ${venue.area}, book sports ground ${venue.city}`,
-      image: venue.images?.[0] || venue.image,
+      keywords: `${venue.name}, ${venue.sports?.join(", ") || "turf"} in ${venue.city}, turf booking ${venue.area}, book sports ground ${venue.city}`,
+      image: venue.image,
       type: "website",
     });
   },
