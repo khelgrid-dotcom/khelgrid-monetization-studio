@@ -25,11 +25,12 @@ export const analyticsConfig = {
   enabled: !import.meta.env.DEV,
 } as const;
 
-/** Every tag ID that should be configured on load. */
+/** Every tag ID that should be configured on load, deduplicated. */
 export function googleTagIds(): string[] {
-  return [analyticsConfig.measurementId, analyticsConfig.googleTagId].filter(
-    (id) => id && GA_ID_RE.test(id),
-  );
+  const ids = [analyticsConfig.measurementId, analyticsConfig.googleTagId]
+    .map((id) => (id || "").trim())
+    .filter((id) => id && GA_ID_RE.test(id));
+  return Array.from(new Set(ids));
 }
 
 export function hasValidGoogleTag(): boolean {

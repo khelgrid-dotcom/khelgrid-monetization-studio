@@ -8,4 +8,3 @@ export { HomeGuidesSection } from "./HomeGuidesSection";
 export { HomeCommunityImpactSection } from "./HomeCommunityImpactSection";
 export { HomeMonetizationSection } from "./HomeMonetizationSection";
 export { HomeCtaBannerSection } from "./HomeCtaBannerSection";
-export { MetroCityPickerModal } from "./MetroCityPickerModal";

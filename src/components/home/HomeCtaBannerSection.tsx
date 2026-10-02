@@ -30,9 +30,7 @@ export function HomeCtaBannerSection() {
               Your sports career deserves a trusted platform
             </h2>
             <p className="mt-4 text-sm sm:text-base leading-relaxed text-primary-foreground/90 max-w-xl">
-              Whether you are an aspiring athlete aiming for state selections, a parent seeking
-              authentic academy trials, or a facility owner with empty court slots, KhelGrid
-              connects you directly.
+              Whether you are an aspiring athlete aiming for state selections, a parent seeking authentic academy trials, or a facility owner with empty court slots, KhelGrid connects you directly.
             </p>
 
             <div className="mt-6 flex flex-wrap gap-y-2 gap-x-4 text-xs font-medium text-primary-foreground/80">

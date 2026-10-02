@@ -1,5 +1,6 @@
-// Lightweight analytics helper. Forwards events to window.gtag / dataLayer
+// Consolidated lightweight analytics helper. Forwards events to window.gtag / dataLayer
 // when present, and always mirrors to console.debug for local visibility.
+
 export type NavClickEvent = {
   event: "nav_click";
   label: string;
@@ -7,7 +8,7 @@ export type NavClickEvent = {
   source: "sidebar_desktop" | "sidebar_mobile";
 };
 
-type AnalyticsEvent = NavClickEvent;
+export type AnalyticsEvent = NavClickEvent;
 
 declare global {
   interface Window {
@@ -16,19 +17,58 @@ declare global {
   }
 }
 
-export function trackEvent(evt: AnalyticsEvent) {
+/**
+ * Single source of truth for sending events to Google Analytics gtag and dataLayer.
+ * Removes duplication across core analytics, ad tracking, and user engagement.
+ */
+export function sendGtagEvent(
+  eventName: string,
+  params: Record<string, unknown> = {},
+  debugNamespace: string = "analytics",
+) {
   if (typeof window === "undefined") return;
   try {
-    window.gtag?.("event", evt.event, {
+    window.gtag?.("event", eventName, params);
+    window.dataLayer?.push({ event: eventName, ...params });
+  } catch {
+    // Graceful no-op when gtag fails or is blocked
+  }
+  console.debug(`[${debugNamespace}]`, eventName, params);
+}
+
+export function trackEvent(evt: AnalyticsEvent) {
+  sendGtagEvent(
+    evt.event,
+    {
       label: evt.label,
       destination: evt.destination,
       source: evt.source,
-    });
-    window.dataLayer?.push({ ...evt });
-  } catch {
-    // no-op
-  }
-  console.debug("[analytics]", evt);
+    },
+    "analytics",
+  );
+}
+
+export function trackPageView(pagePath: string, pageTitle?: string) {
+  sendGtagEvent(
+    "page_view",
+    {
+      page_path: pagePath,
+      page_location: typeof window !== "undefined" ? window.location.href : "",
+      page_title: pageTitle || (typeof document !== "undefined" ? document.title : ""),
+    },
+    "analytics",
+  );
+}
+
+export function trackUserEngagement(action: string, params: Record<string, unknown> = {}) {
+  sendGtagEvent(
+    "user_engagement",
+    {
+      action,
+      ...params,
+    },
+    "engagement",
+  );
 }
 
 // Shared constants so both sidebars emit the same values for /play.

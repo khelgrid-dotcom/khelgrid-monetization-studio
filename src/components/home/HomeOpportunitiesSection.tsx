@@ -11,8 +11,6 @@ import {
   Clock,
   Sparkles,
   MessageCircle,
-  Flame,
-  Crown,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TRIALS, type Trial } from "@/data/trials";
@@ -76,16 +74,6 @@ export function HomeOpportunitiesSection({ trials = TRIALS }: { trials?: readonl
     }
     return trials.filter((t) => t.sport.toLowerCase() === selectedSportFilter.toLowerCase());
   }, [selectedSportFilter, trials]);
-
-  // Urgent trials closing within 48 hours or marked as Closing Soon
-  const urgentTrials = useMemo(() => {
-    return trials
-      .filter((t) => {
-        const badge = getRealtimeOpportunityBadge(t);
-        return badge?.isUrgent || t.badge === "Closing Soon";
-      })
-      .slice(0, 3);
-  }, [trials]);
 
   const handleOpportunitiesScroll = () => {
     if (!opportunitiesRef.current) return;
@@ -222,34 +210,6 @@ export function HomeOpportunitiesSection({ trials = TRIALS }: { trials?: readonl
         </div>
       </div>
 
-      {/* ========================================================================= */}
-      {/* URGENT 48-HOUR DEADLINE TICKER: Highlights trials closing soon             */}
-      {/* ========================================================================= */}
-      {urgentTrials.length > 0 && (
-        <div className="mt-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 rounded-2xl border border-rose-500/30 bg-rose-500/10 p-3 text-xs text-rose-700 dark:text-rose-300">
-          <div className="flex items-center gap-2">
-            <Flame className="h-4 w-4 shrink-0 text-rose-500 animate-pulse" />
-            <span>
-              <strong className="font-bold">Urgent Deadlines:</strong> {urgentTrials.length} trial
-              notices closing within 48 hours!
-            </span>
-          </div>
-          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar -mx-1 px-1 sm:mx-0">
-            {urgentTrials.map((u) => (
-              <Link
-                key={u.id}
-                to="/trial/$id"
-                params={{ id: u.id }}
-                className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-rose-500/30 bg-background/90 px-3 py-1 text-[11px] font-semibold text-foreground hover:border-rose-500 hover:text-rose-600 transition-colors shadow-2xs"
-              >
-                <span className="truncate max-w-[150px]">{u.title}</span>
-                <span className="text-rose-600 dark:text-rose-400 font-bold">→</span>
-              </Link>
-            ))}
-          </div>
-        </div>
-      )}
-
       {/* Sport Filter Chips with tablist accessibility */}
       <div
         role="tablist"
@@ -331,7 +291,7 @@ export function HomeOpportunitiesSection({ trials = TRIALS }: { trials?: readonl
               aria-label={`Opportunity ${index + 1} of ${filteredOpportunities.length}: ${trial.title}${statusBadge ? ` (${statusBadge.label})` : ""}`}
               aria-labelledby={cardTitleId}
               aria-describedby={cardDescId}
-              className={`group relative flex w-[84vw] max-w-[310px] shrink-0 snap-center flex-col justify-between rounded-2xl border border-border/80 bg-gradient-card p-4 transition-all duration-200 hover:-translate-y-1 hover:border-primary/50 hover:shadow-lg active:scale-[0.99] sm:w-auto sm:max-w-none sm:snap-align-none sm:shrink ${
+              className={`group relative flex w-[82vw] max-w-[310px] shrink-0 snap-start flex-col justify-between rounded-2xl border border-border/80 bg-gradient-card p-4 transition-all duration-200 hover:-translate-y-1 hover:border-primary/50 hover:shadow-lg active:scale-[0.99] sm:w-auto sm:shrink ${
                 statusBadge?.isExpired ? "opacity-80 grayscale-[0.25]" : ""
               }`}
             >
@@ -470,14 +430,6 @@ export function HomeOpportunitiesSection({ trials = TRIALS }: { trials?: readonl
                     <span className="truncate">{trial.urgencyText}</span>
                   </div>
                 )}
-
-                {/* KhelGrid Pro Advantage Tag */}
-                <div className="mt-2.5 flex items-center gap-1 text-[10px] font-semibold text-amber-600 dark:text-amber-400">
-                  <span className="inline-flex items-center gap-1 rounded-md bg-amber-500/10 px-2 py-0.5">
-                    <Crown className="h-3 w-3" aria-hidden="true" />
-                    <span>Pro: 1-Click Priority Application</span>
-                  </span>
-                </div>
               </div>
 
               {/* Card Footer with Location, Date & Fee */}

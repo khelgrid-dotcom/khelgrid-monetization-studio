@@ -77,12 +77,6 @@ export default defineConfig({
     server: { entry: "server" },
   },
   vite: {
-    define: {
-      "process.env": {},
-      "process.env.TSS_ROUTER_BASEPATH": JSON.stringify(""),
-      "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV || "development"),
-      global: "globalThis",
-    },
     server: {
       host: "0.0.0.0",
       port: 3000,
@@ -90,7 +84,7 @@ export default defineConfig({
     },
     build: {
       rollupOptions: {
-        onwarn(warning: RollupWarningLike, warn: (warning: RollupWarningLike) => void) {
+        onwarn(warning, warn) {
           if (
             warning.code === "MODULE_LEVEL_DIRECTIVE" ||
             warning.message?.includes("Module level directives") ||
