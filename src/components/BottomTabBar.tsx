@@ -80,9 +80,9 @@ export function BottomTabBar() {
   return (
     <nav
       aria-label="Mobile Bottom Navigation"
-      className="fixed inset-x-0 bottom-0 z-50 border-t border-border/80 bg-background/95 pt-1.5 pb-[max(env(safe-area-inset-bottom,0px),8px)] backdrop-blur-2xl shadow-[0_-4px_24px_rgba(0,0,0,0.06)] dark:shadow-[0_-4px_28px_rgba(0,0,0,0.5)] lg:hidden transition-transform select-none"
+      className="fixed inset-x-0 bottom-0 z-[60] border-t border-border/80 bg-background/95 supports-[backdrop-filter]:bg-background/85 pt-1.5 pb-[max(env(safe-area-inset-bottom,0px),10px)] backdrop-blur-2xl shadow-[0_-8px_30px_rgba(0,0,0,0.12)] dark:shadow-[0_-8px_32px_rgba(0,0,0,0.7)] lg:hidden select-none transition-all"
     >
-      <ul className="grid grid-cols-5 items-center">
+      <ul className="grid grid-cols-5 items-center px-1">
         {BOTTOM_NAV_TABS.map((t) => {
           const isLiveTab = t.isLive;
           const active = isLiveTab
@@ -96,9 +96,9 @@ export function BottomTabBar() {
                 to={t.to}
                 onClick={isLiveTab ? handleLiveClick : t.to === "/" ? handleHomeClick : undefined}
                 className={cn(
-                  "relative flex min-h-[54px] w-full flex-col items-center justify-center py-1 text-[11px] transition-all active:scale-95",
+                  "relative flex min-h-[56px] w-full flex-col items-center justify-center py-1 text-[11px] transition-all active:scale-95",
                   active
-                    ? "font-semibold text-primary"
+                    ? "font-bold text-primary"
                     : "font-medium text-muted-foreground hover:text-foreground",
                 )}
                 aria-current={active ? "page" : undefined}
@@ -108,19 +108,19 @@ export function BottomTabBar() {
                 {active && (
                   <span
                     aria-hidden="true"
-                    className="absolute -top-1.5 h-0.5 w-6 rounded-full bg-primary shadow-xs"
+                    className="absolute top-0 h-[2.5px] w-8 rounded-full bg-primary shadow-[0_0_8px_var(--neon-glow)] animate-in fade-in zoom-in-75 duration-200"
                   />
                 )}
 
                 {/* Tab Icon Container */}
                 <span
                   className={cn(
-                    "relative grid h-7 w-12 place-items-center rounded-full transition-colors",
+                    "relative grid h-7 w-12 place-items-center rounded-full transition-all duration-200",
                     active
-                      ? "bg-primary/15 text-primary shadow-xs"
+                      ? "bg-primary/15 text-primary scale-105 shadow-xs"
                       : isLiveTab
-                        ? "text-emerald-600 dark:text-emerald-400 group-hover:text-emerald-500"
-                        : "text-muted-foreground group-hover:text-foreground",
+                        ? "text-emerald-600 dark:text-emerald-400 hover:text-emerald-500"
+                        : "text-muted-foreground hover:text-foreground",
                   )}
                 >
                   <t.icon className="h-5 w-5 shrink-0" aria-hidden="true" />
@@ -133,7 +133,9 @@ export function BottomTabBar() {
                 </span>
 
                 {/* Tab Label */}
-                <span className="leading-tight tracking-tight mt-0.5">{t.label}</span>
+                <span className="leading-tight tracking-tight mt-0.5 text-[10px] sm:text-[11px]">
+                  {t.label}
+                </span>
               </Link>
             </li>
           );

@@ -134,6 +134,16 @@ export function AppHeaderBanner({ selectedCity, onSelectCity }: AppHeaderBannerP
           aria-label="Search trials, venues, or sports events"
           className="h-10 w-full bg-transparent px-3 text-xs sm:text-sm outline-none placeholder:text-muted-foreground"
         />
+        {searchQuery && (
+          <button
+            type="button"
+            onClick={() => setSearchQuery("")}
+            className="mr-2 text-xs text-muted-foreground hover:text-foreground"
+            aria-label="Clear search"
+          >
+            ×
+          </button>
+        )}
         <button
           type="submit"
           className="flex h-9 shrink-0 items-center justify-center rounded-xl bg-primary px-3 sm:px-4 text-xs font-semibold text-primary-foreground shadow-xs transition hover:bg-primary/90 cursor-pointer min-h-[36px]"
@@ -141,6 +151,70 @@ export function AppHeaderBanner({ selectedCity, onSelectCity }: AppHeaderBannerP
           <span>Find</span>
         </button>
       </form>
+
+      {/* Quick Athletic Highlights Strip */}
+      <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-0.5 text-[11px] text-muted-foreground">
+        <span className="inline-flex shrink-0 items-center gap-1 font-semibold text-primary">
+          <Sparkles className="h-3 w-3" /> Quick Explore:
+        </span>
+        <button
+          type="button"
+          onClick={() => {
+            navigate({
+              to: "/search",
+              search: {
+                q: "Cricket",
+                sport: "Cricket",
+                city: undefined,
+                sort: "Soonest",
+                free: false,
+              },
+            });
+          }}
+          className="shrink-0 rounded-full border border-border/60 bg-secondary/50 px-2.5 py-0.5 hover:bg-secondary hover:text-foreground transition cursor-pointer"
+        >
+          🏏 Cricket Trials
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            navigate({
+              to: "/search",
+              search: {
+                q: "Wrestling",
+                sport: "Wrestling",
+                city: undefined,
+                sort: "Soonest",
+                free: false,
+              },
+            });
+          }}
+          className="shrink-0 rounded-full border border-border/60 bg-secondary/50 px-2.5 py-0.5 hover:bg-secondary hover:text-foreground transition cursor-pointer"
+        >
+          🤼 SAI Wrestling
+        </button>
+        <button
+          type="button"
+          onClick={() => navigate({ to: "/book" })}
+          className="shrink-0 rounded-full border border-border/60 bg-secondary/50 px-2.5 py-0.5 hover:bg-secondary hover:text-foreground transition cursor-pointer"
+        >
+          ⚽ Book Turf
+        </button>
+        <button
+          type="button"
+          onClick={() => navigate({ to: "/play" })}
+          className="shrink-0 rounded-full border border-border/60 bg-secondary/50 px-2.5 py-0.5 hover:bg-secondary hover:text-foreground transition cursor-pointer"
+        >
+          ⚔️ Pickup Games
+        </button>
+        <button
+          type="button"
+          onClick={() => navigate({ to: "/my-stats" })}
+          className="shrink-0 rounded-full border border-border/60 bg-secondary/50 px-2.5 py-0.5 hover:bg-secondary hover:text-foreground transition cursor-pointer"
+        >
+          📄 Sports CV
+        </button>
+      </div>
     </header>
   );
 }

@@ -29,11 +29,13 @@ describe("BottomTabBar", () => {
     expect(html).toContain("Live");
   });
 
-  it("contains lg:hidden class to hide on desktop screens", () => {
+  it("contains lg:hidden class to hide on desktop screens and has high z-index with safe area padding", () => {
     const html = renderToString(<BottomTabBar />);
     expect(html).toContain("lg:hidden");
     expect(html).toContain("fixed");
     expect(html).toContain("bottom-0");
+    expect(html).toContain("z-[60]");
+    expect(html).toContain("safe-area-inset-bottom");
   });
 
   it("marks Home as active when on root pathname", () => {
