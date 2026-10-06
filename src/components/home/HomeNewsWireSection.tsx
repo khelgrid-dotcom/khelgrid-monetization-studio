@@ -7,7 +7,7 @@ export function HomeNewsWireSection() {
       aria-label="National Sports & Selection Dispatch"
       className="w-full py-1"
     >
-      <SportsNewsSection />
+      <SportsNewsSection variant="home" />
     </section>
   );
 }

@@ -44,6 +44,7 @@ const STATIC_PATHS = [
   "/posh-policy",
   "/privacy",
   "/terms",
+  "/chronicle",
   "/blog",
 ];
 

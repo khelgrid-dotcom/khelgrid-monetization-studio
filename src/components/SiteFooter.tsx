@@ -70,6 +70,7 @@ const COLUMNS: Array<{ title: string; items: ReturnType<typeof pick> }> = [
       "/start-from-zero",
       "/ai-guide",
       "/guides",
+      "/chronicle",
       "/blog",
       "/learning-hub",
       "/tools",

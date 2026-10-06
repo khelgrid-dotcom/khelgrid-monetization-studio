@@ -122,4 +122,23 @@ describe("SportsNewsSection", () => {
     expect(html).toContain("SAI to Conduct Selection Trials for Men");
     expect(html).toContain("Kandivali");
   });
+
+  it("renders only 3 cards side by side on the home page variant with link to KhelChronicle page", () => {
+    const html = renderToString(<SportsNewsSection variant="home" />);
+
+    expect(html).toContain("KhelChronicle");
+    expect(html).toContain("View All on KhelChronicle");
+    expect(html).toContain("grid-cols-1 md:grid-cols-3");
+    expect(html).toContain("Showing top 3 national sports dispatches");
+    expect(html).toContain('href="/chronicle"');
+
+    // Counts articles rendered on home page
+    const cardMatches = html.match(/id="home-news-/g);
+    expect(cardMatches).not.toBeNull();
+    expect(cardMatches?.length).toBe(3);
+
+    // Full-page specific elements should not be rendered on the home page variant
+    expect(html).not.toContain("OFFICIAL CIRCULARS");
+    expect(html).not.toContain("High-Performance Analytics Hub");
+  });
 });

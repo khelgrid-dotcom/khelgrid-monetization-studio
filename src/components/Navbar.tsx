@@ -54,6 +54,7 @@ const PRIMARY_NAV = [
 // Secondary items accessible via clean dropdown to prevent top bar overflow
 const SECONDARY_NAV = [
   { to: "/community", label: "Community", icon: Users },
+  { to: "/chronicle", label: "KhelChronicle", icon: Newspaper },
   { to: "/blog", label: "Blog", icon: Newspaper },
 ] as const;
 

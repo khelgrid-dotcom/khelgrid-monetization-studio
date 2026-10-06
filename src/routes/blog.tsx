@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Clock, PenLine, Search } from "lucide-react";
+import { Clock, PenLine, Search, Newspaper } from "lucide-react";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { InFeedAd } from "@/components/ads";
 import { Badge } from "@/components/ui/badge";
@@ -76,12 +76,20 @@ function BlogIndex() {
             and confirm important decisions with a qualified professional or official organizer.
           </p>
         </div>
-        <Button asChild className="shrink-0 rounded-full">
-          <Link to="/blog/write">
-            <PenLine className="mr-2 h-4 w-4" />
-            Write an article
-          </Link>
-        </Button>
+        <div className="flex flex-wrap items-center gap-2">
+          <Button asChild variant="outline" className="shrink-0 rounded-full">
+            <Link to="/chronicle">
+              <Newspaper className="mr-2 h-4 w-4 text-primary" />
+              KhelChronicle Wire
+            </Link>
+          </Button>
+          <Button asChild className="shrink-0 rounded-full">
+            <Link to="/blog/write">
+              <PenLine className="mr-2 h-4 w-4" />
+              Write an article
+            </Link>
+          </Button>
+        </div>
       </header>
 
       <section className="mt-6" aria-label="Blog filters">

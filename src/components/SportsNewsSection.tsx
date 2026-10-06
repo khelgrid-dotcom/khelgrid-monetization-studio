@@ -141,8 +141,17 @@ const OFFICIAL_SELECTION_CIRCULARS = [
   },
 ] as const;
 
-export function SportsNewsSection() {
+export interface SportsNewsSectionProps {
+  variant?: "full" | "home";
+  isHomePage?: boolean;
+}
+
+export function SportsNewsSection({
+  variant = "full",
+  isHomePage = false,
+}: SportsNewsSectionProps = {}) {
   const { t } = useLanguage();
+  const isHomeMode = variant === "home" || isHomePage;
   const [selectedSportTab, setSelectedSportTab] = useState<string>("All Sports");
   const [savedArticles, setSavedArticles] = useState<Set<string>>(new Set());
   const [isAnalyticsModalOpen, setIsAnalyticsModalOpen] = useState<boolean>(false);
@@ -557,6 +566,240 @@ export function SportsNewsSection() {
       return "Recent";
     }
   };
+
+  if (isHomeMode) {
+    const homeArticles = filteredArticles.slice(0, 3);
+    return (
+      <section
+        id="sports-news-section"
+        className="mt-6 border-t border-border/60 pt-6 sm:mt-8 sm:pt-8"
+        aria-labelledby="sports-news-heading"
+        itemScope
+        itemType="https://schema.org/CollectionPage"
+      >
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(newsJsonLd) }}
+        />
+
+        {/* Home Header: Low-profile title, live status, and direct link to KhelChronicle */}
+        <header className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between mb-4">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="sr-only">
+              Real-time Sports Wire · National Sports &amp; Selection Dispatch
+            </span>
+            <h2
+              id="sports-news-heading"
+              className="text-lg sm:text-xl font-bold tracking-tight text-foreground flex items-center gap-2"
+            >
+              <Newspaper className="h-4 w-4 text-primary shrink-0" />
+              <span>{t("sportsUpdatesTitle", "KhelChronicle")}</span>
+              <span className="hidden sm:inline-block text-xs font-semibold text-muted-foreground">
+                · National Sports &amp; Selection Dispatch
+              </span>
+            </h2>
+
+            {/* Official Verification Badge */}
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 shrink-0">
+              <ShieldCheck className="h-3 w-3 text-emerald-500" />
+              <span>{t("updatedLive", "Official Dispatches")}</span>
+            </span>
+
+            <p className="sr-only sm:not-sr-only text-[11px] text-muted-foreground ml-1 hidden md:inline truncate max-w-sm">
+              {t(
+                "sportsUpdatesDesc",
+                "Official selection circulars, Khelo India updates, state championships, and athlete pathways across India.",
+              )}
+            </p>
+          </div>
+
+          <Link
+            to="/chronicle"
+            className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3.5 py-1.5 text-xs font-semibold text-primary hover:bg-primary/20 transition-colors self-start sm:self-center"
+          >
+            <span>View All on KhelChronicle</span>
+            <ArrowRight className="h-3.5 w-3.5" />
+          </Link>
+        </header>
+
+        {/* Exactly 3 cards side by side */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6">
+          {homeArticles.map((article) => {
+            const issuer = getOfficialIssuer(article);
+            return (
+              <article
+                key={article.id}
+                id={`home-news-${article.slug}`}
+                itemScope
+                itemType="https://schema.org/NewsArticle"
+                className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-border/80 bg-gradient-card p-4 transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:shadow-lg"
+              >
+                <div>
+                  <div className="relative aspect-[16/10] w-full overflow-hidden rounded-xl bg-muted">
+                    <img
+                      src={article.imageUrl}
+                      alt={`${article.title} - ${article.sport}`}
+                      loading="lazy"
+                      decoding="async"
+                      itemProp="image"
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
+                    <div className="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between text-xs text-white/90">
+                      <div className="flex items-center gap-1.5 font-semibold text-white">
+                        <span>{article.sport}</span>
+                        <span aria-hidden="true" className="text-white/50">
+                          ·
+                        </span>
+                        <span className="text-[11px] text-white/80">{issuer.issuer}</span>
+                      </div>
+                      <span className="font-mono text-[11px] text-white/90">
+                        {article.readTime}
+                      </span>
+                    </div>
+                    {article.featured && (
+                      <div className="absolute top-2.5 left-2.5 flex items-center gap-1 text-[11px] font-semibold text-amber-300 drop-shadow-xs">
+                        <Sparkles className="h-3 w-3" /> Featured Story
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="mt-3">
+                    <div className="flex items-center justify-between text-[11px] text-muted-foreground">
+                      <div className="flex items-center gap-1.5">
+                        <span className="font-mono font-medium text-primary">
+                          {formatWireRelativeTime(article.publishedAt)}
+                        </span>
+                        <span aria-hidden="true">·</span>
+                        <span className="font-semibold text-foreground/80">{article.category}</span>
+                      </div>
+                      <time
+                        dateTime={article.publishedAt}
+                        itemProp="datePublished"
+                        suppressHydrationWarning
+                      >
+                        {formatDate(article.publishedAt)}
+                      </time>
+                    </div>
+
+                    <h3
+                      itemProp="headline"
+                      className="mt-1.5 line-clamp-2 text-base font-bold leading-snug text-foreground transition-colors group-hover:text-primary"
+                    >
+                      {article.title}
+                    </h3>
+
+                    <p
+                      itemProp="description"
+                      className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-muted-foreground"
+                    >
+                      {article.excerpt}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="mt-4 border-t border-border/60 pt-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-primary/10 text-primary text-[10px] font-bold">
+                        {article.author.name.charAt(0)}
+                      </div>
+                      <span
+                        itemProp="author"
+                        className="line-clamp-1 text-xs font-medium text-foreground max-w-[130px]"
+                      >
+                        {article.author.name}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-1">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => toggleSave(article.id)}
+                        className="h-7 w-7 rounded-lg"
+                        aria-label={`Bookmark ${article.title}`}
+                      >
+                        <Bookmark
+                          className={`h-3.5 w-3.5 ${
+                            savedArticles.has(article.id)
+                              ? "fill-primary text-primary"
+                              : "text-muted-foreground"
+                          }`}
+                        />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleShare(article)}
+                        className="h-7 w-7 rounded-lg"
+                        aria-label={`Share ${article.title}`}
+                      >
+                        <Share2 className="h-3.5 w-3.5 text-muted-foreground" />
+                      </Button>
+                    </div>
+                  </div>
+
+                  {issuer.isOpportunityTrial ? (
+                    <Link
+                      to="/trials"
+                      className="mt-2.5 flex items-center justify-center gap-1.5 rounded-lg border border-emerald-500/30 bg-emerald-500/10 py-1.5 text-xs font-semibold text-emerald-600 dark:text-emerald-400 transition hover:bg-emerald-500/20"
+                    >
+                      <ShieldCheck className="h-3.5 w-3.5" />
+                      <span>View Trial Cutoffs &amp; Info</span>
+                      <ArrowRight className="h-3 w-3" />
+                    </Link>
+                  ) : article.blogSlug ? (
+                    <Link
+                      to="/blog/$slug"
+                      params={{ slug: article.blogSlug }}
+                      className="mt-2.5 flex items-center justify-center gap-1.5 rounded-lg bg-primary/10 py-1.5 text-xs font-semibold text-primary transition hover:bg-primary/20"
+                    >
+                      <span>Read Full Story</span>
+                      <ArrowRight className="h-3 w-3" />
+                    </Link>
+                  ) : (
+                    <Link
+                      to="/chronicle"
+                      className="mt-2.5 flex items-center justify-center gap-1.5 rounded-lg bg-secondary py-1.5 text-xs font-semibold text-secondary-foreground transition hover:bg-secondary/80"
+                    >
+                      <span>Read on KhelChronicle</span>
+                      <ArrowRight className="h-3 w-3" />
+                    </Link>
+                  )}
+                </div>
+              </article>
+            );
+          })}
+        </div>
+
+        {/* Bottom Banner Linking to KhelChronicle */}
+        <div className="mt-5 flex flex-col sm:flex-row items-center justify-between gap-3 rounded-2xl border border-primary/20 bg-primary/5 p-4 text-xs">
+          <div className="flex items-center gap-2.5">
+            <div className="grid h-8 w-8 place-items-center rounded-xl bg-primary/15 text-primary shrink-0">
+              <Newspaper className="h-4 w-4" />
+            </div>
+            <div>
+              <p className="font-semibold text-foreground">
+                Showing top 3 national sports dispatches
+              </p>
+              <p className="text-muted-foreground text-[11px]">
+                The rest of the circulars, federation dispatches, and match analytics are available
+                on KhelChronicle.
+              </p>
+            </div>
+          </div>
+          <Link
+            to="/chronicle"
+            className="inline-flex shrink-0 items-center gap-1.5 rounded-xl bg-primary px-4 py-2 font-semibold text-primary-foreground text-xs hover:bg-primary/90 transition shadow-xs"
+          >
+            <span>Explore All on KhelChronicle ({SPORTS_NEWS_CATALOG.length} updates)</span>
+            <ArrowRight className="h-3.5 w-3.5" />
+          </Link>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section

@@ -68,6 +68,7 @@ export const NAV_ITEMS: NavItem[] = [
   { to: "/sports", label: "Sports", icon: Trophy, surfaces: ["primary", "features"] },
   { to: "/cities", label: "Cities", icon: Compass, surfaces: ["primary"] },
   { to: "/guides", label: "Guides", icon: BookOpen, surfaces: ["primary", "features"] },
+  { to: "/chronicle", label: "KhelChronicle", icon: Newspaper, surfaces: ["primary", "features"] },
   { to: "/blog", label: "Blog", icon: Newspaper, surfaces: ["primary", "features"] },
   { to: "/tools", label: "Tools & calculators", icon: Wrench, surfaces: ["primary", "features"] },
   { to: "/play", label: "Play · Find games", icon: Swords, surfaces: ["primary", "features"] },
