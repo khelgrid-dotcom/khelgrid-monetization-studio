@@ -32,10 +32,19 @@ export function SportCategoryPills({ selectedSport, onSelectSport }: SportCatego
   };
 
   return (
-    <div className="relative py-1 min-h-[46px]">
+    <div className="relative flex items-center gap-1.5 py-1 min-h-[46px]">
+      <button
+        type="button"
+        onClick={() => scroll("left")}
+        aria-label="Scroll sports left"
+        className="hidden sm:grid h-8 w-8 shrink-0 place-items-center rounded-xl border border-border/80 bg-secondary/70 text-muted-foreground hover:bg-secondary hover:text-foreground transition cursor-pointer"
+      >
+        <ChevronLeft className="h-4 w-4" />
+      </button>
+
       <div
         ref={scrollContainerRef}
-        className="flex items-center gap-2 overflow-x-auto no-scrollbar scroll-smooth py-1 px-0.5 overscroll-x-contain touch-pan-x snap-x snap-mandatory"
+        className="flex-1 flex items-center gap-2 overflow-x-auto no-scrollbar scroll-smooth py-1 px-0.5 overscroll-x-contain touch-pan-x snap-x snap-mandatory"
       >
         {SPORTS_LIST.map((sport) => {
           const isSelected =
@@ -59,6 +68,15 @@ export function SportCategoryPills({ selectedSport, onSelectSport }: SportCatego
           );
         })}
       </div>
+
+      <button
+        type="button"
+        onClick={() => scroll("right")}
+        aria-label="Scroll sports right"
+        className="hidden sm:grid h-8 w-8 shrink-0 place-items-center rounded-xl border border-border/80 bg-secondary/70 text-muted-foreground hover:bg-secondary hover:text-foreground transition cursor-pointer"
+      >
+        <ChevronRight className="h-4 w-4" />
+      </button>
     </div>
   );
 }

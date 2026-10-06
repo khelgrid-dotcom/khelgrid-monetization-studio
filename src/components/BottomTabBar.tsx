@@ -80,7 +80,7 @@ export function BottomTabBar() {
   return (
     <nav
       aria-label="Mobile Bottom Navigation"
-      className="fixed inset-x-0 bottom-0 z-[60] border-t border-border/80 bg-background/95 supports-[backdrop-filter]:bg-background/85 pt-1.5 pb-[max(env(safe-area-inset-bottom,0px),10px)] backdrop-blur-2xl shadow-[0_-8px_30px_rgba(0,0,0,0.12)] dark:shadow-[0_-8px_32px_rgba(0,0,0,0.7)] lg:hidden select-none transition-all"
+      className="fixed inset-x-0 bottom-0 z-[60] border-t border-border/80 bg-background/95 supports-[backdrop-filter]:bg-background/85 pt-1.5 pb-[max(env(safe-area-inset-bottom,0px),10px)] backdrop-blur-2xl shadow-[0_-8px_30px_rgba(0,0,0,0.12)] dark:shadow-[0_-8px_32px_rgba(0,0,0,0.7)] lg:hidden select-none transition-all touch-manipulation transform-gpu"
     >
       <ul className="grid grid-cols-5 items-center px-1">
         {BOTTOM_NAV_TABS.map((t) => {

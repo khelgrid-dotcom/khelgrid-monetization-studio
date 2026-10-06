@@ -31,18 +31,24 @@ export function NativeAppBanner() {
               downloads.
             </p>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-2 text-xs text-slate-200">
-              <div className="flex items-center gap-2 rounded-xl bg-white/5 p-2">
+            <div className="flex items-stretch gap-2.5 pt-2 text-xs text-slate-200 overflow-x-auto no-scrollbar scroll-smooth pb-1 overscroll-x-contain touch-pan-x snap-x snap-mandatory sm:grid sm:grid-cols-3">
+              <div className="snap-start shrink-0 min-w-[200px] sm:min-w-0 flex items-center gap-2 rounded-xl bg-white/5 p-2">
                 <Zap className="h-4 w-4 text-amber-400 shrink-0" />
-                <span>Instant Offline Launch</span>
+                <span className="whitespace-nowrap sm:whitespace-normal">
+                  Instant Offline Launch
+                </span>
               </div>
-              <div className="flex items-center gap-2 rounded-xl bg-white/5 p-2">
+              <div className="snap-start shrink-0 min-w-[200px] sm:min-w-0 flex items-center gap-2 rounded-xl bg-white/5 p-2">
                 <Bell className="h-4 w-4 text-emerald-400 shrink-0" />
-                <span>Live Trial Notifications</span>
+                <span className="whitespace-nowrap sm:whitespace-normal">
+                  Live Trial Notifications
+                </span>
               </div>
-              <div className="flex items-center gap-2 rounded-xl bg-white/5 p-2">
+              <div className="snap-start shrink-0 min-w-[200px] sm:min-w-0 flex items-center gap-2 rounded-xl bg-white/5 p-2">
                 <ShieldCheck className="h-4 w-4 text-blue-400 shrink-0" />
-                <span>Battery & Data Optimized</span>
+                <span className="whitespace-nowrap sm:whitespace-normal">
+                  Battery & Data Optimized
+                </span>
               </div>
             </div>
           </div>

@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { Link } from "@tanstack/react-router";
 import {
   Trophy,
@@ -7,6 +8,7 @@ import {
   Sparkles,
   Award,
   ChevronRight,
+  ChevronLeft,
 } from "lucide-react";
 
 export const LAUNCHPAD_ITEMS = [
@@ -61,31 +63,65 @@ export const LAUNCHPAD_ITEMS = [
 ] as const;
 
 export function AppLaunchpad() {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const scroll = (direction: "left" | "right") => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollBy({
+        left: direction === "left" ? -220 : 220,
+        behavior: "smooth",
+      });
+    }
+  };
+
   return (
     <section aria-label="Core sports app actions" className="py-2">
-      <div className="grid grid-cols-3 gap-2.5 sm:grid-cols-6 sm:gap-3">
-        {LAUNCHPAD_ITEMS.map((item) => (
-          <Link
-            key={item.to}
-            to={item.to}
-            className={`group relative flex flex-col items-center justify-center rounded-2xl border border-border/80 bg-card p-3 text-center transition-all duration-200 hover:-translate-y-1 hover:shadow-md active:scale-95 ${item.border}`}
-          >
-            {/* App Icon Container */}
-            <div
-              className={`grid h-12 w-12 place-items-center rounded-2xl bg-gradient-to-br shadow-inner transition-transform group-hover:scale-105 ${item.gradient}`}
-            >
-              <item.icon className="h-6 w-6 shrink-0" aria-hidden="true" />
-            </div>
+      <div className="relative flex items-center gap-1.5">
+        <button
+          type="button"
+          onClick={() => scroll("left")}
+          aria-label="Scroll launchpad left"
+          className="hidden md:grid h-8 w-8 shrink-0 place-items-center rounded-xl border border-border/80 bg-secondary/70 text-muted-foreground hover:bg-secondary hover:text-foreground transition cursor-pointer"
+        >
+          <ChevronLeft className="h-4 w-4" />
+        </button>
 
-            {/* Title & Subtitle */}
-            <span className="mt-2 text-xs font-bold text-foreground tracking-tight group-hover:text-primary transition-colors">
-              {item.title}
-            </span>
-            <span className="text-[10px] text-muted-foreground truncate w-full">
-              {item.subtitle}
-            </span>
-          </Link>
-        ))}
+        <div
+          ref={scrollRef}
+          className="flex-1 flex items-stretch gap-2.5 sm:gap-3 overflow-x-auto no-scrollbar scroll-smooth pb-1.5 pt-0.5 px-0.5 overscroll-x-contain touch-pan-x snap-x snap-mandatory"
+        >
+          {LAUNCHPAD_ITEMS.map((item) => (
+            <Link
+              key={item.to}
+              to={item.to}
+              className={`snap-start shrink-0 min-w-[108px] sm:min-w-[130px] flex-1 max-w-[180px] group relative flex flex-col items-center justify-center rounded-2xl border border-border/80 bg-card p-3 text-center transition-all duration-200 hover:-translate-y-1 hover:shadow-md active:scale-95 ${item.border}`}
+            >
+              {/* App Icon Container */}
+              <div
+                className={`grid h-12 w-12 place-items-center rounded-2xl bg-gradient-to-br shadow-inner transition-transform group-hover:scale-105 ${item.gradient}`}
+              >
+                <item.icon className="h-6 w-6 shrink-0" aria-hidden="true" />
+              </div>
+
+              {/* Title & Subtitle */}
+              <span className="mt-2 text-xs font-bold text-foreground tracking-tight group-hover:text-primary transition-colors">
+                {item.title}
+              </span>
+              <span className="text-[10px] text-muted-foreground truncate w-full">
+                {item.subtitle}
+              </span>
+            </Link>
+          ))}
+        </div>
+
+        <button
+          type="button"
+          onClick={() => scroll("right")}
+          aria-label="Scroll launchpad right"
+          className="hidden md:grid h-8 w-8 shrink-0 place-items-center rounded-xl border border-border/80 bg-secondary/70 text-muted-foreground hover:bg-secondary hover:text-foreground transition cursor-pointer"
+        >
+          <ChevronRight className="h-4 w-4" />
+        </button>
       </div>
     </section>
   );

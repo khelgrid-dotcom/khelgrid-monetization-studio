@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { Link } from "@tanstack/react-router";
 import {
   ShieldCheck,
@@ -6,6 +7,8 @@ import {
   Users2,
   MapPin,
   ArrowRight,
+  ChevronLeft,
+  ChevronRight,
   Sparkles,
 } from "lucide-react";
 
@@ -56,6 +59,17 @@ export const VERIFICATION_PILLARS = [
 ] as const;
 
 export function HomeCommunityImpactSection() {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const scroll = (direction: "left" | "right") => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollBy({
+        left: direction === "left" ? -280 : 280,
+        behavior: "smooth",
+      });
+    }
+  };
+
   return (
     <section
       id="community-impact"
@@ -117,24 +131,49 @@ export function HomeCommunityImpactSection() {
                     Featured Training Institutions
                   </h3>
                   <p className="text-xs text-muted-foreground">
-                    Accredited sports centers actively scouted on KhelGrid
+                    Accredited sports centers actively scouted on KhelGrid · Swipe to view
                   </p>
                 </div>
-                <Link
-                  to="/academy"
-                  className="text-xs font-semibold text-primary hover:underline inline-flex items-center gap-1"
-                >
-                  <span>All Academies</span>
-                  <ArrowRight className="h-3 w-3" aria-hidden="true" />
-                </Link>
+
+                <div className="flex items-center gap-2">
+                  <div className="hidden sm:flex items-center gap-1">
+                    <button
+                      type="button"
+                      onClick={() => scroll("left")}
+                      aria-label="Scroll academies left"
+                      className="grid h-7 w-7 place-items-center rounded-lg border border-border/80 bg-secondary/60 text-muted-foreground hover:bg-secondary hover:text-foreground transition cursor-pointer"
+                    >
+                      <ChevronLeft className="h-4 w-4" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => scroll("right")}
+                      aria-label="Scroll academies right"
+                      className="grid h-7 w-7 place-items-center rounded-lg border border-border/80 bg-secondary/60 text-muted-foreground hover:bg-secondary hover:text-foreground transition cursor-pointer"
+                    >
+                      <ChevronRight className="h-4 w-4" />
+                    </button>
+                  </div>
+
+                  <Link
+                    to="/academy"
+                    className="text-xs font-semibold text-primary hover:underline inline-flex items-center gap-1"
+                  >
+                    <span>All Academies</span>
+                    <ArrowRight className="h-3 w-3" aria-hidden="true" />
+                  </Link>
+                </div>
               </div>
 
-              {/* Academy Cards List */}
-              <div className="mt-4 grid gap-3 sm:grid-cols-2">
+              {/* Academy Cards List - Horizontally scrollable across all screen devices */}
+              <div
+                ref={scrollRef}
+                className="mt-4 flex items-stretch gap-3 overflow-x-auto no-scrollbar scroll-smooth pb-2 pt-1 overscroll-x-contain touch-pan-x snap-x snap-mandatory"
+              >
                 {VERIFIED_ACADEMIES.map((academy) => (
                   <div
                     key={academy.name}
-                    className="flex flex-col justify-between rounded-xl border border-border/70 bg-card p-3.5 transition-colors hover:border-primary/40"
+                    className="snap-start shrink-0 w-[80vw] max-w-[280px] sm:w-[260px] flex flex-col justify-between rounded-xl border border-border/70 bg-card p-3.5 transition-colors hover:border-primary/40 shadow-xs"
                   >
                     <div>
                       <div className="flex items-start justify-between gap-2">
@@ -166,9 +205,9 @@ export function HomeCommunityImpactSection() {
                 <div className="text-xs font-semibold uppercase tracking-wider text-primary">
                   The KhelGrid Promise
                 </div>
-                <div className="mt-3 grid gap-3 sm:grid-cols-3">
+                <div className="mt-3 flex items-stretch gap-3 overflow-x-auto no-scrollbar scroll-smooth pb-1 overscroll-x-contain touch-pan-x snap-x snap-mandatory sm:grid sm:grid-cols-3">
                   {VERIFICATION_PILLARS.map((p) => (
-                    <div key={p.title} className="text-xs">
+                    <div key={p.title} className="snap-start shrink-0 w-[240px] sm:w-auto text-xs">
                       <div className="font-semibold text-foreground">{p.title}</div>
                       <div className="mt-1 text-muted-foreground leading-relaxed">{p.desc}</div>
                     </div>

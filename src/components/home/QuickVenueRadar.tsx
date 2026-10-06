@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { VENUES, type Venue } from "@/data/playo";
-import { CalendarCheck, Star, MapPin, ChevronRight, Zap } from "lucide-react";
+import { CalendarCheck, Star, MapPin, ChevronRight, ChevronLeft, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface QuickVenueRadarProps {
@@ -14,6 +14,7 @@ export function QuickVenueRadar({
   selectedSport = "All",
 }: QuickVenueRadarProps) {
   const navigate = useNavigate();
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   const venues = VENUES.filter((venue) => {
     const matchCity =
@@ -27,9 +28,18 @@ export function QuickVenueRadar({
       venue.sports.some((s) => s.toLowerCase() === selectedSport.toLowerCase());
 
     return matchCity && matchSport;
-  }).slice(0, 4);
+  }).slice(0, 8);
 
-  const displayVenues = venues.length > 0 ? venues : VENUES.slice(0, 4);
+  const displayVenues = venues.length > 0 ? venues : VENUES.slice(0, 8);
+
+  const scroll = (direction: "left" | "right") => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollBy({
+        left: direction === "left" ? -300 : 300,
+        behavior: "smooth",
+      });
+    }
+  };
 
   return (
     <section aria-label="Book sports turf venues" className="py-2">
@@ -40,25 +50,50 @@ export function QuickVenueRadar({
             <span>Book Turfs & Courts</span>
           </h2>
           <p className="text-[11px] text-muted-foreground">
-            Instant court booking across football, badminton & cricket
+            Instant court booking across football, badminton & cricket · Swipe to view
           </p>
         </div>
 
-        <Link
-          to="/book"
-          className="text-xs font-semibold text-primary hover:underline inline-flex items-center gap-0.5"
-        >
-          <span>Find Turfs</span>
-          <ChevronRight className="h-3.5 w-3.5" />
-        </Link>
+        <div className="flex items-center gap-2">
+          {/* Scroll navigation arrows */}
+          <div className="hidden sm:flex items-center gap-1">
+            <button
+              type="button"
+              onClick={() => scroll("left")}
+              aria-label="Scroll venues left"
+              className="grid h-7 w-7 place-items-center rounded-lg border border-border/80 bg-secondary/60 text-muted-foreground hover:bg-secondary hover:text-foreground transition cursor-pointer"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </button>
+            <button
+              type="button"
+              onClick={() => scroll("right")}
+              aria-label="Scroll venues right"
+              className="grid h-7 w-7 place-items-center rounded-lg border border-border/80 bg-secondary/60 text-muted-foreground hover:bg-secondary hover:text-foreground transition cursor-pointer"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </button>
+          </div>
+
+          <Link
+            to="/book"
+            className="text-xs font-semibold text-primary hover:underline inline-flex items-center gap-0.5"
+          >
+            <span>Find Turfs</span>
+            <ChevronRight className="h-3.5 w-3.5" />
+          </Link>
+        </div>
       </div>
 
-      {/* Venues Grid */}
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      {/* Horizontally Scrollable Venues Rail across all screen devices */}
+      <div
+        ref={scrollRef}
+        className="flex items-stretch gap-3.5 overflow-x-auto no-scrollbar scroll-smooth pb-2.5 pt-1 px-0.5 overscroll-x-contain touch-pan-x snap-x snap-mandatory"
+      >
         {displayVenues.map((venue) => (
           <div
             key={venue.id}
-            className="group flex flex-col justify-between overflow-hidden rounded-2xl border border-border/80 bg-card p-3 shadow-xs transition-all hover:border-emerald-500/50 hover:shadow-md"
+            className="snap-start shrink-0 w-[82vw] max-w-[280px] sm:w-[260px] lg:w-[280px] group flex flex-col justify-between overflow-hidden rounded-2xl border border-border/80 bg-card p-3 shadow-xs transition-all hover:border-emerald-500/50 hover:shadow-md"
           >
             <div>
               {/* Venue Image / Fallback Container */}

@@ -169,6 +169,16 @@ export function SportsNewsSection({
 
   const carouselRef = useRef<HTMLDivElement>(null);
   const tabsContainerRef = useRef<HTMLDivElement>(null);
+  const homeScrollRef = useRef<HTMLDivElement>(null);
+
+  const scrollHomeArticles = (direction: "left" | "right") => {
+    if (homeScrollRef.current) {
+      homeScrollRef.current.scrollBy({
+        left: direction === "left" ? -340 : 340,
+        behavior: "smooth",
+      });
+    }
+  };
 
   // Load saved bookmarks from localStorage on mount
   useEffect(() => {
@@ -613,17 +623,42 @@ export function SportsNewsSection({
             </p>
           </div>
 
-          <Link
-            to="/chronicle"
-            className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3.5 py-1.5 text-xs font-semibold text-primary hover:bg-primary/20 transition-colors self-start sm:self-center"
-          >
-            <span>View All on KhelChronicle</span>
-            <ArrowRight className="h-3.5 w-3.5" />
-          </Link>
+          <div className="flex items-center gap-2 self-start sm:self-center">
+            {/* Scroll navigation arrows for all screen devices */}
+            <div className="hidden sm:flex items-center gap-1">
+              <button
+                type="button"
+                onClick={() => scrollHomeArticles("left")}
+                aria-label="Scroll KhelChronicle articles left"
+                className="grid h-7 w-7 place-items-center rounded-lg border border-border/80 bg-secondary/60 text-muted-foreground hover:bg-secondary hover:text-foreground transition cursor-pointer"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </button>
+              <button
+                type="button"
+                onClick={() => scrollHomeArticles("right")}
+                aria-label="Scroll KhelChronicle articles right"
+                className="grid h-7 w-7 place-items-center rounded-lg border border-border/80 bg-secondary/60 text-muted-foreground hover:bg-secondary hover:text-foreground transition cursor-pointer"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </button>
+            </div>
+
+            <Link
+              to="/chronicle"
+              className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3.5 py-1.5 text-xs font-semibold text-primary hover:bg-primary/20 transition-colors"
+            >
+              <span>View All on KhelChronicle</span>
+              <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+          </div>
         </header>
 
-        {/* Exactly 3 cards side by side */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6">
+        {/* Exactly 3 cards side by side in a horizontally scrollable rail across all screen devices */}
+        <div
+          ref={homeScrollRef}
+          className="flex items-stretch gap-4 sm:gap-5 overflow-x-auto no-scrollbar scroll-smooth pb-2.5 pt-1 px-0.5 overscroll-x-contain touch-pan-x snap-x snap-mandatory grid-cols-1 md:grid-cols-3"
+        >
           {homeArticles.map((article) => {
             const issuer = getOfficialIssuer(article);
             return (
@@ -632,7 +667,7 @@ export function SportsNewsSection({
                 id={`home-news-${article.slug}`}
                 itemScope
                 itemType="https://schema.org/NewsArticle"
-                className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-border/80 bg-gradient-card p-4 transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:shadow-lg"
+                className="snap-start shrink-0 w-[84vw] max-w-[340px] sm:w-[320px] md:w-[340px] lg:w-[360px] group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-border/80 bg-gradient-card p-4 transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:shadow-lg"
               >
                 <div>
                   <div className="relative aspect-[16/10] w-full overflow-hidden rounded-xl bg-muted">

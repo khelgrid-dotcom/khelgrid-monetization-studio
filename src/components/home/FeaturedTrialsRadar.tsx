@@ -1,16 +1,15 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Link } from "@tanstack/react-router";
 import { TRIALS, type Trial } from "@/data/trials";
 import { useSavedOpportunities } from "@/context/SavedOpportunityContext";
 import {
   Trophy,
   Calendar,
-  MapPin,
   Bookmark,
   Share2,
   ChevronRight,
+  ChevronLeft,
   ShieldCheck,
-  CheckCircle,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -24,6 +23,7 @@ export function FeaturedTrialsRadar({
   selectedCity = "All Cities",
 }: FeaturedTrialsRadarProps) {
   const { isSaved, toggleSaved } = useSavedOpportunities();
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   const filteredTrials = TRIALS.filter((trial) => {
     const matchSport =
@@ -37,9 +37,18 @@ export function FeaturedTrialsRadar({
       trial.city.toLowerCase() === selectedCity.toLowerCase();
 
     return matchSport && matchCity;
-  }).slice(0, 6);
+  }).slice(0, 8);
 
-  const displayTrials = filteredTrials.length > 0 ? filteredTrials : TRIALS.slice(0, 6);
+  const displayTrials = filteredTrials.length > 0 ? filteredTrials : TRIALS.slice(0, 8);
+
+  const scroll = (direction: "left" | "right") => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollBy({
+        left: direction === "left" ? -340 : 340,
+        behavior: "smooth",
+      });
+    }
+  };
 
   const handleShare = (e: React.MouseEvent, trial: Trial) => {
     e.preventDefault();
@@ -72,21 +81,46 @@ export function FeaturedTrialsRadar({
             <span>Selection Trials & Combines</span>
           </h2>
           <p className="text-[11px] text-muted-foreground">
-            Verified SAI, federation & academy scouting trials
+            Verified SAI, federation & academy scouting trials · Swipe to explore
           </p>
         </div>
 
-        <Link
-          to="/trials"
-          className="text-xs font-semibold text-primary hover:underline inline-flex items-center gap-0.5"
-        >
-          <span>View All ({TRIALS.length})</span>
-          <ChevronRight className="h-3.5 w-3.5" />
-        </Link>
+        <div className="flex items-center gap-2">
+          {/* Left/Right Scroll Arrows */}
+          <div className="hidden sm:flex items-center gap-1">
+            <button
+              type="button"
+              onClick={() => scroll("left")}
+              aria-label="Scroll trials left"
+              className="grid h-7 w-7 place-items-center rounded-lg border border-border/80 bg-secondary/60 text-muted-foreground hover:bg-secondary hover:text-foreground transition cursor-pointer"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </button>
+            <button
+              type="button"
+              onClick={() => scroll("right")}
+              aria-label="Scroll trials right"
+              className="grid h-7 w-7 place-items-center rounded-lg border border-border/80 bg-secondary/60 text-muted-foreground hover:bg-secondary hover:text-foreground transition cursor-pointer"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </button>
+          </div>
+
+          <Link
+            to="/trials"
+            className="text-xs font-semibold text-primary hover:underline inline-flex items-center gap-0.5"
+          >
+            <span>All ({TRIALS.length})</span>
+            <ChevronRight className="h-3.5 w-3.5" />
+          </Link>
+        </div>
       </div>
 
-      {/* Grid of Trial Cards: 1 col on mobile, 2 on tablet, 3 on desktop */}
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      {/* Horizontally Scrollable Rail of Trial Cards across all screen devices */}
+      <div
+        ref={scrollRef}
+        className="flex items-stretch gap-3.5 overflow-x-auto no-scrollbar scroll-smooth pb-2.5 pt-1 px-0.5 overscroll-x-contain touch-pan-x snap-x snap-mandatory"
+      >
         {displayTrials.map((trial) => {
           const saved = isSaved(trial.id);
 
@@ -95,7 +129,7 @@ export function FeaturedTrialsRadar({
               key={trial.id}
               to="/trial/$id"
               params={{ id: trial.id }}
-              className="group relative flex flex-col justify-between rounded-2xl border border-border/80 bg-card p-4 transition-all hover:border-primary/50 hover:shadow-md"
+              className="snap-start shrink-0 w-[84vw] max-w-[340px] sm:w-[320px] lg:w-[340px] group relative flex flex-col justify-between rounded-2xl border border-border/80 bg-card p-4 transition-all hover:border-primary/50 hover:shadow-md"
             >
               <div>
                 {/* Meta Header */}

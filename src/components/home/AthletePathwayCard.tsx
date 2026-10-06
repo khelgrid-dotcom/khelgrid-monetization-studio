@@ -23,18 +23,18 @@ export function AthletePathwayCard() {
               QR passport on KhelGrid for free.
             </p>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-1 text-xs text-foreground/80">
-              <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-2 overflow-x-auto no-scrollbar scroll-smooth pt-1 pb-1 text-xs text-foreground/80 overscroll-x-contain touch-pan-x snap-x snap-mandatory sm:grid sm:grid-cols-3">
+              <div className="snap-start shrink-0 flex items-center gap-1.5 rounded-lg bg-secondary/50 border border-border/60 px-2.5 py-1.5 sm:border-0 sm:bg-transparent sm:p-0">
                 <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 shrink-0" />
-                <span>Verified Match Stats</span>
+                <span className="whitespace-nowrap sm:whitespace-normal">Verified Match Stats</span>
               </div>
-              <div className="flex items-center gap-1.5">
+              <div className="snap-start shrink-0 flex items-center gap-1.5 rounded-lg bg-secondary/50 border border-border/60 px-2.5 py-1.5 sm:border-0 sm:bg-transparent sm:p-0">
                 <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 shrink-0" />
-                <span>Export PDF Resume</span>
+                <span className="whitespace-nowrap sm:whitespace-normal">Export PDF Resume</span>
               </div>
-              <div className="flex items-center gap-1.5">
+              <div className="snap-start shrink-0 flex items-center gap-1.5 rounded-lg bg-secondary/50 border border-border/60 px-2.5 py-1.5 sm:border-0 sm:bg-transparent sm:p-0">
                 <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 shrink-0" />
-                <span>Scout Share Link</span>
+                <span className="whitespace-nowrap sm:whitespace-normal">Scout Share Link</span>
               </div>
             </div>
           </div>

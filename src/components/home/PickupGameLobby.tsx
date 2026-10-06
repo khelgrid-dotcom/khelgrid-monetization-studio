@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { GAMES, type Game } from "@/data/playo";
-import { Swords, Users, Clock, MapPin, ChevronRight, PlusCircle } from "lucide-react";
+import { Swords, Users, Clock, MapPin, ChevronRight, ChevronLeft, PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { HostGameModal } from "@/components/play/HostGameModal";
 import { GameDetailsModal } from "@/components/play/GameDetailsModal";
@@ -18,6 +18,7 @@ export function PickupGameLobby({
   const navigate = useNavigate();
   const [hostModalOpen, setHostModalOpen] = useState(false);
   const [selectedGame, setSelectedGame] = useState<Game | null>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   const games = GAMES.filter((g) => {
     const matchCity =
@@ -31,9 +32,18 @@ export function PickupGameLobby({
       g.sport.toLowerCase() === selectedSport.toLowerCase();
 
     return matchCity && matchSport;
-  }).slice(0, 3);
+  }).slice(0, 8);
 
-  const displayGames = games.length > 0 ? games : GAMES.slice(0, 3);
+  const displayGames = games.length > 0 ? games : GAMES.slice(0, 8);
+
+  const scroll = (direction: "left" | "right") => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollBy({
+        left: direction === "left" ? -320 : 320,
+        behavior: "smooth",
+      });
+    }
+  };
 
   return (
     <section aria-label="Join or host pickup sports games" className="py-2">
@@ -44,11 +54,31 @@ export function PickupGameLobby({
             <span>Join Pickup Games</span>
           </h2>
           <p className="text-[11px] text-muted-foreground">
-            Connect with local players and fill missing court spots
+            Connect with local players and fill missing court spots · Swipe to explore
           </p>
         </div>
 
         <div className="flex items-center gap-2">
+          {/* Scroll navigation arrows */}
+          <div className="hidden sm:flex items-center gap-1">
+            <button
+              type="button"
+              onClick={() => scroll("left")}
+              aria-label="Scroll games left"
+              className="grid h-7 w-7 place-items-center rounded-lg border border-border/80 bg-secondary/60 text-muted-foreground hover:bg-secondary hover:text-foreground transition cursor-pointer"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </button>
+            <button
+              type="button"
+              onClick={() => scroll("right")}
+              aria-label="Scroll games right"
+              className="grid h-7 w-7 place-items-center rounded-lg border border-border/80 bg-secondary/60 text-muted-foreground hover:bg-secondary hover:text-foreground transition cursor-pointer"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </button>
+          </div>
+
           <Button
             size="sm"
             variant="outline"
@@ -69,8 +99,11 @@ export function PickupGameLobby({
         </div>
       </div>
 
-      {/* Pickup Games Cards */}
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+      {/* Horizontally Scrollable Pickup Games Rail across all screen devices */}
+      <div
+        ref={scrollRef}
+        className="flex items-stretch gap-3.5 overflow-x-auto no-scrollbar scroll-smooth pb-2.5 pt-1 px-0.5 overscroll-x-contain touch-pan-x snap-x snap-mandatory"
+      >
         {displayGames.map((game) => {
           const spotsLeft = game.capacity - game.joined;
           const percentage = Math.round((game.joined / game.capacity) * 100);
@@ -79,7 +112,7 @@ export function PickupGameLobby({
             <div
               key={game.id}
               onClick={() => setSelectedGame(game)}
-              className="group flex flex-col justify-between min-h-[220px] rounded-2xl border border-border/80 bg-card p-4 shadow-xs transition-all hover:border-blue-500/50 hover:shadow-md cursor-pointer"
+              className="snap-start shrink-0 w-[84vw] max-w-[320px] sm:w-[300px] lg:w-[320px] group flex flex-col justify-between min-h-[220px] rounded-2xl border border-border/80 bg-card p-4 shadow-xs transition-all hover:border-blue-500/50 hover:shadow-md cursor-pointer"
             >
               <div>
                 {/* Meta Header */}

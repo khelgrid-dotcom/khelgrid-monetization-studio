@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Link } from "@tanstack/react-router";
 import { LIVE_SPORTS_UPDATES, type LiveMatchUpdate } from "@/data/liveSports";
-import { Radio, ChevronRight, Trophy, Flame, Activity, X, Share2 } from "lucide-react";
+import { Radio, ChevronRight, ChevronLeft, Trophy, Flame, Activity, X, Share2 } from "lucide-react";
 import { toast } from "sonner";
 import {
   Dialog,
@@ -17,6 +17,16 @@ interface LiveMatchTickerProps {
 
 export function LiveMatchTicker({ selectedSport = "All" }: LiveMatchTickerProps) {
   const [selectedMatch, setSelectedMatch] = useState<LiveMatchUpdate | null>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const scroll = (direction: "left" | "right") => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollBy({
+        left: direction === "left" ? -320 : 320,
+        behavior: "smooth",
+      });
+    }
+  };
 
   const matches = LIVE_SPORTS_UPDATES.filter((m) => {
     if (selectedSport === "All" || selectedSport === "All Sports") return true;
@@ -26,7 +36,7 @@ export function LiveMatchTicker({ selectedSport = "All" }: LiveMatchTickerProps)
   const displayMatches = matches.length > 0 ? matches : LIVE_SPORTS_UPDATES;
 
   return (
-    <section id="live-scores" aria-label="Live Match Score Center" className="py-2 scroll-mt-20">
+    <section id="live-scores" aria-label="Live Match Score Center" className="py-2 scroll-mt-24">
       {/* Header with Live Pulse */}
       <div className="flex items-center justify-between gap-2 pb-2.5">
         <div className="flex items-center gap-2">
@@ -42,17 +52,42 @@ export function LiveMatchTicker({ selectedSport = "All" }: LiveMatchTickerProps)
           </span>
         </div>
 
-        <Link
-          to="/events"
-          className="text-xs font-semibold text-primary hover:underline inline-flex items-center gap-0.5"
-        >
-          <span>All Scores</span>
-          <ChevronRight className="h-3.5 w-3.5" />
-        </Link>
+        <div className="flex items-center gap-2">
+          {/* Scroll navigation arrows for all screen devices */}
+          <div className="hidden sm:flex items-center gap-1">
+            <button
+              type="button"
+              onClick={() => scroll("left")}
+              aria-label="Scroll live matches left"
+              className="grid h-7 w-7 place-items-center rounded-lg border border-border/80 bg-secondary/60 text-muted-foreground hover:bg-secondary hover:text-foreground transition cursor-pointer"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </button>
+            <button
+              type="button"
+              onClick={() => scroll("right")}
+              aria-label="Scroll live matches right"
+              className="grid h-7 w-7 place-items-center rounded-lg border border-border/80 bg-secondary/60 text-muted-foreground hover:bg-secondary hover:text-foreground transition cursor-pointer"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </button>
+          </div>
+
+          <Link
+            to="/events"
+            className="text-xs font-semibold text-primary hover:underline inline-flex items-center gap-0.5"
+          >
+            <span>All Scores</span>
+            <ChevronRight className="h-3.5 w-3.5" />
+          </Link>
+        </div>
       </div>
 
       {/* Horizontal Swipeable Match Cards */}
-      <div className="flex items-stretch gap-3 overflow-x-auto no-scrollbar scroll-smooth pb-2 pt-1 px-0.5 overscroll-x-contain touch-pan-x snap-x snap-mandatory">
+      <div
+        ref={scrollRef}
+        className="flex items-stretch gap-3 overflow-x-auto no-scrollbar scroll-smooth pb-2 pt-1 px-0.5 overscroll-x-contain touch-pan-x snap-x snap-mandatory"
+      >
         {displayMatches.map((match) => (
           <div
             key={match.id}

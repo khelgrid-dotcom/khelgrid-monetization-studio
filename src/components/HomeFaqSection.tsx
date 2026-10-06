@@ -52,7 +52,7 @@ export function HomeFaqSection() {
       <div
         role="tablist"
         aria-label="Filter frequently asked questions by topic"
-        className="mt-6 flex flex-wrap items-center justify-center gap-2"
+        className="mt-6 flex items-center justify-start sm:justify-center gap-2 overflow-x-auto no-scrollbar py-1 px-1 overscroll-x-contain touch-pan-x"
       >
         {categories.map((cat) => {
           const isActive = selectedCategory === cat.id;
@@ -64,7 +64,7 @@ export function HomeFaqSection() {
               aria-selected={isActive}
               aria-controls="faq-accordion-container"
               onClick={() => setSelectedCategory(cat.id)}
-              className={`inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-semibold transition-all focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary ${
+              className={`shrink-0 inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-semibold transition-all focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary ${
                 isActive
                   ? "bg-primary text-primary-foreground shadow-xs ring-2 ring-primary/20"
                   : "border border-border/80 bg-background/80 text-muted-foreground hover:border-primary/40 hover:text-foreground"
