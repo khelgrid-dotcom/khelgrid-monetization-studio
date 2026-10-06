@@ -11,6 +11,7 @@ import {
   AthletePathwayCard,
   NativeAppBanner,
   HomeNewsWireSection,
+  FeaturedAcademiesSection,
   HomeCommunityImpactSection,
 } from "@/components/home";
 import { HomeFaqSection } from "@/components/HomeFaqSection";
@@ -69,8 +70,8 @@ function Home() {
   };
 
   return (
-    <div className="w-full min-w-0 flex-1 overscroll-y-contain pb-10 sm:pb-16">
-      <div className="mx-auto w-full max-w-7xl px-3 sm:px-6 lg:px-8 space-y-6 sm:space-y-8">
+    <div className="w-full min-w-0 max-w-full overflow-x-hidden flex-1 overscroll-y-contain pb-10 sm:pb-16">
+      <div className="mx-auto w-full min-w-0 max-w-7xl px-3 sm:px-6 lg:px-8 space-y-6 sm:space-y-8">
         {/* 1. App Header Greeting, City Switcher, Quick Search & PWA Install Bar */}
         <AppHeaderBanner selectedCity={selectedCity} onSelectCity={handleSelectCity} />
 
@@ -106,15 +107,18 @@ function Home() {
         {/* 11. Multi-Platform PWA, Android & iOS Native App Showcase */}
         <NativeAppBanner />
 
-        {/* 12. Verified Academies & Community Trust Audit */}
+        {/* 12. Featured Training Institutions & Sports Academies */}
+        <FeaturedAcademiesSection />
+
+        {/* 13. Zero Fake Trials Standard & Community Trust Audit */}
         <HomeCommunityImpactSection />
 
-        {/* 13. Frequently Asked Questions Accordion */}
+        {/* 14. Frequently Asked Questions Accordion */}
         <div className="pt-2">
           <HomeFaqSection />
         </div>
 
-        {/* 14. Responsive Footer Ad Unit */}
+        {/* 15. Responsive Footer Ad Unit */}
         <div className="pt-2">
           <ResponsiveAd adSlot="homeFooter" minHeight={200} />
         </div>

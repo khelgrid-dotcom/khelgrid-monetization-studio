@@ -29,9 +29,9 @@ export function HomeFaqSection() {
     <section
       id="faq"
       aria-labelledby="faq-section-heading"
-      className="mx-auto mt-4 sm:mt-8 max-w-5xl rounded-2xl sm:rounded-3xl border border-border/80 bg-gradient-card p-4 sm:p-8 md:p-10 shadow-sm"
+      className="w-full min-w-0 max-w-full overflow-hidden mx-auto mt-4 sm:mt-8 max-w-5xl rounded-2xl sm:rounded-3xl border border-border/80 bg-gradient-card p-4 sm:p-8 md:p-10 shadow-sm"
     >
-      <div className="flex flex-col gap-3 text-center sm:items-center">
+      <div className="flex flex-col gap-3 text-center sm:items-center w-full min-w-0">
         <div className="inline-flex items-center gap-2 self-center rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
           <HelpCircle className="h-3.5 w-3.5" aria-hidden="true" />
           <span>Frequently Asked Questions</span>
@@ -52,7 +52,7 @@ export function HomeFaqSection() {
       <div
         role="tablist"
         aria-label="Filter frequently asked questions by topic"
-        className="mt-6 flex items-center justify-start sm:justify-center gap-2 overflow-x-auto no-scrollbar py-1 px-1 overscroll-x-contain touch-pan-x"
+        className="mt-6 flex w-full min-w-0 max-w-full items-center justify-start sm:justify-center gap-2 overflow-x-auto no-scrollbar py-1 px-1 overscroll-x-contain touch-pan-x"
       >
         {categories.map((cat) => {
           const isActive = selectedCategory === cat.id;

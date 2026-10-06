@@ -42,19 +42,22 @@ export function QuickVenueRadar({
   };
 
   return (
-    <section aria-label="Book sports turf venues" className="py-2">
-      <div className="flex items-center justify-between pb-2.5">
-        <div>
+    <section
+      aria-label="Book sports turf venues"
+      className="w-full min-w-0 max-w-full overflow-hidden py-2"
+    >
+      <div className="flex items-center justify-between pb-2.5 w-full min-w-0">
+        <div className="min-w-0">
           <h2 className="text-sm sm:text-base font-bold text-foreground tracking-tight flex items-center gap-1.5">
-            <CalendarCheck className="h-4 w-4 text-emerald-500" />
-            <span>Book Turfs & Courts</span>
+            <CalendarCheck className="h-4 w-4 text-emerald-500 shrink-0" />
+            <span className="truncate">Book Turfs & Courts</span>
           </h2>
-          <p className="text-[11px] text-muted-foreground">
+          <p className="text-[11px] text-muted-foreground truncate">
             Instant court booking across football, badminton & cricket · Swipe to view
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 shrink-0">
           {/* Scroll navigation arrows */}
           <div className="hidden sm:flex items-center gap-1">
             <button
@@ -88,12 +91,12 @@ export function QuickVenueRadar({
       {/* Horizontally Scrollable Venues Rail across all screen devices */}
       <div
         ref={scrollRef}
-        className="flex items-stretch gap-3.5 overflow-x-auto no-scrollbar scroll-smooth pb-2.5 pt-1 px-0.5 overscroll-x-contain touch-pan-x snap-x snap-mandatory"
+        className="flex w-full min-w-0 max-w-full items-stretch gap-3 sm:gap-3.5 overflow-x-auto no-scrollbar scroll-smooth pb-2.5 pt-1 px-0.5 overscroll-x-contain touch-pan-x snap-x snap-mandatory"
       >
         {displayVenues.map((venue) => (
           <div
             key={venue.id}
-            className="snap-start shrink-0 w-[82vw] max-w-[280px] sm:w-[260px] lg:w-[280px] group flex flex-col justify-between overflow-hidden rounded-2xl border border-border/80 bg-card p-3 shadow-xs transition-all hover:border-emerald-500/50 hover:shadow-md"
+            className="snap-start shrink-0 w-[80vw] max-w-[280px] sm:w-[260px] lg:w-[280px] group flex flex-col justify-between overflow-hidden rounded-2xl border border-border/80 bg-card p-3 shadow-xs transition-all hover:border-emerald-500/50 hover:shadow-md"
           >
             <div>
               {/* Venue Image / Fallback Container */}

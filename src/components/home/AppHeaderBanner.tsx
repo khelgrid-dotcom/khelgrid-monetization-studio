@@ -36,12 +36,12 @@ export function AppHeaderBanner({ selectedCity, onSelectCity }: AppHeaderBannerP
   };
 
   return (
-    <header className="relative space-y-3 pt-2">
+    <header className="relative w-full min-w-0 max-w-full overflow-hidden space-y-3 pt-2">
       {/* PWA / App Install Bar */}
       <PWAInstallBanner />
 
       {/* App Top Greetings & City Switcher Bar */}
-      <div className="flex items-start sm:items-center justify-between gap-2.5">
+      <div className="flex items-start sm:items-center justify-between gap-2.5 w-full min-w-0">
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-1.5 text-xs text-muted-foreground font-medium h-5">
             <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0" />
@@ -153,7 +153,7 @@ export function AppHeaderBanner({ selectedCity, onSelectCity }: AppHeaderBannerP
       </form>
 
       {/* Quick Athletic Highlights Strip */}
-      <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-0.5 text-[11px] text-muted-foreground">
+      <div className="flex w-full min-w-0 max-w-full items-center gap-2 overflow-x-auto no-scrollbar py-0.5 text-[11px] text-muted-foreground overscroll-x-contain touch-pan-x">
         <span className="inline-flex shrink-0 items-center gap-1 font-semibold text-primary">
           <Sparkles className="h-3 w-3" /> Quick Explore:
         </span>

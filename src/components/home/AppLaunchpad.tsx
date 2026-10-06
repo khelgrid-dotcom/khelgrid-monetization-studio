@@ -75,8 +75,11 @@ export function AppLaunchpad() {
   };
 
   return (
-    <section aria-label="Core sports app actions" className="py-2">
-      <div className="relative flex items-center gap-1.5">
+    <section
+      aria-label="Core sports app actions"
+      className="w-full min-w-0 max-w-full overflow-hidden py-2"
+    >
+      <div className="relative flex w-full min-w-0 max-w-full items-center gap-1.5 overflow-hidden">
         <button
           type="button"
           onClick={() => scroll("left")}
@@ -88,7 +91,7 @@ export function AppLaunchpad() {
 
         <div
           ref={scrollRef}
-          className="flex-1 flex items-stretch gap-2.5 sm:gap-3 overflow-x-auto no-scrollbar scroll-smooth pb-1.5 pt-0.5 px-0.5 overscroll-x-contain touch-pan-x snap-x snap-mandatory"
+          className="flex-1 min-w-0 flex items-stretch gap-2.5 sm:gap-3 overflow-x-auto no-scrollbar scroll-smooth pb-1.5 pt-0.5 px-0.5 overscroll-x-contain touch-pan-x snap-x snap-mandatory"
         >
           {LAUNCHPAD_ITEMS.map((item) => (
             <Link

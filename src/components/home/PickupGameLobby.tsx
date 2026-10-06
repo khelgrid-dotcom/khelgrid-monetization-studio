@@ -46,19 +46,22 @@ export function PickupGameLobby({
   };
 
   return (
-    <section aria-label="Join or host pickup sports games" className="py-2">
-      <div className="flex items-center justify-between pb-2.5">
-        <div>
+    <section
+      aria-label="Join or host pickup sports games"
+      className="w-full min-w-0 max-w-full overflow-hidden py-2"
+    >
+      <div className="flex items-center justify-between pb-2.5 w-full min-w-0">
+        <div className="min-w-0">
           <h2 className="text-sm sm:text-base font-bold text-foreground tracking-tight flex items-center gap-1.5">
-            <Swords className="h-4 w-4 text-blue-500" />
-            <span>Join Pickup Games</span>
+            <Swords className="h-4 w-4 text-blue-500 shrink-0" />
+            <span className="truncate">Join Pickup Games</span>
           </h2>
-          <p className="text-[11px] text-muted-foreground">
+          <p className="text-[11px] text-muted-foreground truncate">
             Connect with local players and fill missing court spots · Swipe to explore
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 shrink-0">
           {/* Scroll navigation arrows */}
           <div className="hidden sm:flex items-center gap-1">
             <button
@@ -86,7 +89,7 @@ export function PickupGameLobby({
             className="h-8 gap-1 rounded-xl border-primary/30 text-xs font-semibold text-primary hover:bg-primary/10"
           >
             <PlusCircle className="h-3.5 w-3.5" />
-            <span className="hidden xs:inline">Host Game</span>
+            <span className="hidden sm:inline">Host Game</span>
           </Button>
 
           <Link
@@ -102,7 +105,7 @@ export function PickupGameLobby({
       {/* Horizontally Scrollable Pickup Games Rail across all screen devices */}
       <div
         ref={scrollRef}
-        className="flex items-stretch gap-3.5 overflow-x-auto no-scrollbar scroll-smooth pb-2.5 pt-1 px-0.5 overscroll-x-contain touch-pan-x snap-x snap-mandatory"
+        className="flex w-full min-w-0 max-w-full items-stretch gap-3 sm:gap-3.5 overflow-x-auto no-scrollbar scroll-smooth pb-2.5 pt-1 px-0.5 overscroll-x-contain touch-pan-x snap-x snap-mandatory"
       >
         {displayGames.map((game) => {
           const spotsLeft = game.capacity - game.joined;
@@ -112,7 +115,7 @@ export function PickupGameLobby({
             <div
               key={game.id}
               onClick={() => setSelectedGame(game)}
-              className="snap-start shrink-0 w-[84vw] max-w-[320px] sm:w-[300px] lg:w-[320px] group flex flex-col justify-between min-h-[220px] rounded-2xl border border-border/80 bg-card p-4 shadow-xs transition-all hover:border-blue-500/50 hover:shadow-md cursor-pointer"
+              className="snap-start shrink-0 w-[80vw] max-w-[300px] sm:w-[300px] lg:w-[320px] group flex flex-col justify-between min-h-[220px] rounded-2xl border border-border/80 bg-card p-3.5 sm:p-4 shadow-xs transition-all hover:border-blue-500/50 hover:shadow-md cursor-pointer"
             >
               <div>
                 {/* Meta Header */}

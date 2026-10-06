@@ -72,20 +72,23 @@ export function FeaturedTrialsRadar({
   };
 
   return (
-    <section aria-label="Featured Selection Trials" className="py-2">
+    <section
+      aria-label="Featured Selection Trials"
+      className="w-full min-w-0 max-w-full overflow-hidden py-2"
+    >
       {/* Section Header */}
-      <div className="flex items-center justify-between pb-2.5">
-        <div>
+      <div className="flex items-center justify-between pb-2.5 w-full min-w-0">
+        <div className="min-w-0">
           <h2 className="text-sm sm:text-base font-bold text-foreground tracking-tight flex items-center gap-1.5">
-            <Trophy className="h-4 w-4 text-primary" />
-            <span>Selection Trials & Combines</span>
+            <Trophy className="h-4 w-4 text-primary shrink-0" />
+            <span className="truncate">Selection Trials & Combines</span>
           </h2>
-          <p className="text-[11px] text-muted-foreground">
+          <p className="text-[11px] text-muted-foreground truncate">
             Verified SAI, federation & academy scouting trials · Swipe to explore
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 shrink-0">
           {/* Left/Right Scroll Arrows */}
           <div className="hidden sm:flex items-center gap-1">
             <button
@@ -119,7 +122,7 @@ export function FeaturedTrialsRadar({
       {/* Horizontally Scrollable Rail of Trial Cards across all screen devices */}
       <div
         ref={scrollRef}
-        className="flex items-stretch gap-3.5 overflow-x-auto no-scrollbar scroll-smooth pb-2.5 pt-1 px-0.5 overscroll-x-contain touch-pan-x snap-x snap-mandatory"
+        className="flex w-full min-w-0 max-w-full items-stretch gap-3 sm:gap-3.5 overflow-x-auto no-scrollbar scroll-smooth pb-2.5 pt-1 px-0.5 overscroll-x-contain touch-pan-x snap-x snap-mandatory"
       >
         {displayTrials.map((trial) => {
           const saved = isSaved(trial.id);
@@ -129,7 +132,7 @@ export function FeaturedTrialsRadar({
               key={trial.id}
               to="/trial/$id"
               params={{ id: trial.id }}
-              className="snap-start shrink-0 w-[84vw] max-w-[340px] sm:w-[320px] lg:w-[340px] group relative flex flex-col justify-between rounded-2xl border border-border/80 bg-card p-4 transition-all hover:border-primary/50 hover:shadow-md"
+              className="snap-start shrink-0 w-[82vw] max-w-[320px] sm:w-[320px] lg:w-[340px] group relative flex flex-col justify-between rounded-2xl border border-border/80 bg-card p-3.5 sm:p-4 transition-all hover:border-primary/50 hover:shadow-md"
             >
               <div>
                 {/* Meta Header */}

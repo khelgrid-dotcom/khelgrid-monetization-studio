@@ -582,7 +582,7 @@ export function SportsNewsSection({
     return (
       <section
         id="sports-news-section"
-        className="mt-6 border-t border-border/60 pt-6 sm:mt-8 sm:pt-8"
+        className="w-full min-w-0 max-w-full overflow-hidden mt-6 border-t border-border/60 pt-6 sm:mt-8 sm:pt-8"
         aria-labelledby="sports-news-heading"
         itemScope
         itemType="https://schema.org/CollectionPage"
@@ -593,8 +593,8 @@ export function SportsNewsSection({
         />
 
         {/* Home Header: Low-profile title, live status, and direct link to KhelChronicle */}
-        <header className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between mb-4">
-          <div className="flex flex-wrap items-center gap-2">
+        <header className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between mb-4 w-full min-w-0">
+          <div className="flex flex-wrap items-center gap-2 min-w-0">
             <span className="sr-only">
               Real-time Sports Wire · National Sports &amp; Selection Dispatch
             </span>
@@ -623,7 +623,7 @@ export function SportsNewsSection({
             </p>
           </div>
 
-          <div className="flex items-center gap-2 self-start sm:self-center">
+          <div className="flex items-center gap-2 self-start sm:self-center shrink-0">
             {/* Scroll navigation arrows for all screen devices */}
             <div className="hidden sm:flex items-center gap-1">
               <button
@@ -646,7 +646,7 @@ export function SportsNewsSection({
 
             <Link
               to="/chronicle"
-              className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3.5 py-1.5 text-xs font-semibold text-primary hover:bg-primary/20 transition-colors"
+              className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3.5 py-1.5 text-xs font-semibold text-primary hover:bg-primary/20 transition-colors shrink-0"
             >
               <span>View All on KhelChronicle</span>
               <ArrowRight className="h-3.5 w-3.5" />
@@ -657,7 +657,7 @@ export function SportsNewsSection({
         {/* Exactly 3 cards side by side in a horizontally scrollable rail across all screen devices */}
         <div
           ref={homeScrollRef}
-          className="flex items-stretch gap-4 sm:gap-5 overflow-x-auto no-scrollbar scroll-smooth pb-2.5 pt-1 px-0.5 overscroll-x-contain touch-pan-x snap-x snap-mandatory grid-cols-1 md:grid-cols-3"
+          className="flex w-full min-w-0 max-w-full items-stretch gap-3.5 sm:gap-4 overflow-x-auto no-scrollbar scroll-smooth pb-2.5 pt-1 px-0.5 overscroll-x-contain touch-pan-x snap-x snap-mandatory grid-cols-1 md:grid-cols-3"
         >
           {homeArticles.map((article) => {
             const issuer = getOfficialIssuer(article);
@@ -667,7 +667,7 @@ export function SportsNewsSection({
                 id={`home-news-${article.slug}`}
                 itemScope
                 itemType="https://schema.org/NewsArticle"
-                className="snap-start shrink-0 w-[84vw] max-w-[340px] sm:w-[320px] md:w-[340px] lg:w-[360px] group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-border/80 bg-gradient-card p-4 transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:shadow-lg"
+                className="snap-start shrink-0 w-[82vw] max-w-[320px] sm:w-[300px] md:w-[320px] lg:w-[340px] group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-border/80 bg-gradient-card p-3.5 sm:p-4 transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:shadow-lg"
               >
                 <div>
                   <div className="relative aspect-[16/10] w-full overflow-hidden rounded-xl bg-muted">

@@ -32,7 +32,7 @@ export function SportCategoryPills({ selectedSport, onSelectSport }: SportCatego
   };
 
   return (
-    <div className="relative flex items-center gap-1.5 py-1 min-h-[46px]">
+    <div className="relative flex w-full min-w-0 max-w-full items-center gap-1.5 py-1 min-h-[46px] overflow-hidden">
       <button
         type="button"
         onClick={() => scroll("left")}
@@ -44,7 +44,7 @@ export function SportCategoryPills({ selectedSport, onSelectSport }: SportCatego
 
       <div
         ref={scrollContainerRef}
-        className="flex-1 flex items-center gap-2 overflow-x-auto no-scrollbar scroll-smooth py-1 px-0.5 overscroll-x-contain touch-pan-x snap-x snap-mandatory"
+        className="flex-1 min-w-0 flex items-center gap-2 overflow-x-auto no-scrollbar scroll-smooth py-1 px-0.5 overscroll-x-contain touch-pan-x snap-x snap-mandatory"
       >
         {SPORTS_LIST.map((sport) => {
           const isSelected =

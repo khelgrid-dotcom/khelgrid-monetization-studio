@@ -5,7 +5,7 @@ export function HomeNewsWireSection() {
     <section
       id="sports-wire"
       aria-label="National Sports & Selection Dispatch"
-      className="w-full py-1"
+      className="w-full min-w-0 max-w-full overflow-hidden py-1"
     >
       <SportsNewsSection variant="home" />
     </section>

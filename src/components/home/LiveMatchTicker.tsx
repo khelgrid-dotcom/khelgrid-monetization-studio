@@ -36,23 +36,27 @@ export function LiveMatchTicker({ selectedSport = "All" }: LiveMatchTickerProps)
   const displayMatches = matches.length > 0 ? matches : LIVE_SPORTS_UPDATES;
 
   return (
-    <section id="live-scores" aria-label="Live Match Score Center" className="py-2 scroll-mt-24">
+    <section
+      id="live-scores"
+      aria-label="Live Match Score Center"
+      className="w-full min-w-0 max-w-full overflow-hidden py-2 scroll-mt-24"
+    >
       {/* Header with Live Pulse */}
-      <div className="flex items-center justify-between gap-2 pb-2.5">
-        <div className="flex items-center gap-2">
-          <span className="relative flex h-2.5 w-2.5">
+      <div className="flex items-center justify-between gap-2 pb-2.5 w-full min-w-0">
+        <div className="flex items-center gap-2 min-w-0">
+          <span className="relative flex h-2.5 w-2.5 shrink-0">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
             <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
           </span>
-          <h2 className="text-sm sm:text-base font-bold text-foreground tracking-tight flex items-center gap-1.5">
+          <h2 className="text-sm sm:text-base font-bold text-foreground tracking-tight flex items-center gap-1.5 truncate">
             <span>In-Play Match Center</span>
           </h2>
-          <span className="rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-600 dark:text-emerald-400">
+          <span className="rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-600 dark:text-emerald-400 shrink-0">
             LIVE
           </span>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 shrink-0">
           {/* Scroll navigation arrows for all screen devices */}
           <div className="hidden sm:flex items-center gap-1">
             <button
@@ -86,13 +90,13 @@ export function LiveMatchTicker({ selectedSport = "All" }: LiveMatchTickerProps)
       {/* Horizontal Swipeable Match Cards */}
       <div
         ref={scrollRef}
-        className="flex items-stretch gap-3 overflow-x-auto no-scrollbar scroll-smooth pb-2 pt-1 px-0.5 overscroll-x-contain touch-pan-x snap-x snap-mandatory"
+        className="flex w-full min-w-0 max-w-full items-stretch gap-3 overflow-x-auto no-scrollbar scroll-smooth pb-2 pt-1 px-0.5 overscroll-x-contain touch-pan-x snap-x snap-mandatory"
       >
         {displayMatches.map((match) => (
           <div
             key={match.id}
             onClick={() => setSelectedMatch(match)}
-            className="snap-start flex-none w-[84vw] max-w-[320px] sm:w-[320px] min-h-[148px] rounded-2xl border border-border/80 bg-card p-3.5 shadow-xs transition-all hover:border-primary/50 hover:shadow-md cursor-pointer active:scale-[0.99] flex flex-col justify-between"
+            className="snap-start flex-none w-[80vw] max-w-[300px] sm:w-[320px] min-h-[148px] rounded-2xl border border-border/80 bg-card p-3 sm:p-3.5 shadow-xs transition-all hover:border-primary/50 hover:shadow-md cursor-pointer active:scale-[0.99] flex flex-col justify-between"
           >
             {/* Match Header */}
             <div className="flex items-center justify-between text-[11px] pb-2 border-b border-border/60">

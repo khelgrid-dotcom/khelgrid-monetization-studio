@@ -7,6 +7,7 @@ export { QuickVenueRadar } from "./QuickVenueRadar";
 export { PickupGameLobby } from "./PickupGameLobby";
 export { AthletePathwayCard } from "./AthletePathwayCard";
 export { NativeAppBanner } from "./NativeAppBanner";
+export { FeaturedAcademiesSection } from "./FeaturedAcademiesSection";
 
 // Core home sections
 export { HomeHeroSection } from "./HomeHeroSection";
