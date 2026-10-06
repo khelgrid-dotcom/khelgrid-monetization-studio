@@ -21,11 +21,17 @@ import {
   ExternalLink,
   Globe,
   Share2,
+  TrendingUp,
+  BarChart3,
+  Layers,
+  Clock,
+  Users,
 } from "lucide-react";
 
 interface SportsCVCardProps {
   data: SportsCVData;
   className?: string;
+  onShare?: () => void;
 }
 
 const THEME_CONFIG: Record<
@@ -93,7 +99,7 @@ const THEME_CONFIG: Record<
   },
 };
 
-export function SportsCVCard({ data, className = "" }: SportsCVCardProps) {
+export function SportsCVCard({ data, className = "", onShare }: SportsCVCardProps) {
   const theme = THEME_CONFIG[data.theme] || THEME_CONFIG.gold;
 
   // Average performance rating
@@ -237,6 +243,221 @@ export function SportsCVCard({ data, className = "" }: SportsCVCardProps) {
         <div className="mt-4 rounded-xl border border-white/10 bg-white/[0.02] p-3.5 text-xs sm:text-sm leading-relaxed text-neutral-300">
           <span className="font-semibold text-white mr-1">Athlete Summary:</span>
           {data.bio}
+        </div>
+      )}
+
+      {/* Section 1: Career Stats & Match Records */}
+      {(data.careerSummary || (data.careerSeasonStats && data.careerSeasonStats.length > 0)) && (
+        <div className="mt-6">
+          <div className="flex items-center justify-between border-b border-white/10 pb-2">
+            <h4 className="flex items-center gap-1.5 text-sm font-bold uppercase tracking-wider text-white">
+              <BarChart3 className={`h-4 w-4 ${theme.accentText}`} />
+              Career Stats &amp; Match Records
+            </h4>
+            <span className="text-[11px] text-neutral-400">
+              {data.careerSummary?.totalMatches ||
+                data.careerSeasonStats?.reduce((a, b) => a + (b.matches || 0), 0) ||
+                0}{" "}
+              Matches Recorded
+            </span>
+          </div>
+
+          {/* Key Metric Ticker Cards */}
+          {data.careerSummary && (
+            <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
+              <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3 text-center">
+                <div className="text-[10px] uppercase tracking-wider text-neutral-400">
+                  Career Matches
+                </div>
+                <div className="mt-1 font-mono text-xl sm:text-2xl font-black text-white tabular-nums">
+                  {data.careerSummary.totalMatches}
+                </div>
+                {data.careerSummary.winRate && (
+                  <div className="mt-0.5 text-[10px] text-emerald-400 font-medium">
+                    {`${data.careerSummary.winRate} Win/Select Rate`}
+                  </div>
+                )}
+              </div>
+
+              <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3 text-center">
+                <div className="text-[10px] uppercase tracking-wider text-neutral-400">
+                  {data.careerSummary.primaryMetric.label}
+                </div>
+                <div
+                  className={`mt-1 font-mono text-xl sm:text-2xl font-black tabular-nums ${theme.accentText}`}
+                >
+                  {data.careerSummary.primaryMetric.value}
+                </div>
+                <div className="mt-0.5 text-[10px] text-neutral-400">Primary Benchmark</div>
+              </div>
+
+              <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3 text-center">
+                <div className="text-[10px] uppercase tracking-wider text-neutral-400">
+                  {data.careerSummary.secondaryMetric.label}
+                </div>
+                <div className="mt-1 font-mono text-xl sm:text-2xl font-black text-white tabular-nums">
+                  {data.careerSummary.secondaryMetric.value}
+                </div>
+                <div className="mt-0.5 text-[10px] text-neutral-400">Secondary Benchmark</div>
+              </div>
+
+              {data.careerSummary.tertiaryMetric ? (
+                <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3 text-center">
+                  <div className="text-[10px] uppercase tracking-wider text-neutral-400">
+                    {data.careerSummary.tertiaryMetric.label}
+                  </div>
+                  <div className="mt-1 font-mono text-xl sm:text-2xl font-black text-white tabular-nums">
+                    {data.careerSummary.tertiaryMetric.value}
+                  </div>
+                  <div className="mt-0.5 text-[10px] text-neutral-400">Efficiency Rate</div>
+                </div>
+              ) : (
+                <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3 text-center">
+                  <div className="text-[10px] uppercase tracking-wider text-neutral-400">
+                    Status
+                  </div>
+                  <div className="mt-1 text-sm font-bold text-emerald-400">Active Scouted</div>
+                  <div className="mt-0.5 text-[10px] text-neutral-400">State Circuit</div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Season-by-Season Breakdown Table */}
+          {data.careerSeasonStats && data.careerSeasonStats.length > 0 && (
+            <div className="mt-3 overflow-x-auto rounded-xl border border-white/10 bg-white/[0.02]">
+              <table className="w-full text-left text-xs">
+                <thead>
+                  <tr className="border-b border-white/10 bg-white/[0.03] text-[10px] uppercase tracking-wider text-neutral-400">
+                    <th className="px-3 py-2.5 font-semibold">Season</th>
+                    <th className="px-3 py-2.5 font-semibold">Tournament / Team</th>
+                    <th className="px-3 py-2.5 font-semibold text-center">Matches</th>
+                    <th className="px-3 py-2.5 font-semibold text-right">
+                      {data.careerSeasonStats[0].stat1Label}
+                    </th>
+                    <th className="px-3 py-2.5 font-semibold text-right">
+                      {data.careerSeasonStats[0].stat2Label}
+                    </th>
+                    {data.careerSeasonStats[0].stat3Label && (
+                      <th className="px-3 py-2.5 font-semibold text-right">
+                        {data.careerSeasonStats[0].stat3Label}
+                      </th>
+                    )}
+                    <th className="px-3 py-2.5 font-semibold">Honour / Notes</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-white/5">
+                  {data.careerSeasonStats.map((season) => (
+                    <tr key={season.id} className="hover:bg-white/[0.04] transition-colors">
+                      <td className="px-3 py-2.5 font-mono text-white font-medium whitespace-nowrap tabular-nums">
+                        {season.season}
+                      </td>
+                      <td className="px-3 py-2.5 text-neutral-300 font-medium">
+                        {season.teamOrTournament}
+                      </td>
+                      <td className="px-3 py-2.5 font-mono text-center font-bold text-neutral-200 tabular-nums">
+                        {season.matches}
+                      </td>
+                      <td className="px-3 py-2.5 font-mono text-right font-bold text-white tabular-nums">
+                        {season.stat1Value}
+                      </td>
+                      <td className="px-3 py-2.5 font-mono text-right font-bold text-neutral-300 tabular-nums">
+                        {season.stat2Value}
+                      </td>
+                      {season.stat3Label && (
+                        <td className="px-3 py-2.5 font-mono text-right text-neutral-400 tabular-nums">
+                          {season.stat3Value ?? "—"}
+                        </td>
+                      )}
+                      <td className="px-3 py-2.5 text-neutral-300">
+                        {season.ratingOrHighlight ? (
+                          <span className={`inline-block font-semibold ${theme.accentText}`}>
+                            {season.ratingOrHighlight}
+                          </span>
+                        ) : (
+                          <span className="text-neutral-500">—</span>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Section 2: Position & Squad History Timeline */}
+      {data.positionHistory && data.positionHistory.length > 0 && (
+        <div className="mt-6">
+          <div className="flex items-center justify-between border-b border-white/10 pb-2">
+            <h4 className="flex items-center gap-1.5 text-sm font-bold uppercase tracking-wider text-white">
+              <Layers className={`h-4 w-4 ${theme.accentText}`} />
+              Position &amp; Squad History
+            </h4>
+            <span className="text-[11px] text-neutral-400">
+              {data.positionHistory.length} Squads Logged
+            </span>
+          </div>
+
+          <div className="mt-3 space-y-2.5">
+            {data.positionHistory.map((item) => (
+              <div
+                key={item.id}
+                className="relative flex items-start gap-3 rounded-xl border border-white/10 bg-white/[0.03] p-3.5 transition-colors hover:bg-white/[0.05]"
+              >
+                <div
+                  className={`mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-white/15 bg-white/5 ${theme.accentText}`}
+                >
+                  <Clock className="h-4 w-4" />
+                </div>
+
+                <div className="flex-1 min-w-0">
+                  <div className="flex flex-wrap items-center justify-between gap-1">
+                    <div className="flex items-center gap-2">
+                      <h5 className="font-bold text-xs sm:text-sm text-white">{item.position}</h5>
+                      {item.isCurrent && (
+                        <span className="inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-[9px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                          <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                          Current Squad
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <span
+                        className={`rounded px-1.5 py-0.5 text-[10px] font-bold ${theme.badgeBg} ${theme.badgeText}`}
+                      >
+                        {item.level}
+                      </span>
+                      <span className="text-[11px] font-mono text-neutral-400 tabular-nums">
+                        {item.period}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-neutral-300">
+                    <span className="font-semibold text-white/90">{item.team}</span>
+                    {item.secondaryPosition && (
+                      <span className="text-neutral-400">
+                        · Tactical Role: {item.secondaryPosition}
+                      </span>
+                    )}
+                    {typeof item.appearances === "number" && (
+                      <span className="font-mono text-neutral-400 tabular-nums">
+                        · {item.appearances} Caps / Matches
+                      </span>
+                    )}
+                  </div>
+
+                  {item.notes && (
+                    <p className="mt-1.5 text-[11px] leading-relaxed text-neutral-400">
+                      {item.notes}
+                    </p>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 
@@ -499,7 +720,19 @@ export function SportsCVCard({ data, className = "" }: SportsCVCardProps) {
             <QrCode className="h-6 w-6" />
           </div>
           <div>
-            <div className="font-semibold text-white">Digital Scout Verification</div>
+            <div className="flex items-center gap-2">
+              <span className="font-semibold text-white">Digital Scout Verification</span>
+              {onShare && (
+                <button
+                  type="button"
+                  onClick={onShare}
+                  className={`inline-flex items-center gap-1 rounded px-2 py-0.5 text-[10px] font-bold ${theme.badgeBg} ${theme.badgeText} transition hover:opacity-90`}
+                >
+                  <Share2 className="h-3 w-3" />
+                  Share Public Link
+                </button>
+              )}
+            </div>
             <div className="text-[11px] text-neutral-400">
               Scan to inspect full match history & official trial telemetry
             </div>

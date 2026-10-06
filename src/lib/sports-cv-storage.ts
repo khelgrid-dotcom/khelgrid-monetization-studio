@@ -1,4 +1,11 @@
-import type { SportsCVData, AthleticAchievement, PerformanceMetric } from "@/types/sports-cv";
+import type {
+  SportsCVData,
+  AthleticAchievement,
+  PerformanceMetric,
+  PositionHistoryEntry,
+  CareerStatSeason,
+  CareerSummaryStats,
+} from "@/types/sports-cv";
 
 export const SPORTS_CV_STORAGE_KEY = "khelgrid_athlete_sports_cv_v2";
 
@@ -34,6 +41,93 @@ export const SAMPLE_ACHIEVEMENTS: AthleticAchievement[] = [
     description:
       "Match-winning performance in the finals with 84 runs off 52 balls and 3 run-outs.",
     verified: true,
+  },
+];
+
+export const SAMPLE_POSITION_HISTORY: PositionHistoryEntry[] = [
+  {
+    id: "pos-1",
+    period: "2024 - Present",
+    team: "Delhi State Youth Squad (DDCA)",
+    position: "Right-Arm Fast Bowler (Opening Attack)",
+    secondaryPosition: "Death Overs Seamer",
+    level: "State",
+    isCurrent: true,
+    appearances: 18,
+    notes: "Lead opening seamer in BCCI domestic tournaments; took 28 wickets in 2024 season.",
+  },
+  {
+    id: "pos-2",
+    period: "2023 - 2024",
+    team: "National Sports Excellence Academy XI",
+    position: "Fast Bowler & Lower-Order Power Hitter",
+    secondaryPosition: "First-Change Seamer",
+    level: "Club",
+    isCurrent: false,
+    appearances: 22,
+    notes: "Regular strike bowler and vice-captain; registered 3 five-wicket hauls.",
+  },
+  {
+    id: "pos-3",
+    period: "2021 - 2023",
+    team: "Modern School Barakhamba Senior XI",
+    position: "All-Rounder (Bowler / Batsman)",
+    secondaryPosition: "Middle-Order Anchor",
+    level: "School",
+    isCurrent: false,
+    appearances: 34,
+    notes: "Captained school to Delhi Inter-School Championship trophy in final year.",
+  },
+];
+
+export const SAMPLE_CAREER_SUMMARY: CareerSummaryStats = {
+  totalMatches: 74,
+  winRate: "68%",
+  primaryMetric: { label: "Total Wickets", value: 104 },
+  secondaryMetric: { label: "Total Runs", value: 928 },
+  tertiaryMetric: { label: "Bowling Avg", value: "15.8" },
+  quaternaryMetric: { label: "Best Bowling", value: "6/21" },
+};
+
+export const SAMPLE_SEASON_STATS: CareerStatSeason[] = [
+  {
+    id: "season-1",
+    season: "2024-25",
+    teamOrTournament: "Delhi State U-19 Championship",
+    matches: 12,
+    stat1Label: "Runs",
+    stat1Value: 246,
+    stat2Label: "Wickets",
+    stat2Value: 28,
+    stat3Label: "Bowling Avg",
+    stat3Value: "14.2",
+    ratingOrHighlight: "Player of the Tournament",
+  },
+  {
+    id: "season-2",
+    season: "2023-24",
+    teamOrTournament: "North Zone Inter-Academy Trophy",
+    matches: 16,
+    stat1Label: "Runs",
+    stat1Value: 312,
+    stat2Label: "Wickets",
+    stat2Value: 34,
+    stat3Label: "Bowling Avg",
+    stat3Value: "15.6",
+    ratingOrHighlight: "Best Fast Bowler Award",
+  },
+  {
+    id: "season-3",
+    season: "2022-23",
+    teamOrTournament: "Inter-School State Shield",
+    matches: 18,
+    stat1Label: "Runs",
+    stat1Value: 370,
+    stat2Label: "Wickets",
+    stat2Value: 42,
+    stat3Label: "Bowling Avg",
+    stat3Value: "13.8",
+    ratingOrHighlight: "Championship Winning Captain",
   },
 ];
 
@@ -106,6 +200,9 @@ export function getDefaultSportsCV(athleteName = "Aarav Sharma"): SportsCVData {
     athleteId: "KG-IND-2026-9042",
     theme: "gold",
     achievements: SAMPLE_ACHIEVEMENTS,
+    positionHistory: SAMPLE_POSITION_HISTORY,
+    careerSummary: SAMPLE_CAREER_SUMMARY,
+    careerSeasonStats: SAMPLE_SEASON_STATS,
     performanceMetrics: SAMPLE_METRICS,
     highlightVideoUrl: "https://youtu.be/sample-reel",
     socialProfiles: {
@@ -152,6 +249,16 @@ export function loadSportsCVData(fallbackName?: string): SportsCVData {
     if (fallbackName && parsed.athleteName === "Aarav Sharma" && fallbackName !== "Aarav Sharma") {
       parsed.athleteName = fallbackName;
     }
+    // Backfill position history and career stats if missing in stored payload
+    if (!parsed.positionHistory || parsed.positionHistory.length === 0) {
+      parsed.positionHistory = SAMPLE_POSITION_HISTORY;
+    }
+    if (!parsed.careerSummary) {
+      parsed.careerSummary = SAMPLE_CAREER_SUMMARY;
+    }
+    if (!parsed.careerSeasonStats || parsed.careerSeasonStats.length === 0) {
+      parsed.careerSeasonStats = SAMPLE_SEASON_STATS;
+    }
     return parsed;
   } catch {
     return getDefaultSportsCV(fallbackName);
@@ -185,7 +292,7 @@ export async function downloadSportsCardAsPNG(data: SportsCVData): Promise<void>
   if (typeof document === "undefined") return;
 
   const width = 1200;
-  const height = 1500;
+  const height = 2100;
   const canvas = document.createElement("canvas");
   canvas.width = width;
   canvas.height = height;
@@ -316,74 +423,169 @@ export async function downloadSportsCardAsPNG(data: SportsCVData): Promise<void>
   ctx.font = "italic 14px sans-serif";
   ctx.fillText(`Current Academy: ${data.currentAcademy || "Independent Trainee"}`, 90, 388);
 
-  // Section 1: Core Performance Metrics
-  ctx.fillStyle = "#ffffff";
-  ctx.font = "bold 24px sans-serif";
-  ctx.fillText("⚡ PERFORMANCE METRICS & BENCHMARKS", 70, 450);
+  // Section 1: Career Stats & Match Records
+  let currentY = 445;
+  if (data.careerSummary) {
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "bold 22px sans-serif";
+    ctx.fillText("📊 CAREER STATS & MATCH RECORDS", 70, currentY);
+    currentY += 25;
 
-  let metY = 485;
-  const metricsToRender = data.performanceMetrics.slice(0, 5);
-  metricsToRender.forEach((met, idx) => {
-    // Card item
+    // 4 summary boxes
+    const boxWidth = (width - 140 - 36) / 4;
+    const summaryBoxes = [
+      {
+        label: "CAREER MATCHES",
+        val: String(data.careerSummary.totalMatches),
+        sub: data.careerSummary.winRate
+          ? `${data.careerSummary.winRate} Win Rate`
+          : "State Selections",
+      },
+      {
+        label: data.careerSummary.primaryMetric.label.toUpperCase(),
+        val: String(data.careerSummary.primaryMetric.value),
+        sub: "Primary Metric",
+      },
+      {
+        label: data.careerSummary.secondaryMetric.label.toUpperCase(),
+        val: String(data.careerSummary.secondaryMetric.value),
+        sub: "Secondary Metric",
+      },
+      {
+        label: (data.careerSummary.tertiaryMetric?.label || "EFFICIENCY").toUpperCase(),
+        val: String(data.careerSummary.tertiaryMetric?.value || "85%"),
+        sub: "Benchmark",
+      },
+    ];
+
+    summaryBoxes.forEach((box, i) => {
+      const bx = 70 + i * (boxWidth + 12);
+      ctx.fillStyle = "rgba(255, 255, 255, 0.04)";
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.1)";
+      ctx.beginPath();
+      ctx.roundRect(bx, currentY, boxWidth, 80, 10);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
+      ctx.font = "bold 11px sans-serif";
+      ctx.fillText(box.label.substring(0, 18), bx + 14, currentY + 22);
+
+      ctx.fillStyle = primaryColor;
+      ctx.font = "900 24px monospace";
+      ctx.fillText(box.val, bx + 14, currentY + 52);
+
+      ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
+      ctx.font = "11px sans-serif";
+      ctx.fillText(box.sub, bx + 14, currentY + 70);
+    });
+
+    currentY += 105;
+  }
+
+  // Section 2: Position & Squad History
+  const posHistory = data.positionHistory?.slice(0, 3) || [];
+  if (posHistory.length > 0) {
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "bold 22px sans-serif";
+    ctx.fillText("📍 POSITION & SQUAD HISTORY", 70, currentY);
+    currentY += 30;
+
+    posHistory.forEach((pos) => {
+      ctx.fillStyle = "rgba(255, 255, 255, 0.04)";
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.1)";
+      ctx.beginPath();
+      ctx.roundRect(70, currentY, width - 140, 72, 10);
+      ctx.fill();
+      ctx.stroke();
+
+      // Position Title
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "bold 18px sans-serif";
+      ctx.fillText(pos.position, 92, currentY + 28);
+
+      // Period & Level on right
+      ctx.textAlign = "right";
+      ctx.fillStyle = primaryColor;
+      ctx.font = "bold 13px monospace";
+      ctx.fillText(`${pos.level.toUpperCase()} · ${pos.period}`, width - 92, currentY + 28);
+      ctx.textAlign = "left";
+
+      // Team & Secondary
+      ctx.fillStyle = "rgba(255, 255, 255, 0.65)";
+      ctx.font = "14px sans-serif";
+      const teamText = `${pos.team}${pos.secondaryPosition ? ` · Role: ${pos.secondaryPosition}` : ""}${pos.appearances ? ` · ${pos.appearances} Caps` : ""}`;
+      ctx.fillText(teamText.substring(0, 95), 92, currentY + 52);
+
+      currentY += 84;
+    });
+
+    currentY += 20;
+  }
+
+  // Section 3: Core Performance Metrics
+  ctx.fillStyle = "#ffffff";
+  ctx.font = "bold 22px sans-serif";
+  ctx.fillText("⚡ PERFORMANCE METRICS & BENCHMARKS", 70, currentY);
+  currentY += 30;
+
+  const metricsToRender = data.performanceMetrics.slice(0, 4);
+  metricsToRender.forEach((met) => {
     ctx.fillStyle = "rgba(255, 255, 255, 0.04)";
     ctx.strokeStyle = "rgba(255, 255, 255, 0.1)";
     ctx.beginPath();
-    ctx.roundRect(70, metY, width - 140, 68, 10);
+    ctx.roundRect(70, currentY, width - 140, 64, 10);
     ctx.fill();
     ctx.stroke();
 
-    // Metric Name & Category
     ctx.fillStyle = "#ffffff";
-    ctx.font = "bold 19px sans-serif";
-    ctx.fillText(met.name, 92, metY + 30);
+    ctx.font = "bold 18px sans-serif";
+    ctx.fillText(met.name, 92, currentY + 28);
 
     ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
-    ctx.font = "14px sans-serif";
-    ctx.fillText(met.benchmark || `Category: ${met.category}`, 92, metY + 54);
+    ctx.font = "13px sans-serif";
+    ctx.fillText(met.benchmark || `Category: ${met.category}`, 92, currentY + 50);
 
-    // Value on right
     ctx.textAlign = "right";
     ctx.fillStyle = primaryColor;
-    ctx.font = "900 26px monospace";
-    ctx.fillText(`${met.value} ${met.unit}`, width - 92, metY + 42);
+    ctx.font = "900 24px monospace";
+    ctx.fillText(`${met.value} ${met.unit}`, width - 92, currentY + 40);
     ctx.textAlign = "left";
 
-    metY += 80;
+    currentY += 76;
   });
 
-  // Section 2: Athletic Achievements
-  const achSectionY = metY + 30;
-  ctx.fillStyle = "#ffffff";
-  ctx.font = "bold 24px sans-serif";
-  ctx.fillText("🏆 ATHLETIC ACHIEVEMENTS & TITLES", 70, achSectionY);
+  currentY += 20;
 
-  let achY = achSectionY + 35;
-  const achsToRender = data.achievements.slice(0, 4);
+  // Section 4: Athletic Achievements
+  ctx.fillStyle = "#ffffff";
+  ctx.font = "bold 22px sans-serif";
+  ctx.fillText("🏆 ATHLETIC ACHIEVEMENTS & TITLES", 70, currentY);
+  currentY += 30;
+
+  const achsToRender = data.achievements.slice(0, 3);
   achsToRender.forEach((ach) => {
     ctx.fillStyle = "rgba(255, 255, 255, 0.04)";
     ctx.strokeStyle = "rgba(255, 255, 255, 0.1)";
     ctx.beginPath();
-    ctx.roundRect(70, achY, width - 140, 85, 10);
+    ctx.roundRect(70, currentY, width - 140, 78, 10);
     ctx.fill();
     ctx.stroke();
 
-    // Level Badge
     ctx.fillStyle = primaryColor;
     ctx.font = "bold 13px sans-serif";
-    ctx.fillText(`${ach.level.toUpperCase()} · ${ach.year}`, 92, achY + 26);
+    ctx.fillText(`${ach.level.toUpperCase()} · ${ach.year}`, 92, currentY + 24);
 
-    // Title
     ctx.fillStyle = "#ffffff";
-    ctx.font = "bold 19px sans-serif";
-    ctx.fillText(ach.title, 92, achY + 50);
+    ctx.font = "bold 18px sans-serif";
+    ctx.fillText(ach.title, 92, currentY + 46);
 
-    // Competition & Award
     ctx.fillStyle = "rgba(255, 255, 255, 0.65)";
-    ctx.font = "14px sans-serif";
+    ctx.font = "13px sans-serif";
     const compText = `${ach.award} | ${ach.competition}`;
-    ctx.fillText(compText.substring(0, 90), 92, achY + 72);
+    ctx.fillText(compText.substring(0, 90), 92, currentY + 66);
 
-    achY += 98;
+    currentY += 90;
   });
 
   // Footer: Verification & QR
@@ -438,6 +640,24 @@ export function buildScoutTextSummary(data: SportsCVData): string {
     .map((a) => `• [${a.year}] ${a.title} (${a.level} - ${a.award})`)
     .join("\n");
 
+  const posHistoryStr = (data.positionHistory || [])
+    .map(
+      (p) =>
+        `• [${p.period}] ${p.team} | ${p.position}${p.secondaryPosition ? ` (${p.secondaryPosition})` : ""} [${p.level}]`,
+    )
+    .join("\n");
+
+  const careerSummaryStr = data.careerSummary
+    ? `Total Matches: ${data.careerSummary.totalMatches} | Win Rate: ${data.careerSummary.winRate || "N/A"} | ${data.careerSummary.primaryMetric.label}: ${data.careerSummary.primaryMetric.value} | ${data.careerSummary.secondaryMetric.label}: ${data.careerSummary.secondaryMetric.value}`
+    : "";
+
+  const seasonsStr = (data.careerSeasonStats || [])
+    .map(
+      (s) =>
+        `• ${s.season} (${s.teamOrTournament}): ${s.matches} matches | ${s.stat1Label}: ${s.stat1Value} | ${s.stat2Label}: ${s.stat2Value}${s.stat3Label ? ` | ${s.stat3Label}: ${s.stat3Value}` : ""}${s.ratingOrHighlight ? ` [${s.ratingOrHighlight}]` : ""}`,
+    )
+    .join("\n");
+
   const socialStr = data.socialProfiles
     ? [
         data.socialProfiles.instagram ? `• Instagram: ${data.socialProfiles.instagram}` : null,
@@ -460,6 +680,9 @@ Location: ${data.city}, ${data.state}
 Academy: ${data.currentAcademy || "Independent"}
 Physical: ${data.height || "N/A"} | ${data.weight || "N/A"} | Dominant: ${data.dominantSide}
 Status: ${data.availability}
+${careerSummaryStr ? `\n📊 CAREER STATS SUMMARY:\n${careerSummaryStr}` : ""}
+${seasonsStr ? `\n📈 SEASON & MATCH STATS:\n${seasonsStr}` : ""}
+${posHistoryStr ? `\n📍 POSITION & SQUAD HISTORY:\n${posHistoryStr}` : ""}
 
 ⚡ KEY PERFORMANCE METRICS:
 ${metricsStr || "• Standard baseline trials pending"}

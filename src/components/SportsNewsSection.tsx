@@ -91,6 +91,54 @@ const SPORT_TABS_CONFIG = [
 
 const SAVED_NEWS_STORAGE_KEY = "khelgrid-saved-news-v1";
 
+const OFFICIAL_SELECTION_CIRCULARS = [
+  {
+    id: "circ-1",
+    authority: "SAI NCOE",
+    title: "Men Wrestlers Induction Selection Trials at Kandivali Campus",
+    date: "Sep 2026",
+    tag: "Official Trial",
+    badgeColor: "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/30",
+    link: "/trials?sport=wrestling",
+  },
+  {
+    id: "circ-2",
+    authority: "Fit India Mission",
+    title: "School Games District Selection Cum Competitions Active in Namchi & State Zonal Centers",
+    date: "Sep-Oct 2026",
+    tag: "Govt Scheme",
+    badgeColor: "bg-blue-500/15 text-blue-600 dark:text-blue-400 border-blue-500/30",
+    link: "/trials?category=government",
+  },
+  {
+    id: "circ-3",
+    authority: "Khelo India",
+    title: "State Youth Games Talent Identification Guidelines & District Quotas Published",
+    date: "2026 Season",
+    tag: "Federation Circular",
+    badgeColor: "bg-purple-500/15 text-purple-600 dark:text-purple-400 border-purple-500/30",
+    link: "/guides",
+  },
+  {
+    id: "circ-4",
+    authority: "KhelGrid Trust",
+    title: "Anti-Scam Alert: Zero Unofficial Registration Fees — Verify Organizers via Platform Audit",
+    date: "Active Advisory",
+    tag: "Scout Advisory",
+    badgeColor: "bg-amber-500/15 text-amber-600 dark:text-amber-400 border-amber-500/30",
+    link: "/trust-center",
+  },
+  {
+    id: "circ-5",
+    authority: "BCCI / DDCA",
+    title: "State Youth Championship & U-19 Selection Combine Rosters Released",
+    date: "Domestic Season",
+    tag: "Cricket Combine",
+    badgeColor: "bg-indigo-500/15 text-indigo-600 dark:text-indigo-400 border-indigo-500/30",
+    link: "/trials?sport=cricket",
+  },
+] as const;
+
 export function SportsNewsSection() {
   const { t } = useLanguage();
   const [selectedSportTab, setSelectedSportTab] = useState<string>("All Sports");

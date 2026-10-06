@@ -11,6 +11,8 @@ import {
 } from "@/lib/sports-cv-storage";
 import { SportsCVCard } from "@/components/SportsCVCard";
 import { SportsCVEditor } from "@/components/SportsCVEditor";
+import { ShareSportsCVModal } from "@/components/ShareSportsCVModal";
+import { slugifyAthleteName } from "@/lib/sports-cv-sharing";
 import { AthleteProfileAgent } from "@/components/AthleteProfileAgent";
 import { AthleteOnboardingWizard } from "@/components/AthleteOnboardingWizard";
 import type { AthleteProfile } from "@/lib/athlete-profile-agent";
@@ -54,6 +56,7 @@ export function SportsCV({ initialViewMode = "card", className = "" }: SportsCVP
   const [data, setData] = useState<SportsCVData>(() => loadSportsCVData(name));
   const [viewMode, setViewMode] = useState<"card" | "edit" | "split" | "wizard">(initialViewMode);
   const [unlockModalOpen, setUnlockModalOpen] = useState(false);
+  const [shareModalOpen, setShareModalOpen] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<"wallet" | "upi">("wallet");
   const [isExporting, setIsExporting] = useState(false);
 
@@ -115,30 +118,8 @@ export function SportsCV({ initialViewMode = "card", className = "" }: SportsCVP
   };
 
   // Share profile
-  const handleShare = async () => {
-    const shareUrl =
-      typeof window !== "undefined"
-        ? `${window.location.origin}/profile?id=${data.athleteId}`
-        : `https://khelgrid.com/profile/${data.athleteId}`;
-
-    if (typeof navigator !== "undefined" && navigator.share) {
-      try {
-        await navigator.share({
-          title: `${data.athleteName} · Sports CV (${data.sport})`,
-          text: `Check out ${data.athleteName}'s verified ${data.sport} Sports CV and performance metrics on KhelGrid!`,
-          url: shareUrl,
-        });
-        toast.success("Profile shared!");
-        return;
-      } catch (err) {
-        // user cancelled or share failed, fallback to copy
-      }
-    }
-
-    if (typeof navigator !== "undefined" && navigator.clipboard) {
-      await navigator.clipboard.writeText(shareUrl);
-      toast.success("Profile link copied to clipboard!");
-    }
+  const handleShare = () => {
+    setShareModalOpen(true);
   };
 
   // Copy Scout summary text
@@ -331,13 +312,27 @@ export function SportsCV({ initialViewMode = "card", className = "" }: SportsCVP
 
           <Button
             type="button"
-            variant="outline"
+            variant="default"
             size="sm"
             onClick={handleShare}
-            className="text-xs h-8 gap-1.5"
+            className="text-xs h-8 gap-1.5 font-semibold shadow-sm"
           >
             <Share2 className="h-3.5 w-3.5" />
-            Share
+            Share CV
+          </Button>
+
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            asChild
+            className="text-xs h-8 gap-1.5"
+            title="Open your public scout portfolio page"
+          >
+            <Link to="/cv/$id" params={{ id: slugifyAthleteName(data.athleteName, data.sport) }}>
+              <ExternalLink className="h-3.5 w-3.5" />
+              Public Link
+            </Link>
           </Button>
 
           <Button
@@ -368,7 +363,7 @@ export function SportsCV({ initialViewMode = "card", className = "" }: SportsCVP
       {/* Main Content Area based on viewMode */}
       {viewMode === "card" && (
         <div className="space-y-4">
-          <SportsCVCard data={data} />
+          <SportsCVCard data={data} onShare={handleShare} />
           <AthleteProfileAgent profile={athleteProfileForAgent} />
         </div>
       )}
@@ -402,7 +397,7 @@ export function SportsCV({ initialViewMode = "card", className = "" }: SportsCVP
               <span>Live Visual Card Preview</span>
               <span className="text-primary font-mono">{data.theme.toUpperCase()} THEME</span>
             </div>
-            <SportsCVCard data={data} />
+            <SportsCVCard data={data} onShare={handleShare} />
             <AthleteProfileAgent profile={athleteProfileForAgent} />
           </div>
         </div>
@@ -507,6 +502,9 @@ export function SportsCV({ initialViewMode = "card", className = "" }: SportsCVP
           </Button>
         </DialogContent>
       </Dialog>
+
+      {/* Shareable Link & Social Media Modal */}
+      <ShareSportsCVModal open={shareModalOpen} onOpenChange={setShareModalOpen} data={data} />
     </div>
   );
 }

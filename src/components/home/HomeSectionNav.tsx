@@ -14,7 +14,7 @@ export const NAV_SECTIONS = [
   { id: "quick-actions", label: "Portals", icon: Swords },
   { id: "trials-opportunities", label: "Trials & Selections", icon: Trophy },
   { id: "match-center", label: "Live Match Center", icon: Activity },
-  { id: "sports-wire", label: "Sports Wire", icon: Newspaper },
+  { id: "sports-wire", label: "Sports Dispatch", icon: Newspaper },
   { id: "pathways-and-guides", label: "Guides & Pathways", icon: BookOpen },
   { id: "community-impact", label: "Verified Academies", icon: ShieldCheck },
   { id: "plans-pricing", label: "Pricing & Plans", icon: Crown },

@@ -38,6 +38,41 @@ export interface AthleticAchievement {
   verified?: boolean;
 }
 
+export interface PositionHistoryEntry {
+  id: string;
+  period: string; // e.g. "2024 - Present" or "2023 - 2024"
+  team: string; // e.g. "Delhi State U-19 Squad"
+  position: string; // e.g. "Opening Bowler (Right-Arm Fast)"
+  secondaryPosition?: string; // e.g. "Death Overs Specialist"
+  level: AchievementLevel;
+  isCurrent?: boolean;
+  notes?: string;
+  appearances?: number;
+}
+
+export interface CareerStatSeason {
+  id: string;
+  season: string; // e.g. "2024-25" or "2024"
+  teamOrTournament: string; // e.g. "BCCI Cooch Behar Trophy"
+  matches: number;
+  stat1Label: string; // e.g. "Runs" or "Goals" or "Points"
+  stat1Value: string | number;
+  stat2Label: string; // e.g. "Wickets" or "Assists" or "Win %"
+  stat2Value: string | number;
+  stat3Label?: string; // e.g. "Bowling Avg" or "Pass Acc"
+  stat3Value?: string | number;
+  ratingOrHighlight?: string; // e.g. "Player of the Final" or "8.8 Avg Rating"
+}
+
+export interface CareerSummaryStats {
+  totalMatches: number;
+  winRate?: string;
+  primaryMetric: { label: string; value: string | number };
+  secondaryMetric: { label: string; value: string | number };
+  tertiaryMetric?: { label: string; value: string | number };
+  quaternaryMetric?: { label: string; value: string | number };
+}
+
 export type MetricCategory = "Athleticism" | "Speed" | "Endurance" | "Power" | "Sport-Specific";
 
 export interface PerformanceMetric {
@@ -81,6 +116,9 @@ export interface SportsCVData {
   athleteId: string;
   theme: CardTheme;
   achievements: AthleticAchievement[];
+  positionHistory?: PositionHistoryEntry[];
+  careerSummary?: CareerSummaryStats;
+  careerSeasonStats?: CareerStatSeason[];
   performanceMetrics: PerformanceMetric[];
   highlightVideoUrl?: string;
   socialProfiles?: SocialProfiles;
@@ -462,4 +500,96 @@ export const COMMON_METRIC_PRESETS: Record<SportType, Array<Omit<PerformanceMetr
       benchmark: "Benchmark: 55cm",
     },
   ],
+};
+
+export interface SportStatTemplate {
+  primaryLabel: string;
+  secondaryLabel: string;
+  tertiaryLabel: string;
+  stat1Label: string;
+  stat2Label: string;
+  stat3Label: string;
+}
+
+export const SPORT_STAT_TEMPLATES: Record<SportType, SportStatTemplate> = {
+  Cricket: {
+    primaryLabel: "Total Wickets",
+    secondaryLabel: "Total Runs",
+    tertiaryLabel: "Bowling Avg",
+    stat1Label: "Runs",
+    stat2Label: "Wickets",
+    stat3Label: "Econ / Avg",
+  },
+  Football: {
+    primaryLabel: "Goals",
+    secondaryLabel: "Assists",
+    tertiaryLabel: "Clean Sheets",
+    stat1Label: "Goals",
+    stat2Label: "Assists",
+    stat3Label: "Pass Acc %",
+  },
+  Basketball: {
+    primaryLabel: "PPG (Pts/Game)",
+    secondaryLabel: "APG (Assists)",
+    tertiaryLabel: "RPG (Rebounds)",
+    stat1Label: "Points",
+    stat2Label: "Rebounds",
+    stat3Label: "Assists",
+  },
+  Badminton: {
+    primaryLabel: "Win Rate",
+    secondaryLabel: "Titles Won",
+    tertiaryLabel: "Singles Rank",
+    stat1Label: "Matches Won",
+    stat2Label: "Win %",
+    stat3Label: "Tournament Finish",
+  },
+  Athletics: {
+    primaryLabel: "Personal Best (PB)",
+    secondaryLabel: "Podium Finishes",
+    tertiaryLabel: "State Seed",
+    stat1Label: "Mark / Time",
+    stat2Label: "Wind / Comp",
+    stat3Label: "Medal / Rank",
+  },
+  Tennis: {
+    primaryLabel: "Match Win %",
+    secondaryLabel: "Tourney Titles",
+    tertiaryLabel: "AITA / ITF Rank",
+    stat1Label: "Sets Won",
+    stat2Label: "1st Serve %",
+    stat3Label: "Break Pts Saved",
+  },
+  Kabaddi: {
+    primaryLabel: "Raid Points",
+    secondaryLabel: "Tackle Points",
+    tertiaryLabel: "Super Raids",
+    stat1Label: "Raid Pts",
+    stat2Label: "Tackle Pts",
+    stat3Label: "Super 10s",
+  },
+  Swimming: {
+    primaryLabel: "50m Free PB",
+    secondaryLabel: "State Medals",
+    tertiaryLabel: "FINA Points",
+    stat1Label: "Timing",
+    stat2Label: "Event Category",
+    stat3Label: "Podium Place",
+  },
+  Hockey: {
+    primaryLabel: "Goals Scored",
+    secondaryLabel: "Penalty Corners",
+    tertiaryLabel: "Caps / Matches",
+    stat1Label: "Field Goals",
+    stat2Label: "PC Conversions",
+    stat3Label: "Dispossessions",
+  },
+  Other: {
+    primaryLabel: "Wins / Selections",
+    secondaryLabel: "Matches Played",
+    tertiaryLabel: "Performance Index",
+    stat1Label: "Wins",
+    stat2Label: "Win %",
+    stat3Label: "Rank / Score",
+  },
 };

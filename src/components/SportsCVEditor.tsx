@@ -1,14 +1,21 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type {
   SportsCVData,
   AthleticAchievement,
   PerformanceMetric,
+  PositionHistoryEntry,
+  CareerStatSeason,
+  CareerSummaryStats,
   SportType,
   AchievementLevel,
   AwardType,
   MetricCategory,
 } from "@/types/sports-cv";
-import { SPORT_POSITION_PRESETS, COMMON_METRIC_PRESETS } from "@/types/sports-cv";
+import {
+  SPORT_POSITION_PRESETS,
+  COMMON_METRIC_PRESETS,
+  SPORT_STAT_TEMPLATES,
+} from "@/types/sports-cv";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -31,6 +38,11 @@ import {
   User,
   Medal,
   RefreshCw,
+  BarChart3,
+  Layers,
+  Clock,
+  TrendingUp,
+  CheckCircle2,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -91,6 +103,37 @@ export function SportsCVEditor({ data, onChange }: SportsCVEditorProps) {
   const [newAchAward, setNewAchAward] = useState<AwardType>("Gold / 1st Place");
   const [newAchDesc, setNewAchDesc] = useState("");
 
+  // Position History form state
+  const [newPosPeriod, setNewPosPeriod] = useState("2024 - Present");
+  const [newPosTeam, setNewPosTeam] = useState("");
+  const [newPosPosition, setNewPosPosition] = useState(data.position || "");
+  const [newPosSecondary, setNewPosSecondary] = useState(data.secondaryPosition || "");
+  const [newPosLevel, setNewPosLevel] = useState<AchievementLevel>("State");
+  const [newPosIsCurrent, setNewPosIsCurrent] = useState(true);
+  const [newPosAppearances, setNewPosAppearances] = useState<number | "">(18);
+  const [newPosNotes, setNewPosNotes] = useState("");
+
+  // Career Stats form state
+  const statTemplate = SPORT_STAT_TEMPLATES[data.sport] || SPORT_STAT_TEMPLATES.Cricket;
+  const [newSeasonName, setNewSeasonName] = useState("2024-25");
+  const [newSeasonTournament, setNewSeasonTournament] = useState("");
+  const [newSeasonMatches, setNewSeasonMatches] = useState<number | "">(12);
+  const [newSeasonStat1Label, setNewSeasonStat1Label] = useState(statTemplate.stat1Label);
+  const [newSeasonStat1Val, setNewSeasonStat1Val] = useState("");
+  const [newSeasonStat2Label, setNewSeasonStat2Label] = useState(statTemplate.stat2Label);
+  const [newSeasonStat2Val, setNewSeasonStat2Val] = useState("");
+  const [newSeasonStat3Label, setNewSeasonStat3Label] = useState(statTemplate.stat3Label);
+  const [newSeasonStat3Val, setNewSeasonStat3Val] = useState("");
+  const [newSeasonHighlight, setNewSeasonHighlight] = useState("");
+
+  // Keep stat labels in sync when sport changes
+  useEffect(() => {
+    const tmpl = SPORT_STAT_TEMPLATES[data.sport] || SPORT_STAT_TEMPLATES.Cricket;
+    setNewSeasonStat1Label(tmpl.stat1Label);
+    setNewSeasonStat2Label(tmpl.stat2Label);
+    setNewSeasonStat3Label(tmpl.stat3Label);
+  }, [data.sport]);
+
   // New Metric form state
   const [newMetName, setNewMetName] = useState("");
   const [newMetValue, setNewMetValue] = useState("");
@@ -105,6 +148,159 @@ export function SportsCVEditor({ data, onChange }: SportsCVEditorProps) {
       ...data,
       [field]: value,
     });
+  };
+
+  // Add Position History Entry
+  const handleAddPositionHistory = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newPosTeam.trim() || !newPosPosition.trim()) {
+      toast.error("Please enter the team/squad name and position.");
+      return;
+    }
+
+    const newPos: PositionHistoryEntry = {
+      id: `pos-${Date.now()}`,
+      period: newPosPeriod.trim() || `${new Date().getFullYear()} - Present`,
+      team: newPosTeam.trim(),
+      position: newPosPosition.trim(),
+      secondaryPosition: newPosSecondary.trim() || undefined,
+      level: newPosLevel,
+      isCurrent: Boolean(newPosIsCurrent),
+      appearances: typeof newPosAppearances === "number" ? newPosAppearances : undefined,
+      notes: newPosNotes.trim() || undefined,
+    };
+
+    const currentHistory = data.positionHistory || [];
+    onChange({
+      ...data,
+      positionHistory: [newPos, ...currentHistory],
+    });
+
+    setNewPosTeam("");
+    setNewPosNotes("");
+    toast.success("Position and squad history logged!");
+  };
+
+  const handleRemovePositionHistory = (id: string) => {
+    const updated = (data.positionHistory || []).filter((p) => p.id !== id);
+    onChange({
+      ...data,
+      positionHistory: updated,
+    });
+    toast.info("Position history entry removed.");
+  };
+
+  // Career Summary Updater
+  const updateCareerSummary = (
+    field: keyof CareerSummaryStats | "primary" | "secondary" | "tertiary" | "quaternary",
+    value:
+      | number
+      | string
+      | Partial<{ label: string; value: string | number }>
+      | Record<string, unknown>,
+  ) => {
+    const current = data.careerSummary || {
+      totalMatches: 0,
+      winRate: "0%",
+      primaryMetric: { label: statTemplate.primaryLabel, value: 0 },
+      secondaryMetric: { label: statTemplate.secondaryLabel, value: 0 },
+    };
+
+    let next: CareerSummaryStats;
+    if (field === "primary" && typeof value === "object" && value !== null) {
+      next = { ...current, primaryMetric: { ...current.primaryMetric, ...value } };
+    } else if (field === "secondary" && typeof value === "object" && value !== null) {
+      next = { ...current, secondaryMetric: { ...current.secondaryMetric, ...value } };
+    } else if (field === "tertiary" && typeof value === "object" && value !== null) {
+      next = {
+        ...current,
+        tertiaryMetric: {
+          label: current.tertiaryMetric?.label || statTemplate.tertiaryLabel,
+          value: "",
+          ...value,
+        },
+      };
+    } else {
+      next = { ...current, [field]: value };
+    }
+
+    onChange({
+      ...data,
+      careerSummary: next,
+    });
+  };
+
+  // Add Season Stat Record
+  const handleAddSeasonStat = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newSeasonTournament.trim()) {
+      toast.error("Please enter the tournament or competition name.");
+      return;
+    }
+
+    const newSeason: CareerStatSeason = {
+      id: `season-${Date.now()}`,
+      season: newSeasonName.trim() || "2024-25",
+      teamOrTournament: newSeasonTournament.trim(),
+      matches: Number(newSeasonMatches) || 0,
+      stat1Label: newSeasonStat1Label.trim() || statTemplate.stat1Label,
+      stat1Value: newSeasonStat1Val.trim() || "0",
+      stat2Label: newSeasonStat2Label.trim() || statTemplate.stat2Label,
+      stat2Value: newSeasonStat2Val.trim() || "0",
+      stat3Label: newSeasonStat3Label.trim() || statTemplate.stat3Label,
+      stat3Value: newSeasonStat3Val.trim() || undefined,
+      ratingOrHighlight: newSeasonHighlight.trim() || undefined,
+    };
+
+    const currentSeasons = data.careerSeasonStats || [];
+    onChange({
+      ...data,
+      careerSeasonStats: [newSeason, ...currentSeasons],
+    });
+
+    setNewSeasonTournament("");
+    setNewSeasonStat1Val("");
+    setNewSeasonStat2Val("");
+    setNewSeasonStat3Val("");
+    setNewSeasonHighlight("");
+    toast.success("Season stats recorded!");
+  };
+
+  const handleRemoveSeasonStat = (id: string) => {
+    const updated = (data.careerSeasonStats || []).filter((s) => s.id !== id);
+    onChange({
+      ...data,
+      careerSeasonStats: updated,
+    });
+    toast.info("Season stat entry removed.");
+  };
+
+  // Apply Sport Career Stat Template
+  const handleApplySportStatTemplate = () => {
+    const tmpl = SPORT_STAT_TEMPLATES[data.sport] || SPORT_STAT_TEMPLATES.Cricket;
+    const currentSummary = data.careerSummary || {
+      totalMatches: 30,
+      winRate: "65%",
+      primaryMetric: { label: tmpl.primaryLabel, value: 45 },
+      secondaryMetric: { label: tmpl.secondaryLabel, value: 20 },
+    };
+
+    onChange({
+      ...data,
+      careerSummary: {
+        ...currentSummary,
+        primaryMetric: { label: tmpl.primaryLabel, value: currentSummary.primaryMetric.value },
+        secondaryMetric: {
+          label: tmpl.secondaryLabel,
+          value: currentSummary.secondaryMetric.value,
+        },
+        tertiaryMetric: {
+          label: tmpl.tertiaryLabel,
+          value: currentSummary.tertiaryMetric?.value || "85%",
+        },
+      },
+    });
+    toast.success(`Configured career stat benchmarks for ${data.sport}!`);
   };
 
   // Add Achievement
@@ -430,6 +626,485 @@ export function SportsCVEditor({ data, onChange }: SportsCVEditorProps) {
             />
           </div>
         </div>
+      </section>
+
+      {/* 2. Career Stats & Match Records Section */}
+      <section className="rounded-2xl border border-border bg-card p-5 sm:p-6 shadow-sm">
+        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border pb-3">
+          <div>
+            <div className="flex items-center gap-2">
+              <BarChart3 className="h-5 w-5 text-primary" />
+              <h3 className="text-base font-bold">Career Stats & Match Records</h3>
+            </div>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              Showcase high-impact career totals, win rates, and tournament-by-tournament season
+              stats.
+            </p>
+          </div>
+
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={handleApplySportStatTemplate}
+            className="text-xs flex items-center gap-1.5"
+          >
+            <RefreshCw className="h-3.5 w-3.5" />
+            Apply {data.sport} Stat Template
+          </Button>
+        </div>
+
+        {/* Overall Career Summary Fields */}
+        <div className="mt-5 rounded-xl border border-border bg-muted/20 p-4">
+          <div className="text-xs font-bold uppercase tracking-wider text-foreground mb-3 flex items-center gap-1.5">
+            <TrendingUp className="h-3.5 w-3.5 text-primary" />
+            Overall Career Totals & Key Benchmarks
+          </div>
+
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="space-y-1">
+              <Label htmlFor="stat-total-matches" className="text-xs">
+                Total Matches Played
+              </Label>
+              <Input
+                id="stat-total-matches"
+                type="number"
+                min={0}
+                value={data.careerSummary?.totalMatches ?? 0}
+                onChange={(e) => updateCareerSummary("totalMatches", Number(e.target.value) || 0)}
+                placeholder="e.g. 74"
+              />
+            </div>
+
+            <div className="space-y-1">
+              <Label htmlFor="stat-win-rate" className="text-xs">
+                Win / Selection Rate
+              </Label>
+              <Input
+                id="stat-win-rate"
+                value={data.careerSummary?.winRate ?? "65%"}
+                onChange={(e) => updateCareerSummary("winRate", e.target.value)}
+                placeholder="e.g. 68% or 14/18 Trials"
+              />
+            </div>
+
+            <div className="space-y-1">
+              <Label htmlFor="stat-prim-val" className="text-xs">
+                {data.careerSummary?.primaryMetric.label || statTemplate.primaryLabel}
+              </Label>
+              <Input
+                id="stat-prim-val"
+                value={data.careerSummary?.primaryMetric.value ?? ""}
+                onChange={(e) => updateCareerSummary("primary", { value: e.target.value })}
+                placeholder="e.g. 104"
+              />
+            </div>
+
+            <div className="space-y-1">
+              <Label htmlFor="stat-sec-val" className="text-xs">
+                {data.careerSummary?.secondaryMetric.label || statTemplate.secondaryLabel}
+              </Label>
+              <Input
+                id="stat-sec-val"
+                value={data.careerSummary?.secondaryMetric.value ?? ""}
+                onChange={(e) => updateCareerSummary("secondary", { value: e.target.value })}
+                placeholder="e.g. 928"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Existing Season Stats List */}
+        <div className="mt-5">
+          <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+            Recorded Seasons & Tournaments ({data.careerSeasonStats?.length ?? 0})
+          </div>
+
+          {!data.careerSeasonStats || data.careerSeasonStats.length === 0 ? (
+            <div className="rounded-lg border border-dashed border-border p-4 text-center text-xs text-muted-foreground">
+              No tournament or season records added yet. Add a season below to showcase your
+              competitive match records.
+            </div>
+          ) : (
+            <div className="space-y-2">
+              {data.careerSeasonStats.map((season) => (
+                <div
+                  key={season.id}
+                  className="flex items-center justify-between rounded-xl border border-border bg-muted/20 p-3"
+                >
+                  <div className="min-w-0 pr-2">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="font-mono font-bold text-xs text-primary tabular-nums">
+                        {season.season}
+                      </span>
+                      <span className="font-semibold text-xs sm:text-sm text-foreground">
+                        {season.teamOrTournament}
+                      </span>
+                      {season.ratingOrHighlight && (
+                        <span className="rounded bg-primary/10 px-1.5 py-0.5 text-[10px] font-semibold text-primary">
+                          {season.ratingOrHighlight}
+                        </span>
+                      )}
+                    </div>
+                    <div className="mt-1 flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
+                      <span>
+                        Matches:{" "}
+                        <strong className="text-foreground font-mono tabular-nums">
+                          {season.matches}
+                        </strong>
+                      </span>
+                      <span>
+                        {season.stat1Label}:{" "}
+                        <strong className="text-foreground font-mono tabular-nums">
+                          {season.stat1Value}
+                        </strong>
+                      </span>
+                      <span>
+                        {season.stat2Label}:{" "}
+                        <strong className="text-foreground font-mono tabular-nums">
+                          {season.stat2Value}
+                        </strong>
+                      </span>
+                      {season.stat3Label && (
+                        <span>
+                          {season.stat3Label}:{" "}
+                          <strong className="text-foreground font-mono tabular-nums">
+                            {season.stat3Value}
+                          </strong>
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveSeasonStat(season.id)}
+                    className="text-muted-foreground hover:text-destructive p-1 rounded transition-colors shrink-0"
+                    title="Delete season"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Add New Season Form */}
+        <form
+          onSubmit={handleAddSeasonStat}
+          className="mt-5 rounded-xl border border-dashed border-border bg-muted/10 p-4"
+        >
+          <div className="text-xs font-bold text-foreground mb-3 flex items-center gap-1.5">
+            <Plus className="h-3.5 w-3.5 text-primary" />
+            Add Season or Tournament Record
+          </div>
+
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="space-y-1">
+              <Label htmlFor="season-year" className="text-xs">
+                Season / Year *
+              </Label>
+              <Input
+                id="season-year"
+                value={newSeasonName}
+                onChange={(e) => setNewSeasonName(e.target.value)}
+                placeholder="e.g. 2024-25 or 2024"
+              />
+            </div>
+
+            <div className="space-y-1 sm:col-span-2">
+              <Label htmlFor="season-tourney" className="text-xs">
+                Tournament / Team / League *
+              </Label>
+              <Input
+                id="season-tourney"
+                value={newSeasonTournament}
+                onChange={(e) => setNewSeasonTournament(e.target.value)}
+                placeholder="e.g. Delhi State Youth Cup or National Inter-Academy"
+              />
+            </div>
+
+            <div className="space-y-1">
+              <Label htmlFor="season-matches" className="text-xs">
+                Matches Played
+              </Label>
+              <Input
+                id="season-matches"
+                type="number"
+                min={0}
+                value={newSeasonMatches}
+                onChange={(e) =>
+                  setNewSeasonMatches(e.target.value === "" ? "" : Number(e.target.value))
+                }
+                placeholder="e.g. 12"
+              />
+            </div>
+
+            <div className="space-y-1">
+              <Label htmlFor="season-stat1-val" className="text-xs">
+                {newSeasonStat1Label} Value
+              </Label>
+              <Input
+                id="season-stat1-val"
+                value={newSeasonStat1Val}
+                onChange={(e) => setNewSeasonStat1Val(e.target.value)}
+                placeholder="e.g. 340"
+              />
+            </div>
+
+            <div className="space-y-1">
+              <Label htmlFor="season-stat2-val" className="text-xs">
+                {newSeasonStat2Label} Value
+              </Label>
+              <Input
+                id="season-stat2-val"
+                value={newSeasonStat2Val}
+                onChange={(e) => setNewSeasonStat2Val(e.target.value)}
+                placeholder="e.g. 24"
+              />
+            </div>
+
+            <div className="space-y-1">
+              <Label htmlFor="season-stat3-val" className="text-xs">
+                {newSeasonStat3Label} Value (Optional)
+              </Label>
+              <Input
+                id="season-stat3-val"
+                value={newSeasonStat3Val}
+                onChange={(e) => setNewSeasonStat3Val(e.target.value)}
+                placeholder="e.g. 14.8"
+              />
+            </div>
+
+            <div className="space-y-1 sm:col-span-2">
+              <Label htmlFor="season-highlight" className="text-xs">
+                Key Honour / Match Highlight (Optional)
+              </Label>
+              <Input
+                id="season-highlight"
+                value={newSeasonHighlight}
+                onChange={(e) => setNewSeasonHighlight(e.target.value)}
+                placeholder="e.g. Player of the Final, Best Bowler, 5-wicket haul"
+              />
+            </div>
+          </div>
+
+          <div className="mt-3 flex justify-end">
+            <Button type="submit" size="sm" className="gap-1.5">
+              <Plus className="h-4 w-4" /> Add Season Stats
+            </Button>
+          </div>
+        </form>
+      </section>
+
+      {/* 3. Position & Squad History Section */}
+      <section className="rounded-2xl border border-border bg-card p-5 sm:p-6 shadow-sm">
+        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border pb-3">
+          <div>
+            <div className="flex items-center gap-2">
+              <Layers className="h-5 w-5 text-primary" />
+              <h3 className="text-base font-bold">Position & Squad History</h3>
+            </div>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              Document your positions played across academies, state squads, clubs, and school
+              teams.
+            </p>
+          </div>
+        </div>
+
+        {/* Existing Position History List */}
+        <div className="mt-4">
+          <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+            Logged Squads &amp; Positions ({data.positionHistory?.length ?? 0})
+          </div>
+
+          {!data.positionHistory || data.positionHistory.length === 0 ? (
+            <div className="rounded-lg border border-dashed border-border p-4 text-center text-xs text-muted-foreground">
+              No squad or position history logged yet. Add your current and previous teams below.
+            </div>
+          ) : (
+            <div className="space-y-2">
+              {data.positionHistory.map((item) => (
+                <div
+                  key={item.id}
+                  className="flex items-start justify-between rounded-xl border border-border bg-muted/20 p-3"
+                >
+                  <div className="min-w-0 pr-2">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="font-bold text-xs sm:text-sm text-foreground">
+                        {item.position}
+                      </span>
+                      {item.isCurrent && (
+                        <span className="rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 px-1.5 py-0.5 text-[10px] font-bold border border-emerald-500/20">
+                          Current Squad
+                        </span>
+                      )}
+                      <span className="rounded bg-secondary px-1.5 py-0.5 text-[10px] font-semibold text-secondary-foreground">
+                        {item.level}
+                      </span>
+                      <span className="font-mono text-xs text-muted-foreground tabular-nums">
+                        {item.period}
+                      </span>
+                    </div>
+
+                    <div className="mt-1 text-xs text-muted-foreground">
+                      <strong className="text-foreground">{item.team}</strong>
+                      {item.secondaryPosition && <span> · Tactical: {item.secondaryPosition}</span>}
+                      {typeof item.appearances === "number" && (
+                        <span> · {item.appearances} Caps / Matches</span>
+                      )}
+                    </div>
+
+                    {item.notes && (
+                      <p className="mt-1 text-[11px] text-muted-foreground leading-relaxed">
+                        {item.notes}
+                      </p>
+                    )}
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => handleRemovePositionHistory(item.id)}
+                    className="text-muted-foreground hover:text-destructive p-1 rounded transition-colors shrink-0"
+                    title="Delete position entry"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Add Position History Form */}
+        <form
+          onSubmit={handleAddPositionHistory}
+          className="mt-5 rounded-xl border border-dashed border-border bg-muted/10 p-4"
+        >
+          <div className="text-xs font-bold text-foreground mb-3 flex items-center gap-1.5">
+            <Plus className="h-3.5 w-3.5 text-primary" />
+            Add Position or Squad Entry
+          </div>
+
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="space-y-1">
+              <Label htmlFor="pos-period" className="text-xs">
+                Period / Years *
+              </Label>
+              <Input
+                id="pos-period"
+                value={newPosPeriod}
+                onChange={(e) => setNewPosPeriod(e.target.value)}
+                placeholder="e.g. 2024 - Present or 2022 - 2024"
+              />
+            </div>
+
+            <div className="space-y-1 sm:col-span-2">
+              <Label htmlFor="pos-team" className="text-xs">
+                Team / Academy / Club / School *
+              </Label>
+              <Input
+                id="pos-team"
+                value={newPosTeam}
+                onChange={(e) => setNewPosTeam(e.target.value)}
+                placeholder="e.g. Delhi State Youth Squad or Modern School Cricket XI"
+              />
+            </div>
+
+            <div className="space-y-1">
+              <Label htmlFor="pos-primary" className="text-xs">
+                Primary Position *
+              </Label>
+              <Input
+                id="pos-primary"
+                value={newPosPosition}
+                onChange={(e) => setNewPosPosition(e.target.value)}
+                placeholder="e.g. Opening Fast Bowler"
+              />
+            </div>
+
+            <div className="space-y-1">
+              <Label htmlFor="pos-secondary" className="text-xs">
+                Secondary Tactical Role
+              </Label>
+              <Input
+                id="pos-secondary"
+                value={newPosSecondary}
+                onChange={(e) => setNewPosSecondary(e.target.value)}
+                placeholder="e.g. Death Overs Specialist, Slip Catcher"
+              />
+            </div>
+
+            <div className="space-y-1">
+              <Label htmlFor="pos-level" className="text-xs">
+                Competition Level
+              </Label>
+              <Select
+                value={newPosLevel}
+                onValueChange={(val: AchievementLevel) => setNewPosLevel(val)}
+              >
+                <SelectTrigger id="pos-level">
+                  <SelectValue placeholder="Level" />
+                </SelectTrigger>
+                <SelectContent>
+                  {ACHIEVEMENT_LEVELS.map((lvl) => (
+                    <SelectItem key={lvl} value={lvl}>
+                      {lvl}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-1">
+              <Label htmlFor="pos-caps" className="text-xs">
+                Appearances / Matches
+              </Label>
+              <Input
+                id="pos-caps"
+                type="number"
+                min={0}
+                value={newPosAppearances}
+                onChange={(e) =>
+                  setNewPosAppearances(e.target.value === "" ? "" : Number(e.target.value))
+                }
+                placeholder="e.g. 24"
+              />
+            </div>
+
+            <div className="space-y-1 sm:col-span-2">
+              <Label htmlFor="pos-notes" className="text-xs">
+                Role Highlights &amp; Leadership (Optional)
+              </Label>
+              <Input
+                id="pos-notes"
+                value={newPosNotes}
+                onChange={(e) => setNewPosNotes(e.target.value)}
+                placeholder="e.g. Vice-Captain, opening bowler taking 24 wickets in season"
+              />
+            </div>
+
+            <div className="flex items-center gap-2 pt-2 sm:col-span-3">
+              <input
+                id="pos-is-current"
+                type="checkbox"
+                checked={newPosIsCurrent}
+                onChange={(e) => setNewPosIsCurrent(e.target.checked)}
+                className="h-4 w-4 rounded border-border text-primary focus:ring-primary"
+              />
+              <Label htmlFor="pos-is-current" className="text-xs cursor-pointer font-medium">
+                This is my current active team / squad
+              </Label>
+            </div>
+          </div>
+
+          <div className="mt-3 flex justify-end">
+            <Button type="submit" size="sm" className="gap-1.5">
+              <Plus className="h-4 w-4" /> Add Position History
+            </Button>
+          </div>
+        </form>
       </section>
 
       {/* 2. Performance Metrics Section */}

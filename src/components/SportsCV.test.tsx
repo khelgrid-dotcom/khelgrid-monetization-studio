@@ -203,5 +203,88 @@ describe("Sports CV Component & Data Layer", () => {
       const htmlEmerald = renderToString(<SportsCVCard data={dataEmerald} />);
       expect(htmlEmerald).toContain("border-emerald-500/40");
     });
+
+    it("renders position and squad history timeline with teams, roles and caps", () => {
+      const data: SportsCVData = {
+        ...getDefaultSportsCV("Kabir Das"),
+        positionHistory: [
+          {
+            id: "pos-test-1",
+            period: "2024 - Present",
+            team: "Bengaluru FC Youth Academy",
+            position: "Attacking Midfielder (CAM)",
+            secondaryPosition: "Left Winger",
+            level: "State",
+            isCurrent: true,
+            appearances: 24,
+            notes: "Lead playmaker with 14 assists in state league.",
+          },
+          {
+            id: "pos-test-2",
+            period: "2022 - 2024",
+            team: "Bishop Cotton Boys School First XI",
+            position: "Central Midfielder",
+            level: "School",
+            isCurrent: false,
+            appearances: 30,
+            notes: "Inter-school tournament winner.",
+          },
+        ],
+      };
+
+      const html = renderToString(<SportsCVCard data={data} />);
+
+      expect(html).toContain("Position &amp; Squad History");
+      expect(html).toContain("Attacking Midfielder (CAM)");
+      expect(html).toContain("Bengaluru FC Youth Academy");
+      expect(html).toContain("Current Squad");
+      expect(html).toContain("24");
+      expect(html).toContain("Caps / Matches");
+      expect(html).toContain("Bishop Cotton Boys School First XI");
+      expect(html).toContain("2022 - 2024");
+    });
+
+    it("renders career stats summary cards and season-by-season match records table", () => {
+      const data: SportsCVData = {
+        ...getDefaultSportsCV("Rhea Pillai"),
+        careerSummary: {
+          totalMatches: 82,
+          winRate: "72%",
+          primaryMetric: { label: "Total Goals", value: 46 },
+          secondaryMetric: { label: "Total Assists", value: 28 },
+          tertiaryMetric: { label: "Pass Accuracy", value: "86.4%" },
+        },
+        careerSeasonStats: [
+          {
+            id: "season-test-1",
+            season: "2024-25",
+            teamOrTournament: "Karnataka Women's State League",
+            matches: 14,
+            stat1Label: "Goals",
+            stat1Value: 18,
+            stat2Label: "Assists",
+            stat2Value: 10,
+            stat3Label: "Pass Acc",
+            stat3Value: "88%",
+            ratingOrHighlight: "Golden Boot Winner",
+          },
+        ],
+      };
+
+      const html = renderToString(<SportsCVCard data={data} />);
+
+      expect(html).toContain("Career Stats &amp; Match Records");
+      expect(html).toContain("Career Matches");
+      expect(html).toContain("82");
+      expect(html).toContain("72%");
+      expect(html).toContain("Win/Select Rate");
+      expect(html).toContain("Total Goals");
+      expect(html).toContain("46");
+      expect(html).toContain("Total Assists");
+      expect(html).toContain("28");
+      expect(html).toContain("Karnataka Women&#x27;s State League");
+      expect(html).toContain("Golden Boot Winner");
+      expect(html).toContain("2024-25");
+    });
   });
 });
