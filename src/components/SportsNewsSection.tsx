@@ -104,7 +104,8 @@ const OFFICIAL_SELECTION_CIRCULARS = [
   {
     id: "circ-2",
     authority: "Fit India Mission",
-    title: "School Games District Selection Cum Competitions Active in Namchi & State Zonal Centers",
+    title:
+      "School Games District Selection Cum Competitions Active in Namchi & State Zonal Centers",
     date: "Sep-Oct 2026",
     tag: "Govt Scheme",
     badgeColor: "bg-blue-500/15 text-blue-600 dark:text-blue-400 border-blue-500/30",
@@ -122,7 +123,8 @@ const OFFICIAL_SELECTION_CIRCULARS = [
   {
     id: "circ-4",
     authority: "KhelGrid Trust",
-    title: "Anti-Scam Alert: Zero Unofficial Registration Fees — Verify Organizers via Platform Audit",
+    title:
+      "Anti-Scam Alert: Zero Unofficial Registration Fees — Verify Organizers via Platform Audit",
     date: "Active Advisory",
     tag: "Scout Advisory",
     badgeColor: "bg-amber-500/15 text-amber-600 dark:text-amber-400 border-amber-500/30",
@@ -573,28 +575,30 @@ export function SportsNewsSection() {
       {/* Streamlined Header: Low-profile title, live status, and compact actions */}
       <header className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between mb-2">
         <div className="flex flex-wrap items-center gap-2">
-          <span className="sr-only">Real-time Sports Wire</span>
+          <span className="sr-only">
+            Real-time Sports Wire · National Sports &amp; Selection Dispatch
+          </span>
           <h2
             id="sports-news-heading"
             className="text-lg sm:text-xl font-bold tracking-tight text-foreground flex items-center gap-2"
           >
-            <Flame className="h-4 w-4 text-primary shrink-0 animate-pulse" />
-            <span>{t("sportsUpdatesTitle", "KhelWire")}</span>
+            <Newspaper className="h-4 w-4 text-primary shrink-0" />
+            <span>{t("sportsUpdatesTitle", "KhelChronicle")}</span>
+            <span className="hidden sm:inline-block text-xs font-semibold text-muted-foreground">
+              · National Sports &amp; Selection Dispatch
+            </span>
           </h2>
 
-          {/* Live pulsing badge */}
+          {/* Official Verification Badge */}
           <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 shrink-0">
-            <span className="relative flex h-1.5 w-1.5">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500" />
-            </span>
-            <span>{t("updatedLive", "Updated Live")}</span>
+            <ShieldCheck className="h-3 w-3 text-emerald-500" />
+            <span>{t("updatedLive", "Official Dispatches")}</span>
           </span>
 
           <p className="sr-only sm:not-sr-only text-[11px] text-muted-foreground ml-1 hidden md:inline truncate max-w-sm">
             {t(
               "sportsUpdatesDesc",
-              "Breaking selection trials, Khelo India updates, state championships, and athlete pathways across India.",
+              "Official selection circulars, Khelo India updates, state championships, and athlete pathways across India.",
             )}
           </p>
         </div>
@@ -629,8 +633,8 @@ export function SportsNewsSection() {
             onClick={handleRefreshWire}
             disabled={isRefreshing}
             className="h-7 w-7 rounded-full border border-border/60 hover:bg-muted text-muted-foreground hover:text-foreground"
-            title="Refresh Sports Wire feed"
-            aria-label="Refresh Wire"
+            title="Refresh Sports Dispatches"
+            aria-label="Refresh Dispatches"
           >
             <RefreshCw
               className={`h-3.5 w-3.5 ${isRefreshing ? "animate-spin text-primary" : ""}`}
@@ -671,44 +675,39 @@ export function SportsNewsSection() {
         </div>
       </header>
 
-      {/* Real-time In-Play Match Scores & Standings Ticker Ribbon */}
+      {/* Official Opportunity & Selection Circulars Ticker Ribbon */}
       <div className="mb-4 -mx-1 overflow-x-auto no-scrollbar py-1">
         <div className="flex items-center gap-2.5 px-1 min-w-max">
-          <div className="flex items-center gap-1.5 rounded-lg bg-rose-500/10 border border-rose-500/20 px-2.5 py-1 text-[11px] font-bold text-rose-600 dark:text-rose-400 shrink-0">
+          <div className="flex items-center gap-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 text-[11px] font-bold text-emerald-600 dark:text-emerald-400 shrink-0">
             <span className="relative flex h-1.5 w-1.5">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-rose-400 opacity-75" />
-              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-rose-500" />
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500" />
             </span>
-            <Activity className="h-3 w-3" />
-            <span>MATCH WIRE</span>
+            <ShieldCheck className="h-3 w-3" />
+            <span>OFFICIAL CIRCULARS</span>
           </div>
 
-          {LIVE_SPORTS_UPDATES.map((match) => (
-            <div
-              key={match.id}
+          {OFFICIAL_SELECTION_CIRCULARS.map((circ) => (
+            <Link
+              key={circ.id}
+              to={circ.link}
               className="flex shrink-0 items-center gap-2 rounded-xl border border-border/70 bg-card/90 px-3 py-1.5 text-xs transition-colors hover:border-primary/40 shadow-2xs"
             >
-              <span className="font-semibold text-primary text-[10px] tracking-wide uppercase">
-                {match.sport}
+              <span className="font-bold text-primary text-[10px] tracking-wide uppercase">
+                {circ.authority}
               </span>
               <span aria-hidden="true" className="text-border">
                 ·
               </span>
-              <span className="font-medium text-foreground">
-                {match.teamA.code}{" "}
-                <strong className="font-mono text-primary font-bold">{match.teamA.score}</strong>
+              <span className="font-medium text-foreground max-w-[260px] sm:max-w-[340px] truncate">
+                {circ.title}
               </span>
-              <span className="text-[10px] text-muted-foreground">vs</span>
-              <span className="font-medium text-foreground">
-                {match.teamB.code} {match.teamB.score}
+              <span
+                className={`rounded px-1.5 py-0.5 text-[9px] font-bold border ${circ.badgeColor}`}
+              >
+                {circ.tag}
               </span>
-              <span aria-hidden="true" className="text-border">
-                ·
-              </span>
-              <span className="font-mono text-[10px] text-muted-foreground truncate max-w-[130px]">
-                {match.venueOrOvers || match.stage}
-              </span>
-            </div>
+            </Link>
           ))}
         </div>
       </div>
@@ -720,17 +719,18 @@ export function SportsNewsSection() {
             ⚡
           </span>
           <span className="font-medium text-foreground">
-            <strong>KhelWire Intelligence Desk:</strong> Live match scores, continental medal
-            tallies & national dispatches.
+            <strong>KhelGrid Sports Intelligence Desk:</strong> India&apos;s verified clearinghouse
+            for SAI selection trials, Khelo India pathways, federation notifications &amp;
+            grassroots athlete journalism.
           </span>
         </div>
-        <a
-          href="#latest-opportunities-heading"
+        <Link
+          to="/trials"
           className="inline-flex items-center gap-1.5 font-semibold text-primary hover:underline shrink-0 text-xs"
         >
-          <span>Looking to register for trials? Jump to Opportunities</span>
+          <span>Browse 350+ Verified Selection Trials</span>
           <ArrowRight className="h-3.5 w-3.5" />
-        </a>
+        </Link>
       </div>
 
       {/* Streamlined Horizontal Filtering Bar directly above news grid */}
@@ -1171,7 +1171,7 @@ export function SportsNewsSection() {
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75" />
                   <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
                 </span>
-                {t("trendingBulletins", "Live Wire Stream")}
+                {t("trendingBulletins", "Latest Selection & Grassroots Bulletins")}
               </span>
               <span className="font-mono text-[11px] text-muted-foreground">
                 {filteredArticles.length} {t("activeUpdates", "updates active")}
@@ -1322,7 +1322,7 @@ export function SportsNewsSection() {
             <div className="flex items-center justify-between px-1 pt-4 border-t border-border/60">
               <span className="flex items-center gap-2 text-xs font-bold tracking-wider uppercase text-foreground">
                 <Newspaper className="h-4 w-4 text-primary" />
-                {t("moreNationalUpdates", "National Sports Dispatches & Selection Wire")}
+                {t("moreNationalUpdates", "National Sports Dispatches & Official Circulars")}
               </span>
               <span className="font-mono text-xs text-muted-foreground">
                 {remainingGridArticles.length} {t("articles", "articles")}

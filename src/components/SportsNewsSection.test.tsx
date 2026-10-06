@@ -34,9 +34,18 @@ describe("SportsNewsSection", () => {
     const html = renderToString(<SportsNewsSection />);
 
     expect(html).toContain("Real-time Sports Wire");
-    expect(html).toContain("Updated Live");
-    expect(html).toContain("KhelWire");
-    expect(html).toContain("Breaking selection trials, Khelo India updates");
+    expect(html).toContain("Official Dispatches");
+    expect(html).toContain("KhelChronicle");
+    expect(html).toContain("Official selection circulars, Khelo India updates");
+  });
+
+  it("renders official selection circulars ticker with government schemes, SAI trials, and advisories", () => {
+    const html = renderToString(<SportsNewsSection />);
+
+    expect(html).toContain("OFFICIAL CIRCULARS");
+    expect(html).toContain("SAI NCOE");
+    expect(html).toContain("Fit India Mission");
+    expect(html).toContain("Anti-Scam Alert");
   });
 
   it("renders horizontally movable carousel structure for small screens", () => {
