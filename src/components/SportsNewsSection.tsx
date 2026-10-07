@@ -28,6 +28,7 @@ import {
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { getChronicleCardImage } from "@/data/card-images";
 import {
   Dialog,
   DialogContent,
@@ -672,14 +673,20 @@ export function SportsNewsSection({
                 <div>
                   <div className="relative aspect-[16/10] w-full overflow-hidden rounded-xl bg-muted">
                     <img
-                      src={article.imageUrl}
+                      src={article.imageUrl || getChronicleCardImage(article.sport)}
                       alt={`${article.title} - ${article.sport}`}
                       loading="lazy"
                       decoding="async"
+                      referrerPolicy="no-referrer"
                       itemProp="image"
                       className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      onError={(e) => {
+                        (e.currentTarget as HTMLImageElement).src = getChronicleCardImage(
+                          article.sport,
+                        );
+                      }}
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent pointer-events-none" />
                     <div className="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between text-xs text-white/90">
                       <div className="flex items-center gap-1.5 font-semibold text-white">
                         <span>{article.sport}</span>

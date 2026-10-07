@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Building2, CheckCircle2, MapPin, ChevronRight, ChevronLeft } from "lucide-react";
 import { useTouchScroll } from "@/hooks/use-touch-scroll";
+import { getAcademyCardImage } from "@/data/card-images";
 
 export interface VerifiedAcademy {
   id: string;
@@ -165,22 +166,40 @@ export function FeaturedAcademiesSection() {
         {VERIFIED_ACADEMIES_CATALOG.map((academy) => (
           <div
             key={academy.id}
-            className="snap-start shrink-0 w-[80vw] max-w-[280px] sm:w-[270px] lg:w-[290px] group flex flex-col justify-between rounded-2xl border border-border/80 bg-card p-3.5 sm:p-4 shadow-xs transition-all hover:border-primary/50 hover:shadow-md"
+            className="snap-start shrink-0 w-[80vw] max-w-[280px] sm:w-[270px] lg:w-[290px] group flex flex-col justify-between overflow-hidden rounded-2xl border border-border/80 bg-card p-3 sm:p-3.5 shadow-xs transition-all hover:border-primary/50 hover:shadow-md"
           >
             <div>
-              {/* Top Meta Bar */}
-              <div className="flex items-start justify-between gap-2">
-                <span className="rounded-md bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary uppercase tracking-wide">
-                  {academy.established}
-                </span>
-                <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">
-                  <CheckCircle2 className="h-3.5 w-3.5" />
-                  <span>Verified</span>
-                </span>
+              {/* Academy Campus Image Banner */}
+              <div className="relative aspect-[16/10] w-full overflow-hidden rounded-xl bg-muted mb-2.5 shrink-0">
+                <img
+                  src={getAcademyCardImage(academy.id)}
+                  alt={`${academy.name} - Sports Academy in ${academy.city}`}
+                  loading="lazy"
+                  decoding="async"
+                  referrerPolicy="no-referrer"
+                  className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
+                <div className="absolute top-2 left-2 flex items-center gap-1.5 z-10">
+                  <span className="rounded-md bg-black/70 backdrop-blur-xs px-2 py-0.5 text-[10px] font-bold text-white uppercase tracking-wider">
+                    {academy.established}
+                  </span>
+                </div>
+                <div className="absolute top-2 right-2 z-10">
+                  <span className="inline-flex items-center gap-1 rounded-md bg-emerald-950/80 backdrop-blur-xs px-2 py-0.5 text-[10px] font-bold text-emerald-300 border border-emerald-500/30">
+                    <CheckCircle2 className="h-3 w-3 text-emerald-400" />
+                    <span>Verified</span>
+                  </span>
+                </div>
+                <div className="absolute bottom-2 left-2 right-2 flex items-center justify-between text-xs text-white/95 z-10 pointer-events-none">
+                  <span className="text-[10px] font-semibold text-white/90 truncate">
+                    {academy.scoutStatus}
+                  </span>
+                </div>
               </div>
 
               {/* Academy Name */}
-              <h3 className="mt-2.5 text-sm font-bold text-foreground group-hover:text-primary transition-colors line-clamp-2 min-h-[2.5rem]">
+              <h3 className="text-sm font-bold text-foreground group-hover:text-primary transition-colors line-clamp-2 min-h-[2.5rem]">
                 {academy.name}
               </h3>
 

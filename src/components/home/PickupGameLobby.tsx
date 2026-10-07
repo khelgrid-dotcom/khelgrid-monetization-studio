@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { HostGameModal } from "@/components/play/HostGameModal";
 import { GameDetailsModal } from "@/components/play/GameDetailsModal";
 import { useTouchScroll } from "@/hooks/use-touch-scroll";
+import { getPickupGameCardImage } from "@/data/card-images";
 
 interface PickupGameLobbyProps {
   selectedCity?: string;
@@ -107,21 +108,40 @@ export function PickupGameLobby({
             <div
               key={game.id}
               onClick={() => setSelectedGame(game)}
-              className="snap-start shrink-0 w-[80vw] max-w-[300px] sm:w-[300px] lg:w-[320px] group flex flex-col justify-between min-h-[220px] rounded-2xl border border-border/80 bg-card p-3.5 sm:p-4 shadow-xs transition-all hover:border-blue-500/50 hover:shadow-md cursor-pointer"
+              className="snap-start shrink-0 w-[80vw] max-w-[300px] sm:w-[300px] lg:w-[320px] group flex flex-col justify-between overflow-hidden rounded-2xl border border-border/80 bg-card p-3 sm:p-3.5 shadow-xs transition-all hover:border-blue-500/50 hover:shadow-md cursor-pointer"
             >
               <div>
-                {/* Meta Header */}
-                <div className="flex items-center justify-between text-xs">
-                  <span className="font-bold text-primary text-[11px] uppercase tracking-wide">
-                    {game.sport}
-                  </span>
-                  <span className="rounded-md bg-secondary px-2 py-0.5 text-[10px] font-semibold text-foreground">
-                    {game.skillLevel}
-                  </span>
+                {/* Pickup Game Visual Banner */}
+                <div className="relative aspect-[16/10] w-full overflow-hidden rounded-xl bg-muted mb-2.5 shrink-0">
+                  <img
+                    src={getPickupGameCardImage(game.sport)}
+                    alt={`${game.title} - ${game.sport} Pickup Match`}
+                    loading="lazy"
+                    decoding="async"
+                    referrerPolicy="no-referrer"
+                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
+                  <div className="absolute top-2 left-2 flex items-center gap-1.5 z-10">
+                    <span className="rounded-md bg-black/70 backdrop-blur-xs px-2 py-0.5 text-[10px] font-bold text-white uppercase tracking-wider">
+                      {game.sport}
+                    </span>
+                    <span className="rounded-md bg-secondary/90 px-2 py-0.5 text-[10px] font-semibold text-foreground">
+                      {game.skillLevel}
+                    </span>
+                  </div>
+                  <div className="absolute bottom-2 left-2 right-2 flex items-center justify-between text-xs text-white/95 z-10 pointer-events-none">
+                    <span className="text-[10px] font-semibold text-emerald-400">
+                      {spotsLeft > 0 ? `${spotsLeft} spots open` : "Match Full"}
+                    </span>
+                    <span className="rounded-md bg-blue-600/90 px-1.5 py-0.5 text-[10px] font-bold text-white shadow-xs">
+                      {game.costPerPlayer === 0 ? "Free" : `₹${game.costPerPlayer}/player`}
+                    </span>
+                  </div>
                 </div>
 
                 {/* Title & Venue */}
-                <h3 className="mt-2 text-xs sm:text-sm font-bold text-foreground line-clamp-1 group-hover:text-primary transition-colors min-h-[1.25rem]">
+                <h3 className="text-xs sm:text-sm font-bold text-foreground line-clamp-1 group-hover:text-primary transition-colors min-h-[1.25rem]">
                   {game.title}
                 </h3>
                 <div className="mt-1 flex items-center gap-1 text-[11px] text-muted-foreground">

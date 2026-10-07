@@ -9,9 +9,11 @@ import {
   ChevronRight,
   ChevronLeft,
   ShieldCheck,
+  MapPin,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useTouchScroll } from "@/hooks/use-touch-scroll";
+import { getTrialCardImage } from "@/data/card-images";
 
 interface FeaturedTrialsRadarProps {
   selectedSport?: string;
@@ -120,24 +122,39 @@ export function FeaturedTrialsRadar({
               key={trial.id}
               to="/trial/$id"
               params={{ id: trial.id }}
-              className="snap-start shrink-0 w-[82vw] max-w-[320px] sm:w-[320px] lg:w-[340px] group relative flex flex-col justify-between rounded-2xl border border-border/80 bg-card p-3.5 sm:p-4 transition-all hover:border-primary/50 hover:shadow-md"
+              className="snap-start shrink-0 w-[82vw] max-w-[320px] sm:w-[320px] lg:w-[340px] group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-border/80 bg-card p-3 sm:p-3.5 transition-all hover:border-primary/50 hover:shadow-md"
             >
               <div>
-                {/* Meta Header */}
-                <div className="flex items-center justify-between gap-2 text-xs">
-                  <div className="flex items-center gap-1.5 min-w-0">
-                    <span className="font-semibold text-primary text-[11px] uppercase tracking-wide truncate">
+                {/* Visual Card Image Banner */}
+                <div className="relative aspect-[16/10] w-full overflow-hidden rounded-xl bg-muted mb-3 shrink-0">
+                  <img
+                    src={getTrialCardImage(trial.sport)}
+                    alt={`${trial.title} - ${trial.sport} Selection Trial`}
+                    loading="lazy"
+                    decoding="async"
+                    referrerPolicy="no-referrer"
+                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent pointer-events-none" />
+
+                  {/* Top Overlay: Sport & Badge */}
+                  <div className="absolute top-2 left-2 flex items-center gap-1.5 z-10">
+                    <span className="rounded-md bg-black/70 backdrop-blur-xs px-2 py-0.5 text-[10px] font-bold text-white uppercase tracking-wider">
                       {trial.sport}
                     </span>
-                    <span className="text-muted-foreground/50">·</span>
-                    <span className="text-[11px] text-muted-foreground truncate">{trial.city}</span>
+                    {trial.badge && (
+                      <span className="rounded-md bg-primary/90 px-2 py-0.5 text-[10px] font-bold text-white shadow-xs">
+                        {trial.badge}
+                      </span>
+                    )}
                   </div>
 
-                  <div className="flex items-center gap-1">
+                  {/* Top Right Action Buttons */}
+                  <div className="absolute top-2 right-2 flex items-center gap-1 z-10">
                     <button
                       type="button"
                       onClick={(e) => handleShare(e, trial)}
-                      className="grid h-7 w-7 place-items-center rounded-lg text-muted-foreground hover:bg-secondary hover:text-foreground cursor-pointer transition"
+                      className="grid h-7 w-7 place-items-center rounded-lg bg-black/60 text-white/90 hover:bg-black/90 hover:text-white cursor-pointer transition backdrop-blur-xs"
                       title="Share trial"
                       aria-label="Share trial on WhatsApp"
                     >
@@ -146,21 +163,32 @@ export function FeaturedTrialsRadar({
                     <button
                       type="button"
                       onClick={(e) => handleBookmark(e, trial.id, trial.title)}
-                      className={`grid h-7 w-7 place-items-center rounded-lg transition cursor-pointer ${
+                      className={`grid h-7 w-7 place-items-center rounded-lg transition cursor-pointer backdrop-blur-xs ${
                         saved
-                          ? "bg-primary/10 text-primary"
-                          : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+                          ? "bg-primary text-white"
+                          : "bg-black/60 text-white/90 hover:bg-black/90 hover:text-white"
                       }`}
                       title={saved ? "Remove bookmark" : "Bookmark trial"}
                       aria-label="Bookmark trial"
                     >
-                      <Bookmark className={`h-3.5 w-3.5 ${saved ? "fill-primary" : ""}`} />
+                      <Bookmark className={`h-3.5 w-3.5 ${saved ? "fill-white" : ""}`} />
                     </button>
+                  </div>
+
+                  {/* Bottom Overlay: City & Fee */}
+                  <div className="absolute bottom-2 left-2 right-2 flex items-center justify-between text-xs text-white/95 z-10 pointer-events-none">
+                    <span className="text-[11px] font-medium text-white/95 truncate flex items-center gap-1">
+                      <MapPin className="h-3 w-3 text-white/80 shrink-0" />
+                      <span>{trial.city}</span>
+                    </span>
+                    <span className="rounded-md bg-emerald-500/90 px-2 py-0.5 text-[10px] font-bold text-white shadow-xs shrink-0">
+                      {trial.fee === 0 ? "Free Entry" : `₹${trial.fee}`}
+                    </span>
                   </div>
                 </div>
 
                 {/* Trial Title */}
-                <h3 className="mt-2 text-sm font-bold text-foreground group-hover:text-primary transition-colors line-clamp-2 min-h-[2.5rem]">
+                <h3 className="text-sm font-bold text-foreground group-hover:text-primary transition-colors line-clamp-2 min-h-[2.5rem]">
                   {trial.title}
                 </h3>
 
@@ -171,27 +199,16 @@ export function FeaturedTrialsRadar({
                 </p>
               </div>
 
-              {/* Card Footer: Date, Eligibility, Fee */}
-              <div className="mt-4 pt-3 border-t border-border/60 flex items-center justify-between text-xs">
+              {/* Card Footer: Date, Eligibility */}
+              <div className="mt-3.5 pt-2.5 border-t border-border/60 flex items-center justify-between text-xs">
                 <div className="flex items-center gap-1 text-muted-foreground">
                   <Calendar className="h-3.5 w-3.5 text-primary shrink-0" />
                   <span className="text-[11px] font-medium">{trial.date}</span>
                 </div>
 
-                <div className="flex items-center gap-2">
-                  <span className="rounded-md bg-secondary px-2 py-0.5 text-[10px] font-semibold text-secondary-foreground">
-                    {trial.ageCategory || "Open Age"}
-                  </span>
-                  <span
-                    className={`rounded-md px-2 py-0.5 text-[10px] font-bold ${
-                      trial.fee === 0
-                        ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
-                        : "bg-primary/10 text-primary"
-                    }`}
-                  >
-                    {trial.fee === 0 ? "Free" : `₹${trial.fee}`}
-                  </span>
-                </div>
+                <span className="rounded-md bg-secondary px-2 py-0.5 text-[10px] font-semibold text-secondary-foreground">
+                  {trial.ageCategory || "Open Age"}
+                </span>
               </div>
             </Link>
           );

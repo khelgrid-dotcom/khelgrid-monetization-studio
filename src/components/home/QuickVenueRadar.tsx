@@ -3,6 +3,7 @@ import { VENUES, type Venue } from "@/data/playo";
 import { CalendarCheck, Star, MapPin, ChevronRight, ChevronLeft, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTouchScroll } from "@/hooks/use-touch-scroll";
+import { getVenueCardImage } from "@/data/card-images";
 
 interface QuickVenueRadarProps {
   selectedCity?: string;
@@ -87,20 +88,17 @@ export function QuickVenueRadar({
             className="snap-start shrink-0 w-[80vw] max-w-[280px] sm:w-[260px] lg:w-[280px] group flex flex-col justify-between overflow-hidden rounded-2xl border border-border/80 bg-card p-3 shadow-xs transition-all hover:border-emerald-500/50 hover:shadow-md"
           >
             <div>
-              {/* Venue Image / Fallback Container */}
+              {/* Venue Image / Visual Banner */}
               <div className="relative h-36 sm:h-32 w-full overflow-hidden rounded-xl bg-muted shrink-0">
                 <img
-                  src={venue.image}
-                  alt={venue.name}
+                  src={getVenueCardImage(venue.id, venue.sports[0])}
+                  alt={`${venue.name} - Sports Turf in ${venue.city}`}
                   loading="lazy"
                   decoding="async"
                   referrerPolicy="no-referrer"
                   className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                  onError={(e) => {
-                    // Fallback gradient if unsplash image fails
-                    (e.target as HTMLElement).style.display = "none";
-                  }}
                 />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent pointer-events-none" />
                 <div className="absolute top-2 left-2 rounded-md bg-black/70 px-2 py-0.5 text-[10px] font-bold text-white backdrop-blur-xs flex items-center gap-1">
                   <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
                   <span>{venue.rating.toFixed(1)}</span>
