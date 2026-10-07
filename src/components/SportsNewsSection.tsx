@@ -582,7 +582,7 @@ export function SportsNewsSection({
     return (
       <section
         id="sports-news-section"
-        className="w-full min-w-0 max-w-full overflow-hidden mt-6 border-t border-border/60 pt-6 sm:mt-8 sm:pt-8"
+        className="w-full min-w-0 max-w-full mt-6 border-t border-border/60 pt-6 sm:mt-8 sm:pt-8"
         aria-labelledby="sports-news-heading"
         itemScope
         itemType="https://schema.org/CollectionPage"
@@ -657,7 +657,7 @@ export function SportsNewsSection({
         {/* Exactly 3 cards side by side in a horizontally scrollable rail across all screen devices */}
         <div
           ref={homeScrollRef}
-          className="flex w-full min-w-0 max-w-full items-stretch gap-3.5 sm:gap-4 overflow-x-auto no-scrollbar scroll-smooth pb-2.5 pt-1 px-0.5 overscroll-x-contain touch-pan-x snap-x snap-mandatory grid-cols-1 md:grid-cols-3"
+          className="flex w-full min-w-0 max-w-full items-stretch gap-3.5 sm:gap-4 overflow-x-auto no-scrollbar touch-scroll-rail pb-2.5 pt-1 px-0.5 snap-x snap-proximity grid-cols-1 md:grid-cols-3 select-none cursor-grab active:cursor-grabbing"
         >
           {homeArticles.map((article) => {
             const issuer = getOfficialIssuer(article);

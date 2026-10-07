@@ -1,14 +1,6 @@
-import { useRef } from "react";
 import { Link } from "@tanstack/react-router";
-import {
-  Building2,
-  CheckCircle2,
-  MapPin,
-  ChevronRight,
-  ChevronLeft,
-  Award,
-  Sparkles,
-} from "lucide-react";
+import { Building2, CheckCircle2, MapPin, ChevronRight, ChevronLeft } from "lucide-react";
+import { useTouchScroll } from "@/hooks/use-touch-scroll";
 
 export interface VerifiedAcademy {
   id: string;
@@ -114,22 +106,13 @@ export const VERIFIED_ACADEMIES_CATALOG: readonly VerifiedAcademy[] = [
 ] as const;
 
 export function FeaturedAcademiesSection() {
-  const scrollRef = useRef<HTMLDivElement>(null);
-
-  const scroll = (direction: "left" | "right") => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollBy({
-        left: direction === "left" ? -300 : 300,
-        behavior: "smooth",
-      });
-    }
-  };
+  const { scrollRef, scroll } = useTouchScroll(300);
 
   return (
     <section
       id="featured-academies"
       aria-label="Featured Training Institutions and Sports Academies"
-      className="w-full min-w-0 max-w-full overflow-hidden py-2"
+      className="w-full min-w-0 max-w-full py-2"
     >
       {/* Section Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-2.5 w-full min-w-0">
@@ -145,12 +128,12 @@ export function FeaturedAcademiesSection() {
 
         <div className="flex items-center justify-between sm:justify-end gap-2 shrink-0">
           {/* Scroll navigation arrows for all screen devices */}
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1.5">
             <button
               type="button"
               onClick={() => scroll("left")}
               aria-label="Scroll academies left"
-              className="grid h-7 w-7 place-items-center rounded-lg border border-border/80 bg-secondary/60 text-muted-foreground hover:bg-secondary hover:text-foreground transition cursor-pointer"
+              className="grid h-8 w-8 place-items-center rounded-lg border border-border/80 bg-secondary/80 text-foreground hover:bg-secondary active:scale-95 transition cursor-pointer touch-manipulation"
             >
               <ChevronLeft className="h-4 w-4" />
             </button>
@@ -158,7 +141,7 @@ export function FeaturedAcademiesSection() {
               type="button"
               onClick={() => scroll("right")}
               aria-label="Scroll academies right"
-              className="grid h-7 w-7 place-items-center rounded-lg border border-border/80 bg-secondary/60 text-muted-foreground hover:bg-secondary hover:text-foreground transition cursor-pointer"
+              className="grid h-8 w-8 place-items-center rounded-lg border border-border/80 bg-secondary/80 text-foreground hover:bg-secondary active:scale-95 transition cursor-pointer touch-manipulation"
             >
               <ChevronRight className="h-4 w-4" />
             </button>
@@ -177,7 +160,7 @@ export function FeaturedAcademiesSection() {
       {/* Horizontally Scrollable Rail of Academy Cards across all screen devices */}
       <div
         ref={scrollRef}
-        className="flex w-full min-w-0 max-w-full items-stretch gap-3 sm:gap-3.5 overflow-x-auto no-scrollbar scroll-smooth pb-2.5 pt-1 px-0.5 overscroll-x-contain touch-pan-x snap-x snap-mandatory"
+        className="flex w-full min-w-0 max-w-full items-stretch gap-3 sm:gap-3.5 overflow-x-auto no-scrollbar touch-scroll-rail pb-2.5 pt-1 px-0.5 snap-x snap-proximity select-none cursor-grab active:cursor-grabbing"
       >
         {VERIFIED_ACADEMIES_CATALOG.map((academy) => (
           <div

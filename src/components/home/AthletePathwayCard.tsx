@@ -6,7 +6,7 @@ export function AthletePathwayCard() {
   return (
     <section
       aria-label="Athlete Sports CV Passport and Pathways"
-      className="w-full min-w-0 max-w-full overflow-hidden py-2"
+      className="w-full min-w-0 max-w-full py-2"
     >
       <div className="relative w-full min-w-0 max-w-full overflow-hidden rounded-3xl border border-primary/30 bg-gradient-card p-4 sm:p-6 lg:p-7 shadow-sm">
         <div className="grid lg:grid-cols-12 gap-5 sm:gap-6 items-center w-full min-w-0">
@@ -26,24 +26,18 @@ export function AthletePathwayCard() {
               QR passport on KhelGrid for free.
             </p>
 
-            <div className="flex items-center gap-2 overflow-x-auto no-scrollbar scroll-smooth pt-1 pb-1 text-xs text-foreground/80 overscroll-x-contain touch-pan-x snap-x snap-mandatory sm:grid sm:grid-cols-3 w-full min-w-0 max-w-full">
-              <div className="snap-start shrink-0 flex items-center gap-1.5 rounded-lg bg-secondary/50 border border-border/60 px-2.5 py-1.5 sm:border-0 sm:bg-transparent sm:p-0">
+            <div className="flex flex-wrap items-center gap-2 pt-1 pb-1 text-xs text-foreground/80 sm:grid sm:grid-cols-3 w-full min-w-0 max-w-full">
+              <div className="flex items-center gap-1.5 rounded-lg bg-secondary/50 border border-border/60 px-2.5 py-1.5 sm:border-0 sm:bg-transparent sm:p-0">
                 <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 shrink-0" />
-                <span className="whitespace-nowrap sm:whitespace-normal font-medium text-[11px] sm:text-xs">
-                  Verified Match Stats
-                </span>
+                <span className="font-medium text-[11px] sm:text-xs">Verified Match Stats</span>
               </div>
-              <div className="snap-start shrink-0 flex items-center gap-1.5 rounded-lg bg-secondary/50 border border-border/60 px-2.5 py-1.5 sm:border-0 sm:bg-transparent sm:p-0">
+              <div className="flex items-center gap-1.5 rounded-lg bg-secondary/50 border border-border/60 px-2.5 py-1.5 sm:border-0 sm:bg-transparent sm:p-0">
                 <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 shrink-0" />
-                <span className="whitespace-nowrap sm:whitespace-normal font-medium text-[11px] sm:text-xs">
-                  Export PDF Resume
-                </span>
+                <span className="font-medium text-[11px] sm:text-xs">Export PDF Resume</span>
               </div>
-              <div className="snap-start shrink-0 flex items-center gap-1.5 rounded-lg bg-secondary/50 border border-border/60 px-2.5 py-1.5 sm:border-0 sm:bg-transparent sm:p-0">
+              <div className="flex items-center gap-1.5 rounded-lg bg-secondary/50 border border-border/60 px-2.5 py-1.5 sm:border-0 sm:bg-transparent sm:p-0">
                 <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 shrink-0" />
-                <span className="whitespace-nowrap sm:whitespace-normal font-medium text-[11px] sm:text-xs">
-                  Scout Share Link
-                </span>
+                <span className="font-medium text-[11px] sm:text-xs">Scout Share Link</span>
               </div>
             </div>
           </div>

@@ -1,4 +1,3 @@
-import { useState, useRef } from "react";
 import { Link } from "@tanstack/react-router";
 import { TRIALS, type Trial } from "@/data/trials";
 import { useSavedOpportunities } from "@/context/SavedOpportunityContext";
@@ -12,6 +11,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { toast } from "sonner";
+import { useTouchScroll } from "@/hooks/use-touch-scroll";
 
 interface FeaturedTrialsRadarProps {
   selectedSport?: string;
@@ -23,7 +23,7 @@ export function FeaturedTrialsRadar({
   selectedCity = "All Cities",
 }: FeaturedTrialsRadarProps) {
   const { isSaved, toggleSaved } = useSavedOpportunities();
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const { scrollRef, scroll } = useTouchScroll(340);
 
   const filteredTrials = TRIALS.filter((trial) => {
     const matchSport =
@@ -40,15 +40,6 @@ export function FeaturedTrialsRadar({
   }).slice(0, 8);
 
   const displayTrials = filteredTrials.length > 0 ? filteredTrials : TRIALS.slice(0, 8);
-
-  const scroll = (direction: "left" | "right") => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollBy({
-        left: direction === "left" ? -340 : 340,
-        behavior: "smooth",
-      });
-    }
-  };
 
   const handleShare = (e: React.MouseEvent, trial: Trial) => {
     e.preventDefault();
@@ -72,10 +63,7 @@ export function FeaturedTrialsRadar({
   };
 
   return (
-    <section
-      aria-label="Featured Selection Trials"
-      className="w-full min-w-0 max-w-full overflow-hidden py-2"
-    >
+    <section aria-label="Featured Selection Trials" className="w-full min-w-0 max-w-full py-2">
       {/* Section Header */}
       <div className="flex items-center justify-between pb-2.5 w-full min-w-0">
         <div className="min-w-0">
@@ -90,12 +78,12 @@ export function FeaturedTrialsRadar({
 
         <div className="flex items-center gap-2 shrink-0">
           {/* Left/Right Scroll Arrows */}
-          <div className="hidden sm:flex items-center gap-1">
+          <div className="flex items-center gap-1.5">
             <button
               type="button"
               onClick={() => scroll("left")}
               aria-label="Scroll trials left"
-              className="grid h-7 w-7 place-items-center rounded-lg border border-border/80 bg-secondary/60 text-muted-foreground hover:bg-secondary hover:text-foreground transition cursor-pointer"
+              className="grid h-8 w-8 place-items-center rounded-lg border border-border/80 bg-secondary/80 text-foreground hover:bg-secondary active:scale-95 transition cursor-pointer touch-manipulation"
             >
               <ChevronLeft className="h-4 w-4" />
             </button>
@@ -103,7 +91,7 @@ export function FeaturedTrialsRadar({
               type="button"
               onClick={() => scroll("right")}
               aria-label="Scroll trials right"
-              className="grid h-7 w-7 place-items-center rounded-lg border border-border/80 bg-secondary/60 text-muted-foreground hover:bg-secondary hover:text-foreground transition cursor-pointer"
+              className="grid h-8 w-8 place-items-center rounded-lg border border-border/80 bg-secondary/80 text-foreground hover:bg-secondary active:scale-95 transition cursor-pointer touch-manipulation"
             >
               <ChevronRight className="h-4 w-4" />
             </button>
@@ -122,7 +110,7 @@ export function FeaturedTrialsRadar({
       {/* Horizontally Scrollable Rail of Trial Cards across all screen devices */}
       <div
         ref={scrollRef}
-        className="flex w-full min-w-0 max-w-full items-stretch gap-3 sm:gap-3.5 overflow-x-auto no-scrollbar scroll-smooth pb-2.5 pt-1 px-0.5 overscroll-x-contain touch-pan-x snap-x snap-mandatory"
+        className="flex w-full min-w-0 max-w-full items-stretch gap-3 sm:gap-3.5 overflow-x-auto no-scrollbar touch-scroll-rail pb-2.5 pt-1 px-0.5 snap-x snap-proximity select-none cursor-grab active:cursor-grabbing"
       >
         {displayTrials.map((trial) => {
           const saved = isSaved(trial.id);

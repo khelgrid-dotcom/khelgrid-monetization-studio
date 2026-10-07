@@ -36,7 +36,7 @@ export function AppHeaderBanner({ selectedCity, onSelectCity }: AppHeaderBannerP
   };
 
   return (
-    <header className="relative w-full min-w-0 max-w-full overflow-hidden space-y-3 pt-2">
+    <header className="relative w-full min-w-0 max-w-full space-y-3 pt-2">
       {/* PWA / App Install Bar */}
       <PWAInstallBanner />
 

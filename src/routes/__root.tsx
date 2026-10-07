@@ -212,10 +212,10 @@ function RootComponent() {
 
                         <Navbar />
                         <Breadcrumbs />
-                        <div className="block lg:flex min-h-[calc(100vh-4rem)] w-full min-w-0 max-w-full overflow-x-hidden">
+                        <div className="block lg:flex min-h-[calc(100vh-4rem)] w-full min-w-0 max-w-full">
                           <FeaturesSidebar />
-                          <div className="flex min-w-0 max-w-full flex-1 flex-col pb-28 lg:pb-0 overflow-x-hidden">
-                            <main className="flex-1 min-w-0 max-w-full overflow-x-hidden">
+                          <div className="flex min-w-0 max-w-full flex-1 flex-col pb-28 lg:pb-0">
+                            <main className="flex-1 min-w-0 max-w-full">
                               <Outlet />
                             </main>
                             <SiteFooter />

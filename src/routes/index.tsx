@@ -70,7 +70,7 @@ function Home() {
   };
 
   return (
-    <div className="w-full min-w-0 max-w-full overflow-x-hidden flex-1 overscroll-y-contain pb-10 sm:pb-16">
+    <div className="w-full min-w-0 max-w-full flex-1 pb-10 sm:pb-16">
       <div className="mx-auto w-full min-w-0 max-w-7xl px-3 sm:px-6 lg:px-8 space-y-6 sm:space-y-8">
         {/* 1. App Header Greeting, City Switcher, Quick Search & PWA Install Bar */}
         <AppHeaderBanner selectedCity={selectedCity} onSelectCity={handleSelectCity} />

@@ -1,4 +1,3 @@
-import { useRef } from "react";
 import { Link } from "@tanstack/react-router";
 import {
   ShieldCheck,
@@ -10,6 +9,7 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
+import { useTouchScroll } from "@/hooks/use-touch-scroll";
 
 export const VERIFICATION_PILLARS = [
   {
@@ -39,22 +39,13 @@ export const VERIFICATION_PILLARS = [
 ] as const;
 
 export function HomeCommunityImpactSection() {
-  const scrollRef = useRef<HTMLDivElement>(null);
-
-  const scroll = (direction: "left" | "right") => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollBy({
-        left: direction === "left" ? -280 : 280,
-        behavior: "smooth",
-      });
-    }
-  };
+  const { scrollRef, scroll } = useTouchScroll(280);
 
   return (
     <section
       id="community-impact"
       aria-label="Zero Fake Trials Standard and Sports Opportunity Audit"
-      className="w-full min-w-0 max-w-full overflow-hidden py-2"
+      className="w-full min-w-0 max-w-full py-2"
     >
       <div className="w-full min-w-0 max-w-full overflow-hidden rounded-3xl border border-border/80 bg-gradient-card shadow-sm">
         <div className="grid lg:grid-cols-12 gap-0 items-stretch w-full min-w-0 max-w-full">
@@ -126,12 +117,12 @@ export function HomeCommunityImpactSection() {
                 </div>
 
                 <div className="flex items-center justify-between sm:justify-end gap-2 shrink-0">
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-1.5">
                     <button
                       type="button"
                       onClick={() => scroll("left")}
                       aria-label="Scroll pillars left"
-                      className="grid h-7 w-7 place-items-center rounded-lg border border-border/80 bg-secondary/60 text-muted-foreground hover:bg-secondary hover:text-foreground transition cursor-pointer"
+                      className="grid h-8 w-8 place-items-center rounded-lg border border-border/80 bg-secondary/80 text-foreground hover:bg-secondary active:scale-95 transition cursor-pointer touch-manipulation"
                     >
                       <ChevronLeft className="h-4 w-4" />
                     </button>
@@ -139,7 +130,7 @@ export function HomeCommunityImpactSection() {
                       type="button"
                       onClick={() => scroll("right")}
                       aria-label="Scroll pillars right"
-                      className="grid h-7 w-7 place-items-center rounded-lg border border-border/80 bg-secondary/60 text-muted-foreground hover:bg-secondary hover:text-foreground transition cursor-pointer"
+                      className="grid h-8 w-8 place-items-center rounded-lg border border-border/80 bg-secondary/80 text-foreground hover:bg-secondary active:scale-95 transition cursor-pointer touch-manipulation"
                     >
                       <ChevronRight className="h-4 w-4" />
                     </button>
@@ -158,7 +149,7 @@ export function HomeCommunityImpactSection() {
               {/* Horizontally Scrollable Pillar Cards across all screen devices */}
               <div
                 ref={scrollRef}
-                className="mt-3.5 flex w-full min-w-0 max-w-full items-stretch gap-3 overflow-x-auto no-scrollbar scroll-smooth pb-2 pt-1 overscroll-x-contain touch-pan-x snap-x snap-mandatory"
+                className="mt-3.5 flex w-full min-w-0 max-w-full items-stretch gap-3 overflow-x-auto no-scrollbar touch-scroll-rail pb-2 pt-1 snap-x snap-proximity select-none cursor-grab active:cursor-grabbing"
               >
                 {VERIFICATION_PILLARS.map((p) => {
                   const Icon = p.icon;

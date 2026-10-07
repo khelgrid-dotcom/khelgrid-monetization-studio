@@ -1,4 +1,3 @@
-import { useRef } from "react";
 import { Link } from "@tanstack/react-router";
 import {
   Trophy,
@@ -10,6 +9,7 @@ import {
   ChevronRight,
   ChevronLeft,
 } from "lucide-react";
+import { useTouchScroll } from "@/hooks/use-touch-scroll";
 
 export const LAUNCHPAD_ITEMS = [
   {
@@ -63,23 +63,11 @@ export const LAUNCHPAD_ITEMS = [
 ] as const;
 
 export function AppLaunchpad() {
-  const scrollRef = useRef<HTMLDivElement>(null);
-
-  const scroll = (direction: "left" | "right") => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollBy({
-        left: direction === "left" ? -220 : 220,
-        behavior: "smooth",
-      });
-    }
-  };
+  const { scrollRef, scroll } = useTouchScroll(220);
 
   return (
-    <section
-      aria-label="Core sports app actions"
-      className="w-full min-w-0 max-w-full overflow-hidden py-2"
-    >
-      <div className="relative flex w-full min-w-0 max-w-full items-center gap-1.5 overflow-hidden">
+    <section aria-label="Core sports app actions" className="w-full min-w-0 max-w-full py-2">
+      <div className="relative flex w-full min-w-0 max-w-full items-center gap-1.5">
         <button
           type="button"
           onClick={() => scroll("left")}
@@ -91,7 +79,7 @@ export function AppLaunchpad() {
 
         <div
           ref={scrollRef}
-          className="flex-1 min-w-0 flex items-stretch gap-2.5 sm:gap-3 overflow-x-auto no-scrollbar scroll-smooth pb-1.5 pt-0.5 px-0.5 overscroll-x-contain touch-pan-x snap-x snap-mandatory"
+          className="flex-1 min-w-0 flex items-stretch gap-2.5 sm:gap-3 overflow-x-auto no-scrollbar touch-scroll-rail pb-1.5 pt-0.5 px-0.5 snap-x snap-proximity select-none cursor-grab active:cursor-grabbing"
         >
           {LAUNCHPAD_ITEMS.map((item) => (
             <Link

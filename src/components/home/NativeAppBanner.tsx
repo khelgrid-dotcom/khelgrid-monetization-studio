@@ -19,10 +19,7 @@ export function NativeAppBanner() {
   };
 
   return (
-    <section
-      aria-label="KhelGrid Mobile Application"
-      className="w-full min-w-0 max-w-full overflow-hidden py-2"
-    >
+    <section aria-label="KhelGrid Mobile Application" className="w-full min-w-0 max-w-full py-2">
       <div className="relative w-full min-w-0 max-w-full overflow-hidden rounded-3xl border border-border/80 bg-gradient-to-br from-[#121622] via-[#0d1017] to-[#151a28] p-4 sm:p-6 lg:p-8 text-white shadow-lg">
         {/* Subtle Ambient Glow */}
         <div
@@ -47,24 +44,18 @@ export function NativeAppBanner() {
               downloads.
             </p>
 
-            <div className="flex items-stretch gap-2 pt-1 text-xs text-slate-200 overflow-x-auto no-scrollbar scroll-smooth pb-1 overscroll-x-contain touch-pan-x snap-x snap-mandatory sm:grid sm:grid-cols-3 w-full min-w-0 max-w-full">
-              <div className="snap-start shrink-0 min-w-[150px] sm:min-w-0 flex items-center gap-2 rounded-xl bg-white/5 border border-white/10 p-2 sm:p-2.5">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1 text-xs text-slate-200 w-full min-w-0 max-w-full">
+              <div className="flex items-center gap-2 rounded-xl bg-white/5 border border-white/10 p-2 sm:p-2.5">
                 <Zap className="h-4 w-4 text-amber-400 shrink-0" />
-                <span className="whitespace-nowrap sm:whitespace-normal text-[11px] sm:text-xs">
-                  Instant Offline Launch
-                </span>
+                <span className="text-[11px] sm:text-xs">Instant Offline Launch</span>
               </div>
-              <div className="snap-start shrink-0 min-w-[150px] sm:min-w-0 flex items-center gap-2 rounded-xl bg-white/5 border border-white/10 p-2 sm:p-2.5">
+              <div className="flex items-center gap-2 rounded-xl bg-white/5 border border-white/10 p-2 sm:p-2.5">
                 <Bell className="h-4 w-4 text-emerald-400 shrink-0" />
-                <span className="whitespace-nowrap sm:whitespace-normal text-[11px] sm:text-xs">
-                  Live Trial Notifications
-                </span>
+                <span className="text-[11px] sm:text-xs">Live Trial Notifications</span>
               </div>
-              <div className="snap-start shrink-0 min-w-[150px] sm:min-w-0 flex items-center gap-2 rounded-xl bg-white/5 border border-white/10 p-2 sm:p-2.5">
+              <div className="flex items-center gap-2 rounded-xl bg-white/5 border border-white/10 p-2 sm:p-2.5">
                 <ShieldCheck className="h-4 w-4 text-blue-400 shrink-0" />
-                <span className="whitespace-nowrap sm:whitespace-normal text-[11px] sm:text-xs">
-                  Battery & Data Optimized
-                </span>
+                <span className="text-[11px] sm:text-xs">Battery & Data Optimized</span>
               </div>
             </div>
           </div>

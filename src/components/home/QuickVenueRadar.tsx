@@ -1,8 +1,8 @@
-import { useState, useRef } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { VENUES, type Venue } from "@/data/playo";
 import { CalendarCheck, Star, MapPin, ChevronRight, ChevronLeft, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useTouchScroll } from "@/hooks/use-touch-scroll";
 
 interface QuickVenueRadarProps {
   selectedCity?: string;
@@ -14,7 +14,7 @@ export function QuickVenueRadar({
   selectedSport = "All",
 }: QuickVenueRadarProps) {
   const navigate = useNavigate();
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const { scrollRef, scroll } = useTouchScroll(300);
 
   const venues = VENUES.filter((venue) => {
     const matchCity =
@@ -32,20 +32,8 @@ export function QuickVenueRadar({
 
   const displayVenues = venues.length > 0 ? venues : VENUES.slice(0, 8);
 
-  const scroll = (direction: "left" | "right") => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollBy({
-        left: direction === "left" ? -300 : 300,
-        behavior: "smooth",
-      });
-    }
-  };
-
   return (
-    <section
-      aria-label="Book sports turf venues"
-      className="w-full min-w-0 max-w-full overflow-hidden py-2"
-    >
+    <section aria-label="Book sports turf venues" className="w-full min-w-0 max-w-full py-2">
       <div className="flex items-center justify-between pb-2.5 w-full min-w-0">
         <div className="min-w-0">
           <h2 className="text-sm sm:text-base font-bold text-foreground tracking-tight flex items-center gap-1.5">
@@ -59,12 +47,12 @@ export function QuickVenueRadar({
 
         <div className="flex items-center gap-2 shrink-0">
           {/* Scroll navigation arrows */}
-          <div className="hidden sm:flex items-center gap-1">
+          <div className="flex items-center gap-1.5">
             <button
               type="button"
               onClick={() => scroll("left")}
               aria-label="Scroll venues left"
-              className="grid h-7 w-7 place-items-center rounded-lg border border-border/80 bg-secondary/60 text-muted-foreground hover:bg-secondary hover:text-foreground transition cursor-pointer"
+              className="grid h-8 w-8 place-items-center rounded-lg border border-border/80 bg-secondary/80 text-foreground hover:bg-secondary active:scale-95 transition cursor-pointer touch-manipulation"
             >
               <ChevronLeft className="h-4 w-4" />
             </button>
@@ -72,7 +60,7 @@ export function QuickVenueRadar({
               type="button"
               onClick={() => scroll("right")}
               aria-label="Scroll venues right"
-              className="grid h-7 w-7 place-items-center rounded-lg border border-border/80 bg-secondary/60 text-muted-foreground hover:bg-secondary hover:text-foreground transition cursor-pointer"
+              className="grid h-8 w-8 place-items-center rounded-lg border border-border/80 bg-secondary/80 text-foreground hover:bg-secondary active:scale-95 transition cursor-pointer touch-manipulation"
             >
               <ChevronRight className="h-4 w-4" />
             </button>
@@ -91,7 +79,7 @@ export function QuickVenueRadar({
       {/* Horizontally Scrollable Venues Rail across all screen devices */}
       <div
         ref={scrollRef}
-        className="flex w-full min-w-0 max-w-full items-stretch gap-3 sm:gap-3.5 overflow-x-auto no-scrollbar scroll-smooth pb-2.5 pt-1 px-0.5 overscroll-x-contain touch-pan-x snap-x snap-mandatory"
+        className="flex w-full min-w-0 max-w-full items-stretch gap-3 sm:gap-3.5 overflow-x-auto no-scrollbar touch-scroll-rail pb-2.5 pt-1 px-0.5 snap-x snap-proximity select-none cursor-grab active:cursor-grabbing"
       >
         {displayVenues.map((venue) => (
           <div

@@ -1,5 +1,5 @@
-import { useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useTouchScroll } from "@/hooks/use-touch-scroll";
 
 export const SPORTS_LIST = [
   { id: "All", name: "All Sports", emoji: "🏅" },
@@ -20,19 +20,10 @@ interface SportCategoryPillsProps {
 }
 
 export function SportCategoryPills({ selectedSport, onSelectSport }: SportCategoryPillsProps) {
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-
-  const scroll = (direction: "left" | "right") => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({
-        left: direction === "left" ? -180 : 180,
-        behavior: "smooth",
-      });
-    }
-  };
+  const { scrollRef: scrollContainerRef, scroll } = useTouchScroll(200);
 
   return (
-    <div className="relative flex w-full min-w-0 max-w-full items-center gap-1.5 py-1 min-h-[46px] overflow-hidden">
+    <div className="relative flex w-full min-w-0 max-w-full items-center gap-1.5 py-1 min-h-[46px]">
       <button
         type="button"
         onClick={() => scroll("left")}
@@ -44,7 +35,7 @@ export function SportCategoryPills({ selectedSport, onSelectSport }: SportCatego
 
       <div
         ref={scrollContainerRef}
-        className="flex-1 min-w-0 flex items-center gap-2 overflow-x-auto no-scrollbar scroll-smooth py-1 px-0.5 overscroll-x-contain touch-pan-x snap-x snap-mandatory"
+        className="flex-1 min-w-0 flex items-center gap-2 overflow-x-auto no-scrollbar touch-scroll-rail py-1 px-0.5 snap-x snap-proximity select-none cursor-grab active:cursor-grabbing"
       >
         {SPORTS_LIST.map((sport) => {
           const isSelected =
