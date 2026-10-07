@@ -47,6 +47,8 @@ vi.mock("@/context/AuthContext", () => ({
 // Mock SavedOpportunityContext & FollowedAcademyContext
 vi.mock("@/context/SavedOpportunityContext", () => ({
   useSavedOpportunities: () => ({
+    savedIds: [],
+    savedOpportunities: [],
     isSaved: () => false,
     toggleSaved: vi.fn(),
   }),
@@ -162,6 +164,23 @@ describe("Search Trials Page & SEO Optimization", () => {
 
       expect(html).toContain("No Trials Found Matching Filters");
       expect(html).toContain("Reset Filters");
+    });
+
+    it("renders Save/Heart toggle buttons and allows viewing favorite trials in separate list", () => {
+      const html = renderToString(<SearchPage />);
+
+      expect(html).toContain("My Saved Favorites");
+      expect(html).toContain("Saved Favorites");
+      expect(html).toContain("Save");
+      expect(html).toContain("Save to Favorites");
+    });
+
+    it("renders dedicated saved trials empty state when savedOnly is active and none saved", () => {
+      mockSearchParams.savedOnly = true;
+      const html = renderToString(<SearchPage />);
+
+      expect(html).toContain("No Saved Trials Yet");
+      expect(html).toContain("Browse All Selection Trials");
     });
   });
 });

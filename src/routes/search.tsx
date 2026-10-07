@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { z } from "zod";
-import { Fragment, useMemo, useState } from "react";
+import { Fragment, useMemo, useState, useRef } from "react";
 import { BannerAd, InFeedAd } from "@/components/ads";
 import { TRIALS, SPORTS, CITIES, type Trial } from "@/data/trials";
 import { TrialCard } from "@/components/TrialCard";
@@ -9,6 +9,7 @@ import { TrialNewsletterSignup } from "@/components/TrialNewsletterSignup";
 import { CheckoutModal } from "@/components/CheckoutModal";
 import { BoostModal } from "@/components/BoostModal";
 import { useAuth } from "@/context/AuthContext";
+import { useSavedOpportunities } from "@/context/SavedOpportunityContext";
 import {
   TrialsSearchFilter,
   REGIONS,
@@ -45,9 +46,11 @@ import {
   List as ListIcon,
   Share2,
   RotateCcw,
+  ChevronLeft,
   ChevronRight,
   ExternalLink,
   Bookmark,
+  Heart,
   CheckCircle2,
   Award,
 } from "lucide-react";
@@ -91,6 +94,7 @@ const SPORT_ICONS: Record<string, string> = {
 };
 
 const POPULAR_SEARCHES = [
+  { label: "❤️ My Favorites", savedOnly: true },
   { label: "U-19 Cricket", query: "Cricket", sport: "Cricket" },
   { label: "Football Combine", query: "Combine", sport: "Football" },
   { label: "Badminton Hyderabad", query: "Gopichand", city: "Hyderabad" },
@@ -110,6 +114,7 @@ const searchSchema = z.object({
   sort: fallback(z.enum(SORTS), "Soonest").default("Soonest"),
   free: fallback(z.boolean(), false).default(false),
   officialOnly: fallback(z.boolean(), false).default(false),
+  savedOnly: fallback(z.boolean(), false).default(false),
   view: fallback(z.enum(["grid", "list"]), "grid").default("grid"),
 });
 
@@ -217,6 +222,8 @@ function SearchPage() {
   const auth = useAuth();
   const params = Route.useSearch();
   const navigate = useNavigate({ from: "/search" });
+  const { savedIds: rawSavedIds = [] } = useSavedOpportunities();
+  const savedIds = useMemo(() => (Array.isArray(rawSavedIds) ? rawSavedIds : []), [rawSavedIds]);
   const [checkout, setCheckout] = useState<Trial | null>(null);
   const [boost, setBoost] = useState<Trial | null>(null);
   const [sheetOpen, setSheetOpen] = useState(false);
@@ -243,6 +250,7 @@ function SearchPage() {
       if (params.city !== ALL_CITY && t.city !== params.city) return false;
       if (params.free && t.fee > 0) return false;
       if (params.officialOnly && !t.tag.toLowerCase().includes("official")) return false;
+      if (params.savedOnly && !savedIds.includes(t.id)) return false;
 
       // Region Filter
       if (params.region && params.region !== "all") {
@@ -348,7 +356,7 @@ function SearchPage() {
     const boosted = list.filter((t) => auth.boostedTrials.includes(t.id));
     const regular = list.filter((t) => !auth.boostedTrials.includes(t.id));
     return { boosted, regular, total: list.length, all: list };
-  }, [params, auth.boostedTrials]);
+  }, [params, auth.boostedTrials, savedIds]);
 
   const handleApply = (trial: Trial) => {
     if (auth.applications.includes(trial.id)) return;
@@ -371,6 +379,13 @@ function SearchPage() {
       label: `"${params.q}"`,
       icon: <SearchIcon className="h-3 w-3" />,
       onClear: () => update({ q: "" }),
+    });
+  if (params.savedOnly)
+    activePills.push({
+      key: "savedOnly",
+      label: `Favorites (${savedIds.length})`,
+      icon: <Heart className="h-3 w-3 fill-rose-500 text-rose-500" />,
+      onClear: () => update({ savedOnly: false }),
     });
   if (params.sport !== ALL_SPORT)
     activePills.push({
@@ -461,6 +476,7 @@ function SearchPage() {
         sort: "Soonest",
         free: false,
         officialOnly: false,
+        savedOnly: false,
         view: params.view,
       },
       replace: true,
@@ -474,22 +490,23 @@ function SearchPage() {
   };
 
   return (
-    <main id="search-trials-page" className="mx-auto max-w-7xl px-4 py-6 sm:py-10">
-      {/* Top Banner & Heading */}
-      <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between border-b border-border/60 pb-6">
-        <div className="space-y-1.5">
-          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-primary">
-            <ShieldCheck className="h-4 w-4" />
-            <span>Verified Talent Recruitment Portal</span>
-          </div>
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-foreground">
+    <main
+      id="search-trials-page"
+      className="mx-auto max-w-7xl px-3 sm:px-4 py-4 sm:py-6 w-full min-w-0 max-w-full overflow-x-hidden"
+    >
+      {/* Sleek Compact Header (No wasted vertical space) */}
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/60 pb-3.5 w-full min-w-0 max-w-full">
+        <div className="flex items-center gap-2.5 min-w-0">
+          <h1 className="text-lg sm:text-2xl font-bold tracking-tight text-foreground truncate">
             Search Sports Selection Trials in India
           </h1>
-          <p className="text-xs sm:text-sm text-muted-foreground max-w-3xl leading-relaxed">
-            Discover upcoming selection trials, academy combines, state championship screening
-            camps, and scholarship opportunities across India. Verified by state associations and
-            talent scouts.
-          </p>
+          <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 border border-emerald-500/25 px-2 py-0.5 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 shrink-0">
+            <ShieldCheck className="h-3.5 w-3.5" />
+            <span>Verified</span>
+          </span>
+          <span className="text-xs text-muted-foreground hidden md:inline">
+            ({results.total} trials available)
+          </span>
         </div>
 
         <div className="flex items-center gap-2 shrink-0">
@@ -498,54 +515,27 @@ function SearchPage() {
             variant="outline"
             size="sm"
             onClick={handleShareSearch}
-            className="h-9 gap-1.5 text-xs font-medium border-border"
+            className="h-8 gap-1.5 text-xs font-medium border-border cursor-pointer"
             title="Share this search"
           >
             <Share2 className="h-3.5 w-3.5 text-muted-foreground" />
-            <span className="hidden sm:inline">Share Search</span>
+            <span className="hidden sm:inline">Share</span>
           </Button>
 
           <Button
             asChild
             size="sm"
-            className="h-9 gap-1.5 bg-primary text-primary-foreground font-semibold text-xs shadow-sm"
+            className="h-8 gap-1.5 bg-primary text-primary-foreground font-semibold text-xs shadow-xs"
           >
             <Link to="/onboarding">
-              <Sparkles className="h-3.5 w-3.5" /> Set Up Sports CV
+              <Sparkles className="h-3.5 w-3.5" /> Sports CV
             </Link>
           </Button>
         </div>
       </div>
 
-      {/* Featured Search & Filter Component for Specific Regions, Sport Types & Upcoming Dates */}
-      <div className="mt-6">
-        <TrialsSearchFilter
-          initialCriteria={{
-            query: params.q,
-            sport: params.sport === ALL_SPORT ? "all" : params.sport,
-            city: params.city === ALL_CITY ? "all" : params.city,
-            region: params.region || "all",
-            sportType: params.sportType || "all",
-            dateRange: (params.dateRange as DateRangeOption) || "all",
-            freeOnly: params.free,
-          }}
-          onFilterChange={(newCrit) => {
-            update({
-              q: newCrit.query,
-              sport: newCrit.sport === "all" ? ALL_SPORT : newCrit.sport,
-              city: newCrit.city === "all" ? ALL_CITY : newCrit.city,
-              region: newCrit.region,
-              sportType: newCrit.sportType,
-              dateRange: newCrit.dateRange,
-              free: newCrit.freeOnly,
-            });
-          }}
-          totalResultsCount={results.total}
-        />
-      </div>
-
       {/* Main Responsive Grid Layout: Filter Sidebar (Desktop) + Results Content */}
-      <div className="mt-6 grid gap-8 lg:grid-cols-12 items-start">
+      <div className="mt-5 grid gap-6 lg:grid-cols-12 items-start w-full min-w-0 max-w-full">
         {/* DESKTOP FILTER SIDEBAR (Visible on lg >= 1024px) */}
         <aside
           id="desktop-filter-sidebar"
@@ -560,20 +550,89 @@ function SearchPage() {
               <button
                 type="button"
                 onClick={clearAll}
-                className="text-xs font-medium text-primary hover:underline"
+                className="text-xs font-medium text-primary hover:underline cursor-pointer"
               >
                 Reset
               </button>
             )}
           </div>
 
-          {/* Filter 1: Sport Selection */}
-          <div className="space-y-2">
+          {/* Quick Favorites / Saved Trials Filter Card */}
+          <div className="rounded-xl border border-rose-500/25 bg-rose-500/5 p-3 space-y-2">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-1.5 text-xs font-bold text-foreground">
+                <Heart
+                  className={`h-3.5 w-3.5 ${
+                    savedIds.length > 0 ? "fill-rose-500 text-rose-500" : "text-muted-foreground"
+                  }`}
+                />
+                <span>Saved Favorites</span>
+              </div>
+              <span className="rounded-full bg-rose-500/15 px-2 py-0.5 text-[10px] font-bold text-rose-600 dark:text-rose-400">
+                {savedIds.length}
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={() => update({ savedOnly: !params.savedOnly })}
+              className={`w-full py-1.5 px-3 rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                params.savedOnly
+                  ? "bg-rose-500 text-white shadow-xs"
+                  : "border border-rose-500/30 text-rose-600 dark:text-rose-400 hover:bg-rose-500/10"
+              }`}
+            >
+              <Heart className={`h-3.5 w-3.5 ${params.savedOnly ? "fill-white" : ""}`} />
+              <span>
+                {params.savedOnly ? "Show All Trials" : `View Favorites (${savedIds.length})`}
+              </span>
+            </button>
+          </div>
+
+          {/* Filter 1: Location & Region */}
+          <div className="space-y-3">
+            <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+              <MapPin className="h-3.5 w-3.5 text-primary" />
+              <span>Location & Zone</span>
+            </label>
+            <div className="space-y-2">
+              <select
+                aria-label="Filter by Geographic Region"
+                value={params.region || "all"}
+                onChange={(e) => update({ region: e.target.value })}
+                className="w-full h-9 rounded-lg border border-border bg-background px-2.5 text-xs text-foreground outline-none focus:border-primary"
+              >
+                {REGIONS.map((r) => (
+                  <option key={r.id} value={r.id}>
+                    {r.name}
+                  </option>
+                ))}
+              </select>
+
+              <select
+                aria-label="Filter by City"
+                value={params.city}
+                onChange={(e) => update({ city: e.target.value })}
+                className="w-full h-9 rounded-lg border border-border bg-background px-2.5 text-xs text-foreground outline-none focus:border-primary"
+              >
+                {[ALL_CITY, ...CITIES].map((c) => (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {/* Filter 2: Sport Selection */}
+          <div className="space-y-2 border-t border-border/60 pt-4">
             <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center justify-between">
-              <span>Sport</span>
+              <span className="flex items-center gap-1.5">
+                <Trophy className="h-3.5 w-3.5 text-primary" />
+                <span>Sport</span>
+              </span>
               <span className="font-mono text-[11px]">{results.total} Available</span>
             </label>
-            <div className="space-y-1 max-h-56 overflow-y-auto pr-1">
+            <div className="space-y-1 max-h-52 overflow-y-auto pr-1">
               {[ALL_SPORT, ...SPORTS].map((s) => {
                 const count = sportCounts[s] ?? 0;
                 const isSelected = params.sport === s;
@@ -599,29 +658,10 @@ function SearchPage() {
             </div>
           </div>
 
-          {/* Filter 2: Location */}
-          <div className="space-y-2 border-t border-border/60 pt-4">
-            <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-              <MapPin className="h-3.5 w-3.5" />
-              <span>Location / City</span>
-            </label>
-            <select
-              value={params.city}
-              onChange={(e) => update({ city: e.target.value })}
-              className="w-full h-9 rounded-lg border border-border bg-background px-2.5 text-xs text-foreground outline-none focus:border-primary"
-            >
-              {[ALL_CITY, ...CITIES].map((c) => (
-                <option key={c} value={c}>
-                  {c}
-                </option>
-              ))}
-            </select>
-          </div>
-
           {/* Filter 3: Age Category */}
           <div className="space-y-2 border-t border-border/60 pt-4">
             <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-              <Award className="h-3.5 w-3.5" />
+              <Award className="h-3.5 w-3.5 text-primary" />
               <span>Age Band</span>
             </label>
             <div className="space-y-1">
@@ -632,7 +672,7 @@ function SearchPage() {
                     key={cat}
                     type="button"
                     onClick={() => update({ category: cat })}
-                    className={`w-full text-left rounded-lg px-2.5 py-1 text-xs transition-colors ${
+                    className={`w-full text-left rounded-lg px-2.5 py-1.5 text-xs transition-colors ${
                       isSelected
                         ? "bg-primary/15 text-primary font-bold"
                         : "text-muted-foreground hover:bg-secondary hover:text-foreground"
@@ -645,7 +685,27 @@ function SearchPage() {
             </div>
           </div>
 
-          {/* Filter 4: Entry Fee & Federation Verification */}
+          {/* Filter 4: Upcoming Dates */}
+          <div className="space-y-2 border-t border-border/60 pt-4">
+            <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+              <Calendar className="h-3.5 w-3.5 text-primary" />
+              <span>Upcoming Dates</span>
+            </label>
+            <select
+              aria-label="Filter by Upcoming Dates"
+              value={params.dateRange || "all"}
+              onChange={(e) => update({ dateRange: e.target.value })}
+              className="w-full h-9 rounded-lg border border-border bg-background px-2.5 text-xs text-foreground outline-none focus:border-primary"
+            >
+              {DATE_RANGE_OPTIONS.map((d) => (
+                <option key={d.id} value={d.id}>
+                  {d.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Filter 5: Entry Fee & Federation Verification */}
           <div className="space-y-2 border-t border-border/60 pt-4">
             <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               Participation Criteria
@@ -673,13 +733,14 @@ function SearchPage() {
             </div>
           </div>
 
-          {/* Filter 5: Sort By */}
+          {/* Filter 6: Sort By */}
           <div className="space-y-2 border-t border-border/60 pt-4">
             <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-              <ArrowUpDown className="h-3.5 w-3.5" />
+              <ArrowUpDown className="h-3.5 w-3.5 text-primary" />
               <span>Sort Order</span>
             </label>
             <select
+              aria-label="Sort order"
               value={params.sort}
               onChange={(e) => update({ sort: e.target.value as SortKey })}
               className="w-full h-9 rounded-lg border border-border bg-background px-2.5 text-xs text-foreground outline-none focus:border-primary"
@@ -694,24 +755,24 @@ function SearchPage() {
         </aside>
 
         {/* RESULTS & SEARCH WORKSPACE (9 cols on desktop, full width on mobile) */}
-        <div className="lg:col-span-9 space-y-5">
-          {/* Search Bar + Controls */}
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-            {/* Primary Search Input */}
-            <div className="relative flex-1">
+        <div className="w-full min-w-0 max-w-full lg:col-span-9 space-y-3">
+          {/* Primary Search Bar + Responsive Controls */}
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center w-full min-w-0 max-w-full">
+            {/* Unified Search Input */}
+            <div className="relative flex-1 min-w-0">
               <SearchIcon className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <input
                 id="search-trials-input"
                 value={params.q}
                 onChange={(e) => update({ q: e.target.value })}
                 placeholder="Search by trial title, academy, venue, sport, or keyword..."
-                className="h-11 w-full rounded-xl border border-border bg-card/70 pl-10 pr-9 text-sm text-foreground outline-none ring-primary/40 placeholder:text-muted-foreground focus:ring-2"
+                className="h-10 sm:h-11 w-full rounded-xl border border-border bg-card/70 pl-10 pr-9 text-xs sm:text-sm text-foreground outline-none ring-primary/40 placeholder:text-muted-foreground focus:ring-2"
               />
               {params.q && (
                 <button
                   type="button"
                   onClick={() => update({ q: "" })}
-                  className="absolute right-2.5 top-1/2 -translate-y-1/2 rounded-md p-1 text-muted-foreground hover:bg-secondary hover:text-foreground"
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 rounded-md p-1 text-muted-foreground hover:bg-secondary hover:text-foreground cursor-pointer"
                   aria-label="Clear search input"
                 >
                   <X className="h-4 w-4" />
@@ -719,15 +780,42 @@ function SearchPage() {
               )}
             </div>
 
-            {/* Controls Bar: Sort, View Toggle, Mobile Filter Trigger */}
-            <div className="flex items-center gap-2 shrink-0">
+            {/* Controls Bar: Saved Favorites Toggle, View Mode, Mobile Filter Trigger */}
+            <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+              {/* Quick Saved Favorites Filter Toggle */}
+              <Button
+                type="button"
+                variant={params.savedOnly ? "default" : "outline"}
+                size="sm"
+                onClick={() => update({ savedOnly: !params.savedOnly })}
+                className={`h-10 sm:h-11 gap-1.5 rounded-xl px-2.5 sm:px-3 text-xs font-bold transition-all cursor-pointer ${
+                  params.savedOnly
+                    ? "bg-rose-500 text-white shadow-xs hover:bg-rose-600"
+                    : "border-border bg-card text-rose-600 dark:text-rose-400 hover:bg-rose-500/10"
+                }`}
+                title={params.savedOnly ? "Show all selection trials" : "Show My Saved Favorites"}
+              >
+                <Heart
+                  className={`h-3.5 w-3.5 shrink-0 ${params.savedOnly || savedIds.length > 0 ? "fill-current" : ""}`}
+                />
+                <span className="hidden sm:inline">My Saved Favorites</span>
+                <span className="sm:hidden">Saved</span>
+                <span
+                  className={`rounded-full px-1.5 py-0.2 text-[10px] ${
+                    params.savedOnly ? "bg-white/20 text-white" : "bg-rose-500/15"
+                  }`}
+                >
+                  {savedIds.length}
+                </span>
+              </Button>
+
               {/* Desktop View Mode Toggle (Grid vs List) */}
               <div className="hidden sm:flex items-center rounded-xl border border-border bg-muted/40 p-1">
                 <button
                   type="button"
                   onClick={() => update({ view: "grid" })}
                   title="Grid View"
-                  className={`p-1.5 rounded-lg transition-all ${
+                  className={`p-1.5 rounded-lg transition-all cursor-pointer ${
                     params.view === "grid"
                       ? "bg-background text-foreground shadow-sm"
                       : "text-muted-foreground hover:text-foreground"
@@ -739,7 +827,7 @@ function SearchPage() {
                   type="button"
                   onClick={() => update({ view: "list" })}
                   title="List View"
-                  className={`p-1.5 rounded-lg transition-all ${
+                  className={`p-1.5 rounded-lg transition-all cursor-pointer ${
                     params.view === "list"
                       ? "bg-background text-foreground shadow-sm"
                       : "text-muted-foreground hover:text-foreground"
@@ -749,15 +837,15 @@ function SearchPage() {
                 </button>
               </div>
 
-              {/* Mobile Filter Button (Opens Bottom Sheet) */}
+              {/* Mobile Filter Button (Opens Bottom Sheet / Vertical Filter) */}
               <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
                 <SheetTrigger asChild>
                   <Button
                     variant="outline"
-                    className="h-11 gap-2 rounded-xl border-border px-3.5 text-xs font-semibold lg:hidden"
+                    className="h-10 sm:h-11 gap-1.5 rounded-xl border-border px-3 text-xs font-semibold lg:hidden cursor-pointer"
                     aria-label="Open filter sheet"
                   >
-                    <SlidersHorizontal className="h-4 w-4 text-primary" />
+                    <SlidersHorizontal className="h-3.5 w-3.5 text-primary" />
                     <span>Filters</span>
                     {activePills.length > 0 && (
                       <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
@@ -768,16 +856,16 @@ function SearchPage() {
                 </SheetTrigger>
                 <SheetContent
                   side="bottom"
-                  className="max-h-[85vh] overflow-y-auto rounded-t-3xl p-5"
+                  className="max-h-[85vh] overflow-y-auto rounded-t-3xl p-5 z-[80]"
                 >
                   <SheetHeader className="text-left border-b border-border/60 pb-3">
                     <SheetTitle className="flex items-center justify-between text-base">
-                      <span>Filter Opportunities</span>
+                      <span>Filter Selection Trials</span>
                       {activePills.length > 0 && (
                         <button
                           type="button"
                           onClick={clearAll}
-                          className="text-xs font-medium text-primary"
+                          className="text-xs font-medium text-primary hover:underline cursor-pointer"
                         >
                           Clear All
                         </button>
@@ -786,56 +874,111 @@ function SearchPage() {
                   </SheetHeader>
 
                   <div className="mt-4 space-y-5">
-                    {/* Sport Selection */}
+                    {/* Quick Saved Favorites Filter */}
+                    <div className="rounded-xl border border-rose-500/30 bg-rose-500/5 p-3 flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Heart className="h-4 w-4 fill-rose-500 text-rose-500 shrink-0" />
+                        <div>
+                          <p className="text-xs font-bold text-foreground">My Saved Favorites</p>
+                          <p className="text-[11px] text-muted-foreground">
+                            {savedIds.length} bookmarked favorites
+                          </p>
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => update({ savedOnly: !params.savedOnly })}
+                        className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                          params.savedOnly
+                            ? "bg-rose-500 text-white shadow-xs"
+                            : "border border-border bg-card text-foreground hover:bg-secondary"
+                        }`}
+                      >
+                        {params.savedOnly ? "Saved Only ✓" : "View Saved"}
+                      </button>
+                    </div>
+
+                    {/* Sport Selection (Vertical Filter List) */}
                     <div>
-                      <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5 mb-2">
-                        <Trophy className="h-3.5 w-3.5" /> Sport
-                      </span>
-                      <div className="flex flex-wrap gap-1.5">
-                        {[ALL_SPORT, ...SPORTS].map((s) => (
-                          <button
-                            key={s}
-                            type="button"
-                            onClick={() => update({ sport: s })}
-                            className={`rounded-full px-3 py-1 text-xs font-medium transition-all ${
-                              params.sport === s
-                                ? "bg-primary text-primary-foreground font-bold shadow-sm"
-                                : "border border-border bg-secondary/40 text-muted-foreground"
-                            }`}
-                          >
-                            {s}
-                          </button>
-                        ))}
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+                          <Trophy className="h-3.5 w-3.5 text-primary" /> Sport Selection
+                        </span>
+                        <span className="text-[11px] font-mono text-muted-foreground">
+                          {results.total} trials
+                        </span>
+                      </div>
+                      <div className="space-y-1 max-h-48 overflow-y-auto pr-1">
+                        {[ALL_SPORT, ...SPORTS].map((s) => {
+                          const isSelected = params.sport === s;
+                          const count = sportCounts[s] ?? 0;
+                          return (
+                            <button
+                              key={s}
+                              type="button"
+                              onClick={() => update({ sport: s })}
+                              className={`w-full flex items-center justify-between rounded-lg px-2.5 py-1.5 text-xs transition-colors cursor-pointer ${
+                                isSelected
+                                  ? "bg-primary text-primary-foreground font-bold shadow-xs"
+                                  : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+                              }`}
+                            >
+                              <span className="flex items-center gap-1.5 truncate">
+                                {SPORT_ICONS[s] && <span>{SPORT_ICONS[s]}</span>}
+                                <span>{s}</span>
+                              </span>
+                              <span
+                                className={`text-[10px] font-mono px-1.5 py-0.2 rounded-full ${
+                                  isSelected
+                                    ? "bg-white/20 text-white"
+                                    : "bg-secondary text-muted-foreground"
+                                }`}
+                              >
+                                {count}
+                              </span>
+                            </button>
+                          );
+                        })}
                       </div>
                     </div>
 
-                    {/* Location */}
+                    {/* Location & Region */}
                     <div>
                       <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5 mb-2">
-                        <MapPin className="h-3.5 w-3.5" /> Location
+                        <MapPin className="h-3.5 w-3.5 text-primary" /> Location & Zone
                       </span>
-                      <div className="flex flex-wrap gap-1.5">
-                        {[ALL_CITY, ...CITIES].map((c) => (
-                          <button
-                            key={c}
-                            type="button"
-                            onClick={() => update({ city: c })}
-                            className={`rounded-full px-3 py-1 text-xs font-medium transition-all ${
-                              params.city === c
-                                ? "bg-primary text-primary-foreground font-bold shadow-sm"
-                                : "border border-border bg-secondary/40 text-muted-foreground"
-                            }`}
-                          >
-                            {c}
-                          </button>
-                        ))}
+                      <div className="grid grid-cols-2 gap-2">
+                        <select
+                          aria-label="Filter by Geographic Region (Mobile)"
+                          value={params.region || "all"}
+                          onChange={(e) => update({ region: e.target.value })}
+                          className="h-9 rounded-lg border border-border bg-background px-2.5 text-xs text-foreground outline-none"
+                        >
+                          {REGIONS.map((r) => (
+                            <option key={r.id} value={r.id}>
+                              {r.name}
+                            </option>
+                          ))}
+                        </select>
+                        <select
+                          aria-label="Filter by City (Mobile)"
+                          value={params.city}
+                          onChange={(e) => update({ city: e.target.value })}
+                          className="h-9 rounded-lg border border-border bg-background px-2.5 text-xs text-foreground outline-none"
+                        >
+                          {[ALL_CITY, ...CITIES].map((c) => (
+                            <option key={c} value={c}>
+                              {c}
+                            </option>
+                          ))}
+                        </select>
                       </div>
                     </div>
 
                     {/* Age Category */}
                     <div>
                       <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5 mb-2">
-                        <Award className="h-3.5 w-3.5" /> Age Category
+                        <Award className="h-3.5 w-3.5 text-primary" /> Age Band
                       </span>
                       <div className="flex flex-wrap gap-1.5">
                         {CATEGORIES.map((cat) => (
@@ -843,7 +986,7 @@ function SearchPage() {
                             key={cat}
                             type="button"
                             onClick={() => update({ category: cat })}
-                            className={`rounded-full px-3 py-1 text-xs font-medium transition-all ${
+                            className={`rounded-full px-3 py-1 text-xs font-medium transition-all cursor-pointer ${
                               params.category === cat
                                 ? "bg-primary text-primary-foreground font-bold shadow-sm"
                                 : "border border-border bg-secondary/40 text-muted-foreground"
@@ -853,6 +996,25 @@ function SearchPage() {
                           </button>
                         ))}
                       </div>
+                    </div>
+
+                    {/* Upcoming Dates */}
+                    <div>
+                      <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5 mb-2">
+                        <Calendar className="h-3.5 w-3.5 text-primary" /> Upcoming Dates
+                      </span>
+                      <select
+                        aria-label="Filter by Upcoming Dates (Mobile)"
+                        value={params.dateRange || "all"}
+                        onChange={(e) => update({ dateRange: e.target.value })}
+                        className="w-full h-9 rounded-lg border border-border bg-background px-2.5 text-xs text-foreground outline-none"
+                      >
+                        {DATE_RANGE_OPTIONS.map((d) => (
+                          <option key={d.id} value={d.id}>
+                            {d.label}
+                          </option>
+                        ))}
+                      </select>
                     </div>
 
                     {/* Criteria toggles */}
@@ -888,7 +1050,7 @@ function SearchPage() {
                             key={s}
                             type="button"
                             onClick={() => update({ sort: s })}
-                            className={`rounded-full px-3 py-1 text-xs font-medium transition-all ${
+                            className={`rounded-full px-3 py-1 text-xs font-medium transition-all cursor-pointer ${
                               params.sort === s
                                 ? "bg-primary text-primary-foreground font-bold shadow-sm"
                                 : "border border-border bg-secondary/40 text-muted-foreground"
@@ -923,40 +1085,8 @@ function SearchPage() {
             </div>
           </div>
 
-          {/* Quick Swipeable Horizontal Sport Bar (All Screens) */}
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar text-xs">
-            {[ALL_SPORT, ...SPORTS].map((s) => {
-              const isSelected = params.sport === s;
-              const count = sportCounts[s] ?? 0;
-              return (
-                <button
-                  key={s}
-                  type="button"
-                  onClick={() => update({ sport: s })}
-                  className={`flex shrink-0 items-center gap-1.5 rounded-xl border px-3 py-1.5 transition-all ${
-                    isSelected
-                      ? "border-primary bg-primary text-primary-foreground font-bold shadow-sm"
-                      : "border-border/80 bg-card hover:bg-secondary/40 text-muted-foreground hover:text-foreground"
-                  }`}
-                >
-                  {SPORT_ICONS[s] && <span>{SPORT_ICONS[s]}</span>}
-                  <span>{s}</span>
-                  <span
-                    className={`rounded-full px-1.5 py-0.2 text-[10px] ${
-                      isSelected
-                        ? "bg-primary-foreground/20 text-primary-foreground"
-                        : "bg-secondary text-muted-foreground"
-                    }`}
-                  >
-                    {count}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-
           {/* Popular Search Shortcuts */}
-          <div className="flex flex-wrap items-center gap-1.5 text-xs text-muted-foreground">
+          <div className="flex flex-wrap items-center gap-1.5 text-xs text-muted-foreground w-full min-w-0">
             <span className="text-[11px] font-semibold text-foreground/80">Trending Searches:</span>
             {POPULAR_SEARCHES.map((item, idx) => (
               <button
@@ -969,9 +1099,10 @@ function SearchPage() {
                     city: item.city || ALL_CITY,
                     free: item.free ?? false,
                     officialOnly: item.officialOnly ?? false,
+                    savedOnly: item.savedOnly ?? false,
                   })
                 }
-                className="rounded-lg border border-border/70 bg-secondary/30 px-2 py-0.5 text-[11px] hover:border-primary/50 hover:bg-secondary hover:text-foreground transition-all"
+                className="rounded-lg border border-border/70 bg-secondary/30 px-2 py-0.5 text-[11px] hover:border-primary/50 hover:bg-secondary hover:text-foreground transition-all cursor-pointer"
               >
                 {item.label}
               </button>
@@ -979,10 +1110,12 @@ function SearchPage() {
           </div>
 
           {/* Active Filter Indicators Bar */}
-          <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-border/60 bg-muted/20 px-3 py-2 text-xs">
-            <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-border/60 bg-muted/20 px-3 py-2 text-xs w-full min-w-0 max-w-full">
+            <div className="flex flex-wrap items-center gap-2 min-w-0">
               <span className="font-semibold text-foreground">
-                {results.total} {results.total === 1 ? "Trial" : "Trials"} Found
+                {params.savedOnly
+                  ? `❤️ ${results.total} Saved ${results.total === 1 ? "Trial" : "Trials"}`
+                  : `${results.total} ${results.total === 1 ? "Trial" : "Trials"} Found`}
               </span>
 
               {activePills.length > 0 && (
@@ -993,7 +1126,7 @@ function SearchPage() {
                       key={p.key}
                       type="button"
                       onClick={p.onClear}
-                      className="group inline-flex items-center gap-1 rounded-md border border-primary/40 bg-primary/10 px-2 py-0.5 text-[11px] font-medium text-primary hover:bg-primary/20 transition-colors"
+                      className="group inline-flex items-center gap-1 rounded-md border border-primary/40 bg-primary/10 px-2 py-0.5 text-[11px] font-medium text-primary hover:bg-primary/20 transition-colors cursor-pointer"
                     >
                       {p.icon}
                       <span>{p.label}</span>
@@ -1003,7 +1136,7 @@ function SearchPage() {
                   <button
                     type="button"
                     onClick={clearAll}
-                    className="text-[11px] text-muted-foreground hover:text-foreground underline underline-offset-2 ml-1"
+                    className="text-[11px] text-muted-foreground hover:text-foreground underline underline-offset-2 ml-1 cursor-pointer"
                   >
                     Clear All
                   </button>
@@ -1019,12 +1152,12 @@ function SearchPage() {
 
           {/* FEATURED / BOOSTED TRIALS */}
           {results.boosted.length > 0 && (
-            <section className="space-y-3 pt-2">
+            <section className="space-y-3 pt-2 w-full min-w-0 max-w-full">
               <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-primary">
                 <Flame className="h-4 w-4" />
                 <span>Featured Recruitment Combines</span>
               </div>
-              <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3 w-full min-w-0 max-w-full">
                 {results.boosted.map((t) => (
                   <TrialCard
                     key={t.id}
@@ -1040,46 +1173,75 @@ function SearchPage() {
           )}
 
           {/* REGULAR TRIALS GRID OR COMPACT LIST */}
-          <section className="space-y-4 pt-2">
+          <section className="space-y-4 pt-2 w-full min-w-0 max-w-full">
             {results.regular.length === 0 && results.boosted.length === 0 ? (
-              /* EMPTY STATE WITH HELPFUL NEXT STEPS */
-              <div className="rounded-2xl border border-dashed border-border/80 p-8 sm:p-12 text-center space-y-4">
-                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-secondary text-muted-foreground">
-                  <SearchIcon className="h-6 w-6" />
-                </div>
-                <div className="space-y-1">
-                  <h3 className="text-base font-bold text-foreground">
-                    No Trials Found Matching Filters
-                  </h3>
-                  <p className="text-xs sm:text-sm text-muted-foreground max-w-md mx-auto">
-                    We couldn&apos;t find open selection trials matching your current combination of
-                    filters. Try expanding your search criteria or resetting filters.
-                  </p>
-                </div>
+              params.savedOnly ? (
+                /* DEDICATED EMPTY STATE FOR SAVED FAVORITES */
+                <div className="rounded-2xl border border-dashed border-rose-500/40 bg-rose-500/5 p-8 sm:p-12 text-center space-y-4 w-full">
+                  <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-rose-500/10 text-rose-500">
+                    <Heart className="h-7 w-7" />
+                  </div>
+                  <div className="space-y-1">
+                    <h3 className="text-base sm:text-lg font-bold text-foreground">
+                      No Saved Trials Yet
+                    </h3>
+                    <p className="text-xs sm:text-sm text-muted-foreground max-w-md mx-auto leading-relaxed">
+                      Tap the <strong>Save</strong> or <strong>Heart (❤️)</strong> button on any
+                      selection trial card to bookmark your favorite combines and review them here
+                      in your personalized list.
+                    </p>
+                  </div>
 
-                <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={clearAll}
-                    className="gap-1.5 text-xs"
-                  >
-                    <RotateCcw className="h-3.5 w-3.5" /> Reset Filters
-                  </Button>
-                  <Button
-                    type="button"
-                    size="sm"
-                    onClick={() => update({ sport: ALL_SPORT, city: ALL_CITY })}
-                    className="gap-1.5 text-xs bg-primary text-primary-foreground"
-                  >
-                    View All Sports & Locations
-                  </Button>
+                  <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
+                    <Button
+                      type="button"
+                      onClick={() => update({ savedOnly: false })}
+                      className="gap-2 text-xs bg-primary text-primary-foreground font-semibold cursor-pointer"
+                    >
+                      <Trophy className="h-3.5 w-3.5" /> Browse All Selection Trials
+                    </Button>
+                  </div>
                 </div>
-              </div>
+              ) : (
+                /* GENERAL EMPTY STATE WITH HELPFUL NEXT STEPS */
+                <div className="rounded-2xl border border-dashed border-border/80 p-8 sm:p-12 text-center space-y-4 w-full">
+                  <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-secondary text-muted-foreground">
+                    <SearchIcon className="h-6 w-6" />
+                  </div>
+                  <div className="space-y-1">
+                    <h3 className="text-base font-bold text-foreground">
+                      No Trials Found Matching Filters
+                    </h3>
+                    <p className="text-xs sm:text-sm text-muted-foreground max-w-md mx-auto">
+                      We couldn&apos;t find open selection trials matching your current combination
+                      of filters. Try expanding your search criteria or resetting filters.
+                    </p>
+                  </div>
+
+                  <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={clearAll}
+                      className="gap-1.5 text-xs cursor-pointer"
+                    >
+                      <RotateCcw className="h-3.5 w-3.5" /> Reset Filters
+                    </Button>
+                    <Button
+                      type="button"
+                      size="sm"
+                      onClick={() => update({ sport: ALL_SPORT, city: ALL_CITY, savedOnly: false })}
+                      className="gap-1.5 text-xs bg-primary text-primary-foreground cursor-pointer"
+                    >
+                      View All Sports & Locations
+                    </Button>
+                  </div>
+                </div>
+              )
             ) : params.view === "list" ? (
               /* COMPACT LIST VIEW */
-              <div className="rounded-2xl border border-border/80 bg-card overflow-hidden shadow-sm">
+              <div className="rounded-2xl border border-border/80 bg-card overflow-hidden shadow-sm w-full min-w-0 max-w-full">
                 <div className="divide-y divide-border/60">
                   {results.regular.map((t, idx) => (
                     <div
@@ -1153,7 +1315,7 @@ function SearchPage() {
               </div>
             ) : (
               /* GRID VIEW */
-              <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3 w-full min-w-0 max-w-full">
                 {results.regular.map((t, i) => (
                   <Fragment key={t.id}>
                     <TrialCard

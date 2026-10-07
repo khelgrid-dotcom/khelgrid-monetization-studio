@@ -34,7 +34,7 @@ describe("BottomTabBar", () => {
     expect(html).toContain("lg:hidden");
     expect(html).toContain("fixed");
     expect(html).toContain("bottom-0");
-    expect(html).toContain("z-[60]");
+    expect(html).toContain("z-[70]");
     expect(html).toContain("safe-area-inset-bottom");
   });
 

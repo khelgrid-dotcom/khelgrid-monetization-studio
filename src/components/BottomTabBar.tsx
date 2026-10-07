@@ -48,7 +48,7 @@ export function BottomTabBar() {
         }
       }
     } else {
-      navigate({ to: "/" }).then(() => {
+      navigate({ to: "/", search: {} }).then(() => {
         setTimeout(() => {
           const el =
             document.getElementById("live-scores") || document.getElementById("match-center");
@@ -65,22 +65,35 @@ export function BottomTabBar() {
     }
   };
 
-  const handleHomeClick = () => {
+  const handleHomeClick = (e: React.MouseEvent) => {
     setIsLiveActive(false);
-    if (path === "/" && typeof window !== "undefined" && window.location.hash) {
-      try {
-        window.history.replaceState(null, "", "/");
-      } catch {
-        // ignore
+    if (path === "/") {
+      if (typeof window !== "undefined" && window.location.hash) {
+        try {
+          window.history.replaceState(null, "", "/");
+        } catch {
+          // ignore
+        }
       }
       window.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      e.preventDefault();
+      navigate({ to: "/", search: {} });
+    }
+  };
+
+  const handleTabClick = (e: React.MouseEvent, t: NavTabItem) => {
+    if (t.isLive) {
+      handleLiveClick(e);
+    } else if (t.to === "/") {
+      handleHomeClick(e);
     }
   };
 
   return (
     <nav
       aria-label="Mobile Bottom Navigation"
-      className="fixed inset-x-0 bottom-0 z-[60] border-t border-border/80 bg-background/95 supports-[backdrop-filter]:bg-background/85 pt-1.5 pb-[max(env(safe-area-inset-bottom,0px),10px)] backdrop-blur-2xl shadow-[0_-8px_30px_rgba(0,0,0,0.12)] dark:shadow-[0_-8px_32px_rgba(0,0,0,0.7)] lg:hidden select-none transition-all touch-manipulation transform-gpu"
+      className="fixed inset-x-0 bottom-0 z-[70] pointer-events-auto border-t border-border/80 bg-background/95 supports-[backdrop-filter]:bg-background/85 pt-1.5 pb-[max(env(safe-area-inset-bottom,0px),10px)] backdrop-blur-2xl shadow-[0_-8px_30px_rgba(0,0,0,0.12)] dark:shadow-[0_-8px_32px_rgba(0,0,0,0.7)] lg:hidden select-none transition-all touch-manipulation transform-gpu"
     >
       <ul className="grid grid-cols-5 items-center px-1">
         {BOTTOM_NAV_TABS.map((t) => {
@@ -88,13 +101,16 @@ export function BottomTabBar() {
           const active = isLiveTab
             ? path === "/" && isLiveActive
             : !isLiveActive &&
-              (t.exact ? path === t.to : path === t.to || path.startsWith(t.to + "/"));
+              (t.exact
+                ? path === t.to
+                : path === t.to || path.startsWith(t.to + "/"));
 
           return (
             <li key={t.label} className="relative flex justify-center">
               <Link
                 to={t.to}
-                onClick={isLiveTab ? handleLiveClick : t.to === "/" ? handleHomeClick : undefined}
+                search={{}}
+                onClick={(e) => handleTabClick(e, t)}
                 className={cn(
                   "relative flex min-h-[56px] w-full flex-col items-center justify-center py-1 text-[11px] transition-all active:scale-95",
                   active

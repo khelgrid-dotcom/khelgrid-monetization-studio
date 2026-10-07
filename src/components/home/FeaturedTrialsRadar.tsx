@@ -4,7 +4,7 @@ import { useSavedOpportunities } from "@/context/SavedOpportunityContext";
 import {
   Trophy,
   Calendar,
-  Bookmark,
+  Heart,
   Share2,
   ChevronRight,
   ChevronLeft,
@@ -165,13 +165,13 @@ export function FeaturedTrialsRadar({
                       onClick={(e) => handleBookmark(e, trial.id, trial.title)}
                       className={`grid h-7 w-7 place-items-center rounded-lg transition cursor-pointer backdrop-blur-xs ${
                         saved
-                          ? "bg-primary text-white"
+                          ? "bg-rose-500 text-white shadow-xs"
                           : "bg-black/60 text-white/90 hover:bg-black/90 hover:text-white"
                       }`}
-                      title={saved ? "Remove bookmark" : "Bookmark trial"}
-                      aria-label="Bookmark trial"
+                      title={saved ? "Remove from favorites" : "Save to favorites"}
+                      aria-label={saved ? "Remove from favorites" : "Save to favorites"}
                     >
-                      <Bookmark className={`h-3.5 w-3.5 ${saved ? "fill-white" : ""}`} />
+                      <Heart className={`h-3.5 w-3.5 ${saved ? "fill-white" : ""}`} />
                     </button>
                   </div>
 

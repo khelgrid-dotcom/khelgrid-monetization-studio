@@ -6,7 +6,7 @@ import {
   Flame,
   Check,
   Zap,
-  Bookmark,
+  Heart,
   Bell,
   Share2,
   Copy,
@@ -28,6 +28,7 @@ import { useSavedOpportunities } from "@/context/SavedOpportunityContext";
 import { useFollowedAcademies } from "@/context/FollowedAcademyContext";
 import { getRealtimeOpportunityBadge } from "@/lib/opportunity-badge";
 import { TrialDetailsModal } from "@/components/TrialDetailsModal";
+import { getTrialCardImage } from "@/data/card-images";
 import { toast } from "sonner";
 
 interface Props {
@@ -48,100 +49,161 @@ export function TrialCard({ trial, boosted, onApply, onBoost, showBoostAction }:
   const followingAcademy = isFollowingAcademy(trial.academy);
   const statusBadge = getRealtimeOpportunityBadge(trial);
 
+  const handleToggleHeart = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    toggleSaved(trial.id);
+    if (!saved) {
+      toast.success(`Saved "${trial.title}" to Favorites! ❤️`);
+    } else {
+      toast.info(`Removed "${trial.title}" from Favorites`);
+    }
+  };
+
   return (
     <>
       <div
         id={`trial-card-${trial.id}`}
         onClick={() => setIsDetailsOpen(true)}
-        className={`relative overflow-hidden rounded-2xl border bg-gradient-card p-5 transition-all cursor-pointer ${
+        className={`group relative flex flex-col justify-between overflow-hidden rounded-2xl border bg-gradient-card p-3 sm:p-4 md:p-5 transition-all cursor-pointer w-full min-w-0 max-w-full box-border ${
           boosted
             ? "border-primary/60 animate-pulse-glow"
             : "border-border hover:border-primary/50 hover:shadow-md hover:translate-y-[-2px]"
         } ${statusBadge?.isExpired ? "opacity-85 grayscale-[0.2]" : ""}`}
       >
-        {boosted && (
-          <div className="absolute right-4 top-4 flex items-center gap-1 rounded-full bg-gradient-hero px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-primary-foreground shadow-lg">
-            <Flame className="h-3 w-3" /> Featured
-          </div>
-        )}
+        <div className="w-full min-w-0 max-w-full">
+          {/* Visual Card Image Banner */}
+          <div className="relative aspect-[16/10] w-full min-w-0 max-w-full overflow-hidden rounded-xl bg-muted mb-3 shrink-0">
+            <img
+              src={getTrialCardImage(trial.sport)}
+              alt={`${trial.title} - ${trial.sport} Selection Trial`}
+              loading="lazy"
+              decoding="async"
+              referrerPolicy="no-referrer"
+              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
 
-        <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-          <Badge variant="outline" className="border-border text-[10px]">
-            {trial.sport}
-          </Badge>
-          <span className="text-foreground/60">·</span>
-          <span>{trial.tag}</span>
+            {/* Top Left: Sport & Boosted */}
+            <div className="absolute top-2 left-2 flex items-center gap-1.5 z-10 max-w-[calc(100%-4rem)] truncate">
+              <span className="rounded-md bg-black/75 backdrop-blur-xs px-2 py-0.5 text-[10px] font-bold text-white uppercase tracking-wider shrink-0">
+                {trial.sport}
+              </span>
+              {boosted && (
+                <span className="flex items-center gap-1 rounded-md bg-primary/95 backdrop-blur-xs px-2 py-0.5 text-[10px] font-bold text-white shadow-xs uppercase tracking-wider shrink-0">
+                  <Flame className="h-2.5 w-2.5" /> Featured
+                </span>
+              )}
+            </div>
 
-          {statusBadge && (
-            <span
-              className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider ${statusBadge.style}`}
+            {/* Top Right: Heart Save Toggle */}
+            <button
+              type="button"
+              onClick={handleToggleHeart}
+              aria-label={
+                saved ? `Remove ${trial.title} from favorites` : `Save ${trial.title} to favorites`
+              }
+              title={saved ? "Saved in Favorites (Click to remove)" : "Save to Favorites"}
+              className={`absolute top-2 right-2 z-10 flex h-7 w-7 items-center justify-center rounded-lg border transition-all cursor-pointer backdrop-blur-xs ${
+                saved
+                  ? "border-rose-500/70 bg-rose-500 text-white shadow-sm scale-105"
+                  : "border-white/30 bg-black/60 text-white/90 hover:border-rose-400 hover:text-rose-400 hover:bg-black/90"
+              }`}
             >
-              <span
-                className={`h-1 w-1 rounded-full shrink-0 ${statusBadge.dotStyle}`}
-                aria-hidden="true"
-              />
-              <statusBadge.icon className="h-2.5 w-2.5 shrink-0" aria-hidden="true" />
-              <span>{statusBadge.label}</span>
-            </span>
-          )}
-        </div>
+              <Heart className={`h-3.5 w-3.5 transition-transform ${saved ? "fill-white" : ""}`} />
+            </button>
 
-        <h3 className="mt-3 text-lg font-semibold leading-snug">
+            {/* Bottom Overlay: City & Fee */}
+            <div className="absolute bottom-2 left-2 right-2 flex items-center justify-between text-xs text-white/95 z-10 pointer-events-none gap-2 min-w-0">
+              <span className="text-[11px] font-medium text-white/90 truncate flex items-center gap-1 min-w-0">
+                <MapPin className="h-3 w-3 text-white/80 shrink-0" />
+                <span className="truncate">{trial.city}</span>
+              </span>
+              <span className="rounded-md bg-emerald-500/90 px-2 py-0.5 text-[10px] font-bold text-white shadow-xs shrink-0 whitespace-nowrap ml-1">
+                {trial.fee === 0 ? "Free Entry" : `₹${trial.fee}`}
+              </span>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground w-full min-w-0">
+            <span className="text-foreground/75 font-medium">{trial.tag}</span>
+
+            {statusBadge && (
+              <span
+                className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider ${statusBadge.style}`}
+              >
+                <span
+                  className={`h-1 w-1 rounded-full shrink-0 ${statusBadge.dotStyle}`}
+                  aria-hidden="true"
+                />
+                <statusBadge.icon className="h-2.5 w-2.5 shrink-0" aria-hidden="true" />
+                <span>{statusBadge.label}</span>
+              </span>
+            )}
+          </div>
+
+          <h3 className="mt-2 text-base sm:text-lg font-semibold leading-snug line-clamp-2 break-words w-full">
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsDetailsOpen(true);
+              }}
+              className="text-left font-semibold hover:text-primary transition-colors cursor-pointer w-full break-words"
+            >
+              {trial.title}
+            </button>
+          </h3>
+          <p className="text-xs sm:text-sm text-muted-foreground truncate w-full">
+            {trial.academy}
+          </p>
+
           <button
             type="button"
             onClick={(e) => {
               e.stopPropagation();
               setIsDetailsOpen(true);
             }}
-            className="text-left font-semibold hover:text-primary transition-colors cursor-pointer"
+            className="mt-1 inline-flex text-xs font-medium text-primary hover:underline cursor-pointer truncate max-w-full"
           >
-            {trial.title}
+            View venue location &amp; organizer info →
           </button>
-        </h3>
-        <p className="text-sm text-muted-foreground">{trial.academy}</p>
 
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            setIsDetailsOpen(true);
-          }}
-          className="mt-1 inline-flex text-xs font-medium text-primary hover:underline cursor-pointer"
-        >
-          View venue location &amp; organizer info →
-        </button>
-
-        <div className="mt-4 grid grid-cols-2 gap-2 text-xs text-muted-foreground sm:grid-cols-3">
-          <div className="flex min-w-0 items-center gap-1.5">
-            <MapPin className="h-3.5 w-3.5 shrink-0" />
-            <span className="truncate">{trial.city}</span>
-          </div>
-          <div className="flex min-w-0 items-center gap-1.5">
-            <Calendar className="h-3.5 w-3.5 shrink-0" />
-            <span className="truncate">{trial.date}</span>
-          </div>
-          <div className="flex min-w-0 items-center gap-1.5">
-            <Users className="h-3.5 w-3.5 shrink-0" />
-            <span className="truncate">{trial.spots} spots</span>
+          <div className="mt-3.5 grid grid-cols-3 gap-1 sm:gap-2 text-xs text-muted-foreground w-full min-w-0">
+            <div className="flex min-w-0 items-center gap-1 text-[11px] sm:text-xs">
+              <MapPin className="h-3 w-3 shrink-0 text-muted-foreground/80" />
+              <span className="truncate">{trial.city}</span>
+            </div>
+            <div className="flex min-w-0 items-center gap-1 text-[11px] sm:text-xs">
+              <Calendar className="h-3 w-3 shrink-0 text-muted-foreground/80" />
+              <span className="truncate">{trial.date}</span>
+            </div>
+            <div className="flex min-w-0 items-center gap-1 text-[11px] sm:text-xs">
+              <Users className="h-3 w-3 shrink-0 text-muted-foreground/80" />
+              <span className="truncate">{trial.spots} spots</span>
+            </div>
           </div>
         </div>
 
-        <div className="mt-5 flex items-center gap-2">
+        <div className="mt-4 flex items-center gap-1.5 sm:gap-2 w-full min-w-0">
           <Button
             type="button"
             variant="outline"
-            size="icon"
-            onClick={(e) => {
-              e.stopPropagation();
-              toggleSaved(trial.id);
-            }}
+            size="sm"
+            onClick={handleToggleHeart}
             aria-label={
-              saved ? `Remove ${trial.title} from saved opportunities` : `Save ${trial.title}`
+              saved ? `Remove ${trial.title} from favorites` : `Save ${trial.title} to favorites`
             }
-            title={saved ? "Saved opportunity" : "Save opportunity"}
-            className={saved ? "border-primary bg-primary/10 text-primary" : ""}
+            title={saved ? "Saved in Favorites (Click to remove)" : "Save to Favorites"}
+            className={`h-9 px-2 sm:px-2.5 shrink-0 gap-1 sm:gap-1.5 text-xs font-semibold rounded-xl transition-all cursor-pointer ${
+              saved
+                ? "border-rose-500/60 bg-rose-500/10 text-rose-500 hover:bg-rose-500/20"
+                : "border-border hover:border-rose-400 hover:text-rose-500 text-muted-foreground hover:bg-rose-500/5"
+            }`}
           >
-            <Bookmark className={`h-4 w-4 ${saved ? "fill-current" : ""}`} />
+            <Heart
+              className={`h-3.5 w-3.5 shrink-0 ${saved ? "fill-rose-500 text-rose-500" : ""}`}
+            />
+            <span className="text-[11px] sm:text-xs font-medium">{saved ? "Saved" : "Save"}</span>
           </Button>
 
           <Button
@@ -161,9 +223,13 @@ export function TrialCard({ trial, boosted, onApply, onBoost, showBoostAction }:
                 : `Follow ${trial.academy} for schedule updates`
             }
             title={followingAcademy ? "Following academy" : "Follow academy schedule"}
-            className={followingAcademy ? "border-primary bg-primary/10 text-primary" : ""}
+            className={`h-9 w-9 shrink-0 rounded-xl ${
+              followingAcademy
+                ? "border-primary bg-primary/10 text-primary"
+                : "border-border text-muted-foreground"
+            }`}
           >
-            <Bell className={`h-4 w-4 ${followingAcademy ? "fill-current" : ""}`} />
+            <Bell className={`h-3.5 w-3.5 ${followingAcademy ? "fill-current" : ""}`} />
           </Button>
 
           <DropdownMenu>
@@ -174,8 +240,9 @@ export function TrialCard({ trial, boosted, onApply, onBoost, showBoostAction }:
                 size="icon"
                 title="Share trial announcement"
                 aria-label={`Share ${trial.title}`}
+                className="h-9 w-9 shrink-0 rounded-xl border-border text-muted-foreground"
               >
-                <Share2 className="h-4 w-4" />
+                <Share2 className="h-3.5 w-3.5" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-48">
@@ -248,17 +315,18 @@ export function TrialCard({ trial, boosted, onApply, onBoost, showBoostAction }:
               onApply();
             }}
             disabled={applied || statusBadge?.isExpired}
-            className="flex-1"
+            className="flex-1 min-w-0 h-9 text-xs sm:text-sm font-bold truncate px-2 sm:px-3 rounded-xl shadow-xs"
             variant={applied || statusBadge?.isExpired ? "secondary" : "default"}
           >
             {applied ? (
               <>
-                <Check className="mr-1 h-4 w-4" /> Applied
+                <Check className="mr-1 h-3.5 w-3.5 shrink-0" />
+                <span className="truncate">Applied</span>
               </>
             ) : statusBadge?.isExpired ? (
-              "Registration Closed"
+              <span className="truncate">Closed</span>
             ) : (
-              "Apply now"
+              <span className="truncate">Apply</span>
             )}
           </Button>
 
@@ -271,8 +339,9 @@ export function TrialCard({ trial, boosted, onApply, onBoost, showBoostAction }:
               variant="outline"
               size="icon"
               title="Boost listing"
+              className="h-9 w-9 shrink-0 rounded-xl"
             >
-              <Zap className="h-4 w-4 text-primary" />
+              <Zap className="h-3.5 w-3.5 text-primary" />
             </Button>
           )}
         </div>
