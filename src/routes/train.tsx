@@ -310,7 +310,8 @@ export function TrainPage() {
               <div className="flex items-center gap-2 text-foreground">
                 <GraduationCap className="h-4 w-4 text-primary shrink-0" />
                 <span>
-                  Viewing certified personal trainers &amp; individual sport coaches. Looking for complete coach bios?
+                  Viewing certified personal trainers &amp; individual sport coaches. Looking for
+                  complete coach bios?
                 </span>
               </div>
               <Link
@@ -328,7 +329,8 @@ export function TrainPage() {
               <div className="flex items-center gap-2 text-foreground">
                 <Trophy className="h-4 w-4 text-emerald-500 shrink-0" />
                 <span>
-                  Viewing accredited training academies &amp; sports centers. Are you an academy organizer?
+                  Viewing accredited training academies &amp; sports centers. Are you an academy
+                  organizer?
                 </span>
               </div>
               <Link
@@ -368,7 +370,9 @@ export function TrainPage() {
                 <Button
                   type="button"
                   size="sm"
-                  onClick={() => setFilters({ ...filters, sport: "All", city: "All", entityType: "all" })}
+                  onClick={() =>
+                    setFilters({ ...filters, sport: "All", city: "All", entityType: "all" })
+                  }
                   className="gap-1.5 text-xs bg-primary text-primary-foreground cursor-pointer"
                 >
                   View Pan-India Programs
@@ -444,7 +448,9 @@ export function TrainPage() {
                             {c.facilities && c.facilities.length > 0 && (
                               <>
                                 <span>·</span>
-                                <span className="text-foreground/80">{c.facilities.slice(0, 2).join(", ")}</span>
+                                <span className="text-foreground/80">
+                                  {c.facilities.slice(0, 2).join(", ")}
+                                </span>
                               </>
                             )}
                           </div>
@@ -617,7 +623,9 @@ export function TrainPage() {
               <DialogTitle className="text-base sm:text-lg flex items-center gap-2">
                 <GraduationCap className="h-5 w-5 text-primary" />
                 <span>
-                  {enquiringProgram.entityType === "coach" ? "Book Coaching Session" : "Enquire with Academy"}
+                  {enquiringProgram.entityType === "coach"
+                    ? "Book Coaching Session"
+                    : "Enquire with Academy"}
                 </span>
               </DialogTitle>
               <DialogDescription className="text-xs sm:text-sm">
@@ -732,7 +740,8 @@ export function TrainPage() {
               <span>Register as a Sports Coach</span>
             </DialogTitle>
             <DialogDescription className="text-xs sm:text-sm">
-              List your coaching services on KhelGrid to connect with thousands of athletes and parents across India.
+              List your coaching services on KhelGrid to connect with thousands of athletes and
+              parents across India.
             </DialogDescription>
           </DialogHeader>
 
@@ -794,7 +803,9 @@ export function TrainPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div className="space-y-1">
-                <label className="text-xs font-semibold text-foreground">Accreditation / Certification</label>
+                <label className="text-xs font-semibold text-foreground">
+                  Accreditation / Certification
+                </label>
                 <input
                   value={coachForm.certification}
                   onChange={(e) => setCoachForm({ ...coachForm, certification: e.target.value })}
@@ -844,7 +855,9 @@ export function TrainPage() {
             </div>
 
             <div className="space-y-1">
-              <label className="text-xs font-semibold text-foreground">WhatsApp / Phone Number</label>
+              <label className="text-xs font-semibold text-foreground">
+                WhatsApp / Phone Number
+              </label>
               <input
                 required
                 type="tel"
@@ -856,7 +869,9 @@ export function TrainPage() {
             </div>
 
             <div className="space-y-1">
-              <label className="text-xs font-semibold text-foreground">Coaching Philosophy / Bio</label>
+              <label className="text-xs font-semibold text-foreground">
+                Coaching Philosophy / Bio
+              </label>
               <textarea
                 rows={2}
                 value={coachForm.bio}
@@ -897,7 +912,8 @@ export function TrainPage() {
               <span>Register Your Sports Academy</span>
             </DialogTitle>
             <DialogDescription className="text-xs sm:text-sm">
-              Publish your academy batches, showcase world-class facilities, and enroll aspiring champions.
+              Publish your academy batches, showcase world-class facilities, and enroll aspiring
+              champions.
             </DialogDescription>
           </DialogHeader>
 
@@ -915,7 +931,9 @@ export function TrainPage() {
               </div>
 
               <div className="space-y-1">
-                <label className="text-xs font-semibold text-foreground">Director / Head Coach</label>
+                <label className="text-xs font-semibold text-foreground">
+                  Director / Head Coach
+                </label>
                 <input
                   value={academyForm.directorName}
                   onChange={(e) => setAcademyForm({ ...academyForm, directorName: e.target.value })}
@@ -969,7 +987,9 @@ export function TrainPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div className="space-y-1">
-                <label className="text-xs font-semibold text-foreground">Association Affiliation</label>
+                <label className="text-xs font-semibold text-foreground">
+                  Association Affiliation
+                </label>
                 <select
                   value={academyForm.affiliation}
                   onChange={(e) => setAcademyForm({ ...academyForm, affiliation: e.target.value })}
@@ -983,7 +1003,9 @@ export function TrainPage() {
               </div>
 
               <div className="space-y-1">
-                <label className="text-xs font-semibold text-foreground">Starting Monthly Fee (₹)</label>
+                <label className="text-xs font-semibold text-foreground">
+                  Starting Monthly Fee (₹)
+                </label>
                 <input
                   type="number"
                   step="500"
@@ -1020,7 +1042,9 @@ export function TrainPage() {
             </div>
 
             <div className="rounded-xl border border-border/80 bg-muted/30 p-2.5 text-xs space-y-1.5">
-              <span className="font-semibold text-foreground">Facilities Highlighted on Listing:</span>
+              <span className="font-semibold text-foreground">
+                Facilities Highlighted on Listing:
+              </span>
               <div className="flex flex-wrap gap-1.5 text-[11px] text-muted-foreground">
                 <span className="rounded bg-secondary px-2 py-0.5">✓ Turf Pitches</span>
                 <span className="rounded bg-secondary px-2 py-0.5">✓ Strength Gym</span>

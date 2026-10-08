@@ -177,9 +177,7 @@ describe("Train & Coaching Filters Suite", () => {
       });
       expect(hostelAcademies.length).toBeGreaterThan(0);
       expect(
-        hostelAcademies.every((a) =>
-          a.facilities?.some((f) => f.toLowerCase().includes("hostel")),
-        ),
+        hostelAcademies.every((a) => a.facilities?.some((f) => f.toLowerCase().includes("hostel"))),
       ).toBe(true);
     });
   });

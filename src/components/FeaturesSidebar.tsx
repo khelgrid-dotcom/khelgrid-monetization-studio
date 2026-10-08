@@ -3,6 +3,7 @@ import { useMemo, useState, useEffect, useRef } from "react";
 import {
   ChevronLeft,
   ChevronRight,
+  ChevronDown,
   Search,
   X,
   Sparkles,
@@ -19,7 +20,6 @@ import { PRIMARY_ITEMS, FEATURE_ITEMS, isActivePath, type NavItem } from "@/conf
 import { NavLink } from "@/components/NavLink";
 import { PlayNavLink } from "@/components/PlayNavLink";
 import { SidebarAd } from "@/components/ads";
-import { SidebarLiveScoreWidget } from "@/components/SidebarLiveScoreWidget";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import { cn } from "@/lib/utils";
@@ -115,8 +115,29 @@ export function FeaturesSidebar() {
   const [collapsed, setCollapsed] = useState(false);
   const [query, setQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState<NavCategory>("all");
+  const [collapsedSections, setCollapsedSections] = useState<Record<string, boolean>>(() => {
+    try {
+      const saved = localStorage.getItem("khelgrid_sidebar_collapsed_sections");
+      if (saved) return JSON.parse(saved);
+    } catch {
+      // ignore
+    }
+    return {};
+  });
   const path = useRouterState({ select: (s) => s.location.pathname });
   const searchInputRef = useRef<HTMLInputElement>(null);
+
+  const toggleSection = (category: string) => {
+    setCollapsedSections((prev) => {
+      const next = { ...prev, [category]: !prev[category] };
+      try {
+        localStorage.setItem("khelgrid_sidebar_collapsed_sections", JSON.stringify(next));
+      } catch {
+        // ignore
+      }
+      return next;
+    });
+  };
 
   // Initialize collapse preference from localStorage or screen width (default compact on lg, expanded on xl)
   useEffect(() => {
@@ -387,78 +408,98 @@ export function FeaturesSidebar() {
 
           {/* B. Expanded View: Grouped Sections or Filtered Results */}
           {!collapsed && groupedSections && (
-            <div className="space-y-4">
-              {groupedSections.map((sec) => (
-                <div key={sec.category} className="space-y-1">
-                  <div className="flex items-center justify-between px-2.5 pt-1.5 pb-1">
-                    <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground">
-                      {sec.meta.title}
-                    </span>
-                    <span className="text-[10px] text-muted-foreground/70 font-mono">
-                      {sec.items.length}
-                    </span>
-                  </div>
-
-                  <div className="flex flex-col gap-0.5">
-                    {sec.items.map((f) => (
-                      <div key={f.to} className="flex flex-col">
-                        {f.to === "/play" ? (
-                          <PlayNavLink
-                            active={isActivePath(path, f.to)}
-                            source="sidebar_desktop"
-                            showLabel={true}
-                          />
-                        ) : (
-                          <NavLink
-                            item={f}
-                            active={isActivePath(path, f.to)}
-                            source="sidebar_desktop"
-                            showLabel={true}
-                          />
-                        )}
-                        {/* Live score widget immediately after Search */}
-                        {f.to === "/search" && <SidebarLiveScoreWidget />}
-
-                        {/* Train grouped sub-links (Coaches & Academies) */}
-                        {f.to === "/train" && (
-                          <div className="ml-5 mt-0.5 mb-1 flex flex-col gap-0.5 border-l-2 border-primary/25 pl-2.5">
-                            <Link
-                              to="/coaches"
-                              className={cn(
-                                "flex items-center justify-between rounded-lg px-2 py-1 text-xs transition-colors",
-                                isActivePath(path, "/coaches")
-                                  ? "bg-primary/15 text-primary font-bold"
-                                  : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground",
-                              )}
-                            >
-                              <span className="flex items-center gap-1.5 truncate">
-                                <GraduationCap className="h-3.5 w-3.5 text-primary/80 shrink-0" />
-                                <span>Coaches</span>
-                              </span>
-                              <span className="text-[10px] font-mono text-muted-foreground">Certified</span>
-                            </Link>
-                            <Link
-                              to="/academy"
-                              className={cn(
-                                "flex items-center justify-between rounded-lg px-2 py-1 text-xs transition-colors",
-                                isActivePath(path, "/academy")
-                                  ? "bg-primary/15 text-primary font-bold"
-                                  : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground",
-                              )}
-                            >
-                              <span className="flex items-center gap-1.5 truncate">
-                                <Trophy className="h-3.5 w-3.5 text-amber-500 shrink-0" />
-                                <span>Academies</span>
-                              </span>
-                              <span className="text-[10px] font-mono text-muted-foreground">Centers</span>
-                            </Link>
-                          </div>
-                        )}
+            <div className="space-y-3">
+              {groupedSections.map((sec) => {
+                const isSectionCollapsed = Boolean(collapsedSections[sec.category]);
+                return (
+                  <div key={sec.category} className="space-y-1">
+                    <button
+                      type="button"
+                      onClick={() => toggleSection(sec.category)}
+                      aria-expanded={!isSectionCollapsed}
+                      className="flex w-full items-center justify-between px-2.5 py-1.5 text-left rounded-lg hover:bg-secondary/50 transition-colors group cursor-pointer"
+                    >
+                      <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground group-hover:text-foreground transition-colors">
+                        {sec.meta.title}
+                      </span>
+                      <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground/70 font-mono">
+                        <span className="rounded bg-secondary/80 px-1 py-0.2 text-[9px]">
+                          {sec.items.length}
+                        </span>
+                        <ChevronDown
+                          className={cn(
+                            "h-3 w-3 text-muted-foreground/60 transition-transform duration-200",
+                            isSectionCollapsed && "-rotate-90",
+                          )}
+                        />
                       </div>
-                    ))}
+                    </button>
+
+                    {!isSectionCollapsed && (
+                      <div className="flex flex-col gap-0.5">
+                        {sec.items.map((f) => (
+                          <div key={f.to} className="flex flex-col">
+                            {f.to === "/play" ? (
+                              <PlayNavLink
+                                active={isActivePath(path, f.to)}
+                                source="sidebar_desktop"
+                                showLabel={true}
+                              />
+                            ) : (
+                              <NavLink
+                                item={f}
+                                active={isActivePath(path, f.to)}
+                                source="sidebar_desktop"
+                                showLabel={true}
+                              />
+                            )}
+
+                            {/* Train grouped sub-links (Coaches & Academies) */}
+                            {f.to === "/train" && (
+                              <div className="ml-5 mt-0.5 mb-1 flex flex-col gap-0.5 border-l-2 border-primary/25 pl-2.5">
+                                <Link
+                                  to="/coaches"
+                                  className={cn(
+                                    "flex items-center justify-between rounded-lg px-2 py-1 text-xs transition-colors",
+                                    isActivePath(path, "/coaches")
+                                      ? "bg-primary/15 text-primary font-bold"
+                                      : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground",
+                                  )}
+                                >
+                                  <span className="flex items-center gap-1.5 truncate">
+                                    <GraduationCap className="h-3.5 w-3.5 text-primary/80 shrink-0" />
+                                    <span>Coaches</span>
+                                  </span>
+                                  <span className="text-[10px] font-mono text-muted-foreground">
+                                    Certified
+                                  </span>
+                                </Link>
+                                <Link
+                                  to="/academy"
+                                  className={cn(
+                                    "flex items-center justify-between rounded-lg px-2 py-1 text-xs transition-colors",
+                                    isActivePath(path, "/academy")
+                                      ? "bg-primary/15 text-primary font-bold"
+                                      : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground",
+                                  )}
+                                >
+                                  <span className="flex items-center gap-1.5 truncate">
+                                    <Trophy className="h-3.5 w-3.5 text-amber-500 shrink-0" />
+                                    <span>Academies</span>
+                                  </span>
+                                  <span className="text-[10px] font-mono text-muted-foreground">
+                                    Centers
+                                  </span>
+                                </Link>
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
 
@@ -488,7 +529,6 @@ export function FeaturesSidebar() {
                       showLabel={true}
                     />
                   )}
-                  {f.to === "/search" && !query && <SidebarLiveScoreWidget />}
                   {f.to === "/train" && (
                     <div className="ml-5 mt-0.5 mb-1 flex flex-col gap-0.5 border-l-2 border-primary/25 pl-2.5">
                       <Link
@@ -504,7 +544,9 @@ export function FeaturesSidebar() {
                           <GraduationCap className="h-3.5 w-3.5 text-primary/80 shrink-0" />
                           <span>Coaches</span>
                         </span>
-                        <span className="text-[10px] font-mono text-muted-foreground">Certified</span>
+                        <span className="text-[10px] font-mono text-muted-foreground">
+                          Certified
+                        </span>
                       </Link>
                       <Link
                         to="/academy"
