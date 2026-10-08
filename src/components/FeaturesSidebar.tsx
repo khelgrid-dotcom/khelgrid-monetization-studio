@@ -200,7 +200,13 @@ export function FeaturesSidebar() {
       const matchesQuery =
         !q ||
         f.label.toLowerCase().includes(q) ||
-        (f.to === "/train" && (q.includes("coach") || q.includes("acad")));
+        (f.to === "/train" && (q.includes("coach") || q.includes("acad"))) ||
+        (f.to === "/learning-hub" &&
+          (q.includes("sport") ||
+            q.includes("book") ||
+            q.includes("video") ||
+            q.includes("rule") ||
+            q.includes("learn")));
       const matchesCat = activeCategory === "all" || getItemCategory(f.to) === activeCategory;
       return matchesQuery && matchesCat;
     });

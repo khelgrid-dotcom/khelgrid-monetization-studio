@@ -39,11 +39,16 @@ import { cn } from "@/lib/utils";
 
 export type EventCategoryFilter =
   | "all"
+  | "upcoming"
+  | "registration_open"
+  | "local"
+  | "national"
   | "Weekend Cup"
   | "Corporate League"
   | "Championship"
   | "Youth & Grassroots"
-  | "Community Open";
+  | "Community Open"
+  | (string & {});
 
 export type EventTeamFormatFilter =
   "all" | "Singles" | "Doubles" | "Small Teams (5-7)" | "Full Squad (11v11)" | "Open Individual";
@@ -81,12 +86,15 @@ export const DEFAULT_EVENT_FILTERS: EventFilterState = {
 };
 
 export const EVENT_CATEGORY_TABS = [
-  { id: "all", label: "All Tournaments" },
-  { id: "Weekend Cup", label: "Weekend Cups" },
-  { id: "Championship", label: "Championships" },
-  { id: "Corporate League", label: "Corporate Leagues" },
-  { id: "Youth & Grassroots", label: "Youth & Grassroots" },
-  { id: "Community Open", label: "Community Opens" },
+  { id: "all", label: "All Events", icon: "🏆", badgeText: "All" },
+  { id: "upcoming", label: "Upcoming", icon: "📅", badgeText: "Next" },
+  { id: "registration_open", label: "Registration Open", icon: "⚡", badgeText: "Open Slots" },
+  { id: "local", label: "Local Tournaments", icon: "📍", badgeText: "City / Turf" },
+  { id: "national", label: "National Championships", icon: "🇮🇳", badgeText: "Circuit" },
+  { id: "Weekend Cup", label: "Weekend Cups", icon: "⚔️", badgeText: "Weekend" },
+  { id: "Corporate League", label: "Corporate Leagues", icon: "💼", badgeText: "Corporate" },
+  { id: "Championship", label: "Championships", icon: "🥇", badgeText: "Trophy" },
+  { id: "Youth & Grassroots", label: "Youth & Grassroots", icon: "🌱", badgeText: "U-14/19" },
 ] as const;
 
 export const EVENT_SPORT_ICONS: Record<string, string> = {
@@ -168,8 +176,43 @@ export function filterSportEvents(events: SportEvent[], filters: EventFilterStat
       }
 
       // 4. Category Filter
-      if (filters.category !== "all" && event.category !== filters.category) {
-        return false;
+      if (filters.category && filters.category !== "all") {
+        const catKey = filters.category.toLowerCase().replace(/[\s_-]+/g, "");
+
+        if (catKey === "upcoming") {
+          // Upcoming: all events that are active / scheduled (not completed)
+          if (event.status === "Completed") return false;
+        } else if (catKey === "registrationopen" || catKey === "open") {
+          // Registration Open: only events with slots currently available
+          if (event.spotsLeft <= 0 || event.status === "Sold Out") {
+            return false;
+          }
+        } else if (catKey === "local") {
+          // Local: city-level, turf, neighborhood, club cups or scope === "Local"
+          const isLocal =
+            event.scope === "Local" ||
+            (!event.scope &&
+              (event.category === "Weekend Cup" ||
+                event.category === "Community Open" ||
+                event.category === "Corporate League"));
+          if (!isLocal) return false;
+        } else if (catKey === "national") {
+          // National: pan-India, state/national championships, premier leagues
+          const isNational =
+            event.scope === "National" ||
+            (!event.scope &&
+              (event.category === "Championship" ||
+                event.title.toLowerCase().includes("national") ||
+                event.title.toLowerCase().includes("premier") ||
+                event.title.toLowerCase().includes("all-india")));
+          if (!isNational) return false;
+        } else {
+          // Direct match by category field (e.g. "Weekend Cup", "Corporate League", "Championship", "Youth & Grassroots", "Community Open")
+          const eventCatNormalized = (event.category || "").toLowerCase().replace(/[\s_-]+/g, "");
+          if (event.category !== filters.category && eventCatNormalized !== catKey) {
+            return false;
+          }
+        }
       }
 
       // 5. Team Format Filter
@@ -238,6 +281,7 @@ export interface EventFiltersProps {
   totalFiltered: number;
   totalAvailable: number;
   sportCounts: Record<string, number>;
+  categoryCounts?: Record<string, number>;
   onOpenHostModal?: () => void;
 }
 
@@ -248,6 +292,7 @@ export function EventFilters({
   totalFiltered,
   totalAvailable,
   sportCounts,
+  categoryCounts,
   onOpenHostModal,
 }: EventFiltersProps) {
   const update = (partial: Partial<EventFilterState>) => {
@@ -272,9 +317,10 @@ export function EventFilters({
     const list: Array<{ id: string; label: string; onRemove: () => void }> = [];
 
     if (filters.category !== "all") {
+      const tab = EVENT_CATEGORY_TABS.find((t) => t.id === filters.category);
       list.push({
         id: "category",
-        label: `Category: ${filters.category}`,
+        label: `Category: ${tab?.label || filters.category}`,
         onRemove: () => update({ category: "all" }),
       });
     }
@@ -344,6 +390,7 @@ export function EventFilters({
         >
           {EVENT_CATEGORY_TABS.map((tab) => {
             const isSelected = filters.category === tab.id;
+            const count = categoryCounts ? categoryCounts[tab.id] : undefined;
             return (
               <button
                 key={tab.id}
@@ -352,13 +399,26 @@ export function EventFilters({
                 aria-selected={isSelected}
                 onClick={() => update({ category: tab.id as EventCategoryFilter })}
                 className={cn(
-                  "shrink-0 rounded-lg px-3 py-1.5 text-xs font-semibold transition-all cursor-pointer whitespace-nowrap",
+                  "shrink-0 flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-all cursor-pointer whitespace-nowrap",
                   isSelected
-                    ? "bg-background text-foreground shadow-xs ring-1 ring-border/60"
+                    ? "bg-background text-foreground shadow-xs ring-1 ring-border/60 font-bold"
                     : "text-muted-foreground hover:bg-secondary/70 hover:text-foreground",
                 )}
               >
-                {tab.label}
+                <span>{tab.icon}</span>
+                <span>{tab.label}</span>
+                {typeof count === "number" && (
+                  <span
+                    className={cn(
+                      "font-mono text-[10px] px-1.5 py-0.2 rounded-full",
+                      isSelected
+                        ? "bg-primary/10 text-primary font-bold"
+                        : "bg-muted text-muted-foreground",
+                    )}
+                  >
+                    {count}
+                  </span>
+                )}
               </button>
             );
           })}
@@ -597,6 +657,51 @@ export function EventFilters({
                 )}
               </SheetTitle>
             </SheetHeader>
+
+            {/* Facet 0: Category & Scope Filter */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                  Category &amp; Scope
+                </label>
+                {filters.category !== "all" && (
+                  <button
+                    type="button"
+                    onClick={() => update({ category: "all" })}
+                    className="text-[11px] font-medium text-primary hover:underline cursor-pointer"
+                  >
+                    Clear category
+                  </button>
+                )}
+              </div>
+              <div className="grid grid-cols-2 gap-1.5">
+                {EVENT_CATEGORY_TABS.map((tab) => {
+                  const isSelected = filters.category === tab.id;
+                  const count = categoryCounts ? categoryCounts[tab.id] : undefined;
+                  return (
+                    <button
+                      key={tab.id}
+                      type="button"
+                      onClick={() => update({ category: tab.id as EventCategoryFilter })}
+                      className={cn(
+                        "rounded-lg px-2.5 py-2 text-xs font-medium text-left border transition-all cursor-pointer flex items-center justify-between gap-1",
+                        isSelected
+                          ? "border-primary bg-primary/10 text-primary font-bold shadow-xs"
+                          : "border-border/60 bg-secondary/30 hover:bg-secondary text-foreground",
+                      )}
+                    >
+                      <span className="flex items-center gap-1.5 truncate">
+                        <span>{tab.icon}</span>
+                        <span className="truncate">{tab.label}</span>
+                      </span>
+                      {typeof count === "number" && (
+                        <span className="text-[10px] opacity-75 font-mono shrink-0">({count})</span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
 
             {/* Facet 1: Team Size / Format */}
             <div className="space-y-2">

@@ -151,19 +151,28 @@ export function Navbar() {
                     </div>
                     <DropdownMenuContent align="start" className="w-56 rounded-xl p-1.5">
                       <DropdownMenuItem asChild className="cursor-pointer rounded-lg">
-                        <Link to="/train" className="flex items-center gap-2.5 px-2.5 py-2 text-sm font-medium">
+                        <Link
+                          to="/train"
+                          className="flex items-center gap-2.5 px-2.5 py-2 text-sm font-medium"
+                        >
                           <GraduationCap className="h-4 w-4 text-primary" />
                           <span>All Training Programs</span>
                         </Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem asChild className="cursor-pointer rounded-lg">
-                        <Link to="/coaches" className="flex items-center gap-2.5 px-2.5 py-2 text-sm">
+                        <Link
+                          to="/coaches"
+                          className="flex items-center gap-2.5 px-2.5 py-2 text-sm"
+                        >
                           <User className="h-4 w-4 text-primary/80" />
                           <span>Certified Coaches</span>
                         </Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem asChild className="cursor-pointer rounded-lg">
-                        <Link to="/academy" className="flex items-center gap-2.5 px-2.5 py-2 text-sm">
+                        <Link
+                          to="/academy"
+                          className="flex items-center gap-2.5 px-2.5 py-2 text-sm"
+                        >
                           <Trophy className="h-4 w-4 text-amber-500" />
                           <span>Sports Academies</span>
                         </Link>

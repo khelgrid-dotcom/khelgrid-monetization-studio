@@ -76,6 +76,60 @@ describe("Events & Tournaments Suite", () => {
       expect(results.every((e) => e.category === "Corporate League")).toBe(true);
     });
 
+    it("filters accurately by 'upcoming' category filter", () => {
+      const filters: EventFilterState = {
+        ...DEFAULT_EVENT_FILTERS,
+        category: "upcoming",
+      };
+      const results = filterSportEvents(EVENTS, filters);
+      expect(results.length).toBeGreaterThan(0);
+      expect(results.every((e) => e.status !== "Completed")).toBe(true);
+    });
+
+    it("filters accurately by 'registration_open' category filter", () => {
+      const filters: EventFilterState = {
+        ...DEFAULT_EVENT_FILTERS,
+        category: "registration_open",
+      };
+      const results = filterSportEvents(EVENTS, filters);
+      expect(results.length).toBeGreaterThan(0);
+      // Sold out event e15 should be excluded
+      expect(results.find((e) => e.id === "e15")).toBeUndefined();
+      expect(results.every((e) => e.spotsLeft > 0 && e.status !== "Sold Out")).toBe(true);
+    });
+
+    it("filters accurately by 'local' category filter", () => {
+      const filters: EventFilterState = {
+        ...DEFAULT_EVENT_FILTERS,
+        category: "local",
+      };
+      const results = filterSportEvents(EVENTS, filters);
+      expect(results.length).toBeGreaterThan(0);
+      expect(
+        results.every((e) => e.scope === "Local" || (!e.scope && e.category !== "Championship")),
+      ).toBe(true);
+    });
+
+    it("filters accurately by 'national' category filter", () => {
+      const filters: EventFilterState = {
+        ...DEFAULT_EVENT_FILTERS,
+        category: "national",
+      };
+      const results = filterSportEvents(EVENTS, filters);
+      expect(results.length).toBeGreaterThan(0);
+      expect(
+        results.every(
+          (e) =>
+            e.scope === "National" ||
+            (!e.scope &&
+              (e.category === "Championship" ||
+                e.title.toLowerCase().includes("national") ||
+                e.title.toLowerCase().includes("premier") ||
+                e.title.toLowerCase().includes("all-india"))),
+        ),
+      ).toBe(true);
+    });
+
     it("filters accurately by team format", () => {
       const filters: EventFilterState = {
         ...DEFAULT_EVENT_FILTERS,
@@ -130,7 +184,7 @@ describe("Events & Tournaments Suite", () => {
         sort: "prize_desc",
       });
       expect(prizeSorted.length).toBeGreaterThan(0);
-      expect(prizeSorted[0].prizePool).toContain("₹1,20,000");
+      expect(prizeSorted[0].prizePool).toContain("₹2,50,000");
     });
   });
 
@@ -153,6 +207,16 @@ describe("Events & Tournaments Suite", () => {
       expect(html).toContain("Cricket");
       expect(html).toContain("Football");
       expect(html).toContain("Badminton");
+    });
+
+    it("renders enhanced category filter tabs with Upcoming, Registration Open, Local, National", () => {
+      const html = renderToString(<EventsPage />);
+
+      expect(html).toContain("All Events");
+      expect(html).toContain("Upcoming");
+      expect(html).toContain("Registration Open");
+      expect(html).toContain("Local Tournaments");
+      expect(html).toContain("National Championships");
     });
 
     it("renders tournament cards with prize pool and spots info", () => {

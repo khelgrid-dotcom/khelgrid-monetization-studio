@@ -95,6 +95,7 @@ export function EventsPage() {
     totalSpots: "16",
     format: "Knockout (10 Overs)",
     category: "Weekend Cup" as SportEvent["category"],
+    scope: "Local" as SportEvent["scope"],
     teamFormat: "Small Teams (5-7)" as SportEvent["teamFormat"],
     organizerName: "",
     organizerPhone: "",
@@ -107,6 +108,32 @@ export function EventsPage() {
     for (const e of allEvents) {
       counts[e.sport] = (counts[e.sport] || 0) + 1;
     }
+    return counts;
+  }, [allEvents]);
+
+  // Category counts
+  const categoryCounts = useMemo(() => {
+    const counts: Record<string, number> = {
+      all: allEvents.length,
+      upcoming: allEvents.filter((e) => e.status !== "Completed").length,
+      registration_open: allEvents.filter((e) => e.spotsLeft > 0 && e.status !== "Sold Out").length,
+      local: allEvents.filter(
+        (e) => e.scope === "Local" || (!e.scope && e.category !== "Championship"),
+      ).length,
+      national: allEvents.filter(
+        (e) =>
+          e.scope === "National" ||
+          (!e.scope &&
+            (e.category === "Championship" ||
+              e.title.toLowerCase().includes("national") ||
+              e.title.toLowerCase().includes("premier") ||
+              e.title.toLowerCase().includes("all-india"))),
+      ).length,
+      "Weekend Cup": allEvents.filter((e) => e.category === "Weekend Cup").length,
+      "Corporate League": allEvents.filter((e) => e.category === "Corporate League").length,
+      Championship: allEvents.filter((e) => e.category === "Championship").length,
+      "Youth & Grassroots": allEvents.filter((e) => e.category === "Youth & Grassroots").length,
+    };
     return counts;
   }, [allEvents]);
 
@@ -195,6 +222,8 @@ export function EventsPage() {
       format: hostForm.format.trim(),
       prizePool: hostForm.prizePool.trim(),
       category: hostForm.category,
+      scope: hostForm.scope || "Local",
+      status: "Registration Open",
       teamFormat: hostForm.teamFormat,
       skillLevel: "Open / All Levels",
       organizer: {
@@ -228,6 +257,7 @@ export function EventsPage() {
       totalSpots: "16",
       format: "Knockout (10 Overs)",
       category: "Weekend Cup",
+      scope: "Local",
       teamFormat: "Small Teams (5-7)",
       organizerName: "",
       organizerPhone: "",
@@ -340,6 +370,7 @@ export function EventsPage() {
         totalFiltered={filteredEvents.length}
         totalAvailable={allEvents.length}
         sportCounts={sportCounts}
+        categoryCounts={categoryCounts}
         onOpenHostModal={() => setHostModalOpen(true)}
       />
 
@@ -353,8 +384,8 @@ export function EventsPage() {
           <div className="space-y-1">
             <h3 className="text-base font-bold text-foreground">No Tournaments Found</h3>
             <p className="text-xs sm:text-sm text-muted-foreground max-w-md mx-auto">
-              We couldn&apos;t find any competitions matching your selected sport, city, or budget.
-              Try clearing filters or check pan-India fixtures.
+              We couldn&apos;t find any competitions matching your selected category, sport, city, or budget.
+              Try selecting another category or check upcoming fixtures across India.
             </p>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
@@ -370,10 +401,36 @@ export function EventsPage() {
             <Button
               type="button"
               size="sm"
-              onClick={() => setFilters({ ...filters, sport: "All", city: "All", category: "all" })}
+              onClick={() => setFilters({ ...DEFAULT_EVENT_FILTERS, category: "registration_open" })}
+              className="gap-1.5 text-xs bg-emerald-600 text-white hover:bg-emerald-700 cursor-pointer"
+            >
+              ⚡ View Registration Open
+            </Button>
+            <Button
+              type="button"
+              size="sm"
+              onClick={() => setFilters({ ...DEFAULT_EVENT_FILTERS, category: "upcoming" })}
               className="gap-1.5 text-xs bg-primary text-primary-foreground cursor-pointer"
             >
-              View Pan-India Tournaments
+              📅 View All Upcoming Events
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => setFilters({ ...DEFAULT_EVENT_FILTERS, category: "local" })}
+              className="gap-1.5 text-xs cursor-pointer"
+            >
+              📍 Local Cups
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => setFilters({ ...DEFAULT_EVENT_FILTERS, category: "national" })}
+              className="gap-1.5 text-xs cursor-pointer"
+            >
+              🇮🇳 National Circuits
             </Button>
           </div>
         </div>
@@ -403,14 +460,36 @@ export function EventsPage() {
                       <span className="text-muted-foreground flex items-center gap-1">
                         <MapPin className="h-3 w-3" /> {e.venue}, {e.city}
                       </span>
+                      {e.scope && (
+                        <span
+                          className={cn(
+                            "rounded px-1.5 py-0.5 text-[10px] font-bold",
+                            e.scope === "National"
+                              ? "bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20"
+                              : "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20",
+                          )}
+                        >
+                          {e.scope === "National" ? "🇮🇳 National Circuit" : "📍 Local Cup"}
+                        </span>
+                      )}
                       {e.category && (
-                        <span className="rounded bg-secondary px-1.5 py-0.5 text-[10px] font-semibold text-foreground">
+                        <span className="rounded bg-secondary px-1.5 py-0.5 text-[10px] font-semibold text-foreground border border-border/60">
                           {e.category}
                         </span>
                       )}
                       {isFillingFast && (
-                        <span className="rounded bg-amber-500/10 text-amber-600 dark:text-amber-400 font-bold px-1.5 py-0.5 text-[10px]">
+                        <span className="rounded bg-amber-500/10 text-amber-600 dark:text-amber-400 font-bold px-1.5 py-0.5 text-[10px] border border-amber-500/20">
                           ⚡ Only {e.spotsLeft} spots left!
+                        </span>
+                      )}
+                      {e.spotsLeft > 0 && !isFillingFast && (
+                        <span className="rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-medium px-1.5 py-0.5 text-[10px] border border-emerald-500/20">
+                          ✓ Registration Open
+                        </span>
+                      )}
+                      {e.spotsLeft <= 0 && (
+                        <span className="rounded bg-rose-500/10 text-rose-600 dark:text-rose-400 font-bold px-1.5 py-0.5 text-[10px] border border-rose-500/20">
+                          ✕ Sold Out
                         </span>
                       )}
                     </div>
@@ -510,9 +589,23 @@ export function EventsPage() {
                         <span className="font-bold text-primary flex items-center gap-1">
                           {EVENT_SPORT_ICONS[e.sport] || "🏆"} {e.sport}
                         </span>
-                        <span className="flex items-center gap-1 font-mono text-muted-foreground">
-                          <Clock className="h-3 w-3" /> {e.time}
-                        </span>
+                        <div className="flex items-center gap-1.5">
+                          {e.scope && (
+                            <span
+                              className={cn(
+                                "text-[10px] font-bold px-1.5 py-0.2 rounded border",
+                                e.scope === "National"
+                                  ? "bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border-indigo-500/20"
+                                  : "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
+                              )}
+                            >
+                              {e.scope === "National" ? "🇮🇳 National" : "📍 Local"}
+                            </span>
+                          )}
+                          <span className="flex items-center gap-1 font-mono text-muted-foreground">
+                            <Clock className="h-3 w-3" /> {e.time}
+                          </span>
+                        </div>
                       </div>
 
                       <h4 className="font-bold text-sm text-foreground line-clamp-1">{e.title}</h4>
@@ -595,6 +688,16 @@ export function EventsPage() {
                       <span className="rounded-md bg-black/70 backdrop-blur-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white border border-white/20">
                         {e.sport}
                       </span>
+                      {e.scope === "National" && (
+                        <span className="rounded-md bg-indigo-600/90 backdrop-blur-md px-2 py-0.5 text-[10px] font-bold text-white border border-white/20 shadow-xs">
+                          🇮🇳 National
+                        </span>
+                      )}
+                      {e.scope === "Local" && (
+                        <span className="rounded-md bg-emerald-600/90 backdrop-blur-md px-2 py-0.5 text-[10px] font-bold text-white border border-white/20 shadow-xs">
+                          📍 Local Cup
+                        </span>
+                      )}
                       {e.category && (
                         <span className="rounded-md bg-black/70 backdrop-blur-md px-2 py-0.5 text-[10px] font-bold text-white border border-white/20">
                           {e.category}
@@ -615,9 +718,17 @@ export function EventsPage() {
                         <span className="opacity-75">· {e.time}</span>
                       </span>
 
-                      {isFillingFast && (
+                      {isFillingFast ? (
                         <span className="rounded bg-amber-500 px-1.5 py-0.2 text-[10px] font-bold text-black animate-pulse">
                           {e.spotsLeft} left!
+                        </span>
+                      ) : e.spotsLeft <= 0 ? (
+                        <span className="rounded bg-rose-600 px-1.5 py-0.2 text-[10px] font-bold text-white">
+                          Sold Out
+                        </span>
+                      ) : (
+                        <span className="rounded bg-emerald-500/90 backdrop-blur-md px-1.5 py-0.2 text-[10px] font-bold text-white">
+                          Open
                         </span>
                       )}
                     </div>
@@ -1235,6 +1346,45 @@ export function EventsPage() {
                   placeholder="+91 98765 43210"
                   className="w-full h-9.5 px-3 text-xs rounded-xl border border-border bg-background text-foreground outline-none focus:border-primary"
                 />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="space-y-1">
+                <label className="text-xs font-semibold text-foreground">Tournament Category</label>
+                <select
+                  value={hostForm.category}
+                  onChange={(e) =>
+                    setHostForm({
+                      ...hostForm,
+                      category: e.target.value as SportEvent["category"],
+                    })
+                  }
+                  className="w-full h-9.5 px-2.5 text-xs rounded-xl border border-border bg-background text-foreground outline-none"
+                >
+                  <option value="Weekend Cup">Weekend Cup</option>
+                  <option value="Corporate League">Corporate League</option>
+                  <option value="Championship">Championship</option>
+                  <option value="Youth & Grassroots">Youth & Grassroots</option>
+                  <option value="Community Open">Community Open</option>
+                </select>
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-xs font-semibold text-foreground">Circuit Scope</label>
+                <select
+                  value={hostForm.scope}
+                  onChange={(e) =>
+                    setHostForm({
+                      ...hostForm,
+                      scope: e.target.value as SportEvent["scope"],
+                    })
+                  }
+                  className="w-full h-9.5 px-2.5 text-xs rounded-xl border border-border bg-background text-foreground outline-none"
+                >
+                  <option value="Local">📍 Local &amp; City Turf Cup</option>
+                  <option value="National">🇮🇳 National / State Championship</option>
+                </select>
               </div>
             </div>
 

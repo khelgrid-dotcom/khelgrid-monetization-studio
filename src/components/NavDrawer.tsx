@@ -101,7 +101,13 @@ export function NavDrawer() {
       const matchesQ =
         !q ||
         i.label.toLowerCase().includes(q) ||
-        (i.to === "/train" && (q.includes("coach") || q.includes("acad")));
+        (i.to === "/train" && (q.includes("coach") || q.includes("acad"))) ||
+        (i.to === "/learning-hub" &&
+          (q.includes("sport") ||
+            q.includes("book") ||
+            q.includes("video") ||
+            q.includes("rule") ||
+            q.includes("learn")));
       const matchesCat = activeCategory === "all" || getItemCategory(i.to) === activeCategory;
       return matchesQ && matchesCat;
     });
@@ -319,16 +325,9 @@ export function NavDrawer() {
                 {sec.items.map((i) => (
                   <div key={i.to} className="flex flex-col">
                     {i.to === "/play" ? (
-                      <PlayNavLink
-                        active={isActivePath(path, i.to)}
-                        source="sidebar_mobile"
-                      />
+                      <PlayNavLink active={isActivePath(path, i.to)} source="sidebar_mobile" />
                     ) : (
-                      <NavLink
-                        item={i}
-                        active={isActivePath(path, i.to)}
-                        source="sidebar_mobile"
-                      />
+                      <NavLink item={i} active={isActivePath(path, i.to)} source="sidebar_mobile" />
                     )}
                     {/* Train grouped sub-links */}
                     {i.to === "/train" && (
@@ -346,7 +345,9 @@ export function NavDrawer() {
                             <GraduationCap className="h-3.5 w-3.5 text-primary/80 shrink-0" />
                             <span>Coaches</span>
                           </span>
-                          <span className="text-[10px] font-mono text-muted-foreground">Certified</span>
+                          <span className="text-[10px] font-mono text-muted-foreground">
+                            Certified
+                          </span>
                         </Link>
                         <Link
                           to="/academy"
@@ -361,7 +362,9 @@ export function NavDrawer() {
                             <Trophy className="h-3.5 w-3.5 text-amber-500 shrink-0" />
                             <span>Academies</span>
                           </span>
-                          <span className="text-[10px] font-mono text-muted-foreground">Centers</span>
+                          <span className="text-[10px] font-mono text-muted-foreground">
+                            Centers
+                          </span>
                         </Link>
                       </div>
                     )}
@@ -375,16 +378,9 @@ export function NavDrawer() {
               {filteredItems.map((i) => (
                 <div key={i.to} className="flex flex-col">
                   {i.to === "/play" ? (
-                    <PlayNavLink
-                      active={isActivePath(path, i.to)}
-                      source="sidebar_mobile"
-                    />
+                    <PlayNavLink active={isActivePath(path, i.to)} source="sidebar_mobile" />
                   ) : (
-                    <NavLink
-                      item={i}
-                      active={isActivePath(path, i.to)}
-                      source="sidebar_mobile"
-                    />
+                    <NavLink item={i} active={isActivePath(path, i.to)} source="sidebar_mobile" />
                   )}
                   {i.to === "/train" && (
                     <div className="ml-5 mt-0.5 mb-1 flex flex-col gap-0.5 border-l-2 border-primary/25 pl-2.5">
@@ -401,7 +397,9 @@ export function NavDrawer() {
                           <GraduationCap className="h-3.5 w-3.5 text-primary/80 shrink-0" />
                           <span>Coaches</span>
                         </span>
-                        <span className="text-[10px] font-mono text-muted-foreground">Certified</span>
+                        <span className="text-[10px] font-mono text-muted-foreground">
+                          Certified
+                        </span>
                       </Link>
                       <Link
                         to="/academy"
