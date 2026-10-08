@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import {
   Menu,
   Trophy,
+  GraduationCap,
   Search,
   User,
   Wallet,
@@ -50,6 +51,8 @@ export const DRAWER_ITEMS: readonly NavItem[] = (() => {
     }
   }
   for (const item of FEATURE_ITEMS) {
+    // Coaches and Academies are grouped under Train
+    if (item.to === "/coaches" || item.to === "/academy") continue;
     if (!seen.has(item.to)) {
       seen.add(item.to);
       items.push(item);
@@ -95,7 +98,10 @@ export function NavDrawer() {
   const filteredItems = useMemo(() => {
     const q = query.trim().toLowerCase();
     return DRAWER_ITEMS.filter((i) => {
-      const matchesQ = !q || i.label.toLowerCase().includes(q);
+      const matchesQ =
+        !q ||
+        i.label.toLowerCase().includes(q) ||
+        (i.to === "/train" && (q.includes("coach") || q.includes("acad")));
       const matchesCat = activeCategory === "all" || getItemCategory(i.to) === activeCategory;
       return matchesQ && matchesCat;
     });
@@ -310,43 +316,112 @@ export function NavDrawer() {
           {groupedDrawerSections ? (
             groupedDrawerSections.map((sec) => (
               <Section key={sec.category} title={sec.meta.title}>
-                {sec.items.map((i) =>
-                  i.to === "/play" ? (
-                    <PlayNavLink
-                      key={i.to}
-                      active={isActivePath(path, i.to)}
-                      source="sidebar_mobile"
-                    />
-                  ) : (
-                    <NavLink
-                      key={i.to}
-                      item={i}
-                      active={isActivePath(path, i.to)}
-                      source="sidebar_mobile"
-                    />
-                  ),
-                )}
+                {sec.items.map((i) => (
+                  <div key={i.to} className="flex flex-col">
+                    {i.to === "/play" ? (
+                      <PlayNavLink
+                        active={isActivePath(path, i.to)}
+                        source="sidebar_mobile"
+                      />
+                    ) : (
+                      <NavLink
+                        item={i}
+                        active={isActivePath(path, i.to)}
+                        source="sidebar_mobile"
+                      />
+                    )}
+                    {/* Train grouped sub-links */}
+                    {i.to === "/train" && (
+                      <div className="ml-5 mt-0.5 mb-1 flex flex-col gap-0.5 border-l-2 border-primary/25 pl-2.5">
+                        <Link
+                          to="/coaches"
+                          className={cn(
+                            "flex items-center justify-between rounded-lg px-2.5 py-1.5 text-xs transition-colors",
+                            isActivePath(path, "/coaches")
+                              ? "bg-primary/15 text-primary font-bold"
+                              : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground",
+                          )}
+                        >
+                          <span className="flex items-center gap-2 truncate">
+                            <GraduationCap className="h-3.5 w-3.5 text-primary/80 shrink-0" />
+                            <span>Coaches</span>
+                          </span>
+                          <span className="text-[10px] font-mono text-muted-foreground">Certified</span>
+                        </Link>
+                        <Link
+                          to="/academy"
+                          className={cn(
+                            "flex items-center justify-between rounded-lg px-2.5 py-1.5 text-xs transition-colors",
+                            isActivePath(path, "/academy")
+                              ? "bg-primary/15 text-primary font-bold"
+                              : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground",
+                          )}
+                        >
+                          <span className="flex items-center gap-2 truncate">
+                            <Trophy className="h-3.5 w-3.5 text-amber-500 shrink-0" />
+                            <span>Academies</span>
+                          </span>
+                          <span className="text-[10px] font-mono text-muted-foreground">Centers</span>
+                        </Link>
+                      </div>
+                    )}
+                  </div>
+                ))}
               </Section>
             ))
           ) : (
             /* Flat Filtered List (when searching or category chip selected) with Zero Duplication */
             <div className="flex flex-col gap-0.5">
-              {filteredItems.map((i) =>
-                i.to === "/play" ? (
-                  <PlayNavLink
-                    key={i.to}
-                    active={isActivePath(path, i.to)}
-                    source="sidebar_mobile"
-                  />
-                ) : (
-                  <NavLink
-                    key={i.to}
-                    item={i}
-                    active={isActivePath(path, i.to)}
-                    source="sidebar_mobile"
-                  />
-                ),
-              )}
+              {filteredItems.map((i) => (
+                <div key={i.to} className="flex flex-col">
+                  {i.to === "/play" ? (
+                    <PlayNavLink
+                      active={isActivePath(path, i.to)}
+                      source="sidebar_mobile"
+                    />
+                  ) : (
+                    <NavLink
+                      item={i}
+                      active={isActivePath(path, i.to)}
+                      source="sidebar_mobile"
+                    />
+                  )}
+                  {i.to === "/train" && (
+                    <div className="ml-5 mt-0.5 mb-1 flex flex-col gap-0.5 border-l-2 border-primary/25 pl-2.5">
+                      <Link
+                        to="/coaches"
+                        className={cn(
+                          "flex items-center justify-between rounded-lg px-2.5 py-1.5 text-xs transition-colors",
+                          isActivePath(path, "/coaches")
+                            ? "bg-primary/15 text-primary font-bold"
+                            : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground",
+                        )}
+                      >
+                        <span className="flex items-center gap-2 truncate">
+                          <GraduationCap className="h-3.5 w-3.5 text-primary/80 shrink-0" />
+                          <span>Coaches</span>
+                        </span>
+                        <span className="text-[10px] font-mono text-muted-foreground">Certified</span>
+                      </Link>
+                      <Link
+                        to="/academy"
+                        className={cn(
+                          "flex items-center justify-between rounded-lg px-2.5 py-1.5 text-xs transition-colors",
+                          isActivePath(path, "/academy")
+                            ? "bg-primary/15 text-primary font-bold"
+                            : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground",
+                        )}
+                      >
+                        <span className="flex items-center gap-2 truncate">
+                          <Trophy className="h-3.5 w-3.5 text-amber-500 shrink-0" />
+                          <span>Academies</span>
+                        </span>
+                        <span className="text-[10px] font-mono text-muted-foreground">Centers</span>
+                      </Link>
+                    </div>
+                  )}
+                </div>
+              ))}
             </div>
           )}
 

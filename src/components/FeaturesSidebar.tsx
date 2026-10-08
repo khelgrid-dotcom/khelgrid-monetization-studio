@@ -8,6 +8,7 @@ import {
   Sparkles,
   Swords,
   GraduationCap,
+  Trophy,
   BookOpen,
   Globe,
   SlidersHorizontal,
@@ -35,6 +36,8 @@ export const FEATURES: readonly NavItem[] = (() => {
     }
   }
   for (const item of FEATURE_ITEMS) {
+    // Coaches and Academies are grouped under the Train feature
+    if (item.to === "/coaches" || item.to === "/academy") continue;
     if (!seen.has(item.to)) {
       seen.add(item.to);
       items.push(item);
@@ -173,7 +176,10 @@ export function FeaturesSidebar() {
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     return FEATURES.filter((f) => {
-      const matchesQuery = !q || f.label.toLowerCase().includes(q);
+      const matchesQuery =
+        !q ||
+        f.label.toLowerCase().includes(q) ||
+        (f.to === "/train" && (q.includes("coach") || q.includes("acad")));
       const matchesCat = activeCategory === "all" || getItemCategory(f.to) === activeCategory;
       return matchesQuery && matchesCat;
     });
@@ -412,6 +418,42 @@ export function FeaturesSidebar() {
                         )}
                         {/* Live score widget immediately after Search */}
                         {f.to === "/search" && <SidebarLiveScoreWidget />}
+
+                        {/* Train grouped sub-links (Coaches & Academies) */}
+                        {f.to === "/train" && (
+                          <div className="ml-5 mt-0.5 mb-1 flex flex-col gap-0.5 border-l-2 border-primary/25 pl-2.5">
+                            <Link
+                              to="/coaches"
+                              className={cn(
+                                "flex items-center justify-between rounded-lg px-2 py-1 text-xs transition-colors",
+                                isActivePath(path, "/coaches")
+                                  ? "bg-primary/15 text-primary font-bold"
+                                  : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground",
+                              )}
+                            >
+                              <span className="flex items-center gap-1.5 truncate">
+                                <GraduationCap className="h-3.5 w-3.5 text-primary/80 shrink-0" />
+                                <span>Coaches</span>
+                              </span>
+                              <span className="text-[10px] font-mono text-muted-foreground">Certified</span>
+                            </Link>
+                            <Link
+                              to="/academy"
+                              className={cn(
+                                "flex items-center justify-between rounded-lg px-2 py-1 text-xs transition-colors",
+                                isActivePath(path, "/academy")
+                                  ? "bg-primary/15 text-primary font-bold"
+                                  : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground",
+                              )}
+                            >
+                              <span className="flex items-center gap-1.5 truncate">
+                                <Trophy className="h-3.5 w-3.5 text-amber-500 shrink-0" />
+                                <span>Academies</span>
+                              </span>
+                              <span className="text-[10px] font-mono text-muted-foreground">Centers</span>
+                            </Link>
+                          </div>
+                        )}
                       </div>
                     ))}
                   </div>
@@ -447,6 +489,40 @@ export function FeaturesSidebar() {
                     />
                   )}
                   {f.to === "/search" && !query && <SidebarLiveScoreWidget />}
+                  {f.to === "/train" && (
+                    <div className="ml-5 mt-0.5 mb-1 flex flex-col gap-0.5 border-l-2 border-primary/25 pl-2.5">
+                      <Link
+                        to="/coaches"
+                        className={cn(
+                          "flex items-center justify-between rounded-lg px-2 py-1 text-xs transition-colors",
+                          isActivePath(path, "/coaches")
+                            ? "bg-primary/15 text-primary font-bold"
+                            : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground",
+                        )}
+                      >
+                        <span className="flex items-center gap-1.5 truncate">
+                          <GraduationCap className="h-3.5 w-3.5 text-primary/80 shrink-0" />
+                          <span>Coaches</span>
+                        </span>
+                        <span className="text-[10px] font-mono text-muted-foreground">Certified</span>
+                      </Link>
+                      <Link
+                        to="/academy"
+                        className={cn(
+                          "flex items-center justify-between rounded-lg px-2 py-1 text-xs transition-colors",
+                          isActivePath(path, "/academy")
+                            ? "bg-primary/15 text-primary font-bold"
+                            : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground",
+                        )}
+                      >
+                        <span className="flex items-center gap-1.5 truncate">
+                          <Trophy className="h-3.5 w-3.5 text-amber-500 shrink-0" />
+                          <span>Academies</span>
+                        </span>
+                        <span className="text-[10px] font-mono text-muted-foreground">Centers</span>
+                      </Link>
+                    </div>
+                  )}
                 </div>
               ))}
 

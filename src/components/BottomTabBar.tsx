@@ -103,7 +103,14 @@ export function BottomTabBar() {
             : !isLiveActive &&
               (t.exact
                 ? path === t.to
-                : path === t.to || path.startsWith(t.to + "/"));
+                : t.to === "/train"
+                  ? path === "/train" ||
+                    path.startsWith("/train/") ||
+                    path === "/coaches" ||
+                    path.startsWith("/coaches/") ||
+                    path === "/academy" ||
+                    path.startsWith("/academy/")
+                  : path === t.to || path.startsWith(t.to + "/"));
 
           return (
             <li key={t.label} className="relative flex justify-center">

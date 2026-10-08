@@ -22,6 +22,7 @@ import {
   Wand2,
   Languages,
   Check,
+  Trophy,
 } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
@@ -111,7 +112,87 @@ export function Navbar() {
         {/* Desktop primary nav - Essential core features only */}
         <nav className="ml-2 hidden shrink-0 items-center gap-1 rounded-full border border-border/60 bg-card/60 p-1 lg:flex">
           {PRIMARY_NAV.map((n) => {
-            const active = isActivePath(path, n.to);
+            const isTrainActive =
+              path === "/train" ||
+              path.startsWith("/train/") ||
+              path === "/coaches" ||
+              path.startsWith("/coaches/") ||
+              path === "/academy" ||
+              path.startsWith("/academy/");
+            const active = n.to === "/train" ? isTrainActive : isActivePath(path, n.to);
+
+            if (n.to === "/train") {
+              return (
+                <div key={n.to} className="relative flex items-center">
+                  <DropdownMenu>
+                    <div
+                      className={`flex items-center rounded-full transition-colors ${
+                        active
+                          ? "bg-secondary font-semibold text-foreground"
+                          : "text-muted-foreground hover:text-foreground"
+                      }`}
+                    >
+                      <Link
+                        to="/train"
+                        className="flex items-center gap-1.5 whitespace-nowrap rounded-l-full pl-3.5 pr-1 py-1.5 text-sm"
+                      >
+                        <n.icon className="h-4 w-4 shrink-0" />
+                        <span>{n.label}</span>
+                      </Link>
+                      <DropdownMenuTrigger asChild>
+                        <button
+                          type="button"
+                          className="flex items-center rounded-r-full pr-2.5 pl-0.5 py-1.5 text-xs opacity-75 hover:opacity-100 cursor-pointer"
+                          aria-label="Train options and directory"
+                        >
+                          <ChevronDown className="h-3.5 w-3.5" />
+                        </button>
+                      </DropdownMenuTrigger>
+                    </div>
+                    <DropdownMenuContent align="start" className="w-56 rounded-xl p-1.5">
+                      <DropdownMenuItem asChild className="cursor-pointer rounded-lg">
+                        <Link to="/train" className="flex items-center gap-2.5 px-2.5 py-2 text-sm font-medium">
+                          <GraduationCap className="h-4 w-4 text-primary" />
+                          <span>All Training Programs</span>
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild className="cursor-pointer rounded-lg">
+                        <Link to="/coaches" className="flex items-center gap-2.5 px-2.5 py-2 text-sm">
+                          <User className="h-4 w-4 text-primary/80" />
+                          <span>Certified Coaches</span>
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild className="cursor-pointer rounded-lg">
+                        <Link to="/academy" className="flex items-center gap-2.5 px-2.5 py-2 text-sm">
+                          <Trophy className="h-4 w-4 text-amber-500" />
+                          <span>Sports Academies</span>
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator className="my-1" />
+                      <DropdownMenuItem asChild className="cursor-pointer rounded-lg">
+                        <Link
+                          to="/train"
+                          search={{ register: "coach" }}
+                          className="flex items-center gap-2.5 px-2.5 py-2 text-xs font-semibold text-primary"
+                        >
+                          <span>+ Register as Coach</span>
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild className="cursor-pointer rounded-lg">
+                        <Link
+                          to="/train"
+                          search={{ register: "academy" }}
+                          className="flex items-center gap-2.5 px-2.5 py-2 text-xs font-semibold text-emerald-600 dark:text-emerald-400"
+                        >
+                          <span>+ Register Academy</span>
+                        </Link>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+              );
+            }
+
             return (
               <Link
                 key={n.to}
