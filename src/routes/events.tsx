@@ -18,6 +18,9 @@ import {
   EVENT_SPORT_ICONS,
 } from "@/components/events/EventFilters";
 import { TournamentFAQ } from "@/components/events/TournamentFAQ";
+import { TournamentCountdown } from "@/components/events/TournamentCountdown";
+import { SaveForLaterButton } from "@/components/events/SaveForLaterButton";
+import { useSavedEvents } from "@/components/events/useSavedEvents";
 import {
   Trophy,
   MapPin,
@@ -38,8 +41,10 @@ import {
   AlertCircle,
   HelpCircle,
   Award,
+  Bookmark,
 } from "lucide-react";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 import { buildSeoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/events")({
@@ -59,6 +64,7 @@ export const Route = createFileRoute("/events")({
 export function EventsPage() {
   const [allEvents, setAllEvents] = useState<SportEvent[]>(EVENTS);
   const [filters, setFilters] = useState<EventFilterState>(DEFAULT_EVENT_FILTERS);
+  const { savedIds, savedCount, isSaved, toggleSave, clearSaved } = useSavedEvents();
 
   // Modal states
   const [registeringEvent, setRegisteringEvent] = useState<SportEvent | null>(null);
@@ -140,8 +146,8 @@ export function EventsPage() {
 
   // Filtered tournament list
   const filteredEvents = useMemo(() => {
-    return filterSportEvents(allEvents, filters);
-  }, [allEvents, filters]);
+    return filterSportEvents(allEvents, filters, savedIds);
+  }, [allEvents, filters, savedIds]);
 
   // Group events by date for Calendar / Timeline view
   const eventsByDate = useMemo(() => {
@@ -236,6 +242,12 @@ export function EventsPage() {
         .split(",")
         .map((p) => p.trim())
         .filter(Boolean),
+      rulesHighlights: [
+        "Standard federation rules apply",
+        "Official match balls provided",
+        "Reporting time 30 mins prior to match",
+      ],
+      registrationDeadline: `${hostForm.date}, 06:00 PM`,
       image:
         "https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?auto=format&fit=crop&w=800&q=80",
     };
@@ -288,6 +300,32 @@ export function EventsPage() {
 
         {/* Top Actions */}
         <div className="flex flex-wrap items-center gap-2 shrink-0">
+          <Button
+            type="button"
+            variant={filters.onlySaved ? "secondary" : "outline"}
+            size="sm"
+            onClick={() => setFilters((prev) => ({ ...prev, onlySaved: !prev.onlySaved }))}
+            className={cn(
+              "h-8.5 gap-1.5 text-xs font-semibold cursor-pointer border transition-all",
+              filters.onlySaved
+                ? "border-amber-400 bg-amber-500 text-white hover:bg-amber-600 font-bold"
+                : "border-border/80 hover:border-amber-500/50 text-foreground",
+            )}
+            title={
+              filters.onlySaved
+                ? "Showing shortlisted tournaments (click to show all)"
+                : "View your saved tournaments shortlist"
+            }
+          >
+            <Bookmark
+              className={cn(
+                "h-3.5 w-3.5",
+                filters.onlySaved ? "fill-white text-white" : "text-amber-500 fill-amber-500/30",
+              )}
+            />
+            <span>Shortlist ({savedCount})</span>
+          </Button>
+
           <Button
             type="button"
             variant="outline"
@@ -372,6 +410,7 @@ export function EventsPage() {
         totalAvailable={allEvents.length}
         sportCounts={sportCounts}
         categoryCounts={categoryCounts}
+        savedCount={savedCount}
         onOpenHostModal={() => setHostModalOpen(true)}
       />
 
@@ -380,16 +419,33 @@ export function EventsPage() {
         /* EMPTY STATE */
         <div className="rounded-2xl border border-dashed border-border/80 bg-card p-8 sm:p-12 text-center space-y-4 w-full">
           <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-secondary text-muted-foreground">
-            <Trophy className="h-6 w-6" />
+            {filters.onlySaved ? (
+              <Bookmark className="h-6 w-6 text-amber-500 fill-amber-500/20" />
+            ) : (
+              <Trophy className="h-6 w-6" />
+            )}
           </div>
           <div className="space-y-1">
-            <h3 className="text-base font-bold text-foreground">No Tournaments Found</h3>
+            <h3 className="text-base font-bold text-foreground">
+              {filters.onlySaved ? "No Saved Tournaments Yet" : "No Tournaments Found"}
+            </h3>
             <p className="text-xs sm:text-sm text-muted-foreground max-w-md mx-auto">
-              We couldn&apos;t find any competitions matching your selected category, sport, city,
-              or budget. Try selecting another category or check upcoming fixtures across India.
+              {filters.onlySaved
+                ? "Click the bookmark icon or 'Save for Later' button on any tournament card to shortlist competitions, coordinate with your squad, and track live countdown deadlines."
+                : "We couldn't find any competitions matching your selected category, sport, city, or budget. Try selecting another category or check upcoming fixtures across India."}
             </p>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
+            {filters.onlySaved && (
+              <Button
+                type="button"
+                size="sm"
+                onClick={() => setFilters((prev) => ({ ...prev, onlySaved: false }))}
+                className="gap-1.5 text-xs bg-primary text-primary-foreground cursor-pointer font-bold"
+              >
+                🏆 Browse All Tournaments
+              </Button>
+            )}
             <Button
               type="button"
               variant="outline"
@@ -448,12 +504,24 @@ export function EventsPage() {
                 className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 hover:bg-secondary/20 transition-colors"
               >
                 <div className="flex items-start gap-3.5 min-w-0">
-                  <img
-                    src={e.image}
-                    alt={e.title}
-                    loading="lazy"
-                    className="h-16 w-20 rounded-xl object-cover shrink-0 bg-secondary"
-                  />
+                  <div className="relative shrink-0">
+                    <img
+                      src={e.image}
+                      alt={e.title}
+                      loading="lazy"
+                      className="h-16 w-20 rounded-xl object-cover bg-secondary"
+                    />
+                    <div className="absolute top-1 right-1">
+                      <SaveForLaterButton
+                        eventId={e.id}
+                        eventTitle={e.title}
+                        isSaved={isSaved(e.id)}
+                        onToggle={() => toggleSave(e)}
+                        variant="icon-badge"
+                        className="h-6 w-6"
+                      />
+                    </div>
+                  </div>
                   <div className="space-y-1 min-w-0">
                     <div className="flex flex-wrap items-center gap-2 text-xs">
                       <span className="font-bold text-primary flex items-center gap-1">
@@ -517,6 +585,15 @@ export function EventsPage() {
                           </span>
                         </>
                       )}
+                      <span>·</span>
+                      <TournamentCountdown
+                        eventId={e.id}
+                        deadline={e.registrationDeadline}
+                        eventDate={e.date}
+                        spotsLeft={e.spotsLeft}
+                        status={e.status}
+                        variant="compact"
+                      />
                     </div>
                   </div>
                 </div>
@@ -542,6 +619,13 @@ export function EventsPage() {
                   </div>
 
                   <div className="flex items-center gap-1.5">
+                    <SaveForLaterButton
+                      eventId={e.id}
+                      eventTitle={e.title}
+                      isSaved={isSaved(e.id)}
+                      onToggle={() => toggleSave(e)}
+                      variant="compact"
+                    />
                     <Button
                       type="button"
                       variant="ghost"
@@ -608,6 +692,14 @@ export function EventsPage() {
                           <span className="flex items-center gap-1 font-mono text-muted-foreground">
                             <Clock className="h-3 w-3" /> {e.time}
                           </span>
+                          <SaveForLaterButton
+                            eventId={e.id}
+                            eventTitle={e.title}
+                            isSaved={isSaved(e.id)}
+                            onToggle={() => toggleSave(e)}
+                            variant="icon"
+                            className="h-6 w-6"
+                          />
                         </div>
                       </div>
 
@@ -626,6 +718,16 @@ export function EventsPage() {
                           <span>Prize: {e.prizePool}</span>
                         </div>
                       )}
+
+                      <TournamentCountdown
+                        eventId={e.id}
+                        deadline={e.registrationDeadline}
+                        eventDate={e.date}
+                        spotsLeft={e.spotsLeft}
+                        status={e.status}
+                        variant="strip"
+                        className="py-1 text-[10px]"
+                      />
                     </div>
 
                     <div className="mt-3 pt-3 border-t border-border/60 flex items-center justify-between gap-2">
@@ -638,6 +740,14 @@ export function EventsPage() {
                       </div>
 
                       <div className="flex items-center gap-1.5">
+                        <SaveForLaterButton
+                          eventId={e.id}
+                          eventTitle={e.title}
+                          isSaved={isSaved(e.id)}
+                          onToggle={() => toggleSave(e)}
+                          variant="compact"
+                          className="h-7.5 px-2 text-[11px]"
+                        />
                         <Button
                           type="button"
                           variant="ghost"
@@ -687,7 +797,7 @@ export function EventsPage() {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
 
                     {/* Top Badges */}
-                    <div className="absolute top-2.5 left-2.5 flex flex-wrap gap-1.5">
+                    <div className="absolute top-2.5 left-2.5 flex flex-wrap gap-1.5 pr-10">
                       <span className="rounded-md bg-black/70 backdrop-blur-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white border border-white/20">
                         {e.sport}
                       </span>
@@ -713,27 +823,48 @@ export function EventsPage() {
                       )}
                     </div>
 
-                    {/* Bottom Media Text: Date and Spots Warning */}
-                    <div className="absolute bottom-2.5 inset-x-2.5 flex items-center justify-between text-white text-xs">
-                      <span className="flex items-center gap-1 font-semibold">
-                        <Calendar className="h-3.5 w-3.5" />
-                        <span>{e.date}</span>
+                    {/* Top-Right Save for Later Floating Button */}
+                    <div className="absolute top-2.5 right-2.5 z-10">
+                      <SaveForLaterButton
+                        eventId={e.id}
+                        eventTitle={e.title}
+                        isSaved={isSaved(e.id)}
+                        onToggle={() => toggleSave(e)}
+                        variant="icon-badge"
+                      />
+                    </div>
+
+                    {/* Bottom Media Text: Date, Countdown, and Spots Warning */}
+                    <div className="absolute bottom-2.5 inset-x-2.5 flex items-center justify-between text-white text-xs gap-1.5">
+                      <span className="flex items-center gap-1 font-semibold truncate">
+                        <Calendar className="h-3.5 w-3.5 shrink-0" />
+                        <span className="truncate">{e.date}</span>
                         <span className="opacity-75">· {e.time}</span>
                       </span>
 
-                      {isFillingFast ? (
-                        <span className="rounded bg-amber-500 px-1.5 py-0.2 text-[10px] font-bold text-black animate-pulse">
-                          {e.spotsLeft} left!
-                        </span>
-                      ) : e.spotsLeft <= 0 ? (
-                        <span className="rounded bg-rose-600 px-1.5 py-0.2 text-[10px] font-bold text-white">
-                          Sold Out
-                        </span>
-                      ) : (
-                        <span className="rounded bg-emerald-500/90 backdrop-blur-md px-1.5 py-0.2 text-[10px] font-bold text-white">
-                          Open
-                        </span>
-                      )}
+                      <div className="flex items-center gap-1.5 shrink-0">
+                        <TournamentCountdown
+                          eventId={e.id}
+                          deadline={e.registrationDeadline}
+                          eventDate={e.date}
+                          spotsLeft={e.spotsLeft}
+                          status={e.status}
+                          variant="badge"
+                        />
+                        {isFillingFast ? (
+                          <span className="rounded bg-amber-500 px-1.5 py-0.2 text-[10px] font-bold text-black animate-pulse">
+                            {e.spotsLeft} left!
+                          </span>
+                        ) : e.spotsLeft <= 0 ? (
+                          <span className="rounded bg-rose-600 px-1.5 py-0.2 text-[10px] font-bold text-white">
+                            Sold Out
+                          </span>
+                        ) : (
+                          <span className="rounded bg-emerald-500/90 backdrop-blur-md px-1.5 py-0.2 text-[10px] font-bold text-white">
+                            Open
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </div>
 
@@ -796,6 +927,18 @@ export function EventsPage() {
                         ))}
                       </div>
                     )}
+
+                    {/* Registration Deadline Countdown Bar */}
+                    <div className="pt-1.5">
+                      <TournamentCountdown
+                        eventId={e.id}
+                        deadline={e.registrationDeadline}
+                        eventDate={e.date}
+                        spotsLeft={e.spotsLeft}
+                        status={e.status}
+                        variant="strip"
+                      />
+                    </div>
                   </div>
                 </div>
 
@@ -822,6 +965,13 @@ export function EventsPage() {
                     </div>
 
                     <div className="flex items-center gap-1.5">
+                      <SaveForLaterButton
+                        eventId={e.id}
+                        eventTitle={e.title}
+                        isSaved={isSaved(e.id)}
+                        onToggle={() => toggleSave(e)}
+                        variant="compact"
+                      />
                       <Button
                         type="button"
                         variant="ghost"
@@ -1095,6 +1245,16 @@ export function EventsPage() {
             </DialogHeader>
 
             <div className="space-y-4 py-2 text-xs">
+              {/* Registration Deadline Countdown Banner */}
+              <TournamentCountdown
+                eventId={rulesEvent.id}
+                deadline={rulesEvent.registrationDeadline}
+                eventDate={rulesEvent.date}
+                spotsLeft={rulesEvent.spotsLeft}
+                status={rulesEvent.status}
+                variant="banner"
+              />
+
               {/* Prize & Perks Box */}
               {rulesEvent.prizePool && (
                 <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-3 space-y-1">
@@ -1178,27 +1338,39 @@ export function EventsPage() {
               </div>
             </div>
 
-            <DialogFooter className="pt-2">
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                onClick={() => setRulesEvent(null)}
-                className="text-xs"
-              >
-                Close
-              </Button>
-              <Button
-                type="button"
-                size="sm"
-                onClick={() => {
-                  setRulesEvent(null);
-                  setRegisteringEvent(rulesEvent);
-                }}
-                className="text-xs font-bold bg-primary text-primary-foreground"
-              >
-                Register for this Tournament
-              </Button>
+            <DialogFooter className="pt-3 border-t border-border/60">
+              <div className="w-full flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5">
+                <SaveForLaterButton
+                  eventId={rulesEvent.id}
+                  eventTitle={rulesEvent.title}
+                  isSaved={isSaved(rulesEvent.id)}
+                  onToggle={() => toggleSave(rulesEvent)}
+                  variant="button"
+                />
+
+                <div className="flex items-center justify-end gap-1.5">
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setRulesEvent(null)}
+                    className="text-xs"
+                  >
+                    Close
+                  </Button>
+                  <Button
+                    type="button"
+                    size="sm"
+                    onClick={() => {
+                      setRulesEvent(null);
+                      setRegisteringEvent(rulesEvent);
+                    }}
+                    className="text-xs font-bold bg-primary text-primary-foreground"
+                  >
+                    Register for this Tournament
+                  </Button>
+                </div>
+              </div>
             </DialogFooter>
           </DialogContent>
         </Dialog>

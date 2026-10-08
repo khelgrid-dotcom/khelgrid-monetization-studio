@@ -34,6 +34,7 @@ import {
   PlusCircle,
   ShieldCheck,
   Check,
+  Bookmark,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -68,6 +69,7 @@ export interface EventFilterState {
   priceRange: EventPriceRangeFilter;
   onlySpotsLeft: boolean;
   cashPrizeOnly: boolean;
+  onlySaved?: boolean;
   sort: EventSortOption;
   view: EventViewMode;
 }
@@ -81,6 +83,7 @@ export const DEFAULT_EVENT_FILTERS: EventFilterState = {
   priceRange: "all",
   onlySpotsLeft: false,
   cashPrizeOnly: false,
+  onlySaved: false,
   sort: "date_asc",
   view: "grid",
 };
@@ -140,12 +143,21 @@ export const EVENT_SORT_OPTIONS = [
 /**
  * Filter and sort tournaments based on active criteria
  */
-export function filterSportEvents(events: SportEvent[], filters: EventFilterState): SportEvent[] {
+export function filterSportEvents(
+  events: SportEvent[],
+  filters: EventFilterState,
+  savedIds?: Set<string>,
+): SportEvent[] {
   const query = filters.q.trim().toLowerCase();
 
   return events
     .filter((event) => {
-      // 1. Text Search
+      // 0. Saved for Later Filter
+      if (filters.onlySaved && savedIds) {
+        if (!savedIds.has(event.id)) {
+          return false;
+        }
+      }
       if (query) {
         const text = [
           event.title,
@@ -282,6 +294,7 @@ export interface EventFiltersProps {
   totalAvailable: number;
   sportCounts: Record<string, number>;
   categoryCounts?: Record<string, number>;
+  savedCount?: number;
   onOpenHostModal?: () => void;
 }
 
@@ -293,6 +306,7 @@ export function EventFilters({
   totalAvailable,
   sportCounts,
   categoryCounts,
+  savedCount = 0,
   onOpenHostModal,
 }: EventFiltersProps) {
   const update = (partial: Partial<EventFilterState>) => {
@@ -309,6 +323,7 @@ export function EventFilters({
     if (filters.priceRange !== "all") count++;
     if (filters.onlySpotsLeft) count++;
     if (filters.cashPrizeOnly) count++;
+    if (filters.onlySaved) count++;
     if (filters.sort !== "date_asc") count++;
     return count;
   }, [filters]);
@@ -316,6 +331,13 @@ export function EventFilters({
   const activeBadges = useMemo(() => {
     const list: Array<{ id: string; label: string; onRemove: () => void }> = [];
 
+    if (filters.onlySaved) {
+      list.push({
+        id: "onlySaved",
+        label: `Saved Tournaments (${savedCount})`,
+        onRemove: () => update({ onlySaved: false }),
+      });
+    }
     if (filters.category !== "all") {
       const tab = EVENT_CATEGORY_TABS.find((t) => t.id === filters.category);
       list.push({
@@ -422,6 +444,42 @@ export function EventFilters({
               </button>
             );
           })}
+          {/* Quick Saved for Later Filter Button */}
+          <button
+            type="button"
+            onClick={() => update({ onlySaved: !filters.onlySaved })}
+            className={cn(
+              "shrink-0 flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-all cursor-pointer whitespace-nowrap border",
+              filters.onlySaved
+                ? "bg-amber-500 text-white border-amber-400 font-bold shadow-xs ring-1 ring-amber-400"
+                : "border-border/60 bg-secondary/50 hover:bg-secondary text-muted-foreground hover:text-foreground",
+            )}
+            title={
+              filters.onlySaved
+                ? "Showing saved tournaments only (click to clear)"
+                : "Filter by saved tournaments"
+            }
+          >
+            <Bookmark
+              className={cn(
+                "h-3.5 w-3.5",
+                filters.onlySaved ? "fill-white text-white" : "text-amber-500",
+              )}
+            />
+            <span>Saved</span>
+            {savedCount > 0 && (
+              <span
+                className={cn(
+                  "font-mono text-[10px] px-1.5 py-0.2 rounded-full",
+                  filters.onlySaved
+                    ? "bg-black/20 text-white font-bold"
+                    : "bg-amber-500/10 text-amber-600 dark:text-amber-400 font-bold",
+                )}
+              >
+                {savedCount}
+              </span>
+            )}
+          </button>
         </div>
 
         {/* Top Action Controls: View Switcher & Host CTA */}
@@ -780,6 +838,19 @@ export function EventFilters({
                   <span className="flex items-center gap-1.5">
                     <Check className="h-3.5 w-3.5 text-emerald-500" />
                     <span>Open Registration Slots Only</span>
+                  </span>
+                </label>
+
+                <label className="flex items-center gap-2 cursor-pointer text-xs text-foreground">
+                  <input
+                    type="checkbox"
+                    checked={!!filters.onlySaved}
+                    onChange={(e) => update({ onlySaved: e.target.checked })}
+                    className="rounded border-border accent-amber-500 h-4 w-4"
+                  />
+                  <span className="flex items-center gap-1.5">
+                    <Bookmark className="h-3.5 w-3.5 text-amber-500 fill-amber-500/40" />
+                    <span>Saved for Later Only ({savedCount})</span>
                   </span>
                 </label>
               </div>
