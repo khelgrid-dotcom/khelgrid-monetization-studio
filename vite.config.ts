@@ -82,6 +82,9 @@ export default defineConfig({
       port: 3000,
       allowedHosts: true,
     },
+    define: {
+      "process.env.TSS_ROUTER_BASEPATH": JSON.stringify(""),
+    },
     build: {
       rollupOptions: {
         onwarn(warning, warn) {

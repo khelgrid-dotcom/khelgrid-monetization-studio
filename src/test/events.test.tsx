@@ -228,5 +228,26 @@ describe("Events & Tournaments Suite", () => {
       expect(html).toContain("Register");
       expect(html).toContain("Rules");
     });
+
+    it("renders collapsible FAQ section addressing registration and eligibility questions", () => {
+      const html = renderToString(<EventsPage />);
+
+      expect(html).toContain("Tournament Registration &amp; Eligibility FAQs");
+      expect(html).toContain("Tournament Knowledge Base");
+      expect(html).toContain("Who is eligible to participate in KhelGrid tournaments?");
+      expect(html).toContain("Can I register as an individual / solo player without a team?");
+      expect(html).toContain("What identity documents are required at check-in on match day?");
+      expect(html).toContain(
+        "Can we modify our squad roster or substitute players after registering?",
+      );
+      expect(html).toContain(
+        "What is the cancellation and refund policy if our team cannot attend?",
+      );
+      expect(html).toContain("All Questions");
+      expect(html).toContain("Registration &amp; Teams");
+      expect(html).toContain("Eligibility &amp; ID Verification");
+      expect(html).toContain("Match Rules &amp; Kits");
+      expect(html).toContain("Prizes &amp; Refunds");
+    });
   });
 });

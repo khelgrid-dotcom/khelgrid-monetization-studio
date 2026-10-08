@@ -94,8 +94,7 @@ export function getItemCategory(to: string): NavCategory {
     to === "/sports" ||
     to === "/blog" ||
     to === "/tools" ||
-    to === "/ai-guide" ||
-    to === "/crawler"
+    to === "/ai-guide"
   ) {
     return "community";
   }

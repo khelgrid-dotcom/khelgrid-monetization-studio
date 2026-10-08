@@ -17,6 +17,7 @@ import {
   type EventFilterState,
   EVENT_SPORT_ICONS,
 } from "@/components/events/EventFilters";
+import { TournamentFAQ } from "@/components/events/TournamentFAQ";
 import {
   Trophy,
   MapPin,
@@ -384,8 +385,8 @@ export function EventsPage() {
           <div className="space-y-1">
             <h3 className="text-base font-bold text-foreground">No Tournaments Found</h3>
             <p className="text-xs sm:text-sm text-muted-foreground max-w-md mx-auto">
-              We couldn&apos;t find any competitions matching your selected category, sport, city, or budget.
-              Try selecting another category or check upcoming fixtures across India.
+              We couldn&apos;t find any competitions matching your selected category, sport, city,
+              or budget. Try selecting another category or check upcoming fixtures across India.
             </p>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
@@ -401,7 +402,9 @@ export function EventsPage() {
             <Button
               type="button"
               size="sm"
-              onClick={() => setFilters({ ...DEFAULT_EVENT_FILTERS, category: "registration_open" })}
+              onClick={() =>
+                setFilters({ ...DEFAULT_EVENT_FILTERS, category: "registration_open" })
+              }
               className="gap-1.5 text-xs bg-emerald-600 text-white hover:bg-emerald-700 cursor-pointer"
             >
               ⚡ View Registration Open
@@ -845,6 +848,9 @@ export function EventsPage() {
           })}
         </div>
       )}
+
+      {/* Collapsible FAQ Section: Registration & Eligibility */}
+      <TournamentFAQ onOpenHostModal={() => setHostModalOpen(true)} />
 
       {/* 5. TEAM / SOLO REGISTRATION MODAL */}
       {registeringEvent && (
