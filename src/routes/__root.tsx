@@ -157,9 +157,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           ] as const)
         : []),
     ],
-    // NOTE: the AdSense loader script is intentionally NOT emitted here.
-    // <AdSenseLoader /> injects it client-side only after the visitor answers
-    // the cookie banner, so no ad request happens without consent.
+    scripts: [
+      ...(hasValidPublisherId()
+        ? [
+            {
+              src: `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsConfig.publisherId}`,
+              async: true,
+              crossOrigin: "anonymous" as const,
+            },
+          ]
+        : []),
+    ],
   }),
 
   shellComponent: RootShell,

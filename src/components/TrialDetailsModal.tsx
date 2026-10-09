@@ -36,7 +36,6 @@ import {
 } from "lucide-react";
 import type { Trial } from "@/data/trials";
 import type { TrialDiscoveryItem } from "@/lib/trials-service";
-import { InFeedAd } from "@/components/ads/AdUnits";
 import { toast } from "sonner";
 
 export interface OrganizerContact {
@@ -645,11 +644,6 @@ export function TrialDetailsModal({
                   </a>
                 </Button>
               </div>
-            </div>
-
-            {/* Embedded AdSense Ad Unit */}
-            <div className="w-full overflow-hidden">
-              <InFeedAd adSlot="modalSponsored" minHeight={90} className="my-0" />
             </div>
           </div>
         )}

@@ -128,7 +128,25 @@ function AdUnitBase({
     minHeight: typeof minHeight === "number" ? `${minHeight}px` : minHeight,
   };
 
-  const showPlaceholder = !manualAdsEnabled || status === "unavailable";
+  if (!configured) {
+    if (adsConfig.enableTestMode) {
+      return (
+        <div
+          role="complementary"
+          aria-label={ariaLabel}
+          className={`my-6 w-full max-w-full overflow-hidden ${className}`}
+          style={{ ...reserved, ...style }}
+        >
+          <AdPlaceholder minHeight={reserved.minHeight as string} />
+        </div>
+      );
+    }
+    return null;
+  }
+
+  if (status === "unavailable") {
+    return null;
+  }
 
   return (
     <div
@@ -145,8 +163,10 @@ function AdUnitBase({
         </div>
       )}
 
-      {showPlaceholder ? (
-        <AdPlaceholder minHeight={reserved.minHeight as string} />
+      {!manualAdsEnabled ? (
+        adsConfig.enableTestMode ? (
+          <AdPlaceholder minHeight={reserved.minHeight as string} />
+        ) : null
       ) : (
         <ins
           ref={insRef}
