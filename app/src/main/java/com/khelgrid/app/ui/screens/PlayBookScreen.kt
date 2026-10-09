@@ -23,6 +23,9 @@ import coil.compose.AsyncImage
 import com.khelgrid.app.data.model.UserAuthState
 import com.khelgrid.app.data.repository.SportsRepository
 import com.khelgrid.app.data.repository.UserSessionRepository
+import com.khelgrid.app.ui.components.MatchupPostAgentDialog
+import com.khelgrid.app.ui.components.VerificationAgentDialog
+import com.khelgrid.app.ui.components.VerificationTarget
 import com.khelgrid.app.ui.theme.*
 
 @Composable
@@ -33,6 +36,8 @@ fun PlayBookScreen(
     var selectedTab by remember { mutableStateOf(0) }
     val bookedVenues by UserSessionRepository.bookedVenues.collectAsState()
     val joinedGames by UserSessionRepository.joinedGames.collectAsState()
+    var verificationTarget by remember { mutableStateOf<VerificationTarget?>(null) }
+    var showMatchupAgent by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -179,6 +184,18 @@ fun PlayBookScreen(
                                     }
                                 }
 
+                                OutlinedButton(
+                                    onClick = { verificationTarget = VerificationTarget.venue(venue) },
+                                    modifier = Modifier.fillMaxWidth(),
+                                    shape = RoundedCornerShape(10.dp),
+                                    colors = ButtonDefaults.outlinedButtonColors(contentColor = KhelGridSecondary),
+                                    border = androidx.compose.foundation.BorderStroke(1.dp, KhelGridSecondary.copy(alpha = 0.7f))
+                                ) {
+                                    Icon(Icons.Default.VerifiedUser, contentDescription = null, modifier = Modifier.size(16.dp))
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                    Text("Verify with community agent", fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                                }
+
                                 Spacer(modifier = Modifier.height(12.dp))
 
                                 Row(
@@ -225,6 +242,33 @@ fun PlayBookScreen(
                 contentPadding = PaddingValues(16.dp),
                 verticalArrangement = Arrangement.spacedBy(14.dp)
             ) {
+                item {
+                    Surface(
+                        shape = RoundedCornerShape(16.dp),
+                        color = KhelGridCard,
+                        border = androidx.compose.foundation.BorderStroke(1.dp, KhelGridSecondary.copy(alpha = 0.6f)),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                Icon(Icons.Default.GroupAdd, contentDescription = null, tint = KhelGridSecondary)
+                                Text("Need players for a game?", fontWeight = FontWeight.Bold, fontSize = 16.sp, color = TextPrimary)
+                            }
+                            Text("Draft a MatchupPost, invite compatible athletes, and publish it to the community.", fontSize = 12.sp, color = TextSecondary)
+                            Button(
+                                onClick = { showMatchupAgent = true },
+                                modifier = Modifier.fillMaxWidth(),
+                                shape = RoundedCornerShape(10.dp),
+                                colors = ButtonDefaults.buttonColors(containerColor = KhelGridSecondary)
+                            ) {
+                                Icon(Icons.Default.AutoAwesome, contentDescription = null, tint = Color.Black, modifier = Modifier.size(17.dp))
+                                Spacer(modifier = Modifier.width(7.dp))
+                                Text("Create a MatchupPost", fontWeight = FontWeight.Bold, color = Color.Black)
+                            }
+                        }
+                    }
+                }
+
                 item {
                     Text(
                         text = "Join games hosted by nearby players & split court costs",
@@ -338,5 +382,29 @@ fun PlayBookScreen(
                 }
             }
         }
+    }
+
+    verificationTarget?.let { target ->
+        VerificationAgentDialog(
+            target = target,
+            onDismiss = { verificationTarget = null }
+        )
+    }
+
+    if (showMatchupAgent) {
+        MatchupPostAgentDialog(
+            initialSport = userState.sport,
+            initialCity = userState.location,
+            athletes = SportsRepository.matchupAthletes,
+            onInvite = { athlete ->
+                UserSessionRepository.sendMatchupInvite(athlete.id)
+                onShowMessage("Invite sent to ${athlete.name}!")
+            },
+            onPublish = { post ->
+                UserSessionRepository.publishMatchupPost(post)
+                onShowMessage("MatchupPost published for ${post.sport} in ${post.city}!")
+            },
+            onDismiss = { showMatchupAgent = false }
+        )
     }
 }

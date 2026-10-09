@@ -30,7 +30,7 @@ export function ComingSoon({ icon: Icon, eyebrow, title, description, bullets, c
 
       {bullets && bullets.length > 0 && (
         <div className="mt-10 grid gap-3 sm:grid-cols-2">
-          {bullets.map(b => (
+          {bullets.map((b) => (
             <div key={b} className="rounded-2xl border border-border bg-gradient-card p-5 text-sm">
               <div className="flex items-start gap-3">
                 <div className="mt-0.5 h-2 w-2 rounded-full bg-primary shadow-[0_0_12px_var(--neon-glow)]" />
@@ -42,7 +42,11 @@ export function ComingSoon({ icon: Icon, eyebrow, title, description, bullets, c
       )}
 
       <div className="mt-10 flex flex-wrap gap-3">
-        <Button asChild size="lg" className="bg-gradient-hero text-primary-foreground hover:opacity-95">
+        <Button
+          asChild
+          size="lg"
+          className="bg-gradient-hero text-primary-foreground hover:opacity-95"
+        >
           <Link to={cta?.to ?? "/trials"}>
             {cta?.label ?? "Explore live trials"} <ArrowRight className="ml-1 h-4 w-4" />
           </Link>

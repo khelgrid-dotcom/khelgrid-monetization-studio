@@ -17,7 +17,9 @@ export function BannerAd({ minHeight = 100, className = "", ...rest }: Variant) 
 
 /** Fluid, fully responsive unit that adapts to whatever container it is in. */
 export function ResponsiveAd({ minHeight = 250, ...rest }: Variant) {
-  return <AdUnit adFormat="auto" responsive minHeight={minHeight} ariaLabel="Advertisement" {...rest} />;
+  return (
+    <AdUnit adFormat="auto" responsive minHeight={minHeight} ariaLabel="Advertisement" {...rest} />
+  );
 }
 
 /** Tall unit for the desktop sidebar. Hidden on small screens. */

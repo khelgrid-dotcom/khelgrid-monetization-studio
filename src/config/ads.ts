@@ -13,7 +13,8 @@
 const DEFAULT_PUBLISHER_ID = "ca-pub-8352691151177209";
 
 const RAW_PUBLISHER_ID =
-  ((import.meta.env["VITE_GOOGLE_ADSENSE_ID"] as string | undefined) ?? "").trim() || DEFAULT_PUBLISHER_ID;
+  ((import.meta.env["VITE_GOOGLE_ADSENSE_ID"] as string | undefined) ?? "").trim() ||
+  DEFAULT_PUBLISHER_ID;
 
 /** ca-pub-XXXXXXXXXXXXXXXX (16 digits). */
 const PUBLISHER_ID_RE = /^ca-pub-\d{16}$/;
@@ -69,6 +70,7 @@ export const AD_SLOTS = {
   listingInline: import.meta.env["VITE_ADSLOT_LISTING_INLINE"] ?? "",
   searchInline: import.meta.env["VITE_ADSLOT_SEARCH_INLINE"] ?? "",
   mobileSticky: import.meta.env["VITE_ADSLOT_MOBILE_STICKY"] ?? "",
+  modalSponsored: import.meta.env["VITE_ADSLOT_MODAL_SPONSORED"] ?? "",
 } as const satisfies Record<string, string>;
 
 export type AdSlotKey = keyof typeof AD_SLOTS;

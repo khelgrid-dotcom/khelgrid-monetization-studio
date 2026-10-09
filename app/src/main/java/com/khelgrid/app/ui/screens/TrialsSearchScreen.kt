@@ -25,6 +25,8 @@ import com.khelgrid.app.data.repository.SportsRepository
 import com.khelgrid.app.data.repository.UserSessionRepository
 import com.khelgrid.app.ui.components.BoostModalDialog
 import com.khelgrid.app.ui.components.CheckoutModalDialog
+import com.khelgrid.app.ui.components.VerificationAgentDialog
+import com.khelgrid.app.ui.components.VerificationTarget
 import com.khelgrid.app.ui.theme.*
 
 @Composable
@@ -41,6 +43,7 @@ fun TrialsSearchScreen(
 
     var checkoutTrial by remember { mutableStateOf<Trial?>(null) }
     var boostTrialTarget by remember { mutableStateOf<Trial?>(null) }
+    var verificationTarget by remember { mutableStateOf<VerificationTarget?>(null) }
 
     // Filter & Sort
     val filteredTrials = remember(searchQuery, selectedSport, selectedCity, freeOnly, sortKey, userState.boostedTrials) {
@@ -384,6 +387,18 @@ fun TrialsSearchScreen(
                         }
                     }
 
+                    OutlinedButton(
+                        onClick = { verificationTarget = VerificationTarget.opportunity(trial) },
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(10.dp),
+                        colors = ButtonDefaults.outlinedButtonColors(contentColor = KhelGridSecondary),
+                        border = androidx.compose.foundation.BorderStroke(1.dp, KhelGridSecondary.copy(alpha = 0.7f))
+                    ) {
+                        Icon(Icons.Default.VerifiedUser, contentDescription = null, modifier = Modifier.size(16.dp))
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text("Verify with community agent", fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                    }
+
                     Spacer(modifier = Modifier.height(14.dp))
 
                     // Action buttons (Apply / Boost)
@@ -468,6 +483,13 @@ fun TrialsSearchScreen(
                 boostTrialTarget = null
                 onShowMessage(msg)
             }
+        )
+    }
+
+    verificationTarget?.let { target ->
+        VerificationAgentDialog(
+            target = target,
+            onDismiss = { verificationTarget = null }
         )
     }
 }

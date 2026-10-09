@@ -1,12 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { Heart, Bell, Save, Bot, CheckCheck, Trash2 } from "lucide-react";
+import { Heart, Bell, Save, Bot, CheckCheck, Trash2, Trophy } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { TrialCard } from "@/components/TrialCard";
 import { mockSavedSearches } from "@/data/recommendations";
 import { useNotifications } from "@/context/NotificationContext";
+import { useSavedOpportunities } from "@/context/SavedOpportunityContext";
+import { useAuth } from "@/context/AuthContext";
 import { ParticipationAgent } from "@/components/ParticipationAgent";
 
 export const Route = createFileRoute("/recommendations")({
@@ -25,6 +27,8 @@ export const Route = createFileRoute("/recommendations")({
 
 function RecommendationsPage() {
   const { notifications, markAsRead, markAllAsRead, clearNotification } = useNotifications();
+  const { savedOpportunities, savedIds } = useSavedOpportunities();
+  const auth = useAuth();
   const [activeTab, setActiveTab] = useState<"agent" | "for-you" | "saved" | "alerts">("agent");
 
   const unreadNotifications = notifications.filter((n) => !n.read);
@@ -66,14 +70,16 @@ function RecommendationsPage() {
           </button>
           <button
             onClick={() => setActiveTab("saved")}
-            className={`px-4 py-3 font-medium border-b-2 transition ${
+            className={`whitespace-nowrap px-4 py-3 font-medium border-b-2 transition ${
               activeTab === "saved"
-                ? "border-blue-600 text-blue-600"
+                ? "border-rose-600 text-rose-600 font-bold"
                 : "border-transparent text-slate-600 hover:text-slate-900"
             }`}
           >
-            <Save className="inline mr-2 h-4 w-4" />
-            Saved Searches
+            <Heart
+              className={`inline mr-2 h-4 w-4 ${savedIds.length > 0 ? "fill-rose-500 text-rose-500" : ""}`}
+            />
+            Saved Favorites ({savedOpportunities.length})
           </button>
           <button
             onClick={() => setActiveTab("alerts")}
@@ -163,36 +169,98 @@ function RecommendationsPage() {
           </div>
         )}
 
-        {/* Saved Searches Tab */}
+        {/* Saved Favorites & Searches Tab */}
         {activeTab === "saved" && (
-          <div className="space-y-4">
-            <Button variant="outline" className="w-full justify-start">
-              + Create New Search
-            </Button>
-            {mockSavedSearches.map((search) => (
-              <Card key={search.id} className="hover:shadow-lg transition">
-                <CardHeader>
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <CardTitle>{search.name}</CardTitle>
-                      <CardDescription>
-                        {search.sport} • {search.city}
-                        {search.skillLevel && ` • ${search.skillLevel}`}
-                        {search.priceRange && ` • ₹${search.priceRange[0]}-${search.priceRange[1]}`}
-                      </CardDescription>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-sm font-medium text-blue-600">
-                        {search.savedCount} results
-                      </div>
-                      <Button variant="ghost" size="sm">
-                        Edit
-                      </Button>
-                    </div>
+          <div className="space-y-6">
+            {/* 1. Favorite Selection Trials */}
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
+                    <Heart className="h-5 w-5 fill-rose-500 text-rose-500" />
+                    <span>Your Favorite Selection Trials</span>
+                  </h2>
+                  <p className="text-sm text-slate-600">
+                    Trials and combines you bookmarked with the ❤️ Save icon.
+                  </p>
+                </div>
+                <Link
+                  to="/search"
+                  search={{ savedOnly: false }}
+                  className="text-xs font-semibold text-blue-600 hover:underline"
+                >
+                  Explore All Trials →
+                </Link>
+              </div>
+
+              {savedOpportunities.length === 0 ? (
+                <Card className="border-dashed p-8 text-center space-y-3 bg-white/70">
+                  <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-rose-50 text-rose-500">
+                    <Heart className="h-6 w-6" />
                   </div>
-                </CardHeader>
-              </Card>
-            ))}
+                  <div className="space-y-1">
+                    <h3 className="font-bold text-slate-900">No favorite trials saved yet</h3>
+                    <p className="text-xs sm:text-sm text-slate-600 max-w-md mx-auto">
+                      Click the Save or Heart icon on any selection trial card to view your favorite
+                      trials in this separate list.
+                    </p>
+                  </div>
+                  <Button asChild size="sm" className="bg-blue-600 hover:bg-blue-700">
+                    <Link to="/search">Browse Selection Trials</Link>
+                  </Button>
+                </Card>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full min-w-0 max-w-full">
+                  {savedOpportunities.map((trial) => (
+                    <TrialCard
+                      key={trial.id}
+                      trial={trial}
+                      onApply={() => auth.applyToTrial(trial.id)}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* 2. Saved Searches */}
+            <div className="space-y-3 pt-6 border-t border-slate-200">
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+                  <Save className="h-4 w-4 text-slate-600" />
+                  <span>Saved Search Alerts</span>
+                </h3>
+                <Button variant="outline" size="sm">
+                  + Create New Alert
+                </Button>
+              </div>
+              <div className="space-y-3">
+                {mockSavedSearches.map((search) => (
+                  <Card key={search.id} className="hover:shadow-md transition">
+                    <CardHeader>
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <CardTitle className="text-base">{search.name}</CardTitle>
+                          <CardDescription>
+                            {search.sport} • {search.city}
+                            {search.skillLevel && ` • ${search.skillLevel}`}
+                            {search.priceRange &&
+                              ` • ₹${search.priceRange[0]}-${search.priceRange[1]}`}
+                          </CardDescription>
+                        </div>
+                        <div className="text-right">
+                          <div className="text-sm font-medium text-blue-600">
+                            {search.savedCount} results
+                          </div>
+                          <Button variant="ghost" size="sm">
+                            Edit
+                          </Button>
+                        </div>
+                      </div>
+                    </CardHeader>
+                  </Card>
+                ))}
+              </div>
+            </div>
           </div>
         )}
 

@@ -61,10 +61,19 @@ export const GUIDE_BODIES: Record<string, GuideBody> = {
             type: "table",
             head: ["Category", "Carry"],
             rows: [
-              ["Documents", "Birth certificate, school certificate, Aadhaar, photographs, medical certificate, consent letter"],
-              ["Kit", "Bat, pads, gloves, thigh pad, abdominal guard, helmet, spikes and rubber-sole shoes"],
+              [
+                "Documents",
+                "Birth certificate, school certificate, Aadhaar, photographs, medical certificate, consent letter",
+              ],
+              [
+                "Kit",
+                "Bat, pads, gloves, thigh pad, abdominal guard, helmet, spikes and rubber-sole shoes",
+              ],
               ["Bowling", "Two pairs of socks, tape, spare laces, sunscreen, cap"],
-              ["Recovery", "2 litres of water, electrolyte sachets, bananas, roti-sabzi or rice, glucose"],
+              [
+                "Recovery",
+                "2 litres of water, electrolyte sachets, bananas, roti-sabzi or rice, glucose",
+              ],
             ],
           },
           {
@@ -131,9 +140,17 @@ export const GUIDE_BODIES: Record<string, GuideBody> = {
             type: "table",
             head: ["Test", "What it measures", "How it is run"],
             rows: [
-              ["Yo-Yo intermittent recovery", "Repeated-sprint endurance", "20m shuttles to a beep with a 10-second walk recovery"],
+              [
+                "Yo-Yo intermittent recovery",
+                "Repeated-sprint endurance",
+                "20m shuttles to a beep with a 10-second walk recovery",
+              ],
               ["20m or 40m sprint", "Acceleration and speed", "Timed, standing start, best of two"],
-              ["Countermovement or vertical jump", "Lower-body power", "Reach mark against a wall or a jump mat"],
+              [
+                "Countermovement or vertical jump",
+                "Lower-body power",
+                "Reach mark against a wall or a jump mat",
+              ],
               ["Agility / T-test", "Change of direction", "Cone course, timed"],
               ["Core hold", "Trunk endurance", "Plank or side-plank held to failure"],
             ],
@@ -234,10 +251,16 @@ export const GUIDE_BODIES: Record<string, GuideBody> = {
             type: "table",
             head: ["Weak", "Strong"],
             rows: [
-              ["Good performance in state tournament", "State U-17 championship 2025 — quarter-finalist, 3 wins from 4"],
+              [
+                "Good performance in state tournament",
+                "State U-17 championship 2025 — quarter-finalist, 3 wins from 4",
+              ],
               ["Fast bowler with pace", "Fast-medium; 6 overs, 2/18 in district league final 2025"],
               ["Very fit athlete", "30m sprint 4.28s, standing broad jump 2.35m (tested Jul 2026)"],
-              ["Attended many camps", "SAI district camp, Mar 2026 — 10 days, selected from district trial"],
+              [
+                "Attended many camps",
+                "SAI district camp, Mar 2026 — 10 days, selected from district trial",
+              ],
             ],
           },
           {
@@ -303,10 +326,26 @@ export const GUIDE_BODIES: Record<string, GuideBody> = {
             type: "table",
             head: ["When", "Eat", "Why"],
             rows: [
-              ["Lunch, day before", "Rice or roti, dal, vegetables, curd, a little paneer/egg/chicken", "Tops up carbohydrate stores with familiar food"],
-              ["Evening, day before", "Fruit and a handful of nuts, plenty of water", "Steady energy without a heavy stomach"],
-              ["Dinner, day before", "Carbohydrate-led, light on oil and chilli, modest protein", "Digestible; protects sleep"],
-              ["Before bed", "A glass of water or milk if you normally drink it", "Hydration without waking up thirsty"],
+              [
+                "Lunch, day before",
+                "Rice or roti, dal, vegetables, curd, a little paneer/egg/chicken",
+                "Tops up carbohydrate stores with familiar food",
+              ],
+              [
+                "Evening, day before",
+                "Fruit and a handful of nuts, plenty of water",
+                "Steady energy without a heavy stomach",
+              ],
+              [
+                "Dinner, day before",
+                "Carbohydrate-led, light on oil and chilli, modest protein",
+                "Digestible; protects sleep",
+              ],
+              [
+                "Before bed",
+                "A glass of water or milk if you normally drink it",
+                "Hydration without waking up thirsty",
+              ],
             ],
           },
           {
@@ -487,9 +526,9 @@ export const GUIDE_BODIES: Record<string, GuideBody> = {
             type: "table",
             head: ["Say", "Avoid"],
             rows: [
-              ["\"Warm up properly and enjoy it.\"", "\"This is your one chance.\""],
-              ["\"I'll be here whatever happens.\"", "\"Do you know how much this cost us?\""],
-              ["\"Do the basics well.\"", "Technical instructions from the sideline"],
+              ['"Warm up properly and enjoy it."', '"This is your one chance."'],
+              ['"I\'ll be here whatever happens."', '"Do you know how much this cost us?"'],
+              ['"Do the basics well."', "Technical instructions from the sideline"],
               ["Nothing at all, during play", "Arguing with officials or coaches"],
             ],
           },
@@ -557,10 +596,26 @@ export const GUIDE_BODIES: Record<string, GuideBody> = {
             type: "table",
             head: ["Category", "What is assessed", "How to show it"],
             rows: [
-              ["Technical", "Core skill executed under pressure and repeatedly", "Do the basics cleanly and often rather than attempting the spectacular"],
-              ["Physical", "Speed, power, endurance, movement quality", "Warm up fully; compete in every drill, including the boring ones"],
-              ["Tactical", "Decisions, positioning, reading the game", "Talk, scan, take a simple correct option over a risky one"],
-              ["Psychological", "Response to failure, focus, body language", "Reset visibly after a mistake; keep working when unnoticed"],
+              [
+                "Technical",
+                "Core skill executed under pressure and repeatedly",
+                "Do the basics cleanly and often rather than attempting the spectacular",
+              ],
+              [
+                "Physical",
+                "Speed, power, endurance, movement quality",
+                "Warm up fully; compete in every drill, including the boring ones",
+              ],
+              [
+                "Tactical",
+                "Decisions, positioning, reading the game",
+                "Talk, scan, take a simple correct option over a risky one",
+              ],
+              [
+                "Psychological",
+                "Response to failure, focus, body language",
+                "Reset visibly after a mistake; keep working when unnoticed",
+              ],
             ],
           },
           {

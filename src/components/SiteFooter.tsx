@@ -10,6 +10,9 @@ import {
   Trophy,
   Search,
   Sparkles,
+  Copyright,
+  Scale,
+  Clock,
 } from "lucide-react";
 import { CookieSettingsButton } from "@/components/ads";
 import { NAV_ITEMS } from "@/config/nav";
@@ -59,7 +62,7 @@ const COLUMNS: Array<{ title: string; items: ReturnType<typeof pick> }> = [
   },
   {
     title: "Play & train",
-    items: pick(["/play", "/book", "/train", "/coaches", "/memberships", "/sports"]),
+    items: pick(["/play", "/book", "/train", "/coaches", "/memberships", "/events"]),
   },
   {
     title: "Learn",
@@ -67,6 +70,7 @@ const COLUMNS: Array<{ title: string; items: ReturnType<typeof pick> }> = [
       "/start-from-zero",
       "/ai-guide",
       "/guides",
+      "/chronicle",
       "/blog",
       "/learning-hub",
       "/tools",
@@ -75,7 +79,16 @@ const COLUMNS: Array<{ title: string; items: ReturnType<typeof pick> }> = [
   },
   {
     title: "Grow",
-    items: pick(["/academy", "/pricing", "/community", "/cities", "/mobile-app", "/dashboard"]),
+    items: pick([
+      "/academy",
+      "/partner",
+      "/careers",
+      "/pricing",
+      "/community",
+      "/cities",
+      "/mobile-app",
+      "/dashboard",
+    ]),
   },
 ];
 
@@ -182,6 +195,41 @@ export function SiteFooter() {
         </div>
       </div>
 
+      {/* IPR, AI & Copyright Footbar Strip (Ultra-Compact) */}
+      <section className="border-t border-border bg-muted/15 py-3">
+        <div className="mx-auto flex max-w-7xl flex-col gap-2.5 px-4 text-xs md:flex-row md:items-center md:justify-between md:px-6">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 min-w-0">
+            <span className="inline-flex items-center gap-1 font-semibold text-foreground">
+              <Copyright className="h-3.5 w-3.5 text-primary shrink-0" />
+              IPR, AI & Copyright Notice:
+            </span>
+            <span className="text-[11px] text-muted-foreground">
+              Protected under Indian Copyright Act 1957. Purely autonomous AI outputs lack natural
+              authorship; creative arrangements & Sports CV layouts are proprietary. Unauthorized AI
+              deepfakes, athlete likeness theft & automated scraping for LLM training are strictly
+              prohibited.
+            </span>
+          </div>
+
+          <div className="flex items-center gap-2 shrink-0 pt-1 md:pt-0">
+            <Link
+              to="/ipr-policy"
+              className="inline-flex items-center gap-1 rounded-md border border-border/80 bg-background/80 px-2.5 py-1 text-[11px] font-semibold text-foreground transition hover:border-primary/50 hover:bg-card"
+            >
+              <Scale className="h-3 w-3 text-primary" />
+              IPR & AI Policy
+            </Link>
+            <a
+              href="mailto:ipr@khelgrid.com?subject=IPR%2FAI%20Takedown%20Notice&body=Attention%20Nodal%20IPR%20Officer%2C%0A%0AWork%2FAI%20Content%20URL%3A%0AInfringement%2FLikeness%20Issue%3A"
+              className="inline-flex items-center gap-1 rounded-md bg-primary/10 px-2.5 py-1 text-[11px] font-semibold text-primary transition hover:bg-primary hover:text-primary-foreground"
+            >
+              <Mail className="h-3 w-3" />
+              ipr@khelgrid.com
+            </a>
+          </div>
+        </div>
+      </section>
+
       {/* Legal bar */}
       <div className="border-t border-border">
         <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-5 text-xs text-muted-foreground md:flex-row md:items-center md:justify-between md:px-6">
@@ -198,6 +246,15 @@ export function SiteFooter() {
             </Link>
             <Link to="/terms" className="hover:text-foreground">
               Terms
+            </Link>
+            <Link to="/ipr-policy" className="font-semibold text-primary hover:underline">
+              IPR & Copyright
+            </Link>
+            <Link to="/cancellation-policy" className="hover:text-foreground">
+              Cancellation
+            </Link>
+            <Link to="/posh-policy" className="hover:text-foreground">
+              POSH Policy
             </Link>
             <Link to="/editorial-policy" className="hover:text-foreground">
               Editorial

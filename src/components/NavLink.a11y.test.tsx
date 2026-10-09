@@ -10,9 +10,7 @@ vi.mock("@tanstack/react-router", () => ({
   ),
 }));
 
-const MockIcon = ({ className }: { className?: string }) => (
-  <svg className={className} />
-);
+const MockIcon = ({ className }: { className?: string }) => <svg className={className} />;
 
 const playItem = {
   to: "/play",
@@ -22,9 +20,7 @@ const playItem = {
 };
 
 function classesOf(source: "sidebar_desktop" | "sidebar_mobile", active: boolean) {
-  const html = renderToString(
-    <NavLink item={playItem} active={active} source={source} />,
-  );
+  const html = renderToString(<NavLink item={playItem} active={active} source={source} />);
   const className = html.match(/class="([^"]+)"/)?.[1] ?? "";
   return className.trim().split(/\s+/);
 }

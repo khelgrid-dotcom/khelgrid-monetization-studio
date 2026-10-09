@@ -1,8 +1,7 @@
-@import "tailwindcss" source(none);
-@source "../src";
+@import "tailwindcss";
 @import "tw-animate-css";
 
-@custom-variant dark (&:is(.dark *));
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
@@ -38,7 +37,44 @@
 
 :root {
   --radius: 0.875rem;
-  /* KhelGrid · Midnight Indigo */
+  /* KhelGrid · Crisp Athletic Light Theme (Default) */
+  --background: oklch(0.985 0.005 270);
+  --foreground: oklch(0.18 0.04 275);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.18 0.04 275);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.18 0.04 275);
+  --primary: oklch(0.56 0.22 275);
+  --primary-foreground: oklch(0.99 0.005 270);
+  --secondary: oklch(0.94 0.02 275);
+  --secondary-foreground: oklch(0.2 0.04 275);
+  --muted: oklch(0.95 0.015 275);
+  --muted-foreground: oklch(0.46 0.04 275);
+  --accent: oklch(0.93 0.03 275);
+  --accent-foreground: oklch(0.2 0.04 275);
+  --destructive: oklch(0.6 0.22 25);
+  --destructive-foreground: oklch(0.99 0 0);
+  --border: oklch(0.88 0.02 275);
+  --input: oklch(0.88 0.02 275);
+  --ring: oklch(0.56 0.22 275);
+  --neon: oklch(0.56 0.22 275);
+  --neon-glow: oklch(0.56 0.22 275 / 0.22);
+  --gold: oklch(0.76 0.16 85);
+
+  --gradient-hero: linear-gradient(
+    135deg,
+    oklch(0.56 0.22 275) 0%,
+    oklch(0.54 0.23 295) 55%,
+    oklch(0.66 0.19 320) 100%
+  );
+  --gradient-card: linear-gradient(160deg, oklch(1 0 0) 0%, oklch(0.975 0.01 275) 100%);
+  --gradient-gold: linear-gradient(135deg, oklch(0.78 0.16 85) 0%, oklch(0.66 0.18 50) 100%);
+  --shadow-neon: 0 0 0 1px var(--neon-glow), 0 10px 30px -8px var(--neon-glow);
+  --shadow-elevated: 0 12px 32px -12px oklch(0.2 0.04 275 / 0.1);
+}
+
+.dark {
+  /* KhelGrid · Midnight Indigo (Dark Theme) */
   --background: oklch(0.13 0.04 275);
   --foreground: oklch(0.97 0.01 270);
   --card: oklch(0.18 0.05 275);
@@ -62,7 +98,12 @@
   --neon-glow: oklch(0.62 0.24 275 / 0.55);
   --gold: oklch(0.83 0.15 85);
 
-  --gradient-hero: linear-gradient(135deg, oklch(0.62 0.21 275) 0%, oklch(0.6 0.22 295) 55%, oklch(0.72 0.18 320) 100%);
+  --gradient-hero: linear-gradient(
+    135deg,
+    oklch(0.62 0.21 275) 0%,
+    oklch(0.6 0.22 295) 55%,
+    oklch(0.72 0.18 320) 100%
+  );
   --gradient-card: linear-gradient(160deg, oklch(0.2 0.06 275) 0%, oklch(0.16 0.05 275) 100%);
   --gradient-gold: linear-gradient(135deg, oklch(0.83 0.15 85) 0%, oklch(0.7 0.18 50) 100%);
   --shadow-neon: 0 0 0 1px var(--neon-glow), 0 10px 40px -8px var(--neon-glow);
@@ -70,17 +111,32 @@
 }
 
 @layer base {
-  * { border-color: var(--color-border); }
+  * {
+    border-color: var(--color-border);
+  }
   body {
-    background: radial-gradient(1200px 600px at 10% -10%, oklch(0.62 0.24 275 / 0.18), transparent 60%),
-                radial-gradient(900px 500px at 110% 10%, oklch(0.7 0.22 320 / 0.14), transparent 60%),
-                var(--color-background);
+    background-color: var(--color-background);
+    background-image:
+      radial-gradient(1200px 600px at 10% -10%, oklch(0.56 0.22 275 / 0.05), transparent 60%),
+      radial-gradient(900px 500px at 110% 10%, oklch(0.66 0.19 320 / 0.04), transparent 60%);
     color: var(--color-foreground);
     font-family: var(--font-sans);
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
+    transition:
+      background-color 0.2s ease,
+      color 0.2s ease;
   }
-  h1, h2, h3, h4 {
+  .dark body {
+    background-color: var(--color-background);
+    background-image:
+      radial-gradient(1200px 600px at 10% -10%, oklch(0.62 0.24 275 / 0.18), transparent 60%),
+      radial-gradient(900px 500px at 110% 10%, oklch(0.7 0.22 320 / 0.14), transparent 60%);
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
     font-family: var(--font-display);
     letter-spacing: -0.02em;
   }
@@ -88,7 +144,10 @@
 
 @layer utilities {
   .glow-neon {
-    box-shadow: 0 0 0 1px var(--neon), 0 0 30px var(--neon-glow), inset 0 0 20px oklch(0.78 0.22 155 / 0.1);
+    box-shadow:
+      0 0 0 1px var(--neon),
+      0 0 30px var(--neon-glow),
+      inset 0 0 20px oklch(0.78 0.22 155 / 0.1);
   }
   .text-gradient {
     background: var(--gradient-hero);
@@ -96,14 +155,41 @@
     background-clip: text;
     color: transparent;
   }
-  .bg-gradient-hero { background: var(--gradient-hero); }
-  .bg-gradient-card { background: var(--gradient-card); }
-  .bg-gradient-gold { background: var(--gradient-gold); }
+  .bg-gradient-hero {
+    background: var(--gradient-hero);
+  }
+  .bg-gradient-card {
+    background: var(--gradient-card);
+  }
+  .bg-gradient-gold {
+    background: var(--gradient-gold);
+  }
   .animate-pulse-glow {
     animation: pulse-glow 2.4s ease-in-out infinite;
   }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .touch-scroll-rail {
+    -webkit-overflow-scrolling: touch;
+    touch-action: manipulation;
+    overscroll-behavior-x: contain;
+  }
   @keyframes pulse-glow {
-    0%, 100% { box-shadow: 0 0 0 1px var(--neon), 0 0 20px var(--neon-glow); }
-    50% { box-shadow: 0 0 0 1px var(--neon), 0 0 45px var(--neon-glow); }
+    0%,
+    100% {
+      box-shadow:
+        0 0 0 1px var(--neon),
+        0 0 20px var(--neon-glow);
+    }
+    50% {
+      box-shadow:
+        0 0 0 1px var(--neon),
+        0 0 45px var(--neon-glow);
+    }
   }
 }

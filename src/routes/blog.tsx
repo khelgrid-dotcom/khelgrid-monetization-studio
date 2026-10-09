@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Clock, PenLine, Search } from "lucide-react";
+import { Clock, PenLine, Search, Newspaper } from "lucide-react";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { InFeedAd } from "@/components/ads";
 import { Badge } from "@/components/ui/badge";
@@ -7,9 +7,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useBlog } from "@/context/BlogContext";
 import type { BlogCategory, BlogPost } from "@/data/blog";
+import { buildSeoHead } from "@/lib/seo";
 
 const CATEGORIES: Array<"All" | BlogCategory> = [
   "All",
+  "Match analysis",
   "Training",
   "Trial preparation",
   "Sports career",
@@ -18,17 +20,16 @@ const CATEGORIES: Array<"All" | BlogCategory> = [
 ];
 
 export const Route = createFileRoute("/blog")({
-  head: () => ({
-    meta: [
-      { title: "Sports Training & Career Advice · KhelGrid Blog" },
-      {
-        name: "description",
-        content:
-          "Original athletic training tips, trial preparation checklists, recovery guidance and sports career advice for athletes and families.",
-      },
-    ],
-    links: [{ rel: "canonical", href: "https://khelgrid.com/blog" }],
-  }),
+  head: () =>
+    buildSeoHead({
+      title: "Sports Training, Trial Checklists & Athlete Insights · KhelGrid Blog",
+      description:
+        "Original athletic training tips, trial preparation checklists, recovery guidance and sports career advice for Indian athletes, coaches, and sports families.",
+      canonicalPath: "/blog",
+      keywords:
+        "sports training blog, trial prep checklist, athlete recovery, youth sports development, sports career India",
+      type: "website",
+    }),
   component: BlogIndex,
 });
 
@@ -75,12 +76,20 @@ function BlogIndex() {
             and confirm important decisions with a qualified professional or official organizer.
           </p>
         </div>
-        <Button asChild className="shrink-0 rounded-full">
-          <Link to="/blog/write">
-            <PenLine className="mr-2 h-4 w-4" />
-            Write an article
-          </Link>
-        </Button>
+        <div className="flex flex-wrap items-center gap-2">
+          <Button asChild variant="outline" className="shrink-0 rounded-full">
+            <Link to="/chronicle">
+              <Newspaper className="mr-2 h-4 w-4 text-primary" />
+              KhelChronicle Wire
+            </Link>
+          </Button>
+          <Button asChild className="shrink-0 rounded-full">
+            <Link to="/blog/write">
+              <PenLine className="mr-2 h-4 w-4" />
+              Write an article
+            </Link>
+          </Button>
+        </div>
       </header>
 
       <section className="mt-6" aria-label="Blog filters">

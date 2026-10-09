@@ -15,7 +15,7 @@ export function SportsLauncher({ open, onOpenChange }: SportsLauncherProps) {
   const [searchQuery, setSearchQuery] = useState("");
 
   const filteredSports = SPORTS_CATALOG.filter((sport) =>
-    sport.name.toLowerCase().includes(searchQuery.toLowerCase())
+    sport.name.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   return (

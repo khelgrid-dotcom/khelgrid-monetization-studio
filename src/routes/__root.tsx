@@ -1,4 +1,3 @@
-import type { ErrorComponentProps } from "@tanstack/react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   Outlet,
@@ -17,6 +16,9 @@ import { BlogProvider } from "@/context/BlogContext";
 import { FollowedAcademyProvider } from "@/context/FollowedAcademyContext";
 import { NotificationProvider } from "@/context/NotificationContext";
 import { SavedOpportunityProvider } from "@/context/SavedOpportunityContext";
+import { ThemeProvider, useTheme } from "@/context/ThemeContext";
+import { LanguageProvider } from "@/context/LanguageContext";
+import { HelmetProvider } from "react-helmet-async";
 import { Navbar } from "@/components/Navbar";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { BottomTabBar } from "@/components/BottomTabBar";
@@ -29,7 +31,9 @@ import {
 } from "@/components/ads";
 import { adsConfig, hasValidPublisherId } from "@/config/ads";
 import { GoogleTagLoader } from "@/components/GoogleTagLoader";
+import { SEOHead } from "@/components/SEOHead";
 import { SiteFooter } from "@/components/SiteFooter";
+import { FeaturesSidebar } from "@/components/FeaturesSidebar";
 import { HydrationDiagnostics } from "@/components/HydrationDiagnostics";
 
 function NotFoundComponent() {
@@ -52,7 +56,7 @@ function NotFoundComponent() {
   );
 }
 
-function ErrorComponent({ error, reset }: ErrorComponentProps) {
+function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
   const router = useRouter();
   useEffect(() => {
@@ -95,23 +99,42 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "mobile-web-app-capable", content: "yes" },
       { name: "apple-mobile-web-app-capable", content: "yes" },
       { name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" },
-      { title: "KhelGrid · India's sports trials, scouted & monetized" },
+      { title: "KhelGrid · India's Sports Opportunity Network" },
       {
         name: "description",
         content:
-          "Apply to elite sports trials, get a Verified Sports CV, and let academies boost their listings — all on KhelGrid.",
+          "India's Sports Opportunity Network · Discover trials, book venues, join games, enroll in coaching, and manage Sports CV.",
       },
       { name: "author", content: "KhelGrid" },
-      { property: "og:title", content: "KhelGrid" },
-      { property: "og:description", content: "India's premium grid for sports trials." },
+      { property: "og:site_name", content: "KhelGrid" },
+      { property: "og:title", content: "KhelGrid · India's Sports Opportunity Network" },
+      {
+        property: "og:description",
+        content:
+          "India's Sports Opportunity Network · Discover trials, book venues, join games, enroll in coaching, and manage Sports CV.",
+      },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
+      { property: "og:image", content: "https://khelgrid.com/og-image.svg" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:site", content: "@khelgrid" },
+      { name: "twitter:image", content: "https://khelgrid.com/og-image.svg" },
       // AdSense site ownership verification
-      ...(hasValidPublisherId()
-        ? ([{ name: "google-adsense-account", content: adsConfig.publisherId }] as const)
-        : []),
+      {
+        name: "google-adsense-account",
+        content: adsConfig.publisherId || "ca-pub-8352691151177209",
+      },
     ],
     links: [
+      // Brand Favicons & Icons for browser tabs and mobile home screens
+      { rel: "icon", href: "/favicon.ico", sizes: "32x32" },
+      { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
+      { rel: "icon", type: "image/png", sizes: "96x96", href: "/favicon-96x96.png" },
+      { rel: "icon", type: "image/png", sizes: "32x32", href: "/favicon-32x32.png" },
+      { rel: "icon", type: "image/png", sizes: "16x16", href: "/favicon-16x16.png" },
+      { rel: "shortcut icon", href: "/favicon.ico" },
+      { rel: "apple-touch-icon", sizes: "180x180", href: "/apple-touch-icon.png" },
+      { rel: "manifest", href: "/site.webmanifest" },
+
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       { rel: "preconnect", href: "https://www.googletagmanager.com" },
@@ -147,11 +170,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark" style={{ colorScheme: "dark" }} suppressHydrationWarning>
       <head>
+        <script
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('khelgrid-theme')||localStorage.getItem('theme')||'dark';var d=t==='dark'||(t==='system'&&window.matchMedia('(prefers-color-scheme: dark)').matches);if(!d){document.documentElement.classList.remove('dark');document.documentElement.classList.add('light');document.documentElement.style.colorScheme='light';}else{document.documentElement.classList.add('dark');document.documentElement.style.colorScheme='dark';}}catch(e){};try{if(typeof window!=='undefined'&&!window.process){window.process={env:{NODE_ENV:'development'}}};function retryDynImport(msg){if(/Failed to fetch dynamically imported module/i.test(msg)||/Importing a module script failed/i.test(msg)||/error loading dynamically imported module/i.test(msg)){var k='khelgrid_dyn_import_retry';var l=sessionStorage.getItem(k);if(!l||Date.now()-Number(l)>4000){sessionStorage.setItem(k,String(Date.now()));window.location.reload();}}};window.addEventListener('error',function(e){var m=(e&&e.message)?e.message:'';retryDynImport(m);});window.addEventListener('unhandledrejection',function(e){var m=(e&&e.reason&&e.reason.message)?e.reason.message:String(e&&e.reason||'');retryDynImport(m);});window.addEventListener('vite:preloadError',function(){window.location.reload();});}catch(e){}})()`,
+          }}
+        />
         <HeadContent />
       </head>
-      <body className="overflow-x-hidden">
+      <body className="overflow-x-hidden" suppressHydrationWarning>
         {children}
         <Scripts />
       </body>
@@ -159,37 +188,54 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
+function ThemedToaster() {
+  const { resolvedTheme, mounted } = useTheme();
+  return <Toaster theme={mounted ? resolvedTheme : "dark"} position="top-right" />;
+}
+
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   return (
-    <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <BlogProvider>
-          <SavedOpportunityProvider>
-            <FollowedAcademyProvider>
-              <NotificationProvider>
-                <AdConsentProvider requireConsent>
-                  <GoogleTagLoader />
-                  <AdSenseLoader />
+    <HelmetProvider>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider>
+          <LanguageProvider>
+            <AuthProvider>
+              <BlogProvider>
+                <SavedOpportunityProvider>
+                  <FollowedAcademyProvider>
+                    <NotificationProvider>
+                      <AdConsentProvider requireConsent={false}>
+                        <GoogleTagLoader />
+                        <SEOHead />
+                        <AdSenseLoader />
 
-                  <Navbar />
-                  <Breadcrumbs />
-                  <div className="pb-20 xl:pb-0">
-                    <Outlet />
-                    <SiteFooter />
-                  </div>
-                  <BottomTabBar />
+                        <Navbar />
+                        <Breadcrumbs />
+                        <div className="block lg:flex min-h-[calc(100vh-4rem)] w-full min-w-0 max-w-full">
+                          <FeaturesSidebar />
+                          <div className="flex min-w-0 max-w-full flex-1 flex-col pb-28 lg:pb-0">
+                            <main className="flex-1 min-w-0 max-w-full">
+                              <Outlet />
+                            </main>
+                            <SiteFooter />
+                          </div>
+                        </div>
+                        <BottomTabBar />
 
-                  <StickyMobileAdSlot />
-                  <AdConsentBanner />
-                  <Toaster theme="dark" position="top-right" />
-                  <HydrationDiagnostics />
-                </AdConsentProvider>
-              </NotificationProvider>
-            </FollowedAcademyProvider>
-          </SavedOpportunityProvider>
-        </BlogProvider>
-      </AuthProvider>
-    </QueryClientProvider>
+                        <StickyMobileAdSlot />
+                        <AdConsentBanner />
+                        <ThemedToaster />
+                        <HydrationDiagnostics />
+                      </AdConsentProvider>
+                    </NotificationProvider>
+                  </FollowedAcademyProvider>
+                </SavedOpportunityProvider>
+              </BlogProvider>
+            </AuthProvider>
+          </LanguageProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
+    </HelmetProvider>
   );
 }

@@ -4,7 +4,12 @@ import { fallback, zodValidator } from "@tanstack/zod-adapter";
 import { GUIDES_CATALOG, type Guide } from "@/data/catalog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Clock, ArrowRight } from "lucide-react";
 import { generateFaqs, faqsToJsonLd } from "@/lib/faq-generator";
 import { noindexMeta } from "@/lib/seo";
@@ -14,12 +19,12 @@ const PAGE_SIZE = 6;
 const CATEGORY_BY_SLUG: Record<string, Guide["category"]> = {
   "trial-prep": "Trial prep",
   "sports-cv": "Sports CV",
-  "scholarships": "Scholarships",
-  "nutrition": "Nutrition",
-  "mindset": "Mindset",
-  "parents": "Parents",
-  "recovery": "Recovery",
-  "tech": "Tech",
+  scholarships: "Scholarships",
+  nutrition: "Nutrition",
+  mindset: "Mindset",
+  parents: "Parents",
+  recovery: "Recovery",
+  tech: "Tech",
 };
 
 const searchSchema = z.object({
@@ -39,9 +44,15 @@ export const Route = createFileRoute("/top-guides/$category")({
       meta: [
         noindexMeta(),
         { title: `Top ${loaderData.category} guides for Indian athletes · KhelGrid` },
-        { name: "description", content: `The most read ${loaderData.category.toLowerCase()} guides on KhelGrid — checklists, scripts and frameworks built for Indian sport.` },
+        {
+          name: "description",
+          content: `The most read ${loaderData.category.toLowerCase()} guides on KhelGrid — checklists, scripts and frameworks built for Indian sport.`,
+        },
         { property: "og:title", content: `Top ${loaderData.category} guides` },
-        { property: "og:description", content: `Hand-picked ${loaderData.category.toLowerCase()} playbooks for athletes, parents and coaches in India.` },
+        {
+          property: "og:description",
+          content: `Hand-picked ${loaderData.category.toLowerCase()} playbooks for athletes, parents and coaches in India.`,
+        },
       ],
       links: [{ rel: "canonical", href: `/top-guides/${loaderData.slug}` }],
     };
@@ -49,13 +60,17 @@ export const Route = createFileRoute("/top-guides/$category")({
   notFoundComponent: () => (
     <div className="mx-auto max-w-2xl px-4 py-20 text-center">
       <h1 className="text-3xl font-bold">Category not found</h1>
-      <Button asChild className="mt-6"><Link to="/guides">All guides</Link></Button>
+      <Button asChild className="mt-6">
+        <Link to="/guides">All guides</Link>
+      </Button>
     </div>
   ),
   errorComponent: ({ reset }) => (
     <div className="mx-auto max-w-2xl px-4 py-20 text-center">
       <h1 className="text-3xl font-bold">Something went wrong</h1>
-      <Button className="mt-6" onClick={reset}>Try again</Button>
+      <Button className="mt-6" onClick={reset}>
+        Try again
+      </Button>
     </div>
   ),
   component: TopGuidesCategoryPage,
@@ -64,7 +79,7 @@ export const Route = createFileRoute("/top-guides/$category")({
 function TopGuidesCategoryPage() {
   const { category, slug } = Route.useLoaderData();
   const { page } = Route.useSearch();
-  const all = GUIDES_CATALOG.filter(g => g.category === category);
+  const all = GUIDES_CATALOG.filter((g) => g.category === category);
   const totalPages = Math.max(1, Math.ceil(all.length / PAGE_SIZE));
   const safePage = Math.min(page, totalPages);
   const slice = all.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE);
@@ -74,22 +89,27 @@ function TopGuidesCategoryPage() {
     noun: "guide",
     nounPlural: "guides",
     totalCount: all.length,
-    pageItemTitles: slice.map(g => g.title),
+    pageItemTitles: slice.map((g) => g.title),
     page: safePage,
     totalPages,
   });
   const jsonLd = JSON.stringify(faqsToJsonLd(faqs));
 
-
   return (
     <main className="mx-auto max-w-5xl px-4 py-10 sm:py-14">
-      <Link to="/guides" className="text-xs text-muted-foreground hover:text-foreground">← All guides</Link>
-      <Badge variant="outline" className="mt-3 border-primary/40 bg-primary/5 text-primary">{category}</Badge>
+      <Link to="/guides" className="text-xs text-muted-foreground hover:text-foreground">
+        ← All guides
+      </Link>
+      <Badge variant="outline" className="mt-3 border-primary/40 bg-primary/5 text-primary">
+        {category}
+      </Badge>
       <h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">Top {category} guides</h1>
-      <p className="mt-2 max-w-2xl text-muted-foreground">Page {safePage} of {totalPages} · {all.length} guides curated for Indian athletes.</p>
+      <p className="mt-2 max-w-2xl text-muted-foreground">
+        Page {safePage} of {totalPages} · {all.length} guides curated for Indian athletes.
+      </p>
 
       <section className="mt-8 grid gap-3 sm:grid-cols-2">
-        {slice.map(g => (
+        {slice.map((g) => (
           <Link
             key={g.slug}
             to="/guide/$slug"
@@ -97,19 +117,23 @@ function TopGuidesCategoryPage() {
             className="group rounded-2xl border border-border bg-gradient-card p-5 transition hover:border-primary/40"
           >
             <div className="flex items-center justify-between text-xs text-muted-foreground">
-              <span className="inline-flex items-center gap-1"><Clock className="h-3 w-3" /> {g.readMins} min</span>
+              <span className="inline-flex items-center gap-1">
+                <Clock className="h-3 w-3" /> {g.readMins} min
+              </span>
               <span>{g.category}</span>
             </div>
             <h3 className="mt-2 font-semibold group-hover:text-primary">{g.title}</h3>
             <p className="mt-1 text-sm text-muted-foreground">{g.excerpt}</p>
-            <span className="mt-3 inline-flex items-center text-xs text-primary">Read guide <ArrowRight className="ml-1 h-3 w-3" /></span>
+            <span className="mt-3 inline-flex items-center text-xs text-primary">
+              Read guide <ArrowRight className="ml-1 h-3 w-3" />
+            </span>
           </Link>
         ))}
       </section>
 
       {totalPages > 1 && (
         <nav className="mt-8 flex items-center justify-center gap-2" aria-label="Pagination">
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
             <Link
               key={p}
               from={Route.fullPath}
@@ -139,11 +163,23 @@ function TopGuidesCategoryPage() {
       </section>
 
       <section className="mt-12" aria-labelledby="faq-heading">
-        <h2 id="faq-heading" className="text-lg font-semibold">Frequently asked questions</h2>
-        <p className="mt-1 text-xs text-muted-foreground">Fresh questions for page {safePage} — answers below are unique to this view.</p>
-        <Accordion type="single" collapsible className="mt-3 rounded-2xl border border-border bg-gradient-card px-4">
+        <h2 id="faq-heading" className="text-lg font-semibold">
+          Frequently asked questions
+        </h2>
+        <p className="mt-1 text-xs text-muted-foreground">
+          Fresh questions for page {safePage} — answers below are unique to this view.
+        </p>
+        <Accordion
+          type="single"
+          collapsible
+          className="mt-3 rounded-2xl border border-border bg-gradient-card px-4"
+        >
           {faqs.map((f, i) => (
-            <AccordionItem key={`${safePage}-${i}`} value={`faq-${i}`} className="border-border last:border-b-0">
+            <AccordionItem
+              key={`${safePage}-${i}`}
+              value={`faq-${i}`}
+              className="border-border last:border-b-0"
+            >
               <AccordionTrigger className="text-left text-sm font-medium">{f.q}</AccordionTrigger>
               <AccordionContent className="text-sm text-muted-foreground">{f.a}</AccordionContent>
             </AccordionItem>
@@ -154,6 +190,5 @@ function TopGuidesCategoryPage() {
     </main>
   );
 }
-
 
 export const TOP_GUIDE_CATEGORY_SLUGS = Object.keys(CATEGORY_BY_SLUG);

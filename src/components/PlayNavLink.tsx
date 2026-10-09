@@ -15,12 +15,5 @@ export type PlayNavLinkProps = {
  * sidebar and mobile drawer.
  */
 export function PlayNavLink({ active, source, showLabel = true }: PlayNavLinkProps) {
-  return (
-    <NavLink
-      item={PLAY_ITEM}
-      active={active}
-      source={source}
-      showLabel={showLabel}
-    />
-  );
+  return <NavLink item={PLAY_ITEM} active={active} source={source} showLabel={showLabel} />;
 }

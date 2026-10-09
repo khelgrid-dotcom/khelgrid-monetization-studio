@@ -21,7 +21,8 @@ export function SavedOpportunityProvider({ children }: { children: ReactNode }) 
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) {
         const parsed = JSON.parse(stored);
-        if (Array.isArray(parsed)) setSavedIds(parsed.filter((id): id is string => typeof id === "string"));
+        if (Array.isArray(parsed))
+          setSavedIds(parsed.filter((id): id is string => typeof id === "string"));
       }
     } catch {
       // Saved opportunities remain available for the current session.
@@ -33,21 +34,35 @@ export function SavedOpportunityProvider({ children }: { children: ReactNode }) 
     if (hydrated) localStorage.setItem(STORAGE_KEY, JSON.stringify(savedIds));
   }, [hydrated, savedIds]);
 
-  const value = useMemo<SavedOpportunityContextValue>(() => ({
-    savedIds,
-    savedOpportunities: savedIds.map((id) => TRIALS.find((trial) => trial.id === id)).filter((trial): trial is Trial => Boolean(trial)),
-    isSaved: (trialId) => savedIds.includes(trialId),
-    toggleSaved: (trialId) => setSavedIds((current) => current.includes(trialId) ? current.filter((id) => id !== trialId) : [...current, trialId]),
-  }), [savedIds]);
+  const value = useMemo<SavedOpportunityContextValue>(
+    () => ({
+      savedIds,
+      savedOpportunities: savedIds
+        .map((id) => TRIALS.find((trial) => trial.id === id))
+        .filter((trial): trial is Trial => Boolean(trial)),
+      isSaved: (trialId) => savedIds.includes(trialId),
+      toggleSaved: (trialId) =>
+        setSavedIds((current) =>
+          current.includes(trialId)
+            ? current.filter((id) => id !== trialId)
+            : [...current, trialId],
+        ),
+    }),
+    [savedIds],
+  );
 
-  return <SavedOpportunityContext.Provider value={value}>{children}</SavedOpportunityContext.Provider>;
+  return (
+    <SavedOpportunityContext.Provider value={value}>{children}</SavedOpportunityContext.Provider>
+  );
 }
 
 export function useSavedOpportunities(): SavedOpportunityContextValue {
-  return useContext(SavedOpportunityContext) ?? {
-    savedIds: [],
-    savedOpportunities: [],
-    isSaved: () => false,
-    toggleSaved: () => {},
-  };
+  return (
+    useContext(SavedOpportunityContext) ?? {
+      savedIds: [],
+      savedOpportunities: [],
+      isSaved: () => false,
+      toggleSaved: () => {},
+    }
+  );
 }

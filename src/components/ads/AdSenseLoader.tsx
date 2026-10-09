@@ -19,11 +19,16 @@ export function AdSenseLoader() {
 
   useEffect(() => {
     if (!hasValidPublisherId() || !canLoadScript) return;
-    if (document.getElementById(SCRIPT_ID)) return;
-
-    // Must be set before the loader executes.
+    // Must be set before ads execute.
     const queue = (window.adsbygoogle ??= [] as unknown as AdsByGoogleQueue);
     queue.requestNonPersonalizedAds = nonPersonalized ? 1 : 0;
+
+    if (
+      document.getElementById(SCRIPT_ID) ||
+      document.querySelector('script[src*="pagead2.googlesyndication.com"]')
+    ) {
+      return;
+    }
 
     const script = document.createElement("script");
     script.id = SCRIPT_ID;

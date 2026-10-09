@@ -35,14 +35,7 @@ export interface FaqContext {
 
 /** Full FAQ bank — keep large enough that pagination never wraps. */
 function buildFaqBank(ctx: FaqContext): Faq[] {
-  const {
-    category,
-    noun,
-    nounPlural,
-    totalCount,
-    pageItemTitles,
-    brand = "KhelGrid",
-  } = ctx;
+  const { category, noun, nounPlural, totalCount, pageItemTitles, brand = "KhelGrid" } = ctx;
   const c = category.toLowerCase();
   const cN = category;
   const featured = pageItemTitles[0] ?? `${cN} ${noun}`;

@@ -51,16 +51,16 @@ import { BannerAd, ResponsiveAd, SidebarAd, InArticleAd, InFeedAd } from "@/comp
 
 ## 3. Behaviour built in
 
-| Concern | Implementation |
-| --- | --- |
-| Lazy loading | `IntersectionObserver`, 300px `rootMargin`; `eager` prop opts out |
-| Layout shift | every unit reserves `minHeight` before the ad loads |
-| Double push | mount ref + `data-adsbygoogle-status` guard (HMR-safe) |
-| No fill / ad blocker | falls back to the placeholder after 2.5s |
-| Consent | `AdConsentProvider`; declining sets `requestNonPersonalizedAds = 1` |
-| Test mode | `data-adtest="on"` automatically in development |
-| Performance | `preconnect` / `dns-prefetch` to Google ad hosts; script is `async` |
-| Analytics | `ad_request`, `ad_impression`, `ad_consent` via `src/lib/ad-analytics.ts` |
+| Concern              | Implementation                                                            |
+| -------------------- | ------------------------------------------------------------------------- |
+| Lazy loading         | `IntersectionObserver`, 300px `rootMargin`; `eager` prop opts out         |
+| Layout shift         | every unit reserves `minHeight` before the ad loads                       |
+| Double push          | mount ref + `data-adsbygoogle-status` guard (HMR-safe)                    |
+| No fill / ad blocker | falls back to the placeholder after 2.5s                                  |
+| Consent              | `AdConsentProvider`; declining sets `requestNonPersonalizedAds = 1`       |
+| Test mode            | `data-adtest="on"` automatically in development                           |
+| Performance          | `preconnect` / `dns-prefetch` to Google ad hosts; script is `async`       |
+| Analytics            | `ad_request`, `ad_impression`, `ad_consent` via `src/lib/ad-analytics.ts` |
 
 ## 4. Consent / GDPR
 
@@ -73,14 +73,13 @@ a choice.
 
 - `true` (current) — no script, no ad request until the banner is answered.
   - **Accept all** → personalized ads
-  - **Non-personalized** → `requestNonPersonalizedAds = 1` is set *before* the
+  - **Non-personalized** → `requestNonPersonalizedAds = 1` is set _before_ the
     script is appended, so it applies to the first request
 - `false` — script loads as soon as the stored choice is read; declining still
   switches to non-personalized ads.
 
 The choice persists in `localStorage` under `khelgrid.ads.consent`. Render
 `<CookieSettingsButton />` (e.g. in a footer) to let visitors change it.
-
 
 ## 5. Auto Ads
 

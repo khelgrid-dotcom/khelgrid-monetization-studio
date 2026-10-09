@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/context/AuthContext";
@@ -21,7 +27,10 @@ export function CheckoutModal({ open, onOpenChange, trialId, trialTitle, onPaid 
 
   const handleWallet = () => {
     const ok = payForApplication(trialId, "wallet");
-    if (!ok) { toast.error("Insufficient wallet balance. Try UPI instead."); return; }
+    if (!ok) {
+      toast.error("Insufficient wallet balance. Try UPI instead.");
+      return;
+    }
     toast.success("₹49 paid · Application unlocked");
     onPaid();
     onOpenChange(false);
@@ -51,7 +60,8 @@ export function CheckoutModal({ open, onOpenChange, trialId, trialTitle, onPaid 
         <DialogHeader>
           <DialogTitle className="text-xl">You've hit your free limit</DialogTitle>
           <DialogDescription>
-            Unlock <span className="text-foreground font-medium">{trialTitle}</span> with a one-time payment, or go unlimited with Pro.
+            Unlock <span className="text-foreground font-medium">{trialTitle}</span> with a one-time
+            payment, or go unlimited with Pro.
           </DialogDescription>
         </DialogHeader>
 
@@ -60,12 +70,14 @@ export function CheckoutModal({ open, onOpenChange, trialId, trialTitle, onPaid 
             { id: "pay", label: "Wallet" },
             { id: "upi", label: "UPI" },
             { id: "pro", label: "Pro" },
-          ].map(t => (
+          ].map((t) => (
             <button
               key={t.id}
               onClick={() => setTab(t.id as typeof tab)}
               className={`rounded-md px-3 py-2 font-medium transition ${tab === t.id ? "bg-secondary text-foreground" : "text-muted-foreground hover:text-foreground"}`}
-            >{t.label}</button>
+            >
+              {t.label}
+            </button>
           ))}
         </div>
 
@@ -94,13 +106,17 @@ export function CheckoutModal({ open, onOpenChange, trialId, trialTitle, onPaid 
             <div className="mx-auto grid h-48 w-48 place-items-center rounded-2xl border border-border bg-white p-3">
               <div className="grid h-full w-full grid-cols-12 grid-rows-12 gap-[2px]">
                 {Array.from({ length: 144 }).map((_, i) => (
-                  <div key={i} className={`${(i * 7 + (i % 5) + (i % 3)) % 3 === 0 ? "bg-black" : "bg-white"}`} />
+                  <div
+                    key={i}
+                    className={`${(i * 7 + (i % 5) + (i % 3)) % 3 === 0 ? "bg-black" : "bg-white"}`}
+                  />
                 ))}
               </div>
             </div>
             <div className="text-sm text-muted-foreground">
               <QrCode className="mr-1 inline h-4 w-4" />
-              Scan with any UPI app · <span className="text-foreground font-medium">khelgrid@upi</span>
+              Scan with any UPI app ·{" "}
+              <span className="text-foreground font-medium">khelgrid@upi</span>
             </div>
             <div className="text-3xl font-bold">₹49</div>
             <Button onClick={handleUPI} className="w-full" size="lg" disabled={processing}>
@@ -112,18 +128,32 @@ export function CheckoutModal({ open, onOpenChange, trialId, trialTitle, onPaid 
         {tab === "pro" && (
           <div className="space-y-4">
             <div className="relative overflow-hidden rounded-xl border border-primary/40 bg-gradient-hero p-5 text-primary-foreground">
-              <Badge className="bg-black/30 text-white border-0 mb-2"><Crown className="mr-1 h-3 w-3" /> Most popular</Badge>
+              <Badge className="bg-black/30 text-white border-0 mb-2">
+                <Crown className="mr-1 h-3 w-3" /> Most popular
+              </Badge>
               <div className="flex items-end gap-1">
                 <span className="text-4xl font-bold">₹499</span>
                 <span className="mb-1 text-sm opacity-80">/month</span>
               </div>
               <ul className="mt-3 space-y-1.5 text-sm">
-                {["Unlimited trial applications", "Priority placement to scouts", "Verified Sports CV included", "Early access to elite camps"].map(f => (
-                  <li key={f} className="flex items-center gap-2"><Check className="h-4 w-4" /> {f}</li>
+                {[
+                  "Unlimited trial applications",
+                  "Priority placement to scouts",
+                  "Verified Sports CV included",
+                  "Early access to elite camps",
+                ].map((f) => (
+                  <li key={f} className="flex items-center gap-2">
+                    <Check className="h-4 w-4" /> {f}
+                  </li>
                 ))}
               </ul>
             </div>
-            <Button onClick={handlePro} className="w-full bg-gradient-gold text-primary-foreground hover:opacity-90" size="lg" disabled={plan === "pro"}>
+            <Button
+              onClick={handlePro}
+              className="w-full bg-gradient-gold text-primary-foreground hover:opacity-90"
+              size="lg"
+              disabled={plan === "pro"}
+            >
               <Sparkles className="mr-2 h-4 w-4" /> Upgrade to Pro
             </Button>
           </div>

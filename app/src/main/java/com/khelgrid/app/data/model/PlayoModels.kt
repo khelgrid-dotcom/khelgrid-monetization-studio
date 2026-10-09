@@ -56,6 +56,30 @@ data class Game(
     val costPerPlayer: Int
 )
 
+data class MatchupAthlete(
+    val id: String,
+    val name: String,
+    val sport: String,
+    val skillLevel: String,
+    val city: String,
+    val availability: String,
+    val reliability: Int,
+    val bio: String
+)
+
+data class MatchupPost(
+    val id: String = "",
+    val sport: String,
+    val skillLevel: String,
+    val city: String,
+    val date: String,
+    val time: String,
+    val venue: String,
+    val format: String,
+    val spotsNeeded: Int,
+    val message: String
+)
+
 data class Membership(
     val id: String,
     val name: String,

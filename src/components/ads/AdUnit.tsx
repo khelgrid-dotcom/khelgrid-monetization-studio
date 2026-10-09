@@ -1,5 +1,11 @@
 import { memo, useEffect, useRef, useState, type CSSProperties } from "react";
-import { adsConfig, hasValidPublisherId, resolveAdSlot, type AdFormat, type AdSlotKey } from "@/config/ads";
+import {
+  adsConfig,
+  hasValidPublisherId,
+  resolveAdSlot,
+  type AdFormat,
+  type AdSlotKey,
+} from "@/config/ads";
 import { useAdConsent } from "./AdConsent";
 import { trackAdEvent } from "@/lib/ad-analytics";
 import type { AdsByGoogleQueue } from "./adsbygoogle";
@@ -67,8 +73,8 @@ function AdUnitBase({
       return;
     }
     const observer = new IntersectionObserver(
-      entries => {
-        if (entries.some(e => e.isIntersecting)) {
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
           setInView(true);
           observer.disconnect();
         }

@@ -10,6 +10,7 @@ vi.mock("@tanstack/react-router", () => ({
     </a>
   ),
   useRouterState: vi.fn(),
+  useNavigate: () => vi.fn(),
 }));
 
 vi.mock("@/context/AuthContext", () => ({
@@ -24,6 +25,14 @@ vi.mock("@/components/ui/button", () => ({
 
 vi.mock("@/components/NavDrawer", () => ({
   NavDrawer: () => <button aria-label="Open menu">Menu</button>,
+}));
+
+vi.mock("@/components/ui/dropdown-menu", () => ({
+  DropdownMenu: ({ children }: any) => <div>{children}</div>,
+  DropdownMenuTrigger: ({ children, asChild }: any) => <>{children}</>,
+  DropdownMenuContent: ({ children }: any) => <div data-testid="dropdown-content">{children}</div>,
+  DropdownMenuItem: ({ children, asChild }: any) => <div>{children}</div>,
+  DropdownMenuSeparator: () => <hr />,
 }));
 
 function findAnchorByHref(html: string, href: string): string | null {
@@ -59,5 +68,23 @@ describe("Navbar /play active highlighting", () => {
 
     expect(playClass).toBeTruthy();
     expect(hasToken(playClass!, "bg-secondary")).toBe(false);
+  });
+
+  it("renders the settings trigger button in the navbar", () => {
+    (useRouterState as any).mockReturnValue("/");
+    const html = renderToString(<Navbar />);
+    expect(html).toContain('id="navbar-settings-btn"');
+    expect(html).toContain("Settings &amp; Appearance");
+  });
+
+  it("renders Careers and Partner with Us in the settings menu", () => {
+    (useRouterState as any).mockReturnValue("/");
+    const html = renderToString(<Navbar />);
+    expect(html).toContain('id="navbar-careers-btn"');
+    expect(html).toContain('href="/careers"');
+    expect(html).toContain("Careers");
+    expect(html).toContain('id="navbar-partner-btn"');
+    expect(html).toContain('href="/partner"');
+    expect(html).toContain("Partner with Us");
   });
 });

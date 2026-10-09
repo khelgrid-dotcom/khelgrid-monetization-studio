@@ -14,7 +14,7 @@ export function StickyMobileAdSlot() {
   if (!hasValidPublisherId() || !AD_SLOTS.mobileSticky) return null;
 
   return (
-    <div className="fixed inset-x-0 bottom-14 z-40 border-t border-border bg-background/95 backdrop-blur-xl md:hidden">
+    <div className="fixed inset-x-0 bottom-[calc(4.25rem+env(safe-area-inset-bottom,0px))] z-40 border-t border-border bg-background/95 backdrop-blur-xl md:hidden">
       <div className="relative">
         <button
           type="button"

@@ -1,26 +1,78 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { useEffect, useMemo, useState } from "react";
+import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import { VENUES, PLAYO_SPORTS, PLAYO_CITIES, type Venue } from "@/data/playo";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, MapPin, Star, Trophy, Calendar, Clock, Check, Bot, Sparkles, CircleCheck } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Search,
+  MapPin,
+  Star,
+  Trophy,
+  Calendar,
+  Clock,
+  Check,
+  Bot,
+  Sparkles,
+  CircleCheck,
+  RefreshCw,
+  X,
+  AlertCircle,
+  CheckCircle2,
+  ChevronRight,
+  Eye,
+} from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { BookingConfirmationModal } from "@/components/BookingConfirmationModal";
+import { VenueDetails } from "@/components/VenueDetails";
+import { VenueBookingForm } from "@/components/venue-booking";
+import {
+  createVenueBooking,
+  getVenueBookings,
+  cancelVenueBooking,
+  type BookingRecord,
+} from "@/lib/booking-service";
 import { toast } from "sonner";
+import { buildSeoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/book")({
-  head: () => ({
-    meta: [
-      { title: "Book Sports Venues · KhelGrid" },
-      { name: "description", content: "Find and book sports venues, turfs, courts and arenas near you across India." },
-    ],
-    links: [{ rel: "canonical", href: "https://khelgrid.com/book" }],
-  }),
+  head: () =>
+    buildSeoHead({
+      title: "Book Sports Venues, Turfs & Courts Across India · KhelGrid",
+      description:
+        "Instantly discover, compare, and reserve verified sports turfs, badminton indoor courts, cricket nets, football grounds, and swimming pools across major Indian cities.",
+      canonicalPath: "/book",
+      keywords:
+        "book turf online, badminton court booking, football turf near me, cricket pitch rental, swimming pool hourly booking, sports arena reservations",
+      type: "website",
+    }),
   component: BookVenues,
 });
 
-const TIMES = ["6:00 AM", "7:00 AM", "8:00 AM", "5:00 PM", "6:00 PM", "7:00 PM", "8:00 PM", "9:00 PM"];
+const TIMES = [
+  "6:00 AM",
+  "7:00 AM",
+  "8:00 AM",
+  "5:00 PM",
+  "6:00 PM",
+  "7:00 PM",
+  "8:00 PM",
+  "9:00 PM",
+];
+
 type BookingSelection = { venue: Venue; date: string; time: string | null };
 
 function BookVenues() {
@@ -28,13 +80,37 @@ function BookVenues() {
   const [sport, setSport] = useState<string>("All");
   const [city, setCity] = useState<string>("Bengaluru");
   const [booking, setBooking] = useState<BookingSelection | null>(null);
+  const [selectedVenueForDetails, setSelectedVenueForDetails] = useState<Venue | null>(null);
+  const [activeTab, setActiveTab] = useState<"venues" | "slot-booking" | "my-bookings">("venues");
+  const [bookings, setBookings] = useState<BookingRecord[]>([]);
   const today = new Date().toISOString().slice(0, 10);
 
+  const loadBookings = useCallback(async () => {
+    try {
+      const list = await getVenueBookings();
+      setBookings(list);
+    } catch (e) {
+      console.warn("Failed to load bookings", e);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadBookings();
+    const handleUpdate = () => {
+      loadBookings();
+    };
+    window.addEventListener("khelgrid_booking_created", handleUpdate);
+    return () => {
+      window.removeEventListener("khelgrid_booking_created", handleUpdate);
+    };
+  }, [loadBookings]);
+
   const list = useMemo(() => {
-    return VENUES.filter(v =>
-      (city === "All" || v.city === city) &&
-      (sport === "All" || v.sports.includes(sport)) &&
-      (q === "" || [v.name, v.area].join(" ").toLowerCase().includes(q.toLowerCase())),
+    return VENUES.filter(
+      (v) =>
+        (city === "All" || v.city === city) &&
+        (sport === "All" || v.sports.includes(sport)) &&
+        (q === "" || [v.name, v.area].join(" ").toLowerCase().includes(q.toLowerCase())),
     );
   }, [q, sport, city]);
 
@@ -42,64 +118,320 @@ function BookVenues() {
     setBooking({ venue, date, time });
   };
 
+  const handleCancelBooking = async (bookingId: string) => {
+    const success = await cancelVenueBooking(bookingId);
+    if (success) {
+      toast.info("Booking cancelled.");
+      loadBookings();
+    }
+  };
+
   return (
     <main className="mx-auto max-w-7xl px-4 py-6 sm:py-10">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">Sports Venues in {city}</h1>
-        <p className="mt-1 text-sm text-muted-foreground">Discover and book turfs, courts, arenas and pools near you.</p>
+      {/* Header */}
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">Sports Venues in {city}</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Discover and book turfs, courts, arenas and pools near you.
+          </p>
+        </div>
+
+        {/* Real-time Schedule Status */}
+        <div className="flex items-center gap-2 text-xs bg-muted/60 border border-border/70 rounded-xl p-2 px-3 self-start md:self-auto text-muted-foreground">
+          <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 shrink-0" />
+          <span className="font-medium text-foreground">Live Booking Available</span>
+          <span className="text-muted-foreground/60">•</span>
+          <span>Instant Court Confirmation</span>
+        </div>
       </div>
 
-      <VenueBookingAssistant defaultCity={city === "All" ? "Bengaluru" : city} defaultDate={today} onBook={startBooking} />
+      <VenueBookingAssistant
+        defaultCity={city === "All" ? "Bengaluru" : city}
+        defaultDate={today}
+        onBook={startBooking}
+      />
 
+      {/* Filter Bar */}
       <div className="sticky top-14 z-30 mt-6 -mx-4 border-y border-border/60 bg-background/85 px-4 py-3 backdrop-blur-xl sm:top-16 sm:mx-0 sm:rounded-2xl sm:border sm:px-4">
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-[1fr,180px,180px]">
           <div className="relative col-span-2 sm:col-span-1">
             <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input value={q} onChange={e => setQ(e.target.value)} placeholder="Search by venue name…" className="h-11 border-border bg-secondary/40 pl-9" />
+            <Input
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+              placeholder="Search by venue name…"
+              className="h-11 border-border bg-secondary/40 pl-9"
+            />
           </div>
           <Select value={city} onValueChange={setCity}>
-            <SelectTrigger className="h-11 border-border bg-secondary/40"><MapPin className="mr-1 h-4 w-4 text-primary" /><SelectValue /></SelectTrigger>
+            <SelectTrigger className="h-11 border-border bg-secondary/40">
+              <MapPin className="mr-1 h-4 w-4 text-primary" />
+              <SelectValue />
+            </SelectTrigger>
             <SelectContent>
               <SelectItem value="All">All Cities</SelectItem>
-              {PLAYO_CITIES.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
+              {PLAYO_CITIES.map((c) => (
+                <SelectItem key={c} value={c}>
+                  {c}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
           <Select value={sport} onValueChange={setSport}>
-            <SelectTrigger className="h-11 border-border bg-secondary/40"><Trophy className="mr-1 h-4 w-4 text-primary" /><SelectValue /></SelectTrigger>
+            <SelectTrigger className="h-11 border-border bg-secondary/40">
+              <Trophy className="mr-1 h-4 w-4 text-primary" />
+              <SelectValue />
+            </SelectTrigger>
             <SelectContent>
               <SelectItem value="All">All Sports</SelectItem>
-              {PLAYO_SPORTS.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
+              {PLAYO_SPORTS.map((s) => (
+                <SelectItem key={s} value={s}>
+                  {s}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
       </div>
 
-      <div className="mt-4 flex gap-4 border-b border-border/60 text-sm">
-        <span className="border-b-2 border-primary pb-2 font-semibold text-primary">Venues ({list.length})</span>
-        <span className="pb-2 text-muted-foreground">Coaching</span>
-        <span className="pb-2 text-muted-foreground">Events</span>
-        <span className="pb-2 text-muted-foreground">Memberships</span>
+      {/* Tabs */}
+      <div className="mt-6 flex flex-wrap gap-4 sm:gap-6 border-b border-border/60 text-sm">
+        <button
+          id="tab-venues-browse"
+          onClick={() => setActiveTab("venues")}
+          className={`pb-3 font-semibold transition-colors flex items-center gap-2 ${
+            activeTab === "venues"
+              ? "border-b-2 border-primary text-primary"
+              : "text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          Browse Venues ({list.length})
+        </button>
+        <button
+          id="tab-interactive-slot-booking"
+          onClick={() => setActiveTab("slot-booking")}
+          className={`pb-3 font-semibold transition-colors flex items-center gap-2 ${
+            activeTab === "slot-booking"
+              ? "border-b-2 border-primary text-primary"
+              : "text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          <Sparkles className="h-4 w-4 text-primary" />
+          Interactive Slot Booking
+          <span className="rounded-full bg-primary/10 text-primary px-2 py-0.5 text-[11px] font-bold">
+            New
+          </span>
+        </button>
+        <button
+          id="tab-my-bookings"
+          onClick={() => setActiveTab("my-bookings")}
+          className={`pb-3 font-semibold transition-colors flex items-center gap-2 ${
+            activeTab === "my-bookings"
+              ? "border-b-2 border-primary text-primary"
+              : "text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          My Bookings
+          {bookings.length > 0 && (
+            <span className="rounded-full bg-primary/10 text-primary px-2 py-0.5 text-xs font-bold">
+              {bookings.length}
+            </span>
+          )}
+        </button>
       </div>
 
-      <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {list.map(v => <VenueCard key={v.id} v={v} onBook={() => startBooking(v)} />)}
-        {list.length === 0 && <div className="col-span-full rounded-2xl border border-dashed border-border p-10 text-center text-muted-foreground">No venues match your filters.</div>}
-      </div>
+      {/* Tab: Interactive Slot Booking Form */}
+      {activeTab === "slot-booking" && (
+        <div className="mt-6 max-w-4xl mx-auto">
+          <VenueBookingForm
+            onBookingComplete={() => {
+              loadBookings();
+            }}
+          />
+        </div>
+      )}
 
-      {booking && <BookingDialog key={`${booking.venue.id}-${booking.date}-${booking.time}`} open={Boolean(booking)} onOpenChange={open => !open && setBooking(null)} venue={booking.venue} initialDate={booking.date} initialTime={booking.time} />}
+      {/* Tab: Venues Grid */}
+      {activeTab === "venues" && (
+        <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {list.map((v) => (
+            <VenueCard
+              key={v.id}
+              v={v}
+              onBook={() => startBooking(v)}
+              onViewDetails={() => setSelectedVenueForDetails(v)}
+            />
+          ))}
+          {list.length === 0 && (
+            <div className="col-span-full rounded-2xl border border-dashed border-border p-10 text-center text-muted-foreground">
+              No venues match your filters.
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Tab: My Bookings */}
+      {activeTab === "my-bookings" && (
+        <div className="mt-6">
+          {bookings.length === 0 ? (
+            <div className="rounded-2xl border border-dashed border-border p-12 text-center">
+              <Calendar className="h-10 w-10 text-muted-foreground/40 mx-auto mb-3" />
+              <h3 className="text-base font-semibold">No bookings yet</h3>
+              <p className="mt-1 text-sm text-muted-foreground max-w-md mx-auto">
+                Explore venues and turfs near you. When you book a slot, your confirmed reservations
+                will appear here.
+              </p>
+              <Button
+                variant="default"
+                size="sm"
+                className="mt-4"
+                onClick={() => setActiveTab("venues")}
+              >
+                Browse Venues
+              </Button>
+            </div>
+          ) : (
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {bookings.map((b) => (
+                <div
+                  key={b.id}
+                  className="rounded-2xl border border-border bg-gradient-card p-5 space-y-3 relative overflow-hidden"
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <div>
+                      <span className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
+                        Ref: {b.id.slice(-8)}
+                      </span>
+                      <h3 className="text-base font-bold text-foreground line-clamp-1">
+                        {b.venue_name}
+                      </h3>
+                      <p className="text-xs text-muted-foreground">
+                        {b.venue_area}, {b.venue_city}
+                      </p>
+                    </div>
+                    <Badge
+                      variant={b.status === "cancelled" ? "outline" : "default"}
+                      className={
+                        b.status === "confirmed"
+                          ? "bg-emerald-500/90 text-white hover:bg-emerald-600"
+                          : b.status === "cancelled"
+                            ? "border-destructive text-destructive"
+                            : ""
+                      }
+                    >
+                      {b.status.toUpperCase()}
+                    </Badge>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2 text-xs py-2 border-y border-border/50">
+                    <div>
+                      <span className="text-muted-foreground block text-[11px]">Sport</span>
+                      <span className="font-semibold text-foreground">{b.sport}</span>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground block text-[11px]">Date</span>
+                      <span className="font-semibold text-foreground">{b.booking_date}</span>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground block text-[11px]">Slot</span>
+                      <span className="font-semibold text-foreground">{b.start_time}</span>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground block text-[11px]">Total Paid</span>
+                      <span className="font-bold text-primary">₹{b.total_price}</span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between pt-1">
+                    <div className="text-[11px] text-muted-foreground flex items-center gap-1">
+                      {b.synced_to_db ? (
+                        <span className="text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                          <CheckCircle2 className="h-3 w-3" /> Verified Online
+                        </span>
+                      ) : (
+                        <span className="flex items-center gap-1">
+                          <CheckCircle2 className="h-3 w-3 text-emerald-500" /> Saved on Device
+                        </span>
+                      )}
+                    </div>
+                    {b.status !== "cancelled" && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-xs text-destructive hover:bg-destructive/10 h-8"
+                        onClick={() => handleCancelBooking(b.id)}
+                      >
+                        Cancel
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Quick Booking Dialog */}
+      {booking && (
+        <BookingDialog
+          key={`${booking.venue.id}-${booking.date}-${booking.time}`}
+          open={Boolean(booking)}
+          onOpenChange={(open) => !open && setBooking(null)}
+          venue={booking.venue}
+          initialDate={booking.date}
+          initialTime={booking.time}
+          onBookingSuccess={() => {
+            loadBookings();
+            setActiveTab("my-bookings");
+          }}
+        />
+      )}
+
+      {/* Full Venue Details Modal */}
+      {selectedVenueForDetails && (
+        <Dialog
+          open={Boolean(selectedVenueForDetails)}
+          onOpenChange={(open) => !open && setSelectedVenueForDetails(null)}
+        >
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto p-0 border-border">
+            <VenueDetails
+              venue={selectedVenueForDetails}
+              onClose={() => setSelectedVenueForDetails(null)}
+              onBook={() => {
+                loadBookings();
+                setSelectedVenueForDetails(null);
+                setActiveTab("my-bookings");
+              }}
+            />
+          </DialogContent>
+        </Dialog>
+      )}
     </main>
   );
 }
 
-function VenueBookingAssistant({ defaultCity, defaultDate, onBook }: { defaultCity: string; defaultDate: string; onBook: (venue: Venue, date: string, time: string) => void }) {
+function VenueBookingAssistant({
+  defaultCity,
+  defaultDate,
+  onBook,
+}: {
+  defaultCity: string;
+  defaultDate: string;
+  onBook: (venue: Venue, date: string, time: string) => void;
+}) {
+  const [open, setOpen] = useState(false);
   const [city, setCity] = useState(defaultCity);
   const [sport, setSport] = useState("Football");
   const [date, setDate] = useState(defaultDate);
   const [venueId, setVenueId] = useState("");
 
-  useEffect(() => setCity(defaultCity), [defaultCity]);
-
-  const matches = useMemo(() => VENUES.filter((venue) => venue.bookable && venue.city === city && venue.sports.includes(sport)), [city, sport]);
+  const matches = useMemo(() => {
+    return VENUES.filter(
+      (venue) => venue.bookable && venue.city === city && venue.sports.includes(sport),
+    );
+  }, [city, sport]);
 
   useEffect(() => {
     if (!matches.some((venue) => venue.id === venueId)) setVenueId(matches[0]?.id ?? "");
@@ -109,101 +441,257 @@ function VenueBookingAssistant({ defaultCity, defaultDate, onBook }: { defaultCi
   const slots = venue ? getAvailableSlots(venue, date) : [];
 
   return (
-    <section className="mt-6 overflow-hidden rounded-2xl border border-primary/30 bg-gradient-card">
-      <div className="flex flex-col gap-3 border-b border-primary/20 bg-primary/5 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex items-center gap-3">
-          <div className="grid h-10 w-10 place-items-center rounded-xl bg-primary text-primary-foreground"><Bot className="h-5 w-5" /></div>
-          <div>
-            <div className="flex items-center gap-2"><h2 className="font-semibold">VenueBooking Assistant</h2><Badge className="border-0 bg-primary/15 text-primary">Beta</Badge></div>
-            <p className="text-xs text-muted-foreground">Tell me where and when you want to play. I&apos;ll find matching slots.</p>
+    <div className="mt-6 rounded-2xl border border-border/80 bg-gradient-to-br from-primary/5 via-background to-secondary/30 p-4 sm:p-6">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="space-y-1">
+          <div className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-1 text-xs font-semibold text-primary">
+            <Bot className="h-3.5 w-3.5" /> Fast Turf Booking Assistant
           </div>
+          <h2 className="text-lg font-bold sm:text-xl">Pick your city, sport and instant slot</h2>
+          <p className="text-xs text-muted-foreground sm:text-sm">
+            Check real-time court availability and lock in your turf time without back-and-forth
+            calls.
+          </p>
         </div>
-        <span className="text-xs text-muted-foreground">Demo availability</span>
+        <Button
+          variant={open ? "secondary" : "default"}
+          onClick={() => setOpen((prev) => !prev)}
+          className="self-start sm:self-auto gap-1.5"
+        >
+          <Sparkles className="h-4 w-4" />
+          {open ? "Hide Booking Assistant" : "Find Available Slots"}
+        </Button>
       </div>
 
-      <div className="grid gap-3 p-5 md:grid-cols-4">
-        <Select value={city} onValueChange={setCity}>
-          <SelectTrigger className="h-11"><MapPin className="mr-1 h-4 w-4 text-primary" /><SelectValue /></SelectTrigger>
-          <SelectContent>{PLAYO_CITIES.map((item) => <SelectItem key={item} value={item}>{item}</SelectItem>)}</SelectContent>
-        </Select>
-        <Select value={sport} onValueChange={setSport}>
-          <SelectTrigger className="h-11"><Trophy className="mr-1 h-4 w-4 text-primary" /><SelectValue /></SelectTrigger>
-          <SelectContent>{PLAYO_SPORTS.map((item) => <SelectItem key={item} value={item}>{item}</SelectItem>)}</SelectContent>
-        </Select>
-        <Input type="date" min={defaultDate} value={date} onChange={(event) => setDate(event.target.value)} className="h-11" aria-label="Booking date" />
-        <Select value={venueId} onValueChange={setVenueId} disabled={matches.length === 0}>
-          <SelectTrigger className="h-11"><SelectValue placeholder="Choose venue" /></SelectTrigger>
-          <SelectContent>{matches.map((item) => <SelectItem key={item.id} value={item.id}>{item.name}</SelectItem>)}</SelectContent>
-        </Select>
-      </div>
-
-      <div className="border-t border-border/60 px-5 py-4">
-        {!venue ? (
-          <div className="flex items-center gap-2 text-sm text-muted-foreground"><Sparkles className="h-4 w-4 text-primary" />No bookable {sport.toLowerCase()} venue is available in {city} yet. Try another city or sport.</div>
-        ) : (
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+      {open && (
+        <div className="mt-5 space-y-4 border-t border-border/60 pt-4">
+          <div className="grid gap-3 sm:grid-cols-4">
             <div>
-              <div className="flex items-center gap-2"><CircleCheck className="h-4 w-4 text-primary" /><span className="text-sm font-semibold">{slots.length} slots available at {venue.name}</span></div>
-              <p className="mt-1 text-xs text-muted-foreground">{venue.area} · ₹{venue.pricePerHour}/hour · availability is refreshed in the booking step.</p>
-              <div className="mt-3 flex flex-wrap gap-2">{slots.map((slot) => <button key={slot} onClick={() => onBook(venue, date, slot)} className="rounded-lg border border-primary/30 bg-primary/5 px-3 py-1.5 text-xs font-medium text-primary transition hover:bg-primary hover:text-primary-foreground">{slot}</button>)}</div>
+              <label className="text-xs font-medium text-muted-foreground">City</label>
+              <Select value={city} onValueChange={setCity}>
+                <SelectTrigger className="mt-1 h-10">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {PLAYO_CITIES.map((item) => (
+                    <SelectItem key={item} value={item}>
+                      {item}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
-            <Button onClick={() => onBook(venue, date, slots[0])} disabled={slots.length === 0} className="shrink-0 gap-2"><Calendar className="h-4 w-4" />Book earliest slot</Button>
+            <div>
+              <label className="text-xs font-medium text-muted-foreground">Sport</label>
+              <Select value={sport} onValueChange={setSport}>
+                <SelectTrigger className="mt-1 h-10">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {PLAYO_SPORTS.map((item) => (
+                    <SelectItem key={item} value={item}>
+                      {item}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <label className="text-xs font-medium text-muted-foreground">Date</label>
+              <Input
+                type="date"
+                min={new Date().toISOString().slice(0, 10)}
+                value={date}
+                onChange={(event) => setDate(event.target.value)}
+                className="mt-1 h-10"
+              />
+            </div>
+            <div>
+              <label className="text-xs font-medium text-muted-foreground">Venue</label>
+              <Select value={venueId} onValueChange={setVenueId} disabled={matches.length === 0}>
+                <SelectTrigger className="mt-1 h-10">
+                  <SelectValue placeholder="Choose venue" />
+                </SelectTrigger>
+                <SelectContent>
+                  {matches.map((item) => (
+                    <SelectItem key={item.id} value={item.id}>
+                      {item.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
-        )}
-      </div>
-    </section>
+
+          {!venue ? (
+            <div className="rounded-xl border border-dashed border-border/70 p-4 text-center text-xs text-muted-foreground">
+              No bookable {sport.toLowerCase()} venue is available in {city} yet. Try another city
+              or sport.
+            </div>
+          ) : (
+            <div className="rounded-xl border border-border/70 bg-background/80 p-4 space-y-3">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                <div>
+                  <div className="text-sm font-semibold flex items-center gap-1.5">
+                    <CircleCheck className="h-4 w-4 text-emerald-500" />
+                    {slots.length} slots available at {venue.name}
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    {venue.area} · ₹{venue.pricePerHour}/hour
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex flex-wrap gap-2 pt-1">
+                {slots.map((slot) => (
+                  <Button
+                    key={slot}
+                    size="sm"
+                    variant="outline"
+                    className="h-8 text-xs font-medium border-border/80 hover:bg-primary hover:text-primary-foreground"
+                    onClick={() => onBook(venue, date, slot)}
+                  >
+                    <Clock className="mr-1 h-3 w-3" /> {slot}
+                  </Button>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
   );
 }
 
-function VenueCard({ v, onBook }: { v: Venue; onBook: () => void }) {
+function VenueCard({
+  v,
+  onBook,
+  onViewDetails,
+}: {
+  v: Venue;
+  onBook: () => void;
+  onViewDetails: () => void;
+}) {
   return (
-    <div className="overflow-hidden rounded-2xl border border-border bg-gradient-card transition-all hover:-translate-y-0.5 hover:border-border/80">
-      <div className="relative aspect-[16/10] w-full overflow-hidden bg-secondary">
-        <img src={v.image} alt={v.name} loading="lazy" className="h-full w-full object-cover" />
-        {v.featured && <span className="absolute left-3 top-3 rounded-md bg-yellow-500/95 px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-black">Featured</span>}
-        {v.bookable && <span className="absolute right-3 top-3 rounded-md bg-primary/95 px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-primary-foreground">Bookable</span>}
+    <div className="overflow-hidden rounded-2xl border border-border bg-gradient-card transition-all hover:-translate-y-0.5 hover:border-border/80 flex flex-col justify-between">
+      <div>
+        <div
+          className="relative aspect-[16/10] w-full overflow-hidden bg-secondary cursor-pointer group"
+          onClick={onViewDetails}
+        >
+          <img
+            src={v.image}
+            alt={v.name}
+            loading="lazy"
+            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+          />
+          <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+            <span className="bg-background/90 text-foreground text-xs font-semibold px-3 py-1.5 rounded-full shadow flex items-center gap-1">
+              <Eye className="h-3.5 w-3.5" /> View Details
+            </span>
+          </div>
+          {v.featured && (
+            <span className="absolute left-3 top-3 rounded-md bg-yellow-500/95 px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-black">
+              Featured
+            </span>
+          )}
+          {v.bookable && (
+            <span className="absolute right-3 top-3 rounded-md bg-primary/95 px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-primary-foreground">
+              Bookable
+            </span>
+          )}
+        </div>
+        <div className="p-4">
+          <div className="flex items-start justify-between gap-2">
+            <h3
+              onClick={onViewDetails}
+              className="text-base font-semibold leading-tight hover:text-primary cursor-pointer line-clamp-1"
+            >
+              {v.name}
+            </h3>
+            <div className="flex shrink-0 items-center gap-1 text-xs">
+              <Star className="h-3.5 w-3.5 fill-yellow-500 text-yellow-500" />
+              <span className="font-semibold">{v.rating}</span>
+              <span className="text-muted-foreground">({v.reviews})</span>
+            </div>
+          </div>
+          <p className="mt-1 text-sm text-muted-foreground">
+            {v.area} · ~{v.distanceKm} km
+          </p>
+          <div className="mt-3 flex flex-wrap gap-1.5">
+            {v.sports.map((s) => (
+              <Badge key={s} variant="outline" className="border-border text-[10px]">
+                {s}
+              </Badge>
+            ))}
+          </div>
+        </div>
       </div>
-      <div className="p-4">
-        <div className="flex items-start justify-between gap-2"><h3 className="text-base font-semibold leading-tight">{v.name}</h3><div className="flex shrink-0 items-center gap-1 text-xs"><Star className="h-3.5 w-3.5 fill-yellow-500 text-yellow-500" /><span className="font-semibold">{v.rating}</span><span className="text-muted-foreground">({v.reviews})</span></div></div>
-        <p className="mt-1 text-sm text-muted-foreground">{v.area} · ~{v.distanceKm} km</p>
-        <div className="mt-3 flex flex-wrap gap-1.5">{v.sports.map(s => <Badge key={s} variant="outline" className="border-border text-[10px]">{s}</Badge>)}</div>
-        <div className="mt-4 flex items-center justify-between gap-2"><div className="text-sm"><span className="text-muted-foreground">from </span><span className="font-semibold">₹{v.pricePerHour}</span><span className="text-muted-foreground"> / hr</span></div><Button size="sm" onClick={onBook} className="rounded-full">Book slot</Button></div>
+
+      <div className="p-4 pt-0">
+        <div className="mt-2 flex items-center justify-between gap-2 border-t border-border/50 pt-3">
+          <div className="text-sm">
+            <span className="text-muted-foreground text-xs">from </span>
+            <span className="font-bold text-foreground">₹{v.pricePerHour}</span>
+            <span className="text-muted-foreground text-xs">/hr</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={onViewDetails}
+              className="h-8 text-xs px-2.5 rounded-full"
+            >
+              Details
+            </Button>
+            <Button size="sm" onClick={onBook} className="h-8 text-xs rounded-full px-3">
+              Book Slot
+            </Button>
+          </div>
+        </div>
       </div>
     </div>
   );
 }
 
-function BookingDialog({ open, onOpenChange, venue, initialDate, initialTime }: { open: boolean; onOpenChange: (open: boolean) => void; venue: Venue; initialDate: string; initialTime: string | null }) {
-  const [sport, setSport] = useState(venue.sports[0]);
-  const [date, setDate] = useState(initialDate);
-  const [time, setTime] = useState<string | null>(initialTime);
-  const availableSlots = getAvailableSlots(venue, date);
-
-  const selectDate = (nextDate: string) => {
-    setDate(nextDate);
-    if (time && !getAvailableSlots(venue, nextDate).includes(time)) setTime(null);
-  };
-
-  const confirm = () => {
-    if (!time) return;
-    toast.success(`Booking request sent for ${venue.name} · ${date} · ${time}`);
-    onOpenChange(false);
-  };
-
+function BookingDialog({
+  open,
+  onOpenChange,
+  venue,
+  initialDate,
+  initialTime,
+  onBookingSuccess,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  venue: Venue;
+  initialDate: string;
+  initialTime: string | null;
+  onBookingSuccess?: () => void;
+}) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md border-border bg-gradient-card">
-        <DialogHeader><DialogTitle className="text-xl">{venue.name}</DialogTitle><DialogDescription>{venue.area} · {venue.city}</DialogDescription></DialogHeader>
-        <div className="space-y-3">
-          <div><label className="text-xs font-medium text-muted-foreground">Sport</label><Select value={sport} onValueChange={setSport}><SelectTrigger className="mt-1 h-11"><SelectValue /></SelectTrigger><SelectContent>{venue.sports.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent></Select></div>
-          <div><label className="text-xs font-medium text-muted-foreground"><Calendar className="mr-1 inline h-3 w-3" /> Date</label><Input type="date" min={new Date().toISOString().slice(0, 10)} value={date} onChange={event => selectDate(event.target.value)} className="mt-1 h-11" /></div>
-          <div>
-            <div className="flex items-center justify-between"><label className="text-xs font-medium text-muted-foreground"><Clock className="mr-1 inline h-3 w-3" /> Slot</label><span className="text-[10px] text-muted-foreground">Demo availability</span></div>
-            <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-4">{TIMES.map((slot) => { const available = availableSlots.includes(slot); const active = time === slot; return <button key={slot} disabled={!available} onClick={() => setTime(slot)} className={`rounded-lg border px-1 py-2 text-xs transition ${active ? "border-primary bg-primary text-primary-foreground" : available ? "border-border hover:border-primary/50" : "cursor-not-allowed border-border/50 bg-secondary/40 text-muted-foreground line-through"}`}>{active && <Check className="mr-0.5 inline h-3 w-3" />}{slot}</button>; })}</div>
-          </div>
-          <div className="rounded-xl border border-border bg-background/40 p-3 text-sm"><div className="flex items-center justify-between"><span className="text-muted-foreground">Estimated total</span><span className="text-lg font-bold">₹{venue.pricePerHour}</span></div></div>
-          <Button onClick={confirm} disabled={!time} className="w-full" size="lg">{time ? `Send booking request · ${time}` : "Select an available slot"}</Button>
-        </div>
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto border-border bg-card p-4 sm:p-6">
+        <DialogHeader className="pb-2">
+          <DialogTitle className="text-xl font-bold">{venue.name}</DialogTitle>
+          <DialogDescription>
+            {venue.area} · {venue.city} · Interactive Slot & Calendar Reservation
+          </DialogDescription>
+        </DialogHeader>
+
+        <VenueBookingForm
+          showVenueSelector={false}
+          initialVenueId={venue.id}
+          initialSport={venue.sports[0]}
+          initialDate={initialDate}
+          initialTime={initialTime || undefined}
+          onBookingComplete={() => {
+            onOpenChange(false);
+            if (onBookingSuccess) {
+              onBookingSuccess();
+            }
+          }}
+        />
       </DialogContent>
     </Dialog>
   );

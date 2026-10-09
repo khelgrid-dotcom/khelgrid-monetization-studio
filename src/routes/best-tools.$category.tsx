@@ -4,7 +4,12 @@ import { fallback, zodValidator } from "@tanstack/zod-adapter";
 import { TOOLS_CATALOG, type Tool } from "@/data/catalog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { ArrowRight } from "lucide-react";
 import { generateFaqs, faqsToJsonLd } from "@/lib/faq-generator";
 import { noindexMeta } from "@/lib/seo";
@@ -35,9 +40,15 @@ export const Route = createFileRoute("/best-tools/$category")({
       meta: [
         noindexMeta(),
         { title: `Best ${loaderData.category.toLowerCase()}s for athletes · KhelGrid` },
-        { name: "description", content: `Free ${loaderData.category.toLowerCase()}s built for Indian athletes — trial prep, training load, scholarships and more.` },
+        {
+          name: "description",
+          content: `Free ${loaderData.category.toLowerCase()}s built for Indian athletes — trial prep, training load, scholarships and more.`,
+        },
         { property: "og:title", content: `Best ${loaderData.category.toLowerCase()}s on KhelGrid` },
-        { property: "og:description", content: `Hand-picked ${loaderData.category.toLowerCase()}s for athletes, parents and coaches.` },
+        {
+          property: "og:description",
+          content: `Hand-picked ${loaderData.category.toLowerCase()}s for athletes, parents and coaches.`,
+        },
       ],
       links: [{ rel: "canonical", href: `/best-tools/${params.category}` }],
     };
@@ -45,13 +56,17 @@ export const Route = createFileRoute("/best-tools/$category")({
   notFoundComponent: () => (
     <div className="mx-auto max-w-2xl px-4 py-20 text-center">
       <h1 className="text-3xl font-bold">Category not found</h1>
-      <Button asChild className="mt-6"><Link to="/tools">All tools</Link></Button>
+      <Button asChild className="mt-6">
+        <Link to="/tools">All tools</Link>
+      </Button>
     </div>
   ),
   errorComponent: ({ reset }) => (
     <div className="mx-auto max-w-2xl px-4 py-20 text-center">
       <h1 className="text-3xl font-bold">Something went wrong</h1>
-      <Button className="mt-6" onClick={reset}>Try again</Button>
+      <Button className="mt-6" onClick={reset}>
+        Try again
+      </Button>
     </div>
   ),
   component: BestToolsCategoryPage,
@@ -60,7 +75,7 @@ export const Route = createFileRoute("/best-tools/$category")({
 function BestToolsCategoryPage() {
   const { category, slug } = Route.useLoaderData();
   const { page } = Route.useSearch();
-  const all = TOOLS_CATALOG.filter(t => t.category === category);
+  const all = TOOLS_CATALOG.filter((t) => t.category === category);
   const totalPages = Math.max(1, Math.ceil(all.length / PAGE_SIZE));
   const safePage = Math.min(page, totalPages);
   const slice = all.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE);
@@ -70,39 +85,50 @@ function BestToolsCategoryPage() {
     noun: category.toLowerCase(),
     nounPlural: `${category.toLowerCase()}s`,
     totalCount: all.length,
-    pageItemTitles: slice.map(t => t.name),
+    pageItemTitles: slice.map((t) => t.name),
     page: safePage,
     totalPages,
   });
   const jsonLd = JSON.stringify(faqsToJsonLd(faqs));
 
-
   return (
     <main className="mx-auto max-w-5xl px-4 py-10 sm:py-14">
-      <Link to="/tools" className="text-xs text-muted-foreground hover:text-foreground">← All tools</Link>
-      <Badge variant="outline" className="mt-3 border-primary/40 bg-primary/5 text-primary">{category}</Badge>
-      <h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">Best {category.toLowerCase()}s for athletes</h1>
-      <p className="mt-2 max-w-2xl text-muted-foreground">Page {safePage} of {totalPages} · {all.length} {category.toLowerCase()}s.</p>
+      <Link to="/tools" className="text-xs text-muted-foreground hover:text-foreground">
+        ← All tools
+      </Link>
+      <Badge variant="outline" className="mt-3 border-primary/40 bg-primary/5 text-primary">
+        {category}
+      </Badge>
+      <h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
+        Best {category.toLowerCase()}s for athletes
+      </h1>
+      <p className="mt-2 max-w-2xl text-muted-foreground">
+        Page {safePage} of {totalPages} · {all.length} {category.toLowerCase()}s.
+      </p>
 
       <section className="mt-8 grid gap-3 sm:grid-cols-2">
-        {slice.map(t => (
+        {slice.map((t) => (
           <Link
             key={t.slug}
             to="/tools/$slug"
             params={{ slug: t.slug }}
             className="group rounded-2xl border border-border bg-gradient-card p-5 transition hover:border-primary/40"
           >
-            <Badge variant="secondary" className="text-[10px]">{t.category}</Badge>
+            <Badge variant="secondary" className="text-[10px]">
+              {t.category}
+            </Badge>
             <h3 className="mt-2 font-semibold group-hover:text-primary">{t.name}</h3>
             <p className="mt-1 text-sm text-muted-foreground">{t.blurb}</p>
-            <span className="mt-3 inline-flex items-center text-xs text-primary">Open tool <ArrowRight className="ml-1 h-3 w-3" /></span>
+            <span className="mt-3 inline-flex items-center text-xs text-primary">
+              Open tool <ArrowRight className="ml-1 h-3 w-3" />
+            </span>
           </Link>
         ))}
       </section>
 
       {totalPages > 1 && (
         <nav className="mt-8 flex items-center justify-center gap-2" aria-label="Pagination">
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
             <Link
               key={p}
               from={Route.fullPath}
@@ -132,11 +158,23 @@ function BestToolsCategoryPage() {
       </section>
 
       <section className="mt-12" aria-labelledby="faq-heading">
-        <h2 id="faq-heading" className="text-lg font-semibold">Frequently asked questions</h2>
-        <p className="mt-1 text-xs text-muted-foreground">Fresh questions for page {safePage} — answers below are unique to this view.</p>
-        <Accordion type="single" collapsible className="mt-3 rounded-2xl border border-border bg-gradient-card px-4">
+        <h2 id="faq-heading" className="text-lg font-semibold">
+          Frequently asked questions
+        </h2>
+        <p className="mt-1 text-xs text-muted-foreground">
+          Fresh questions for page {safePage} — answers below are unique to this view.
+        </p>
+        <Accordion
+          type="single"
+          collapsible
+          className="mt-3 rounded-2xl border border-border bg-gradient-card px-4"
+        >
           {faqs.map((f, i) => (
-            <AccordionItem key={`${safePage}-${i}`} value={`faq-${i}`} className="border-border last:border-b-0">
+            <AccordionItem
+              key={`${safePage}-${i}`}
+              value={`faq-${i}`}
+              className="border-border last:border-b-0"
+            >
               <AccordionTrigger className="text-left text-sm font-medium">{f.q}</AccordionTrigger>
               <AccordionContent className="text-sm text-muted-foreground">{f.a}</AccordionContent>
             </AccordionItem>
@@ -147,6 +185,5 @@ function BestToolsCategoryPage() {
     </main>
   );
 }
-
 
 export const BEST_TOOL_CATEGORY_SLUGS = Object.keys(CATEGORY_BY_SLUG);
