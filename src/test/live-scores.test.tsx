@@ -73,4 +73,24 @@ describe("Live Scores Page and Navigation", () => {
     expect(html).toContain("Australia Tour of South Africa 2026");
     expect(html).toContain("Afghanistan vs Bangladesh in UAE 2026");
   });
+
+  it("renders search bar at the top of Live Scores page with cricket filter options", () => {
+    const html = renderToString(<LiveScoresPage />);
+    expect(html).toContain("Search cricket matches by team names");
+    expect(html).toContain("Quick Filters:");
+    expect(html).toContain("West Indies Tour of India 2026");
+    expect(html).toContain("India vs West Indies");
+  });
+
+  it("includes specific Google match link for West Indies Tour of India 2026 2nd T20I", () => {
+    const html = renderToString(<LiveScoresPage />);
+    const specificUrl =
+      "https://www.google.com/search?num=10&amp;sca_esv=afb89ae158309890&amp;sxsrf=APpeQnv7S_hYa8j3xghYQ4nz5MsSmeFQOQ:1791525759353&amp;q=Live+Cricket+match+today&amp;sa=X&amp;sqi=2&amp;ved=2ahUKEwivt_fDoayXAxX6zDgGHQu0G64Q1QJ6BAgxEAE&amp;biw=1280&amp;bih=631&amp;dpr=1.5#sie=m;/g/11z3y_p23j;5;/m/021q23;dt;fp;1;;;;-1";
+    // Check either decoded or HTML encoded ampersands
+    const hasSpecificUrl =
+      html.includes("11z3y_p23j") &&
+      html.includes("West Indies Tour of India 2026") &&
+      html.includes("2nd T20I · Starts 7:00 PM IST");
+    expect(hasSpecificUrl).toBe(true);
+  });
 });

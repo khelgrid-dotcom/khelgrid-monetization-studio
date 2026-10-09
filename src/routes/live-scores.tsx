@@ -243,25 +243,29 @@ export function LiveScoresPage() {
         return false;
       }
 
-      // 4. Text Search
+      // 4. Text Search (filters cricket matches by team names or tournament)
       if (searchQuery.trim()) {
         const q = searchQuery.trim().toLowerCase();
+        const words = q.split(/\s+/).filter(Boolean);
         const searchable = [
           match.tournament,
           match.stage || "",
+          match.matchInfo || "",
           match.teamA.name,
           match.teamA.code,
           match.teamB.name,
           match.teamB.code,
           match.highlight,
           match.statusText || "",
+          match.venueOrOvers || "",
           match.liveTime || "",
           match.sport,
         ]
           .join(" ")
           .toLowerCase();
 
-        if (!searchable.includes(q)) return false;
+        const matchesAllWords = words.every((word) => searchable.includes(word));
+        if (!searchable.includes(q) && !matchesAllWords) return false;
       }
 
       return true;
@@ -489,7 +493,102 @@ export function LiveScoresPage() {
           </div>
         </div>
 
-        {/* 2. SPORT CATEGORY RAILS */}
+        {/* 2. TOP SEARCH BAR: FILTER CRICKET MATCHES BY TEAM OR TOURNAMENT */}
+        <div className="rounded-3xl border border-border/80 bg-card p-4 sm:p-5 shadow-xs space-y-3">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+            <div className="relative flex-1">
+              <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                type="text"
+                placeholder="Search cricket matches by team names (e.g. India, West Indies, Australia) or tournament..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="h-11 rounded-2xl pl-10 pr-9 text-xs sm:text-sm bg-background/80 border-border/80 shadow-xs focus-visible:ring-primary"
+              />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery("")}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground p-1 rounded-full hover:bg-secondary cursor-pointer"
+                  aria-label="Clear search"
+                >
+                  <X className="h-3.5 w-3.5" />
+                </button>
+              )}
+            </div>
+
+            {searchQuery && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setSearchQuery("")}
+                className="rounded-xl text-xs font-semibold shrink-0 cursor-pointer"
+              >
+                Clear Search
+              </Button>
+            )}
+          </div>
+
+          {/* Suggested Quick Filter Chips for Cricket */}
+          <div className="flex flex-wrap items-center gap-1.5 pt-0.5 text-xs">
+            <span className="text-[11px] font-semibold text-muted-foreground mr-1">
+              Quick Filters:
+            </span>
+            {[
+              { label: "West Indies Tour of India 2026", query: "West Indies Tour of India 2026" },
+              { label: "India vs West Indies", query: "India West Indies" },
+              { label: "Australia Tour of South Africa", query: "Australia South Africa" },
+              {
+                label: "ICC Men's Cricket World Cup League 2",
+                query: "ICC Men's Cricket World Cup League 2",
+              },
+              { label: "Asia Qualifier", query: "Asia Qualifier" },
+              { label: "WPL 2026", query: "WPL" },
+            ].map((chip) => {
+              const isActive = searchQuery.toLowerCase() === chip.query.toLowerCase();
+              return (
+                <button
+                  key={chip.label}
+                  type="button"
+                  onClick={() => {
+                    if (isActive) {
+                      setSearchQuery("");
+                    } else {
+                      setSearchQuery(chip.query);
+                      setSelectedSport("Cricket");
+                    }
+                  }}
+                  className={cn(
+                    "rounded-xl px-2.5 py-1 text-[11px] font-medium transition-all cursor-pointer border",
+                    isActive
+                      ? "bg-primary text-primary-foreground border-primary font-bold shadow-xs"
+                      : "bg-secondary/70 text-muted-foreground border-transparent hover:bg-secondary hover:text-foreground",
+                  )}
+                >
+                  {chip.label}
+                </button>
+              );
+            })}
+          </div>
+
+          {searchQuery && (
+            <div className="flex items-center justify-between text-xs text-muted-foreground border-t border-border/40 pt-2">
+              <span>
+                Found <strong>{filteredMatches.length}</strong> match
+                {filteredMatches.length === 1 ? "" : "es"} matching &ldquo;{searchQuery}&rdquo;
+              </span>
+              <button
+                type="button"
+                onClick={() => setSearchQuery("")}
+                className="text-primary hover:underline font-semibold cursor-pointer"
+              >
+                Show all matches
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* 3. SPORT CATEGORY RAILS */}
         <div className="space-y-3">
           <div className="no-scrollbar flex items-center gap-2 overflow-x-auto pb-1 touch-scroll-rail">
             {SPORTS_LIST.map((sp) => {
@@ -1081,18 +1180,37 @@ function MatchScoreCard({
     }
   };
 
+  const handleCardClick = (e: React.MouseEvent) => {
+    const target = e.target as HTMLElement;
+    // If user clicked inside another button or anchor, don't trigger outer navigation
+    if (target.closest("button:not(.card-google-cta)") || target.closest("a")) {
+      return;
+    }
+    const targetUrl = match.googleUrl || GOOGLE_CRICKET_SEARCH_URL;
+    if (targetUrl) {
+      window.open(targetUrl, "_blank", "noopener,noreferrer");
+    } else {
+      onOpenDetails();
+    }
+  };
+
   if (viewMode === "list") {
     return (
-      <div className="group relative flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-2xl border border-border/80 bg-card p-3.5 shadow-xs transition-all hover:border-primary/50 hover:shadow-md">
+      <div
+        onClick={handleCardClick}
+        className="group relative flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-2xl border border-border/80 bg-card p-3.5 shadow-xs transition-all hover:border-primary/80 hover:ring-2 hover:ring-primary/20 hover:shadow-md cursor-pointer"
+      >
         {/* Left: Tournament + Teams */}
         <div className="flex items-center gap-3 min-w-0 flex-1">
           <span className="text-xl shrink-0">{getSportEmoji(match.sport)}</span>
           <div className="min-w-0 flex-1 space-y-0.5">
             <div className="flex items-center gap-2 text-[11px] text-muted-foreground truncate">
-              <span className="font-semibold text-foreground/80 truncate">{match.tournament}</span>
-              {match.stage && <span>• {match.stage}</span>}
-              {match.venueOrOvers && (
-                <span className="font-mono text-primary font-bold">({match.venueOrOvers})</span>
+              <span className="font-bold text-foreground truncate">{match.tournament}</span>
+              {match.stage && <span className="text-primary font-semibold">· {match.stage}</span>}
+              {match.venueOrOvers && !match.stage?.includes(match.venueOrOvers) && (
+                <span className="font-mono text-muted-foreground font-medium">
+                  ({match.venueOrOvers})
+                </span>
               )}
             </div>
 
@@ -1121,10 +1239,10 @@ function MatchScoreCard({
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={(e) => e.stopPropagation()}
-                  className="inline-flex items-center gap-1 rounded-lg border border-primary/40 bg-primary/10 px-2.5 py-1 text-[11px] font-bold text-primary hover:bg-primary hover:text-primary-foreground transition-all"
+                  className="card-google-cta inline-flex items-center gap-1.5 rounded-xl border border-primary/50 bg-primary/10 px-3 py-1.5 text-xs font-bold text-primary hover:bg-primary hover:text-primary-foreground transition-all shadow-xs"
                 >
                   <span>For Live Score visit Google</span>
-                  <ExternalLink className="h-3 w-3" />
+                  <ExternalLink className="h-3.5 w-3.5" />
                 </a>
               </div>
             ) : (
@@ -1164,7 +1282,10 @@ function MatchScoreCard({
           <div className="flex items-center gap-1">
             <button
               type="button"
-              onClick={onTogglePin}
+              onClick={(e) => {
+                e.stopPropagation();
+                onTogglePin();
+              }}
               className="p-1.5 text-muted-foreground hover:text-amber-500 transition-colors rounded-lg cursor-pointer"
               title={isPinned ? "Unpin match" : "Pin match to top"}
             >
@@ -1172,20 +1293,39 @@ function MatchScoreCard({
             </button>
             <button
               type="button"
-              onClick={onShare}
+              onClick={(e) => {
+                e.stopPropagation();
+                onShare();
+              }}
               className="p-1.5 text-muted-foreground hover:text-foreground transition-colors rounded-lg cursor-pointer"
               title="Share score"
             >
               <Share2 className="h-4 w-4" />
             </button>
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={onOpenDetails}
-              className="h-7 text-[11px] rounded-lg font-semibold cursor-pointer"
-            >
-              Details
-            </Button>
+            {match.sport === "Cricket" ? (
+              <a
+                href={match.googleUrl || GOOGLE_CRICKET_SEARCH_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                className="card-google-cta inline-flex items-center gap-1 rounded-xl bg-secondary hover:bg-primary hover:text-primary-foreground text-foreground px-2.5 py-1 text-[11px] font-semibold transition-all"
+              >
+                <span>Google Match</span>
+                <ExternalLink className="h-3 w-3" />
+              </a>
+            ) : (
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onOpenDetails();
+                }}
+                className="h-7 text-[11px] rounded-lg font-semibold cursor-pointer"
+              >
+                Details
+              </Button>
+            )}
           </div>
         </div>
       </div>
@@ -1194,19 +1334,29 @@ function MatchScoreCard({
 
   // Grid Card View
   return (
-    <div className="group relative flex flex-col justify-between rounded-2xl border border-border/80 bg-card p-4 shadow-xs transition-all hover:border-primary/50 hover:shadow-md">
+    <div
+      onClick={handleCardClick}
+      className="group relative flex flex-col justify-between rounded-2xl border border-border/80 bg-card p-4 shadow-xs transition-all hover:border-primary/80 hover:ring-2 hover:ring-primary/20 hover:shadow-md cursor-pointer"
+    >
       {/* Top Header: Tournament, Stage & Pin */}
       <div className="flex items-start justify-between gap-2 border-b border-border/60 pb-2.5 text-[11px]">
-        <div className="min-w-0 flex items-center gap-1.5">
-          <span className="text-sm shrink-0">{getSportEmoji(match.sport)}</span>
-          <span
-            className="font-semibold text-muted-foreground truncate max-w-[170px]"
-            title={match.tournament}
-          >
-            {match.tournament}
-          </span>
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-1.5">
+            <span className="text-sm shrink-0">{getSportEmoji(match.sport)}</span>
+            <span
+              className="font-bold text-foreground truncate max-w-[190px]"
+              title={match.tournament}
+            >
+              {match.tournament}
+            </span>
+          </div>
           {match.stage && (
-            <span className="text-muted-foreground/80 truncate text-[10px]">· {match.stage}</span>
+            <p
+              className="text-primary font-semibold text-[11px] truncate mt-0.5"
+              title={match.stage}
+            >
+              {match.stage}
+            </p>
           )}
         </div>
 
@@ -1227,7 +1377,10 @@ function MatchScoreCard({
 
           <button
             type="button"
-            onClick={onTogglePin}
+            onClick={(e) => {
+              e.stopPropagation();
+              onTogglePin();
+            }}
             className="p-1 text-muted-foreground hover:text-amber-500 transition-colors rounded-lg cursor-pointer ml-1"
             title={isPinned ? "Unpin match" : "Pin match to top"}
           >
@@ -1267,7 +1420,7 @@ function MatchScoreCard({
             target="_blank"
             rel="noopener noreferrer"
             onClick={(e) => e.stopPropagation()}
-            className="flex items-center justify-center gap-1.5 w-full rounded-xl border border-primary/40 bg-primary/10 py-2 px-3 text-xs font-bold text-primary hover:bg-primary hover:text-primary-foreground transition-all shadow-xs"
+            className="card-google-cta flex items-center justify-center gap-2 w-full rounded-xl border border-primary/50 bg-primary/10 py-2.5 px-3 text-xs font-bold text-primary hover:bg-primary hover:text-primary-foreground transition-all shadow-xs"
           >
             <span>For Live Score visit Google</span>
             <ExternalLink className="h-3.5 w-3.5" />
@@ -1334,22 +1487,41 @@ function MatchScoreCard({
       <div className="flex items-center justify-between pt-2 border-t border-border/60">
         <button
           type="button"
-          onClick={onShare}
+          onClick={(e) => {
+            e.stopPropagation();
+            onShare();
+          }}
           className="inline-flex items-center gap-1 text-[11px] text-muted-foreground hover:text-foreground font-medium transition cursor-pointer"
         >
           <Share2 className="h-3 w-3" />
           <span>Share</span>
         </button>
 
-        <Button
-          variant="secondary"
-          size="sm"
-          onClick={onOpenDetails}
-          className="h-7 text-xs rounded-lg font-bold gap-1 cursor-pointer hover:bg-primary hover:text-primary-foreground transition-all"
-        >
-          <span>Match Center</span>
-          <ChevronRight className="h-3 w-3" />
-        </Button>
+        {match.sport === "Cricket" ? (
+          <a
+            href={match.googleUrl || GOOGLE_CRICKET_SEARCH_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            className="card-google-cta inline-flex items-center gap-1.5 text-xs font-bold rounded-lg px-2.5 py-1 bg-secondary text-foreground hover:bg-primary hover:text-primary-foreground transition-all"
+          >
+            <span>Google Match Center</span>
+            <ExternalLink className="h-3 w-3" />
+          </a>
+        ) : (
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={(e) => {
+              e.stopPropagation();
+              onOpenDetails();
+            }}
+            className="h-7 text-xs rounded-lg font-bold gap-1 cursor-pointer hover:bg-primary hover:text-primary-foreground transition-all"
+          >
+            <span>Match Center</span>
+            <ChevronRight className="h-3 w-3" />
+          </Button>
+        )}
       </div>
     </div>
   );

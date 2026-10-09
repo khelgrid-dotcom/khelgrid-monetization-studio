@@ -1,6 +1,9 @@
 export const GOOGLE_CRICKET_SEARCH_URL =
   "https://www.google.com/search?num=10&sca_esv=afb89ae158309890&sxsrf=APpeQnv7S_hYa8j3xghYQ4nz5MsSmeFQOQ:1791525759353&q=Live+Cricket+match+today&sa=X&sqi=2&ved=2ahUKEwivt_fDoayXAxX6zDgGHQu0G64Q1QJ6BAgxEAE&biw=1280&bih=631&dpr=1.5#sie=lg;/g/11ybbzm0qn;5;/m/021q23;mt;fp;1;;;;-1";
 
+export const GOOGLE_IND_WI_2ND_T20I_URL =
+  "https://www.google.com/search?num=10&sca_esv=afb89ae158309890&sxsrf=APpeQnv7S_hYa8j3xghYQ4nz5MsSmeFQOQ:1791525759353&q=Live+Cricket+match+today&sa=X&sqi=2&ved=2ahUKEwivt_fDoayXAxX6zDgGHQu0G64Q1QJ6BAgxEAE&biw=1280&bih=631&dpr=1.5#sie=m;/g/11z3y_p23j;5;/m/021q23;dt;fp;1;;;;-1";
+
 export interface LiveMatchUpdate {
   id: string;
   sport: "Cricket" | "Football" | "Badminton" | "Hockey" | "Kabaddi" | "Tennis";
@@ -40,7 +43,7 @@ export const LIVE_SPORTS_UPDATES: LiveMatchUpdate[] = [
     sport: "Cricket",
     status: "LIVE",
     tournament: "West Indies Tour of India 2026",
-    stage: "2nd T20I",
+    stage: "2nd T20I · Starts 7:00 PM IST",
     matchInfo: "2nd T20I • Bilateral Series",
     teamA: {
       name: "India",
@@ -60,7 +63,7 @@ export const LIVE_SPORTS_UPDATES: LiveMatchUpdate[] = [
     liveTime: "JSCA International Stadium Complex, Ranchi",
     source: "Google Sports Live Feed",
     hasSchedule: true,
-    googleUrl: GOOGLE_CRICKET_SEARCH_URL,
+    googleUrl: GOOGLE_IND_WI_2ND_T20I_URL,
   },
   // 2. South Africa vs Australia 1st Test (Google Live Cricket schedule)
   {
@@ -88,7 +91,8 @@ export const LIVE_SPORTS_UPDATES: LiveMatchUpdate[] = [
     liveTime: "Kingsmead, Durban (8:30 AM GMT / 1:00 PM IST)",
     source: "Google Sports Live Feed",
     hasSchedule: true,
-    googleUrl: GOOGLE_CRICKET_SEARCH_URL,
+    googleUrl:
+      "https://www.google.com/search?num=10&sca_esv=afb89ae158309890&q=Live+Cricket+match+today+Australia+Tour+of+South+Africa+2026+1st+Test&sa=X#sie=m;/g/11y62wkmk8;5;/m/021q23;dt;fp;1;;;;-1",
   },
   // 3. Bangladesh vs Afghanistan Only Test (Google Live Cricket schedule)
   {
@@ -116,7 +120,8 @@ export const LIVE_SPORTS_UPDATES: LiveMatchUpdate[] = [
     liveTime: "Sheikh Zayed Stadium, Abu Dhabi (7:00 AM GMT / 11:30 AM IST)",
     source: "Google Sports Live Feed",
     hasSchedule: true,
-    googleUrl: GOOGLE_CRICKET_SEARCH_URL,
+    googleUrl:
+      "https://www.google.com/search?num=10&sca_esv=afb89ae158309890&q=Live+Cricket+match+today+Afghanistan+vs+Bangladesh+in+UAE+2026+Only+Test&sa=X",
   },
   // 4. Pakistan vs Sri Lanka 1st T20I (Google Live Cricket schedule)
   {
@@ -124,7 +129,7 @@ export const LIVE_SPORTS_UPDATES: LiveMatchUpdate[] = [
     sport: "Cricket",
     status: "UPCOMING",
     tournament: "Sri Lanka Tour of Pakistan 2026",
-    stage: "1st T20I",
+    stage: "1st T20I · Starts 9:00 PM IST",
     matchInfo: "1st T20I • Rawalpindi Series",
     teamA: {
       name: "Pakistan",
@@ -144,7 +149,8 @@ export const LIVE_SPORTS_UPDATES: LiveMatchUpdate[] = [
     liveTime: "Rawalpindi Cricket Stadium, Rawalpindi (3:30 PM GMT)",
     source: "Google Sports Live Feed",
     hasSchedule: true,
-    googleUrl: GOOGLE_CRICKET_SEARCH_URL,
+    googleUrl:
+      "https://www.google.com/search?num=10&sca_esv=afb89ae158309890&q=Live+Cricket+match+today+Sri+Lanka+Tour+of+Pakistan+2026+1st+T20I&sa=X",
   },
   // 5. Oman vs Canada ODI (Google Live Cricket schedule)
   {
@@ -172,7 +178,8 @@ export const LIVE_SPORTS_UPDATES: LiveMatchUpdate[] = [
     liveTime: "Al Amerat Cricket Ground (Ministry Turf 1), Al Amarat (6:00 AM GMT)",
     source: "Google Sports Live Feed",
     hasSchedule: true,
-    googleUrl: GOOGLE_CRICKET_SEARCH_URL,
+    googleUrl:
+      "https://www.google.com/search?num=10&sca_esv=afb89ae158309890&q=Live+Cricket+match+today+ICC+Cricket+World+Cup+League+2+Oman+vs+Canada&sa=X",
   },
   // 6. Namibia vs United Arab Emirates ODI (Google Live Cricket schedule)
   {
@@ -180,7 +187,7 @@ export const LIVE_SPORTS_UPDATES: LiveMatchUpdate[] = [
     sport: "Cricket",
     status: "UPCOMING",
     tournament: "ICC Men's Cricket World Cup League 2",
-    stage: "ODI Match 42",
+    stage: "ODI Match 42 · Starts 9:30 PM IST",
     matchInfo: "ODI Match 42 • CWC League 2",
     teamA: {
       name: "Namibia",
@@ -200,7 +207,8 @@ export const LIVE_SPORTS_UPDATES: LiveMatchUpdate[] = [
     liveTime: "Grand Prairie Stadium, Texas (4:00 PM GMT / 9:30 PM IST)",
     source: "Google Sports Live Feed",
     hasSchedule: true,
-    googleUrl: GOOGLE_CRICKET_SEARCH_URL,
+    googleUrl:
+      "https://www.google.com/search?num=10&sca_esv=afb89ae158309890&q=Live+Cricket+match+today+ICC+Cricket+World+Cup+League+2+Namibia+vs+UAE&sa=X",
   },
   // 7. Malaysia vs Saudi Arabia T20I (Google Live Cricket schedule)
   {
@@ -228,7 +236,8 @@ export const LIVE_SPORTS_UPDATES: LiveMatchUpdate[] = [
     liveTime: "Bayuemas Oval, Kuala Lumpur (7:00 AM GMT)",
     source: "Google Sports Live Feed",
     hasSchedule: true,
-    googleUrl: GOOGLE_CRICKET_SEARCH_URL,
+    googleUrl:
+      "https://www.google.com/search?num=10&sca_esv=afb89ae158309890&q=Live+Cricket+match+today+ICC+T20+World+Cup+Asia+Qualifier+B+Malaysia+vs+Saudi+Arabia&sa=X",
   },
   // 8. China vs Hong Kong T20I (Google Live Cricket schedule)
   {
@@ -256,7 +265,8 @@ export const LIVE_SPORTS_UPDATES: LiveMatchUpdate[] = [
     liveTime: "UKM-YSD Cricket Oval, Bangi (7:00 AM GMT)",
     source: "Google Sports Live Feed",
     hasSchedule: true,
-    googleUrl: GOOGLE_CRICKET_SEARCH_URL,
+    googleUrl:
+      "https://www.google.com/search?num=10&sca_esv=afb89ae158309890&q=Live+Cricket+match+today+ICC+T20+World+Cup+Asia+Qualifier+B+China+vs+Hong+Kong&sa=X",
   },
   // 9. Maldives vs Singapore T20I (Google Live Cricket schedule)
   {
@@ -284,7 +294,8 @@ export const LIVE_SPORTS_UPDATES: LiveMatchUpdate[] = [
     liveTime: "Selangor Turf Club, Kuala Lumpur (7:00 AM GMT)",
     source: "Google Sports Live Feed",
     hasSchedule: true,
-    googleUrl: GOOGLE_CRICKET_SEARCH_URL,
+    googleUrl:
+      "https://www.google.com/search?num=10&sca_esv=afb89ae158309890&q=Live+Cricket+match+today+ICC+T20+World+Cup+Asia+Qualifier+B+Maldives+vs+Singapore&sa=X",
   },
   // 10. Bahrain vs Kuwait T20I (Google Live Cricket schedule)
   {
@@ -312,7 +323,8 @@ export const LIVE_SPORTS_UPDATES: LiveMatchUpdate[] = [
     liveTime: "UKM-YSD Cricket Oval, Bangi",
     source: "Google Sports Live Feed",
     hasSchedule: true,
-    googleUrl: GOOGLE_CRICKET_SEARCH_URL,
+    googleUrl:
+      "https://www.google.com/search?num=10&sca_esv=afb89ae158309890&q=Live+Cricket+match+today+ICC+T20+World+Cup+Asia+Qualifier+A+Bahrain+vs+Kuwait&sa=X",
   },
   // 11. Qatar vs Myanmar T20I (Google Live Cricket schedule)
   {
@@ -340,7 +352,8 @@ export const LIVE_SPORTS_UPDATES: LiveMatchUpdate[] = [
     liveTime: "Selangor Turf Club, Kuala Lumpur",
     source: "Google Sports Live Feed",
     hasSchedule: true,
-    googleUrl: GOOGLE_CRICKET_SEARCH_URL,
+    googleUrl:
+      "https://www.google.com/search?num=10&sca_esv=afb89ae158309890&q=Live+Cricket+match+today+ICC+T20+World+Cup+Asia+Qualifier+A+Qatar+vs+Myanmar&sa=X",
   },
   // 12. Mongolia vs Thailand T20I (Google Live Cricket schedule)
   {
@@ -368,7 +381,8 @@ export const LIVE_SPORTS_UPDATES: LiveMatchUpdate[] = [
     liveTime: "Bayuemas Oval, Kuala Lumpur",
     source: "Google Sports Live Feed",
     hasSchedule: true,
-    googleUrl: GOOGLE_CRICKET_SEARCH_URL,
+    googleUrl:
+      "https://www.google.com/search?num=10&sca_esv=afb89ae158309890&q=Live+Cricket+match+today+ICC+T20+World+Cup+Asia+Qualifier+A+Mongolia+vs+Thailand&sa=X",
   },
   // 13. WPL RCB vs MI
   {
@@ -376,7 +390,7 @@ export const LIVE_SPORTS_UPDATES: LiveMatchUpdate[] = [
     sport: "Cricket",
     status: "UPCOMING",
     tournament: "Women's Premier League (WPL)",
-    stage: "Match 14 · League Stage",
+    stage: "Match 14 · Starts 7:30 PM IST",
     matchInfo: "Match 14 • WPL 2026",
     teamA: { name: "Royal Challengers Bengaluru", code: "RCB-W", score: "Upcoming", flag: "🔴" },
     teamB: { name: "Mumbai Indians", code: "MI-W", score: "Upcoming", flag: "🔵" },
@@ -386,7 +400,8 @@ export const LIVE_SPORTS_UPDATES: LiveMatchUpdate[] = [
     liveTime: "M. Chinnaswamy Stadium, Bengaluru",
     source: "Google Sports Live Feed",
     hasSchedule: true,
-    googleUrl: GOOGLE_CRICKET_SEARCH_URL,
+    googleUrl:
+      "https://www.google.com/search?num=10&sca_esv=afb89ae158309890&q=Live+Cricket+match+today+RCB+vs+MI+Women+Premier+League+WPL&sa=X",
   },
   {
     id: "football-isl-mcfc-mbsg",
