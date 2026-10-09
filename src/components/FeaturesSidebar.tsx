@@ -19,6 +19,7 @@ import {
 import { PRIMARY_ITEMS, FEATURE_ITEMS, isActivePath, type NavItem } from "@/config/nav";
 import { NavLink } from "@/components/NavLink";
 import { PlayNavLink } from "@/components/PlayNavLink";
+import { SidebarLiveScoreWidget } from "@/components/SidebarLiveScoreWidget";
 import { SidebarAd } from "@/components/ads";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
@@ -69,6 +70,7 @@ export function getItemCategory(to: string): NavCategory {
   }
   if (
     to === "/search" ||
+    to === "/live-scores" ||
     to === "/#live-scores" ||
     to === "/play" ||
     to === "/book" ||
@@ -412,6 +414,12 @@ export function FeaturesSidebar() {
           )}
 
           {/* B. Expanded View: Grouped Sections or Filtered Results */}
+          {!collapsed && !query && activeCategory === "all" && (
+            <div className="mb-2">
+              <SidebarLiveScoreWidget />
+            </div>
+          )}
+
           {!collapsed && groupedSections && (
             <div className="space-y-3">
               {groupedSections.map((sec) => {

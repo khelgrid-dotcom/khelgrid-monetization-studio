@@ -16,57 +16,18 @@ export const BOTTOM_NAV_TABS: readonly NavTabItem[] = [
   { to: "/play", label: "Play", icon: Swords, exact: false },
   { to: "/book", label: "Book", icon: CalendarCheck, exact: false },
   { to: "/train", label: "Train", icon: GraduationCap, exact: false },
-  { to: "/", label: "Live", icon: Radio, exact: false, isLive: true },
+  { to: "/live-scores", label: "Live", icon: Radio, exact: false, isLive: true },
 ] as const;
 
 export function BottomTabBar() {
-  const path = useRouterState({ select: (s) => s.location.pathname });
+  const rawPath = useRouterState({ select: (s) => s.location.pathname });
+  const path =
+    typeof rawPath === "string"
+      ? rawPath
+      : (rawPath as { location?: { pathname?: string } })?.location?.pathname || "/";
   const navigate = useNavigate();
-  const [isLiveActive, setIsLiveActive] = useState(false);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const checkHash = () => {
-      setIsLiveActive(window.location.hash === "#live-scores");
-    };
-    checkHash();
-    window.addEventListener("hashchange", checkHash);
-    return () => window.removeEventListener("hashchange", checkHash);
-  }, [path]);
-
-  const handleLiveClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    setIsLiveActive(true);
-    if (path === "/") {
-      const el = document.getElementById("live-scores") || document.getElementById("match-center");
-      if (el) {
-        el.scrollIntoView({ behavior: "smooth" });
-        try {
-          window.history.replaceState(null, "", "/#live-scores");
-        } catch {
-          // ignore
-        }
-      }
-    } else {
-      navigate({ to: "/", search: {} }).then(() => {
-        setTimeout(() => {
-          const el =
-            document.getElementById("live-scores") || document.getElementById("match-center");
-          if (el) {
-            el.scrollIntoView({ behavior: "smooth" });
-            try {
-              window.history.replaceState(null, "", "/#live-scores");
-            } catch {
-              // ignore
-            }
-          }
-        }, 120);
-      });
-    }
-  };
 
   const handleHomeClick = (e: React.MouseEvent) => {
-    setIsLiveActive(false);
     if (path === "/") {
       if (typeof window !== "undefined" && window.location.hash) {
         try {
@@ -83,12 +44,15 @@ export function BottomTabBar() {
   };
 
   const handleTabClick = (e: React.MouseEvent, t: NavTabItem) => {
-    if (t.isLive) {
-      handleLiveClick(e);
+    if (t.isLive || t.to === "/live-scores") {
+      e.preventDefault();
+      navigate({ to: "/live-scores", search: {} });
     } else if (t.to === "/") {
       handleHomeClick(e);
     }
   };
+
+  const isLiveRoute = path === "/live-scores" || path === "/live";
 
   return (
     <nav
@@ -99,8 +63,8 @@ export function BottomTabBar() {
         {BOTTOM_NAV_TABS.map((t) => {
           const isLiveTab = t.isLive;
           const active = isLiveTab
-            ? path === "/" && isLiveActive
-            : !isLiveActive &&
+            ? isLiveRoute
+            : !isLiveRoute &&
               (t.exact
                 ? path === t.to
                 : t.to === "/train"

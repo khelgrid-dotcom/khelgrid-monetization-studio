@@ -70,7 +70,7 @@ export function LiveMatchTicker({ selectedSport = "All" }: LiveMatchTickerProps)
           </div>
 
           <Link
-            to="/events"
+            to="/live-scores"
             className="text-xs font-semibold text-primary hover:underline inline-flex items-center gap-0.5"
           >
             <span>All Scores</span>

@@ -61,11 +61,11 @@ export type NavItem = {
 export const NAV_ITEMS: NavItem[] = [
   { to: "/", label: "Home", icon: Home, surfaces: ["primary"] },
   { to: "/search", label: "Search trials", icon: Search, surfaces: ["primary", "features"] },
-  { to: "/#live-scores", label: "Live Scores", icon: Activity, surfaces: ["primary", "features"] },
+  { to: "/live-scores", label: "Live Scores", icon: Activity, surfaces: ["primary", "features"] },
   { to: "/trials", label: "Live Trials", icon: Radio, surfaces: [] },
   { to: "/opportunities", label: "Opportunities", icon: Briefcase, surfaces: [] },
   { to: "/resources", label: "Resources", icon: Library, surfaces: [] },
-  { to: "/sports", label: "Sports & Learning Hub", icon: Trophy, surfaces: [] },
+  { to: "/sports", label: "Sports", icon: Trophy, surfaces: [] },
   { to: "/cities", label: "Cities", icon: Compass, surfaces: ["primary"] },
   { to: "/guides", label: "Guides", icon: BookOpen, surfaces: ["primary", "features"] },
   { to: "/chronicle", label: "KhelChronicle", icon: Newspaper, surfaces: ["primary", "features"] },

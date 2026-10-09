@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { LIVE_SPORTS_UPDATES, type LiveMatchUpdate } from "@/data/liveSports";
+import { Link } from "@tanstack/react-router";
+import { LIVE_SPORTS_UPDATES } from "@/data/liveSports";
 import { ChevronRight, ChevronLeft, Activity, Radio } from "lucide-react";
 
 export function SidebarLiveScoreWidget() {
@@ -18,72 +19,84 @@ export function SidebarLiveScoreWidget() {
   const currentMatch = liveMatches[currentIndex] || LIVE_SPORTS_UPDATES[0];
   if (!currentMatch) return null;
 
-  const scrollToLiveSection = (e: React.MouseEvent) => {
-    e.preventDefault();
-    if (typeof window !== "undefined") {
-      const el = document.getElementById("live-scores");
-      if (el) {
-        el.scrollIntoView({ behavior: "smooth" });
-      } else {
-        window.location.href = "/#live-scores";
-      }
+  const getSportEmoji = (sport: string) => {
+    switch (sport) {
+      case "Cricket":
+        return "🏏";
+      case "Football":
+        return "⚽";
+      case "Badminton":
+        return "🏸";
+      case "Kabaddi":
+        return "🤼";
+      case "Hockey":
+        return "🏑";
+      case "Tennis":
+        return "🎾";
+      default:
+        return "⚡";
     }
   };
 
   return (
-    <div className="my-2 rounded-xl border border-[#232938] bg-[#141822] p-3 text-white shadow-sm transition-all hover:border-amber-500/40">
+    <div className="my-2 rounded-xl border border-border/80 bg-card/90 p-2.5 text-foreground shadow-xs transition-all hover:border-primary/50">
       {/* Mini Header: Match title & LIVE badge */}
-      <div className="flex items-center justify-between gap-1.5 border-b border-white/10 pb-2">
-        <div className="flex items-center gap-1.5 min-w-0">
-          <span className="text-[11px]">🏏</span>
-          <span className="truncate font-medium text-[11px] text-slate-300">
+      <div className="flex items-center justify-between gap-1.5 border-b border-border/60 pb-1.5">
+        <Link
+          to="/live-scores"
+          className="flex items-center gap-1.5 min-w-0 hover:underline"
+          title="Open Live Scores match center"
+        >
+          <span className="text-xs">{getSportEmoji(currentMatch.sport)}</span>
+          <span className="truncate font-semibold text-[11px] text-foreground/90">
             {currentMatch.matchInfo ||
               `${currentMatch.stage || "Match"} • ${currentMatch.tournament}`}
           </span>
-        </div>
+        </Link>
 
-        <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-[#0a2618] border border-emerald-500/40 px-1.5 py-0.2 text-[9px] font-bold text-emerald-400">
-          <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-ping" />
+        <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-emerald-500/15 border border-emerald-500/40 px-1.5 py-0.2 text-[9px] font-bold text-emerald-600 dark:text-emerald-400">
+          <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-ping" />
           <span>LIVE</span>
         </span>
       </div>
 
       {/* Mini Teams & Scores */}
-      <div className="mt-2 space-y-1.5">
+      <Link to="/live-scores" className="block mt-2 space-y-1 hover:opacity-90">
         <div className="flex items-center justify-between text-xs">
           <div className="flex items-center gap-1.5 min-w-0">
             <span className="text-xs">{currentMatch.teamA.flag || "🇨🇦"}</span>
-            <span className="font-bold text-slate-100 truncate">{currentMatch.teamA.code}</span>
+            <span className="font-bold text-foreground truncate">{currentMatch.teamA.code}</span>
           </div>
-          <span className="font-mono text-xs font-bold text-white">{currentMatch.teamA.score}</span>
+          <span className="font-mono text-xs font-bold text-foreground">
+            {currentMatch.teamA.score}
+          </span>
         </div>
 
         <div className="flex items-center justify-between text-xs">
           <div className="flex items-center gap-1.5 min-w-0">
             <span className="text-xs">{currentMatch.teamB.flag || "⚡"}</span>
-            <span className="font-bold text-slate-100 truncate">{currentMatch.teamB.code}</span>
+            <span className="font-bold text-foreground truncate">{currentMatch.teamB.code}</span>
           </div>
-          <span className="font-mono text-xs font-semibold text-slate-300">
+          <span className="font-mono text-xs font-semibold text-muted-foreground">
             {currentMatch.teamB.score}
           </span>
         </div>
-      </div>
+      </Link>
 
       {/* Mini Status */}
-      <p className="mt-2 text-[10px] text-slate-400 truncate font-medium">
+      <p className="mt-1.5 text-[10px] text-muted-foreground truncate font-medium">
         {currentMatch.statusText || currentMatch.highlight}
       </p>
 
       {/* Mini Footer: Switcher & Link to Live Scores Section */}
-      <div className="mt-2.5 flex items-center justify-between border-t border-white/10 pt-2 text-[10px]">
-        <a
-          href="/#live-scores"
-          onClick={scrollToLiveSection}
-          className="inline-flex items-center gap-0.5 font-semibold text-amber-400 hover:underline"
+      <div className="mt-2 flex items-center justify-between border-t border-border/60 pt-1.5 text-[10px]">
+        <Link
+          to="/live-scores"
+          className="inline-flex items-center gap-0.5 font-bold text-primary hover:underline"
         >
-          <span>Live Scores</span>
+          <span>Live Scores Hub</span>
           <ChevronRight className="h-3 w-3" />
-        </a>
+        </Link>
 
         {liveMatches.length > 1 && (
           <div className="flex items-center gap-1">
@@ -92,18 +105,18 @@ export function SidebarLiveScoreWidget() {
               onClick={() =>
                 setCurrentIndex((prev) => (prev - 1 + liveMatches.length) % liveMatches.length)
               }
-              className="p-0.5 text-slate-400 hover:text-white rounded"
+              className="p-0.5 text-muted-foreground hover:text-foreground rounded cursor-pointer"
               aria-label="Previous live match"
             >
               <ChevronLeft className="h-3 w-3" />
             </button>
-            <span className="text-[9px] text-slate-400 font-mono">
+            <span className="text-[9px] text-muted-foreground font-mono">
               {currentIndex + 1}/{liveMatches.length}
             </span>
             <button
               type="button"
               onClick={() => setCurrentIndex((prev) => (prev + 1) % liveMatches.length)}
-              className="p-0.5 text-slate-400 hover:text-white rounded"
+              className="p-0.5 text-muted-foreground hover:text-foreground rounded cursor-pointer"
               aria-label="Next live match"
             >
               <ChevronRight className="h-3 w-3" />
