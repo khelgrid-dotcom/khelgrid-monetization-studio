@@ -65,7 +65,7 @@ export const REGIONS: RegionDefinition[] = [
   {
     id: "west",
     name: "West Zone",
-    cities: ["Mumbai", "Pune", "Ahmedabad", "Goa", "Nagpur", "Surat", "Vadodara"],
+    cities: ["Mumbai", "Pune", "Ahmedabad", "Goa", "Nagpur", "Surat", "Vadodara", "Gandhinagar"],
   },
   {
     id: "east_ne",
@@ -118,7 +118,7 @@ export const SPORT_TYPES: SportTypeDefinition[] = [
   {
     id: "combat",
     name: "Combat & Martial Arts",
-    sports: ["Wrestling", "Boxing", "Kabaddi", "Judo", "Taekwondo", "Karate"],
+    sports: ["Wrestling", "Boxing", "Kabaddi", "Judo", "Taekwondo", "Karate", "Wushu"],
     icon: "🤼",
   },
   {

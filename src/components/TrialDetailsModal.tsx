@@ -118,6 +118,25 @@ export function getOrganizerContact(trial: Partial<Trial | TrialDiscoveryItem>):
     };
   }
 
+  if (
+    academy.includes("Wushu") ||
+    academy.includes("Rashtriya Raksha University") ||
+    trial.title.includes("Wushu") ||
+    (trial as Trial).sport === "Wushu"
+  ) {
+    return {
+      name: "Mr. Raghvendra Singh",
+      role: "Organizing Secretary & AIU Nodal Officer (Rashtriya Raksha University)",
+      email: "raghvendra.singh@rru.ac.in",
+      phone: "+91 8384849529",
+      helpline: "+91 9898230979 (Competition Coordinator: Mr. Kalpesh Sharma)",
+      address:
+        trial.venue ||
+        "Rashtriya Raksha University (RRU), Lavad, Dahegam, Gandhinagar, Gujarat - 382305",
+      website: trial.sourceUrl,
+    };
+  }
+
   return {
     name: `${academy} Secretariat`,
     role: "Official Trials Coordinator",
@@ -471,8 +490,28 @@ export function TrialDetailsModal({
             </div>
           </div>
 
-          {/* Source announcement link if available */}
-          {trial.sourceUrl && (
+          {/* Source announcement links if available */}
+          {(trial as Trial).sources && (trial as Trial).sources!.length > 0 ? (
+            <div className="pt-2 space-y-1.5">
+              <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider block">
+                Official Source Releases &amp; Circulars
+              </span>
+              <div className="flex flex-col gap-1.5">
+                {(trial as Trial).sources!.map((src) => (
+                  <a
+                    key={src.url}
+                    href={src.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-between text-xs text-primary hover:underline font-medium bg-primary/5 hover:bg-primary/10 border border-primary/20 rounded-md px-2.5 py-1.5 transition-colors"
+                  >
+                    <span className="truncate">{src.label}</span>
+                    <ExternalLink className="h-3 w-3 shrink-0 ml-1.5" />
+                  </a>
+                ))}
+              </div>
+            </div>
+          ) : trial.sourceUrl ? (
             <div className="pt-1">
               <a
                 href={trial.sourceUrl}
@@ -487,8 +526,29 @@ export function TrialDetailsModal({
                 </span>
               </a>
             </div>
-          )}
+          ) : null}
         </div>
+
+        {/* TIMELINES (If available) */}
+        {(trial as Trial).timelines && (trial as Trial).timelines!.length > 0 && (
+          <div className="space-y-3">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+              <Calendar className="h-4 w-4 text-primary" />
+              <span>Crucial Timelines &amp; Deadlines</span>
+            </h4>
+            <div className="grid gap-2 sm:grid-cols-2">
+              {(trial as Trial).timelines!.map((tl) => (
+                <div key={tl.label} className="rounded-lg border border-border bg-card/60 p-3 space-y-1">
+                  <span className="text-[11px] font-medium text-muted-foreground">{tl.label}</span>
+                  <p className="text-xs font-bold text-foreground">{tl.date}</p>
+                  {tl.description && (
+                    <p className="text-[11px] text-muted-foreground">{tl.description}</p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* 3. ELIGIBILITY & SELECTION PROCESS (If available) */}
         {(trial.eligibility || (trial as Trial).selectionProcess) && (

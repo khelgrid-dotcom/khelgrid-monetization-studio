@@ -199,6 +199,14 @@ export const TRIAL_IMAGES: Record<string, string> = {
     sportLabel: "Pickleball State Selection",
     subLabel: "PWR 400 Delhi",
   }),
+  Wushu: createSportSvg({
+    themeColor1: "#b91c1c", // Martial crimson / combat red
+    themeColor2: "#450a0a", // Deep arena dark
+    sportIcon: "🥋",
+    fieldPattern: "ring",
+    sportLabel: "All India Inter-University Wushu",
+    subLabel: "Sanda & Taolu RRU",
+  }),
 };
 
 export function getTrialCardImage(sport: string): string {

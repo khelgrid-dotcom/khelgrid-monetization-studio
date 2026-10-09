@@ -7,6 +7,7 @@ import { TRIALS } from "@/data/trials";
 import { getRealtimeOpportunityBadge } from "@/lib/opportunity-badge";
 import { buildSeoHead, SITE_URL, DEFAULT_SITE_NAME, TWITTER_HANDLE } from "@/lib/seo";
 import { FitIndiaFAQ, FIT_INDIA_FAQS } from "@/components/FitIndiaFAQ";
+import { WushuInterUniversityDetails } from "@/components/WushuInterUniversityDetails";
 import { TrialSocialShare } from "@/components/TrialSocialShare";
 import { TrialNewsletterSignup } from "@/components/TrialNewsletterSignup";
 
@@ -79,7 +80,9 @@ function TrialDetailPage() {
   const ogImageUrl = `${SITE_URL}/og-image.png`;
 
   // Specific Open Graph & Schema.org event structured data for rich previews
-  const startDateIso = trial.date.includes("Oct 10")
+  const startDateIso = trial.date.includes("Dec 25")
+    ? "2026-12-25T08:00:00+05:30"
+    : trial.date.includes("Oct 10")
     ? "2026-10-10T08:00:00+05:30"
     : trial.date.includes("Sep 30")
     ? "2026-09-30T08:00:00+05:30"
@@ -245,7 +248,22 @@ function TrialDetailPage() {
           paying. A KhelGrid listing does not mean that KhelGrid is the organizer or that a place is
           reserved for you.
         </p>
-        {trial.sourceUrl && (
+        {trial.sources && trial.sources.length > 0 ? (
+          <div className="mt-3 flex flex-wrap gap-2">
+            {trial.sources.map((src) => (
+              <a
+                key={src.url}
+                href={src.url}
+                target="_blank"
+                rel="noreferrer noopener"
+                className="inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline bg-primary/10 px-2.5 py-1 rounded-md"
+              >
+                <span>{src.label}</span>
+                <span>→</span>
+              </a>
+            ))}
+          </div>
+        ) : trial.sourceUrl ? (
           <a
             href={trial.sourceUrl}
             target="_blank"
@@ -254,7 +272,7 @@ function TrialDetailPage() {
           >
             Open official source →
           </a>
-        )}
+        ) : null}
         <Link
           to="/trust-center"
           className="mt-3 block text-sm font-semibold text-primary hover:underline"
@@ -368,6 +386,15 @@ function TrialDetailPage() {
         trial.city.toLowerCase() === "namchi") && (
         <div className="mt-10">
           <FitIndiaFAQ sourceUrl={trial.sourceUrl} />
+        </div>
+      )}
+
+      {/* All India Inter-University Wushu Championship Dedicated Details & Timelines Section */}
+      {(trial.id === "t-aiu-wushu-inter-university-trials-2026" ||
+        trial.sport.toLowerCase() === "wushu" ||
+        trial.title.toLowerCase().includes("wushu")) && (
+        <div className="mt-10">
+          <WushuInterUniversityDetails />
         </div>
       )}
 

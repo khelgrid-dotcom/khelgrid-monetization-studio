@@ -1,3 +1,21 @@
+export interface TrialSource {
+  label: string;
+  url: string;
+}
+
+export interface TrialTimeline {
+  label: string;
+  date: string;
+  description?: string;
+}
+
+export interface TrialOrganizerContact {
+  title: string;
+  name: string;
+  email?: string;
+  phone?: string;
+}
+
 export interface Trial {
   id: string;
   title: string;
@@ -10,6 +28,9 @@ export interface Trial {
   tag: string;
   sourceUrl?: string;
   sourceLabel?: string;
+  sources?: TrialSource[];
+  timelines?: TrialTimeline[];
+  organizerContacts?: TrialOrganizerContact[];
   lastVerified?: string;
   eligibility?: string;
   requiredDocuments?: string[];
@@ -24,6 +45,91 @@ export interface Trial {
 }
 
 export const TRIALS: Trial[] = [
+  {
+    id: "t-aiu-wushu-inter-university-trials-2026",
+    title: "All India Inter-University Wushu Championship 2026–27 Selection Trials",
+    academy: "Rashtriya Raksha University (RRU) & Association of Indian Universities (AIU)",
+    sport: "Wushu",
+    city: "Gandhinagar",
+    date: "Dec 25 - Dec 30, 2026 (Championship) · Local Trials: Mid-Oct to Nov 2026",
+    registrationDeadline: "Nov 20, 2026 (General Entry) / Dec 05, 2026 (Detailed Entry)",
+    fee: 0,
+    spots: 128,
+    tag: "Inter-University National",
+    ageCategory: "Collegiate / University Enrolled Students (AIU Guidelines)",
+    gender: "Men & Women (Sanda / Combat & Taolu / Forms)",
+    verifiedLabel: "AIU & Rashtriya Raksha University (RRU) Host Sanctioned",
+    urgencyText: "Local University Trials Underway · Host General Entry Deadline: 20 Nov 2026",
+    badge: "New",
+    sourceUrl:
+      "https://aiu.ac.in/wp-content/uploads/docs/2026/09/AIU-Sports-Calendar-2026-27-Final_compressed.pdf",
+    sourceLabel: "Association of Indian Universities (AIU) Official Sports Calendar 2026–27",
+    sources: [
+      {
+        label: "AIU Official Sports Calendar 2026–27 (PDF)",
+        url: "https://aiu.ac.in/wp-content/uploads/docs/2026/09/AIU-Sports-Calendar-2026-27-Final_compressed.pdf",
+      },
+      {
+        label: "AIIU Wushu Selection Trials Notification Document (Scribd)",
+        url: "https://www.scribd.com/document/1042960239/AIIU-Wushu-Selection-Trials",
+      },
+      {
+        label: "Rashtriya Raksha University (RRU) Host Notification (Instagram Official)",
+        url: "https://www.instagram.com/p/DeOpkCNPoaz/",
+      },
+    ],
+    timelines: [
+      {
+        label: "Local University Selection Trials",
+        date: "Mid-October to Early November 2026",
+        description:
+          "Handled independently by each individual university sports department 4 to 6 weeks before host deadlines",
+      },
+      {
+        label: "Last Date for General Entry",
+        date: "20th November 2026",
+        description: "Official institutional registration deadline set by host Rashtriya Raksha University (RRU)",
+      },
+      {
+        label: "Last Date for Detailed Entry",
+        date: "5th December 2026",
+        description: "Submission of finalized competitor rosters and weight categories",
+      },
+      {
+        label: "Main Championship",
+        date: "25th – 30th December 2026",
+        description: "National championship staging at Rashtriya Raksha University, Lavad, Gujarat",
+      },
+    ],
+    organizerContacts: [
+      {
+        title: "Organizing Secretary & AIU Nodal Officer",
+        name: "Mr. Raghvendra Singh",
+        email: "raghvendra.singh@rru.ac.in",
+        phone: "+91 8384849529",
+      },
+      {
+        title: "Competition Coordinator",
+        name: "Mr. Kalpesh Sharma",
+        phone: "+91 9898230979",
+      },
+    ],
+    lastVerified: "Oct 09, 2026",
+    venue:
+      "Rashtriya Raksha University (RRU), Lavad, Dahegam, Gandhinagar, Gujarat - 382305 (Main National Host)",
+    eligibility:
+      "Selection trials for the All India Inter-University Wushu Championship 2026–27 are handled independently by each individual university. Eligible athletes must be bona fide regular full-time enrolled students in recognized universities affiliated with the Association of Indian Universities (AIU). Disciplines include Sanda (sanshou/combat) and Taolu (routines/forms) for both Men and Women within standard AIU collegiate weight divisions.",
+    requiredDocuments: [
+      "Unique AIU ID (generated via official Association of Indian Universities Sports Portal: https://aiu.ac.in/)",
+      "Current college/university identity card and latest academic fee receipts",
+      "Class 10th and 12th passing certificates (mandatory for age and eligibility verification)",
+      "Bonafide certificate / eligibility proforma signed by the University Registrar / Sports Board Director",
+      "Valid medical fitness certificate and personal accident insurance covering combat sports",
+      "Official Wushu combat/taolu equipment matching WFI / IWUF specifications",
+    ],
+    selectionProcess:
+      "Because Rashtriya Raksha University (RRU) is the national host, they set the institutional entry deadlines, but your specific university determines its own local trial dates to select the contingent representing them. Steps to attend: (1) Check with your University's Sports Department / Directorate of Physical Education immediately (trials are conducted 4-6 weeks before general entry, typically mid-October to early November); (2) Ensure you are measuring and practicing within your target weight bracket for Sanda (sanshou/combat) or Taolu (routines/forms); (3) Present your mandatory documents including AIU ID, college ID, and 10th/12th passing certificates upon selection.",
+  },
   {
     id: "t-delhi-pickleball-selection-trials-2026",
     title: "Delhi State Selection Trials (PWR 400 Pickleball)",
@@ -441,5 +547,14 @@ export const SPORTS = [
   "Tennis",
   "Wrestling",
   "Pickleball",
+  "Wushu",
 ] as const;
-export const CITIES = ["Delhi", "Mumbai", "Bengaluru", "Hyderabad", "Chandigarh", "Pune"] as const;
+export const CITIES = [
+  "Delhi",
+  "Mumbai",
+  "Bengaluru",
+  "Hyderabad",
+  "Chandigarh",
+  "Pune",
+  "Gandhinagar",
+] as const;

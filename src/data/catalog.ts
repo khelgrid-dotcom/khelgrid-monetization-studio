@@ -261,6 +261,19 @@ export const SPORTS_CATALOG: Sport[] = [
       "Singles, doubles, and mixed doubles competitive brackets",
     ],
   },
+  {
+    slug: "wushu",
+    name: "Wushu",
+    tagline: "All India Inter-University championships, Sanda combat & Taolu routines",
+    level: "National",
+    ageBand: "Collegiate / University",
+    emoji: "🥋",
+    highlights: [
+      "Association of Indian Universities (AIU) National Championship",
+      "Sanda (combat/sanshou) and Taolu (routines/forms) disciplines",
+      "Institutional university team selections and AIU sports portal entry",
+    ],
+  },
 ];
 
 export const CITIES_CATALOG: City[] = [
