@@ -165,6 +165,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
               async: true,
               crossOrigin: "anonymous" as const,
             },
+            {
+              src: `https://fundingchoicesmessages.google.com/i/${adsConfig.publisherId}?ers=1`,
+              async: true,
+            },
           ]
         : []),
     ],

@@ -8,17 +8,14 @@ import {
   type ReactNode,
 } from "react";
 import type { AdsByGoogleQueue } from "./adsbygoogle";
+import { initUmpConsent, updateConsentMode, showPrivacyOptionsForm } from "@/lib/ump-web";
 
 /**
- * Minimal, dependency-free consent layer for ads.
+ * User Messaging Platform (UMP) and Consent layer for AdSense and Google Ads.
  *
  * - "unknown"  → no ads requested at all (safe default for GDPR regions)
- * - "granted"  → personalized ads allowed
- * - "denied"   → non-personalized ads only (NPA flag set on adsbygoogle)
- *
- * India (the primary audience) does not require an opt-in banner, so the
- * `requireConsent` flag lets you serve ads immediately outside the EEA/UK
- * while still honouring an explicit "denied" choice.
+ * - "granted"  → personalized ads allowed + Consent Mode v2 granted
+ * - "denied"   → non-personalized ads only (NPA flag set + Consent Mode denied)
  */
 export type ConsentState = "unknown" | "granted" | "denied";
 
@@ -37,6 +34,8 @@ type AdConsentValue = {
   grant: () => void;
   deny: () => void;
   reset: () => void;
+  /** Opens Google UMP privacy options form if present, or opens the consent manager. */
+  openPrivacyOptions: () => void;
 };
 
 const AdConsentContext = createContext<AdConsentValue | null>(null);
@@ -64,17 +63,33 @@ export function AdConsentProvider({
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    setConsent(readStored());
+    initUmpConsent();
+    const stored = readStored();
+    setConsent(stored);
     setReady(true);
+    if (stored === "granted") {
+      updateConsentMode(true, true);
+    } else if (stored === "denied") {
+      updateConsentMode(false, false);
+    }
   }, []);
 
   const persist = useCallback((next: ConsentState) => {
     setConsent(next);
     try {
-      if (next === "unknown") window.localStorage.removeItem(STORAGE_KEY);
-      else window.localStorage.setItem(STORAGE_KEY, next);
+      if (next === "unknown") {
+        window.localStorage.removeItem(STORAGE_KEY);
+      } else {
+        window.localStorage.setItem(STORAGE_KEY, next);
+      }
     } catch {
       // storage blocked — in-memory consent still applies for this session
+    }
+
+    if (next === "granted") {
+      updateConsentMode(true, true);
+    } else if (next === "denied") {
+      updateConsentMode(false, false);
     }
   }, []);
 
@@ -90,10 +105,14 @@ export function AdConsentProvider({
     }
   }, [consent]);
 
+  const openPrivacyOptions = useCallback(() => {
+    const shown = showPrivacyOptionsForm();
+    if (!shown) {
+      persist("unknown");
+    }
+  }, [persist]);
+
   const value = useMemo<AdConsentValue>(() => {
-    // With requireConsent, nothing (not even the loader script) runs until the
-    // visitor answers. Otherwise wait only for the stored choice to be read so
-    // the NPA flag is correct on the very first request.
     const answered = consent !== "unknown";
     const allowed = requireConsent ? ready && answered : ready;
     return {
@@ -105,15 +124,15 @@ export function AdConsentProvider({
       grant: () => persist("granted"),
       deny: () => persist("denied"),
       reset: () => persist("unknown"),
+      openPrivacyOptions,
     };
-  }, [consent, persist, ready, requireConsent]);
+  }, [consent, openPrivacyOptions, persist, ready, requireConsent]);
 
   return <AdConsentContext.Provider value={value}>{children}</AdConsentContext.Provider>;
 }
 
 export function useAdConsent(): AdConsentValue {
   const ctx = useContext(AdConsentContext);
-  // Ads must never crash a page that forgot the provider.
   return (
     ctx ?? {
       consent: "unknown",
@@ -124,6 +143,7 @@ export function useAdConsent(): AdConsentValue {
       grant: () => {},
       deny: () => {},
       reset: () => {},
+      openPrivacyOptions: () => {},
     }
   );
 }

@@ -45,6 +45,20 @@ fun initialiseAdsWithConsent(activity: Activity) {
 }
 
 /**
+ * Checks if User Messaging Platform (UMP) privacy options form is required.
+ */
+fun isPrivacyOptionsRequired(context: android.content.Context): Boolean {
+    return AdMobManager.getInstance().isPrivacyOptionsRequired(context)
+}
+
+/**
+ * Opens Google's UMP Privacy Options Form to allow users to change their consent choices.
+ */
+fun showPrivacyOptionsForm(activity: Activity, onDismissed: ((com.google.android.ump.FormError?) -> Unit)? = null) {
+    AdMobManager.getInstance().showPrivacyOptionsForm(activity, onDismissed)
+}
+
+/**
  * Adaptive banner that fills the width of its container, utilizing [AdMobManager]
  * for ad creation, lifecycle event listeners, and safe disposal.
  */

@@ -60,16 +60,16 @@ export function AdConsentBanner() {
   );
 }
 
-/** Small link/button to re-open the banner so a choice can be changed. */
+/** Small link/button to re-open Google UMP or the banner so a choice can be changed. */
 export function CookieSettingsButton({ className = "" }: { className?: string }) {
-  const { reset } = useAdConsent();
+  const { openPrivacyOptions } = useAdConsent();
   return (
     <button
       type="button"
-      onClick={reset}
+      onClick={openPrivacyOptions}
       className={`text-xs text-muted-foreground underline-offset-4 hover:text-foreground hover:underline ${className}`}
     >
-      Cookie settings
+      Privacy & Cookie Settings
     </button>
   );
 }

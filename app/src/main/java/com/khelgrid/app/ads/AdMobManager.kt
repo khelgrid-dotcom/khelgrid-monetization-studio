@@ -15,8 +15,10 @@ import com.google.android.gms.ads.RequestConfiguration
 import com.google.android.gms.ads.initialization.InitializationStatus
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
+import com.google.android.ump.ConsentDebugSettings
 import com.google.android.ump.ConsentInformation
 import com.google.android.ump.ConsentRequestParameters
+import com.google.android.ump.FormError
 import com.google.android.ump.UserMessagingPlatform
 
 /**
@@ -195,6 +197,29 @@ class AdMobManager private constructor() {
 
         if (consentInformation.canRequestAds()) {
             initialize(activity)
+        }
+    }
+
+    /**
+     * Checks if the UMP Privacy Options form is required for the current user.
+     */
+    fun isPrivacyOptionsRequired(context: Context): Boolean {
+        return UserMessagingPlatform.getConsentInformation(context).privacyOptionsRequirementStatus ==
+            ConsentInformation.PrivacyOptionsRequirementStatus.REQUIRED
+    }
+
+    /**
+     * Displays the UMP Privacy Options form to allow users to review or revoke consent choices anytime.
+     */
+    fun showPrivacyOptionsForm(
+        activity: Activity,
+        onDismissed: ((FormError?) -> Unit)? = null
+    ) {
+        UserMessagingPlatform.showPrivacyOptionsForm(activity) { formError ->
+            if (formError != null) {
+                Log.w(TAG, "Privacy options form error: ${formError.errorCode} - ${formError.message}")
+            }
+            onDismissed?.invoke(formError)
         }
     }
 

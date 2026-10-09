@@ -62,24 +62,20 @@ import { BannerAd, ResponsiveAd, SidebarAd, InArticleAd, InFeedAd } from "@/comp
 | Performance          | `preconnect` / `dns-prefetch` to Google ad hosts; script is `async`       |
 | Analytics            | `ad_request`, `ad_impression`, `ad_consent` via `src/lib/ad-analytics.ts` |
 
-## 4. Consent / GDPR
+## 4. User Messaging Platform (UMP) / GDPR & CCPA Consent
 
-The AdSense loader script is **not** in the document head. `AdSenseLoader`
-(mounted in `src/routes/__root.tsx`) injects it client-side only after the
-visitor answers the cookie banner, so nothing is requested from Google without
-a choice.
+KhelGrid implements Google's User Messaging Platform (UMP) across both Web and Android platforms in compliance with Google's EU user consent policy and IAB TCF v2.2 requirements:
 
-`AdConsentProvider requireConsent`:
+### Web Architecture (`src/lib/ump-web.ts` + `src/components/ads/`):
+- **IAB Europe TCF v2.2**: Registers standard `__tcfapiLocator` iframe and `window.__tcfapi` stub for IAB TCF v2.2 compliance.
+- **Google Privacy & Messaging (Funding Choices)**: Loads Google's official CMP script (`https://fundingchoicesmessages.google.com/i/ca-pub-XXXXXXXX?ers=1`) and signals presence via `googlefcPresent` iframe.
+- **Google Consent Mode v2**: Sets default signals (`ad_storage: 'denied'`, `ad_user_data: 'denied'`, `ad_personalization: 'denied'`, `analytics_storage: 'granted'`), automatically updated when choices are recorded.
+- **Privacy Options / Revocation**: Users can review or revoke consent choices at any time via `<CookieSettingsButton />`, which invokes `window.googlefc.showRevocationMessage()` or the in-app consent manager.
 
-- `true` (current) — no script, no ad request until the banner is answered.
-  - **Accept all** → personalized ads
-  - **Non-personalized** → `requestNonPersonalizedAds = 1` is set _before_ the
-    script is appended, so it applies to the first request
-- `false` — script loads as soon as the stored choice is read; declining still
-  switches to non-personalized ads.
-
-The choice persists in `localStorage` under `khelgrid.ads.consent`. Render
-`<CookieSettingsButton />` (e.g. in a footer) to let visitors change it.
+### Android Architecture (`app/src/main/java/com/khelgrid/app/ads/`):
+- `UserMessagingPlatform.getConsentInformation(context)`
+- `requestConsentInfoUpdate` + `loadAndShowConsentFormIfRequired`
+- `showPrivacyOptionsForm` allows users in EEA/UK or state regulation areas to modify consent anytime.
 
 ## 5. Auto Ads
 

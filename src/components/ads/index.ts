@@ -11,3 +11,9 @@ export {
   MobileStickyAd,
 } from "./AdUnits";
 export { StickyMobileAdSlot } from "./StickyMobileAdSlot";
+export {
+  initUmpConsent,
+  showPrivacyOptionsForm,
+  updateConsentMode,
+  getUmpScriptSrc,
+} from "@/lib/ump-web";
