@@ -2,7 +2,7 @@ import { describe, it, expect, vi, afterEach } from "vitest";
 import { buildPlayNavClickEvent, trackPlayNavClick } from "./analytics";
 
 afterEach(() => {
-  delete (window as any).gtag;
+  vi.unstubAllGlobals();
   vi.restoreAllMocks();
 });
 
@@ -16,7 +16,7 @@ describe("play nav click tracking", () => {
 
   it("sends event_name, label, destination and source to gtag", () => {
     const gtag = vi.fn();
-    (window as any).gtag = gtag;
+    vi.stubGlobal("window", { gtag });
     vi.spyOn(console, "debug").mockImplementation(() => {});
     trackPlayNavClick("sidebar_mobile");
     expect(gtag).toHaveBeenCalledWith("event", "nav_click", {
