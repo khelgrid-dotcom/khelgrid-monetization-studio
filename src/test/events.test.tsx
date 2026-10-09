@@ -229,6 +229,33 @@ describe("Events & Tournaments Suite", () => {
       expect(html).toContain("Rules");
     });
 
+    it("renders 'Save for Later' buttons and registration countdown indicators on tournament cards", () => {
+      const html = renderToString(<EventsPage />);
+
+      // Save for Later buttons
+      expect(html).toContain("Save");
+      expect(html).toContain("Shortlist");
+
+      // Registration deadline countdown indicators
+      expect(html).toContain("Registration Closes");
+      expect(html).toContain("Closes in");
+    });
+
+    it("filters tournaments by saved shortlist when onlySaved filter is active", () => {
+      const savedIds = new Set(["e1", "e3"]);
+      const results = filterSportEvents(
+        EVENTS,
+        {
+          ...DEFAULT_EVENT_FILTERS,
+          onlySaved: true,
+        },
+        savedIds,
+      );
+
+      expect(results.length).toBe(2);
+      expect(results.map((e) => e.id)).toEqual(["e1", "e3"]);
+    });
+
     it("renders collapsible FAQ section addressing registration and eligibility questions", () => {
       const html = renderToString(<EventsPage />);
 

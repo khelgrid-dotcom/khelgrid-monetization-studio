@@ -59,9 +59,7 @@ export function SaveForLaterButton({
             isSaved ? "fill-white text-white stroke-[2.5]" : "stroke-[2]",
           )}
         />
-        {isSaved && (
-          <span className="sr-only">Saved for later</span>
-        )}
+        {isSaved && <span className="sr-only">Saved for later</span>}
       </button>
     );
   }
@@ -113,12 +111,7 @@ export function SaveForLaterButton({
           className,
         )}
       >
-        <Bookmark
-          className={cn(
-            "h-3.5 w-3.5",
-            isSaved && "fill-amber-500 text-amber-500",
-          )}
-        />
+        <Bookmark className={cn("h-3.5 w-3.5", isSaved && "fill-amber-500 text-amber-500")} />
       </button>
     );
   }

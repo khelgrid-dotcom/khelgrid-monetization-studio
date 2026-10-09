@@ -23,4 +23,3 @@ startTransition(() => {
     console.error("[KhelGrid] Client hydration failed:", error);
   }
 });
-

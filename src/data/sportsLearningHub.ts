@@ -75,9 +75,18 @@ export const SPORT_OVERVIEWS: Record<string, SportLearningOverview> = {
       "Dismissals include Bowled, Caught, LBW (Leg Before Wicket), Run Out, Stumped, and Hit Wicket.",
       "Powerplay rules govern field placements inside the 30-yard circle to incentivize aggressive strokeplay.",
     ],
-    courtOrFieldSummary: "Oval field (boundary 65–85m from pitch center). 22-yard turf/mat pitch with popping, bowling, and return creases.",
-    scoringSummary: "Runs scored by running between wickets or hitting boundaries (4 runs on bounce, 6 runs on the full). Extras include No-balls, Wides, Byes, and Leg-byes.",
-    keyEquipment: ["Willow Cricket Bat", "Leather Ball (156g)", "Pads & Gloves", "Helmet with Grille", "Spiked Shoes", "Abdominal Guard"],
+    courtOrFieldSummary:
+      "Oval field (boundary 65–85m from pitch center). 22-yard turf/mat pitch with popping, bowling, and return creases.",
+    scoringSummary:
+      "Runs scored by running between wickets or hitting boundaries (4 runs on bounce, 6 runs on the full). Extras include No-balls, Wides, Byes, and Leg-byes.",
+    keyEquipment: [
+      "Willow Cricket Bat",
+      "Leather Ball (156g)",
+      "Pads & Gloves",
+      "Helmet with Grille",
+      "Spiked Shoes",
+      "Abdominal Guard",
+    ],
   },
   Football: {
     slug: "football",
@@ -93,9 +102,17 @@ export const SPORT_OVERVIEWS: Record<string, SportLearningOverview> = {
       "No handling the ball with hands/arms except the goalkeeper inside their own 18-yard penalty area.",
       "Direct/indirect free kicks, yellow cards (caution) and red cards (dismissal).",
     ],
-    courtOrFieldSummary: "Rectangular pitch 100-110m long by 64-75m wide. Goalposts are 7.32m wide by 2.44m high.",
-    scoringSummary: "1 goal scored when the whole ball crosses the goal line between the posts and under the crossbar.",
-    keyEquipment: ["Size 5 Football (410–450g)", "Studded Cleats (Moulded/Metal)", "Shin Guards", "Team Jersey & Shorts", "Goalkeeper Padded Gloves"],
+    courtOrFieldSummary:
+      "Rectangular pitch 100-110m long by 64-75m wide. Goalposts are 7.32m wide by 2.44m high.",
+    scoringSummary:
+      "1 goal scored when the whole ball crosses the goal line between the posts and under the crossbar.",
+    keyEquipment: [
+      "Size 5 Football (410–450g)",
+      "Studded Cleats (Moulded/Metal)",
+      "Shin Guards",
+      "Team Jersey & Shorts",
+      "Goalkeeper Padded Gloves",
+    ],
   },
   Badminton: {
     slug: "badminton",
@@ -111,9 +128,16 @@ export const SPORT_OVERVIEWS: Record<string, SportLearningOverview> = {
       "Faults include shuttle hitting outside the court lines, shuttle passing through or under net, and racket crossing the net line.",
       "Singles uses the long and narrow court boundary; doubles uses the wide and short serve court boundary.",
     ],
-    courtOrFieldSummary: "Court is 13.4m long by 6.1m wide (doubles) or 5.18m wide (singles). Net height is 1.55m at posts and 1.524m at center.",
-    scoringSummary: "1 point on every rally won. Service changes to whichever player or pair won the preceding point.",
-    keyEquipment: ["Graphite Racket (75–88g)", "Feather (Goose/Duck) or Nylon Shuttlecock", "Gum-Sole Non-Marking Badminton Shoes", "Overgrip Tape"],
+    courtOrFieldSummary:
+      "Court is 13.4m long by 6.1m wide (doubles) or 5.18m wide (singles). Net height is 1.55m at posts and 1.524m at center.",
+    scoringSummary:
+      "1 point on every rally won. Service changes to whichever player or pair won the preceding point.",
+    keyEquipment: [
+      "Graphite Racket (75–88g)",
+      "Feather (Goose/Duck) or Nylon Shuttlecock",
+      "Gum-Sole Non-Marking Badminton Shoes",
+      "Overgrip Tape",
+    ],
   },
   Athletics: {
     slug: "athletics",
@@ -129,9 +153,17 @@ export const SPORT_OVERVIEWS: Record<string, SportLearningOverview> = {
       "Field events allow 3 preliminary attempts plus 3 final attempts for the top 8 qualifiers.",
       "Relay baton exchanges must occur strictly inside the 30-meter exchange zone.",
     ],
-    courtOrFieldSummary: "Standard 400m outdoor synthetic oval track with 8 lanes (each 1.22m wide), infield for throws and jumps.",
-    scoringSummary: "Finishing order decided by torso crossing the finish line. Electronic photo-finish timing to thousandths of a second.",
-    keyEquipment: ["Track Spike Shoes", "Starting Blocks", "Relay Batons", "Fiberglass Vaulting Poles / Throwing Implements", "High Jump Foam Mats"],
+    courtOrFieldSummary:
+      "Standard 400m outdoor synthetic oval track with 8 lanes (each 1.22m wide), infield for throws and jumps.",
+    scoringSummary:
+      "Finishing order decided by torso crossing the finish line. Electronic photo-finish timing to thousandths of a second.",
+    keyEquipment: [
+      "Track Spike Shoes",
+      "Starting Blocks",
+      "Relay Batons",
+      "Fiberglass Vaulting Poles / Throwing Implements",
+      "High Jump Foam Mats",
+    ],
   },
   Tennis: {
     slug: "tennis",
@@ -147,9 +179,15 @@ export const SPORT_OVERVIEWS: Record<string, SportLearningOverview> = {
       "Server gets 2 serves per point; ball must land in opposite diagonal service box without touching net on landing.",
       "Players switch sides of the net on odd game totals (after 1st game, 3rd game, etc.).",
     ],
-    courtOrFieldSummary: "Court is 23.77m long by 8.23m wide (singles) or 10.97m wide (doubles). Net is 0.914m high at center.",
+    courtOrFieldSummary:
+      "Court is 23.77m long by 8.23m wide (singles) or 10.97m wide (doubles). Net is 0.914m high at center.",
     scoringSummary: "Points form Games, Games form Sets, Sets form Matches (Best of 3 or 5 sets).",
-    keyEquipment: ["Composite Graphite Racket (280–320g)", "Pressurized Felt Tennis Balls", "Hard-Court or Clay-Court Tennis Shoes", "Vibration Dampener"],
+    keyEquipment: [
+      "Composite Graphite Racket (280–320g)",
+      "Pressurized Felt Tennis Balls",
+      "Hard-Court or Clay-Court Tennis Shoes",
+      "Vibration Dampener",
+    ],
   },
   Basketball: {
     slug: "basketball",
@@ -165,9 +203,16 @@ export const SPORT_OVERVIEWS: Record<string, SportLearningOverview> = {
       "Dribbling violations include Traveling (moving pivot foot without dribbling) and Double Dribble.",
       "5 personal fouls (FIBA) disqualify a player from returning to the game.",
     ],
-    courtOrFieldSummary: "Hardwood/polyurethane court 28m long by 15m wide. Rim height is 3.05m (10 feet) with backboard 1.8m x 1.05m.",
-    scoringSummary: "2 points for field goals inside 3-point arc (6.75m FIBA), 3 points beyond arc, 1 point per free throw.",
-    keyEquipment: ["Size 7 Basketball (Men) / Size 6 (Women)", "High-Top Basketball Shoes with Ankle Support", "Compression Sleeve", "Mouthguard"],
+    courtOrFieldSummary:
+      "Hardwood/polyurethane court 28m long by 15m wide. Rim height is 3.05m (10 feet) with backboard 1.8m x 1.05m.",
+    scoringSummary:
+      "2 points for field goals inside 3-point arc (6.75m FIBA), 3 points beyond arc, 1 point per free throw.",
+    keyEquipment: [
+      "Size 7 Basketball (Men) / Size 6 (Women)",
+      "High-Top Basketball Shoes with Ankle Support",
+      "Compression Sleeve",
+      "Mouthguard",
+    ],
   },
   Kabaddi: {
     slug: "kabaddi",
@@ -184,9 +229,15 @@ export const SPORT_OVERVIEWS: Record<string, SportLearningOverview> = {
       "Defenders score 1 tackle point by pinning the raider down inside their half before mid-line return.",
       "Do-or-Die Raid: If a team has 2 successive empty raids, the 3rd raid must yield a point or raider is declared out.",
     ],
-    courtOrFieldSummary: "Synthetic EVA foam mat measuring 13m x 10m (Men) or 12m x 8m (Women), divided into two halves by a mid-line, with baulk line and bonus line.",
-    scoringSummary: "Touch points, Tackle points, Bonus point (crossing bonus line with trailing foot in air when 6+ defenders present), and 2-point All-Out bonus.",
-    keyEquipment: ["High-Traction Wrestling/Kabaddi Mat Shoes", "Knee & Elbow Protective Sleeves", "Breathable Technical Jersey"],
+    courtOrFieldSummary:
+      "Synthetic EVA foam mat measuring 13m x 10m (Men) or 12m x 8m (Women), divided into two halves by a mid-line, with baulk line and bonus line.",
+    scoringSummary:
+      "Touch points, Tackle points, Bonus point (crossing bonus line with trailing foot in air when 6+ defenders present), and 2-point All-Out bonus.",
+    keyEquipment: [
+      "High-Traction Wrestling/Kabaddi Mat Shoes",
+      "Knee & Elbow Protective Sleeves",
+      "Breathable Technical Jersey",
+    ],
   },
   "Table Tennis": {
     slug: "table-tennis",
@@ -204,7 +255,11 @@ export const SPORT_OVERVIEWS: Record<string, SportLearningOverview> = {
     ],
     courtOrFieldSummary: "Table is 2.74m long, 1.525m wide, and 76cm high. Net height is 15.25cm.",
     scoringSummary: "1 point per rally. Must win by 2 clear points to claim game.",
-    keyEquipment: ["Laminated Wood Blade with Inverted Pimpled Rubbers", "40mm+ Plastic Poly Balls (3-Star)", "Low-Profile Court Shoes"],
+    keyEquipment: [
+      "Laminated Wood Blade with Inverted Pimpled Rubbers",
+      "40mm+ Plastic Poly Balls (3-Star)",
+      "Low-Profile Court Shoes",
+    ],
   },
   Boxing: {
     slug: "boxing",
@@ -220,9 +275,17 @@ export const SPORT_OVERVIEWS: Record<string, SportLearningOverview> = {
       "Fouls include holding, hitting behind the head (rabbit punch), low blows, hitting with inner glove or elbow.",
       "Five judges score each round on a 10-point must system (10-9 for clear winner, 10-8 with knockdown).",
     ],
-    courtOrFieldSummary: "Elevated ring 6.1m square inside ropes, canvas floor over high-density foam padding.",
-    scoringSummary: "10-Point Must scoring by 5 ringside judges, Knockout (KO), Referee Stops Contest (RSC), or Disqualification.",
-    keyEquipment: ["10oz or 12oz Competition Gloves", "Hand Wraps (4.5m)", "Custom Fitted Mouthguard", "Headgear (Amateur Youth/Women)", "Boxing Boots"],
+    courtOrFieldSummary:
+      "Elevated ring 6.1m square inside ropes, canvas floor over high-density foam padding.",
+    scoringSummary:
+      "10-Point Must scoring by 5 ringside judges, Knockout (KO), Referee Stops Contest (RSC), or Disqualification.",
+    keyEquipment: [
+      "10oz or 12oz Competition Gloves",
+      "Hand Wraps (4.5m)",
+      "Custom Fitted Mouthguard",
+      "Headgear (Amateur Youth/Women)",
+      "Boxing Boots",
+    ],
   },
   Swimming: {
     slug: "swimming",
@@ -238,15 +301,23 @@ export const SPORT_OVERVIEWS: Record<string, SportLearningOverview> = {
       "Underwater dolphin kicks are limited to 15 meters after starts and turns.",
       "False start on the starting platform results in disqualification.",
     ],
-    courtOrFieldSummary: "Olympic pool is 50m long, 25m wide, 2-3m deep, with 10 lanes (each 2.5m wide) and water temperature at 25–28°C.",
-    scoringSummary: "Fastest time from starter horn to wall pad touch recorded via electronic touchpads.",
-    keyEquipment: ["Silicone Swimming Cap", "Low-Profile Hydrodynamic Goggles", "FINA-Approved Racing Jammers/Kneeskin", "Kickboard & Pull Buoy for Training"],
+    courtOrFieldSummary:
+      "Olympic pool is 50m long, 25m wide, 2-3m deep, with 10 lanes (each 2.5m wide) and water temperature at 25–28°C.",
+    scoringSummary:
+      "Fastest time from starter horn to wall pad touch recorded via electronic touchpads.",
+    keyEquipment: [
+      "Silicone Swimming Cap",
+      "Low-Profile Hydrodynamic Goggles",
+      "FINA-Approved Racing Jammers/Kneeskin",
+      "Kickboard & Pull Buoy for Training",
+    ],
   },
   Hockey: {
     slug: "hockey",
     name: "Field Hockey",
     emoji: "🏑",
-    tagline: "Reverse stick slap-shots, aerial reception, penalty corner drag-flicks & zonal pressing",
+    tagline:
+      "Reverse stick slap-shots, aerial reception, penalty corner drag-flicks & zonal pressing",
     governingBody: "International Hockey Federation (FIH)",
     governingBodyIndia: "Hockey India (HI)",
     olympicStatus: "Summer Olympic Sport (India holds 8 historic Olympic Gold Medals)",
@@ -256,9 +327,17 @@ export const SPORT_OVERVIEWS: Record<string, SportLearningOverview> = {
       "Goals can only be scored from inside the 23-meter striking circle (the 'D').",
       "Penalty Corners awarded for defensive fouls inside the circle or intentional fouls inside 23m.",
     ],
-    courtOrFieldSummary: "Synthetic watered turf 91.4m long by 55m wide. Goal cage is 3.66m wide by 2.14m high.",
-    scoringSummary: "1 goal scored when the ball is legally struck inside the D and crosses the goal line.",
-    keyEquipment: ["Composite Hockey Stick", "Dimpled Hard Plastic Ball (156–163g)", "Turf Astroturf Shoes", "Shin Guards", "Face Mask (for Penalty Corner Defence)"],
+    courtOrFieldSummary:
+      "Synthetic watered turf 91.4m long by 55m wide. Goal cage is 3.66m wide by 2.14m high.",
+    scoringSummary:
+      "1 goal scored when the ball is legally struck inside the D and crosses the goal line.",
+    keyEquipment: [
+      "Composite Hockey Stick",
+      "Dimpled Hard Plastic Ball (156–163g)",
+      "Turf Astroturf Shoes",
+      "Shin Guards",
+      "Face Mask (for Penalty Corner Defence)",
+    ],
   },
   Chess: {
     slug: "chess",
@@ -277,7 +356,11 @@ export const SPORT_OVERVIEWS: Record<string, SportLearningOverview> = {
     ],
     courtOrFieldSummary: "64-square board (32 light, 32 dark). Standard square size 50–60mm.",
     scoringSummary: "1 win = 1 point, Draw = 0.5 points, Loss = 0 points.",
-    keyEquipment: ["Staunton Pattern Chess Set (King height ~95mm)", "Digital DGT Chess Clock with Fischer Increment", "Scorebook for Notation"],
+    keyEquipment: [
+      "Staunton Pattern Chess Set (King height ~95mm)",
+      "Digital DGT Chess Clock with Fischer Increment",
+      "Scorebook for Notation",
+    ],
   },
 };
 
@@ -302,10 +385,27 @@ export const LEARNING_RESOURCES: LearningResource[] = [
       "Running between wickets as an aggressive psychological weapon against fielding sides.",
     ],
     chapters: [
-      { page: "Ch 1–4", title: "Grip, Stance & The Backlift", summary: "Detailed diagrams of the V-grip and weight distribution on balls of feet." },
-      { page: "Ch 5–9", title: "Attacking & Defensive Strokes", summary: "Forward defence, back-foot punch, off-drive, leg glance, and pull shot mechanics." },
-      { page: "Ch 10–14", title: "Bowling Fundamentals & Spin Craft", summary: "Seam positioning, wrist release for leg-spin, flight, and drift dynamics." },
-      { page: "Ch 15–18", title: "Captaincy & Tactical Geometry", summary: "Field placings for pace vs spin and managing game tempo in crunch phases." },
+      {
+        page: "Ch 1–4",
+        title: "Grip, Stance & The Backlift",
+        summary: "Detailed diagrams of the V-grip and weight distribution on balls of feet.",
+      },
+      {
+        page: "Ch 5–9",
+        title: "Attacking & Defensive Strokes",
+        summary:
+          "Forward defence, back-foot punch, off-drive, leg glance, and pull shot mechanics.",
+      },
+      {
+        page: "Ch 10–14",
+        title: "Bowling Fundamentals & Spin Craft",
+        summary: "Seam positioning, wrist release for leg-spin, flight, and drift dynamics.",
+      },
+      {
+        page: "Ch 15–18",
+        title: "Captaincy & Tactical Geometry",
+        summary: "Field placings for pace vs spin and managing game tempo in crunch phases.",
+      },
     ],
     tags: ["Batting", "Masterclass", "Biomechanics", "History", "Coaching"],
     featured: true,
@@ -329,10 +429,30 @@ export const LEARNING_RESOURCES: LearningResource[] = [
       "Positional play (Juego de Posición): dividing the pitch into 5 vertical corridors to ensure numerical superiority.",
     ],
     chapters: [
-      { page: "Ch 1–5", title: "Origins: From Chaos to Formations", summary: "The evolution from Victorian dribbling games to passing combinations and the 2-3-5 Pyramid." },
-      { page: "Ch 6–10", title: "The W-M, Danubian School & Hungary 1953", summary: "Herbert Chapman's defensive revolution and Nandor Hidegkuti's deep-lying center-forward role." },
-      { page: "Ch 11–15", title: "Total Football & Italian Pragmatism", summary: "Rinus Michels' interchangeable roles, Cruyff's leadership, and Rocco's libero sweepers." },
-      { page: "Ch 16–20", title: "Modern Pressing & Spatial Overloads", summary: "Gegenpressing, half-spaces, inverted full-backs, and data analytics in match planning." },
+      {
+        page: "Ch 1–5",
+        title: "Origins: From Chaos to Formations",
+        summary:
+          "The evolution from Victorian dribbling games to passing combinations and the 2-3-5 Pyramid.",
+      },
+      {
+        page: "Ch 6–10",
+        title: "The W-M, Danubian School & Hungary 1953",
+        summary:
+          "Herbert Chapman's defensive revolution and Nandor Hidegkuti's deep-lying center-forward role.",
+      },
+      {
+        page: "Ch 11–15",
+        title: "Total Football & Italian Pragmatism",
+        summary:
+          "Rinus Michels' interchangeable roles, Cruyff's leadership, and Rocco's libero sweepers.",
+      },
+      {
+        page: "Ch 16–20",
+        title: "Modern Pressing & Spatial Overloads",
+        summary:
+          "Gegenpressing, half-spaces, inverted full-backs, and data analytics in match planning.",
+      },
     ],
     tags: ["Tactics", "History", "Formations", "Coaching", "Positional Play"],
     featured: true,
@@ -356,10 +476,26 @@ export const LEARNING_RESOURCES: LearningResource[] = [
       "Doubles rotational system: attacking (front-to-back) transitioning smoothly into defensive (side-by-side).",
     ],
     chapters: [
-      { page: "Step 1–3", title: "Grips, Stances & The Split-Step", summary: "Forehand, backhand, bevel, and panhandle grips; balance recovery routines." },
-      { page: "Step 4–6", title: "High Clear, Drop Shot & Smash", summary: "Kinetic chain overhead strokes with steep downward trajectory training." },
-      { page: "Step 7–9", title: "Net Play, Tumbling Drops & Lifts", summary: "Subtle touch at the tape, deception holds, and cross-court hairpin lifts." },
-      { page: "Step 10–12", title: "Singles Strategy & Doubles Rotation", summary: "Exploiting backhand corners, building pressure, and front-court interception." },
+      {
+        page: "Step 1–3",
+        title: "Grips, Stances & The Split-Step",
+        summary: "Forehand, backhand, bevel, and panhandle grips; balance recovery routines.",
+      },
+      {
+        page: "Step 4–6",
+        title: "High Clear, Drop Shot & Smash",
+        summary: "Kinetic chain overhead strokes with steep downward trajectory training.",
+      },
+      {
+        page: "Step 7–9",
+        title: "Net Play, Tumbling Drops & Lifts",
+        summary: "Subtle touch at the tape, deception holds, and cross-court hairpin lifts.",
+      },
+      {
+        page: "Step 10–12",
+        title: "Singles Strategy & Doubles Rotation",
+        summary: "Exploiting backhand corners, building pressure, and front-court interception.",
+      },
     ],
     tags: ["Footwork", "Technique", "Drills", "BWF", "Singles & Doubles"],
     featured: true,
@@ -383,9 +519,22 @@ export const LEARNING_RESOURCES: LearningResource[] = [
       "Managing critical points: 30-15 and 15-30 swings, serving first percentage in tiebreaks.",
     ],
     chapters: [
-      { page: "Part 1", title: "Thinking Before You Step on Court", summary: "Equipment check, pre-match warmup observation, and emotional energy conservation." },
-      { page: "Part 2", title: "Destroying the Opponent's Rhythm", summary: "Playing to weaknesses, altering ball height, and changing court pacing." },
-      { page: "Part 3", title: "Clutch Points & Closing Sets", summary: "Breaks of serve, protecting leads, and navigating tiebreak psychology." },
+      {
+        page: "Part 1",
+        title: "Thinking Before You Step on Court",
+        summary:
+          "Equipment check, pre-match warmup observation, and emotional energy conservation.",
+      },
+      {
+        page: "Part 2",
+        title: "Destroying the Opponent's Rhythm",
+        summary: "Playing to weaknesses, altering ball height, and changing court pacing.",
+      },
+      {
+        page: "Part 3",
+        title: "Clutch Points & Closing Sets",
+        summary: "Breaks of serve, protecting leads, and navigating tiebreak psychology.",
+      },
     ],
     tags: ["Mental Toughness", "Tactics", "Match Play", "Coaching"],
   },
@@ -408,9 +557,22 @@ export const LEARNING_RESOURCES: LearningResource[] = [
       "Peaking and tapering: balancing training volume reduction while maintaining high-intensity stimuli.",
     ],
     chapters: [
-      { page: "Section 1", title: "Biomechanics of the Running Gait", summary: "Foot strike patterns, hip extension, vertical oscillation, and ground reaction forces." },
-      { page: "Section 2", title: "Cardiorespiratory Physiology & Energy Systems", summary: "Aerobic enzymes, mitochondrial density, and lactate buffering capacity." },
-      { page: "Section 3", title: "Training Design & Periodization", summary: "Building microcycles, mesocycles, tempo runs, and track interval progressions." },
+      {
+        page: "Section 1",
+        title: "Biomechanics of the Running Gait",
+        summary:
+          "Foot strike patterns, hip extension, vertical oscillation, and ground reaction forces.",
+      },
+      {
+        page: "Section 2",
+        title: "Cardiorespiratory Physiology & Energy Systems",
+        summary: "Aerobic enzymes, mitochondrial density, and lactate buffering capacity.",
+      },
+      {
+        page: "Section 3",
+        title: "Training Design & Periodization",
+        summary: "Building microcycles, mesocycles, tempo runs, and track interval progressions.",
+      },
     ],
     tags: ["Biomechanics", "Physiology", "Endurance", "Sprints", "Periodization"],
   },
@@ -432,9 +594,21 @@ export const LEARNING_RESOURCES: LearningResource[] = [
       "Eliminating overthinking: training instinct until execution happens without conscious hesitation.",
     ],
     chapters: [
-      { page: "Ch 1–4", title: "When You're a Cleaner...", summary: "The three tiers of performers: Coolers, Closers, and Cleaners." },
-      { page: "Ch 5–8", title: "Pushing Beyond Physical Pain", summary: "Conditioning regimens that turn fourth quarters into dominant displays." },
-      { page: "Ch 9–13", title: "The Dark Side of Focus", summary: "Channelling internal drive and handling championship expectations." },
+      {
+        page: "Ch 1–4",
+        title: "When You're a Cleaner...",
+        summary: "The three tiers of performers: Coolers, Closers, and Cleaners.",
+      },
+      {
+        page: "Ch 5–8",
+        title: "Pushing Beyond Physical Pain",
+        summary: "Conditioning regimens that turn fourth quarters into dominant displays.",
+      },
+      {
+        page: "Ch 9–13",
+        title: "The Dark Side of Focus",
+        summary: "Channelling internal drive and handling championship expectations.",
+      },
     ],
     tags: ["Mindset", "Conditioning", "Basketball", "Clutch Performance"],
   },
@@ -457,10 +631,26 @@ export const LEARNING_RESOURCES: LearningResource[] = [
       "Thigh and ankle locks: leverage principles using bodyweight and mat traction.",
     ],
     chapters: [
-      { page: "Ch 1–3", title: "History, Mat Dimensions & Rules", summary: "Baulk line, bonus line, out zones, and match timing guidelines." },
-      { page: "Ch 4–7", title: "Offensive Skills (Raiding)", summary: "Hand touch, toe touch, side kick, dubki, frog jump, and back kick execution." },
-      { page: "Ch 8–11", title: "Defensive Skills (Catching)", summary: "Ankle hold, thigh hold, waist hold, dash, and chain tackle coordination." },
-      { page: "Ch 12–14", title: "Team Strategy & Match Situations", summary: "Do-or-Die raid tactics, super tackle scenarios, and bonus line prevention." },
+      {
+        page: "Ch 1–3",
+        title: "History, Mat Dimensions & Rules",
+        summary: "Baulk line, bonus line, out zones, and match timing guidelines.",
+      },
+      {
+        page: "Ch 4–7",
+        title: "Offensive Skills (Raiding)",
+        summary: "Hand touch, toe touch, side kick, dubki, frog jump, and back kick execution.",
+      },
+      {
+        page: "Ch 8–11",
+        title: "Defensive Skills (Catching)",
+        summary: "Ankle hold, thigh hold, waist hold, dash, and chain tackle coordination.",
+      },
+      {
+        page: "Ch 12–14",
+        title: "Team Strategy & Match Situations",
+        summary: "Do-or-Die raid tactics, super tackle scenarios, and bonus line prevention.",
+      },
     ],
     tags: ["Kabaddi", "NIS", "Raiding", "Tackling", "Mat Rules"],
     featured: true,
@@ -487,11 +677,31 @@ export const LEARNING_RESOURCES: LearningResource[] = [
       "Follow-through completion: holding pose to maintain spinal posture and balance.",
     ],
     chapters: [
-      { timestamp: "00:00", title: "Introduction & Common Flaws", summary: "Why reaching with hands without moving feet causes outside edges." },
-      { timestamp: "03:15", title: "Stance & Eye Line Alignment", summary: "Ensuring dominant eye remains directly over off-stump." },
-      { timestamp: "07:30", title: "Stride Length & Knee Bend", summary: "Preventing over-striding so the head remains over the ball." },
-      { timestamp: "11:45", title: "The High Elbow & Downward Swing", summary: "Top hand grip control vs bottom hand snap on impact." },
-      { timestamp: "14:10", title: "Three Progressive Drills", summary: "Drop-ball drill, throwdown cone drill, and bowling machine progression." },
+      {
+        timestamp: "00:00",
+        title: "Introduction & Common Flaws",
+        summary: "Why reaching with hands without moving feet causes outside edges.",
+      },
+      {
+        timestamp: "03:15",
+        title: "Stance & Eye Line Alignment",
+        summary: "Ensuring dominant eye remains directly over off-stump.",
+      },
+      {
+        timestamp: "07:30",
+        title: "Stride Length & Knee Bend",
+        summary: "Preventing over-striding so the head remains over the ball.",
+      },
+      {
+        timestamp: "11:45",
+        title: "The High Elbow & Downward Swing",
+        summary: "Top hand grip control vs bottom hand snap on impact.",
+      },
+      {
+        timestamp: "14:10",
+        title: "Three Progressive Drills",
+        summary: "Drop-ball drill, throwdown cone drill, and bowling machine progression.",
+      },
     ],
     equipmentRequired: ["Cricket Bat", "3 Cones", "Tennis or Leather Ball", "Batting Gloves"],
     tags: ["Cover Drive", "Batting Drills", "Biomechanics", "Video Clinic"],
@@ -517,11 +727,31 @@ export const LEARNING_RESOURCES: LearningResource[] = [
       "The 3-second counter-press trigger upon losing possession in the middle zone.",
     ],
     chapters: [
-      { timestamp: "00:00", title: "Why Rondos are Football's DNA", summary: "Translating small-sided rondos into 11v11 match patterns." },
-      { timestamp: "04:30", title: "The Classic 4v2 Setup & Rules", summary: "Grid dimensions 10x10m, 1-touch and 2-touch constraints." },
-      { timestamp: "09:45", title: "Line-Breaking Passes", summary: "Splitting the two central pressing defenders with pace." },
-      { timestamp: "15:20", title: "The 7v4 Positional Grid", summary: "Adding center-backs, pivot (No. 6), and wingers with transition goals." },
-      { timestamp: "19:50", title: "Coaching Points & Key Metrics", summary: "Turnover counts, pass completion streaks, and transition speed." },
+      {
+        timestamp: "00:00",
+        title: "Why Rondos are Football's DNA",
+        summary: "Translating small-sided rondos into 11v11 match patterns.",
+      },
+      {
+        timestamp: "04:30",
+        title: "The Classic 4v2 Setup & Rules",
+        summary: "Grid dimensions 10x10m, 1-touch and 2-touch constraints.",
+      },
+      {
+        timestamp: "09:45",
+        title: "Line-Breaking Passes",
+        summary: "Splitting the two central pressing defenders with pace.",
+      },
+      {
+        timestamp: "15:20",
+        title: "The 7v4 Positional Grid",
+        summary: "Adding center-backs, pivot (No. 6), and wingers with transition goals.",
+      },
+      {
+        timestamp: "19:50",
+        title: "Coaching Points & Key Metrics",
+        summary: "Turnover counts, pass completion streaks, and transition speed.",
+      },
     ],
     equipmentRequired: ["8 Cones", "Size 5 Balls", "Bibs (2 Colors)"],
     tags: ["Rondo", "Passing", "Tactics", "Scanning", "Pressing"],
@@ -546,10 +776,26 @@ export const LEARNING_RESOURCES: LearningResource[] = [
       "Recovering to the 'T' immediately after playing the drop to punish the opponent's defensive lift.",
     ],
     chapters: [
-      { timestamp: "00:00", title: "The Concept of Stroke Disguise", summary: "Why identical setup freezes the defender's legs." },
-      { timestamp: "03:10", title: "Forehand Cross-Court Reverse Slice", summary: "Brushing the right side of the shuttle feathers." },
-      { timestamp: "07:20", title: "Backhand Net Hold & Flick", summary: "Holding racket stationary at net tape before flicking to rear court." },
-      { timestamp: "11:30", title: "Solo & Partner Feed Drills", summary: "Multi-shuttle feeding to master consistent feather contact." },
+      {
+        timestamp: "00:00",
+        title: "The Concept of Stroke Disguise",
+        summary: "Why identical setup freezes the defender's legs.",
+      },
+      {
+        timestamp: "03:10",
+        title: "Forehand Cross-Court Reverse Slice",
+        summary: "Brushing the right side of the shuttle feathers.",
+      },
+      {
+        timestamp: "07:20",
+        title: "Backhand Net Hold & Flick",
+        summary: "Holding racket stationary at net tape before flicking to rear court.",
+      },
+      {
+        timestamp: "11:30",
+        title: "Solo & Partner Feed Drills",
+        summary: "Multi-shuttle feeding to master consistent feather contact.",
+      },
     ],
     equipmentRequired: ["Badminton Racket", "Tube of Feather Shuttles", "Feeder Partner"],
     tags: ["Deception", "Drop Shot", "Net Play", "Smash", "BWF"],
@@ -574,11 +820,31 @@ export const LEARNING_RESOURCES: LearningResource[] = [
       "Landing on the front foot inside the court to initiate forward court momentum.",
     ],
     chapters: [
-      { timestamp: "00:00", title: "Grip & The Trophy Pose", summary: "Continental grip alignment and coil angle of hips." },
-      { timestamp: "05:15", title: "Toss Placement & Left Arm Discipline", summary: "Holding the tossing arm up to maintain shoulder tilt." },
-      { timestamp: "10:00", title: "Racket Drop & Shoulder-over-Shoulder", summary: "Letting racket scratch the back for maximal elastic stretch." },
-      { timestamp: "14:40", title: "Pronation & Contact Point", summary: "High contact point with internal shoulder rotation." },
-      { timestamp: "18:00", title: "Target Practice Targets", summary: "Aiming for T, body, and wide out-wide service cones." },
+      {
+        timestamp: "00:00",
+        title: "Grip & The Trophy Pose",
+        summary: "Continental grip alignment and coil angle of hips.",
+      },
+      {
+        timestamp: "05:15",
+        title: "Toss Placement & Left Arm Discipline",
+        summary: "Holding the tossing arm up to maintain shoulder tilt.",
+      },
+      {
+        timestamp: "10:00",
+        title: "Racket Drop & Shoulder-over-Shoulder",
+        summary: "Letting racket scratch the back for maximal elastic stretch.",
+      },
+      {
+        timestamp: "14:40",
+        title: "Pronation & Contact Point",
+        summary: "High contact point with internal shoulder rotation.",
+      },
+      {
+        timestamp: "18:00",
+        title: "Target Practice Targets",
+        summary: "Aiming for T, body, and wide out-wide service cones.",
+      },
     ],
     equipmentRequired: ["Tennis Racket", "Tennis Balls", "4 Cones on Service Box"],
     tags: ["Serve", "Pronation", "Kinetic Chain", "Trophy Pose"],
@@ -602,10 +868,26 @@ export const LEARNING_RESOURCES: LearningResource[] = [
       "Cover defenders must rush in within 0.8 seconds to secure upper body containment.",
     ],
     chapters: [
-      { timestamp: "00:00", title: "Corner Stance & Stride Reading", summary: "Low center of gravity and staying on balls of feet." },
-      { timestamp: "04:15", title: "The Attack Moment (Baiting the Raider)", summary: "Feigning vulnerability to invite the toe touch." },
-      { timestamp: "08:50", title: "Hand Clamp & Leg Lift Mechanics", summary: "Leverage principles to prevent raider from lunging to mid-line." },
-      { timestamp: "13:20", title: "In-Cover & Center Support Rush", summary: "Team chain tackle locking techniques." },
+      {
+        timestamp: "00:00",
+        title: "Corner Stance & Stride Reading",
+        summary: "Low center of gravity and staying on balls of feet.",
+      },
+      {
+        timestamp: "04:15",
+        title: "The Attack Moment (Baiting the Raider)",
+        summary: "Feigning vulnerability to invite the toe touch.",
+      },
+      {
+        timestamp: "08:50",
+        title: "Hand Clamp & Leg Lift Mechanics",
+        summary: "Leverage principles to prevent raider from lunging to mid-line.",
+      },
+      {
+        timestamp: "13:20",
+        title: "In-Cover & Center Support Rush",
+        summary: "Team chain tackle locking techniques.",
+      },
     ],
     equipmentRequired: ["Kabaddi Mat / Soft Turf", "Knee Pads"],
     tags: ["Kabaddi", "Ankle Hold", "Defense", "PKL", "Chain Tackle"],
@@ -629,10 +911,26 @@ export const LEARNING_RESOURCES: LearningResource[] = [
       "Optimal entry arc of 45 to 50 degrees increases the basket's effective surface area by 40%.",
     ],
     chapters: [
-      { timestamp: "00:00", title: "The BEEF Shooting Foundation", summary: "Balance, Eyes, Elbow, Follow-through breakdown." },
-      { timestamp: "03:45", title: "Footwork: 1-2 Step vs Hop", summary: "Catch-and-shoot preparations under defensive pressure." },
-      { timestamp: "07:30", title: "The Set Point & Release Angle", summary: "Elbow tucked directly below wrist; release apex." },
-      { timestamp: "11:20", title: "Form Shooting Progression Drills", summary: "1-handed close shots building out to 3-point line." },
+      {
+        timestamp: "00:00",
+        title: "The BEEF Shooting Foundation",
+        summary: "Balance, Eyes, Elbow, Follow-through breakdown.",
+      },
+      {
+        timestamp: "03:45",
+        title: "Footwork: 1-2 Step vs Hop",
+        summary: "Catch-and-shoot preparations under defensive pressure.",
+      },
+      {
+        timestamp: "07:30",
+        title: "The Set Point & Release Angle",
+        summary: "Elbow tucked directly below wrist; release apex.",
+      },
+      {
+        timestamp: "11:20",
+        title: "Form Shooting Progression Drills",
+        summary: "1-handed close shots building out to 3-point line.",
+      },
     ],
     equipmentRequired: ["Basketball", "Hoop", "Smartphone Camera for Form Review"],
     tags: ["Shooting Form", "BEEF", "Jump Shot", "Basketball Drills"],
@@ -740,7 +1038,8 @@ It is an offense if a player:
     fieldSpecs: {
       length: "13.40 meters (44 feet)",
       width: "6.10m (Doubles) / 5.18m (Singles)",
-      boundaryNote: "Lines must be 40mm wide, easily distinguishable (usually white or yellow) on synthetic court mat.",
+      boundaryNote:
+        "Lines must be 40mm wide, easily distinguishable (usually white or yellow) on synthetic court mat.",
       keyLines: [
         "Short Service Line: 1.98m from net",
         "Doubles Long Service Line: 0.76m inside back boundary line",
@@ -801,9 +1100,21 @@ It is an offense if a player:
       "How to convert unforced errors into immediate tactical adjustments rather than self-chastisement.",
     ],
     chapters: [
-      { timestamp: "00:00", title: "The 4:00 AM Routine & Mental Fortitude", summary: "Why early morning court sessions create an irreplaceable psychological edge." },
-      { timestamp: "11:20", title: "Multi-Shuttle Drill Progression", summary: "Feeding 40 shuttles in 30 seconds to push VO2 thresholds." },
-      { timestamp: "22:45", title: "Handling Olympic & World Championship Pressure", summary: "De-escalating athlete anxiety before final matches." },
+      {
+        timestamp: "00:00",
+        title: "The 4:00 AM Routine & Mental Fortitude",
+        summary: "Why early morning court sessions create an irreplaceable psychological edge.",
+      },
+      {
+        timestamp: "11:20",
+        title: "Multi-Shuttle Drill Progression",
+        summary: "Feeding 40 shuttles in 30 seconds to push VO2 thresholds.",
+      },
+      {
+        timestamp: "22:45",
+        title: "Handling Olympic & World Championship Pressure",
+        summary: "De-escalating athlete anxiety before final matches.",
+      },
     ],
     tags: ["Coaching", "Pullela Gopichand", "Olympic Mindset", "Discipline"],
   },
@@ -825,9 +1136,21 @@ It is an offense if a player:
       "Bowler captain dialogue: agreeing on dismissal plans over 6 consecutive balls.",
     ],
     chapters: [
-      { timestamp: "00:00", title: "Reading the Pitch on Morning of Day 1", summary: "Moisture, crack lines, and early bounce analysis." },
-      { timestamp: "08:30", title: "Death Overs Field Placement in T20s", summary: "Protecting the short boundary with sweeper cover and deep square leg." },
-      { timestamp: "17:15", title: "Setting Traps for Set Batters", summary: "Starving singles to provoke aggressive shots against spin." },
+      {
+        timestamp: "00:00",
+        title: "Reading the Pitch on Morning of Day 1",
+        summary: "Moisture, crack lines, and early bounce analysis.",
+      },
+      {
+        timestamp: "08:30",
+        title: "Death Overs Field Placement in T20s",
+        summary: "Protecting the short boundary with sweeper cover and deep square leg.",
+      },
+      {
+        timestamp: "17:15",
+        title: "Setting Traps for Set Batters",
+        summary: "Starving singles to provoke aggressive shots against spin.",
+      },
     ],
     tags: ["Captaincy", "Fielding", "Cricket Strategy", "Audio"],
   },
@@ -863,7 +1186,8 @@ It is an offense if a player:
           "Under MCC Law 38.3, the bowler is permitted to attempt a run-out of the non-striker at any point prior to entering their delivery stride if the batter is out of their ground. No prior warning is legally required.",
       },
       {
-        question: "For an LBW appeal to succeed, where must the ball NOT pitch under any circumstance?",
+        question:
+          "For an LBW appeal to succeed, where must the ball NOT pitch under any circumstance?",
         options: [
           "Outside off stump",
           "In line with stumps",
@@ -875,7 +1199,8 @@ It is an offense if a player:
           "Law 36 states that if the ball pitches outside leg stump, the batter CANNOT be given out LBW, even if the ball would have gone on to hit middle stump.",
       },
       {
-        question: "A boundary fielder airborne outside the boundary cushion taps the ball back into play. What was their last point of ground contact required to be?",
+        question:
+          "A boundary fielder airborne outside the boundary cushion taps the ball back into play. What was their last point of ground contact required to be?",
         options: [
           "Anywhere inside or outside the field",
           "Completely inside the boundary line",
@@ -887,14 +1212,16 @@ It is an offense if a player:
           "Under Law 19, an airborne fielder's first contact with the ball is only legal if their last contact with the ground was inside the boundary playing area.",
       },
       {
-        question: "In T20 internationals, what is the maximum time allowed for an incoming batter to be ready to face the next ball?",
+        question:
+          "In T20 internationals, what is the maximum time allowed for an incoming batter to be ready to face the next ball?",
         options: ["90 seconds", "120 seconds (2 minutes)", "180 seconds (3 minutes)", "60 seconds"],
         correctIndex: 1,
         explanation:
           "In T20 International cricket, the incoming batter must be ready to receive the ball within 2 minutes (120 seconds). In Test cricket, the limit is 3 minutes.",
       },
       {
-        question: "If a delivery strikes a fielding helmet placed on the turf behind the wicketkeeper, how many penalty runs are awarded to the batting side?",
+        question:
+          "If a delivery strikes a fielding helmet placed on the turf behind the wicketkeeper, how many penalty runs are awarded to the batting side?",
         options: ["1 run", "4 runs", "5 penalty runs", "No penalty runs"],
         correctIndex: 2,
         explanation:
@@ -922,7 +1249,8 @@ It is an offense if a player:
     ],
     quiz: [
       {
-        question: "An attacker in an offside position receives the ball directly from an opponent who intentionally played the ball. Is the attacker penalized for offside?",
+        question:
+          "An attacker in an offside position receives the ball directly from an opponent who intentionally played the ball. Is the attacker penalized for offside?",
         options: [
           "Yes, always offside",
           "No, because the opponent deliberately played the ball",
@@ -946,7 +1274,8 @@ It is an offense if a player:
           "Under Law 15, a goal cannot be scored directly from a throw-in. If the ball enters the opponent's goal without touching any other player, a goal kick is awarded to the defending team.",
       },
       {
-        question: "Inside the penalty area, a defender accidentally trips an attacker while genuinely attempting to challenge for the ball, stopping an obvious goal. What is the sanction?",
+        question:
+          "Inside the penalty area, a defender accidentally trips an attacker while genuinely attempting to challenge for the ball, stopping an obvious goal. What is the sanction?",
         options: [
           "Penalty kick and Red Card (DOGSO)",
           "Penalty kick and Yellow Card (Double Jeopardy prevention)",
@@ -958,7 +1287,8 @@ It is an offense if a player:
           "To avoid 'triple punishment' (penalty, red card, suspension), when a foul inside the box denies an obvious goal opportunity but is a genuine attempt to play the ball, the sanction is downgraded to a Yellow Card + Penalty.",
       },
       {
-        question: "Can a goalkeeper handle the ball inside their own penalty box if passed back by a teammate using their foot?",
+        question:
+          "Can a goalkeeper handle the ball inside their own penalty box if passed back by a teammate using their foot?",
         options: [
           "Yes, whenever they choose",
           "No; handling a deliberate kick back from a teammate results in an indirect free kick",
@@ -970,7 +1300,8 @@ It is an offense if a player:
           "Under the back-pass rule (Law 12), a goalkeeper cannot touch the ball with their hands if it was deliberately kicked to them by a teammate. An indirect free kick is awarded.",
       },
       {
-        question: "How many players must a team have at minimum to start or continue a competitive 11-a-side match?",
+        question:
+          "How many players must a team have at minimum to start or continue a competitive 11-a-side match?",
         options: ["9 players", "8 players", "7 players", "6 players"],
         correctIndex: 2,
         explanation:
@@ -998,7 +1329,8 @@ It is an offense if a player:
     ],
     quiz: [
       {
-        question: "When the server's score is an EVEN number (0, 2, 4, 6...), from which service court must they serve?",
+        question:
+          "When the server's score is an EVEN number (0, 2, 4, 6...), from which service court must they serve?",
         options: [
           "Right-hand service court",
           "Left-hand service court",
@@ -1010,8 +1342,14 @@ It is an offense if a player:
           "In both singles and doubles, the server serves from the right-hand service court when their score is even (or 0), and from the left-hand service court when their score is odd.",
       },
       {
-        question: "Under the modern BWF fixed-height service rule, the entire shuttlecock must be below what height at the instant of being hit?",
-        options: ["Waist height of the server", "1.15 meters from the court surface", "1.00 meters from the court surface", "The top of the net tape"],
+        question:
+          "Under the modern BWF fixed-height service rule, the entire shuttlecock must be below what height at the instant of being hit?",
+        options: [
+          "Waist height of the server",
+          "1.15 meters from the court surface",
+          "1.00 meters from the court surface",
+          "The top of the net tape",
+        ],
         correctIndex: 1,
         explanation:
           "BWF Law 9.1.5 mandates that the whole shuttlecock shall be below 1.15 meters from the surface of the court at the instant of being hit by the server's racket.",
@@ -1029,7 +1367,8 @@ It is an offense if a player:
           "Under BWF rules, if the score reaches 29-all, the side scoring the 30th point wins that game (capped strictly at 30 points).",
       },
       {
-        question: "During a doubles rally, the shuttlecock touches one player's racket and then their partner's racket before going over the net. What is the call?",
+        question:
+          "During a doubles rally, the shuttlecock touches one player's racket and then their partner's racket before going over the net. What is the call?",
         options: [
           "Legal play if in one motion",
           "Fault: double hit by partners",

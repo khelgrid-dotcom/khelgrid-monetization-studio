@@ -399,7 +399,7 @@ export function EventFilters({
     }
 
     return list;
-  }, [filters]);
+  }, [filters, savedCount]);
 
   return (
     <div className="space-y-3.5 w-full">
