@@ -1,7 +1,8 @@
 import { describe, it, expect, vi, afterEach } from "vitest";
-import { buildPlayNavClickEvent, trackPlayNavClick } from "./analytics";
+import { buildPlayNavClickEvent, trackPlayNavClick, resetPlayNavClickDedupe, PLAY_NAV_DEDUPE_MS } from "./analytics";
 
 afterEach(() => {
+  resetPlayNavClickDedupe();
   vi.unstubAllGlobals();
   vi.restoreAllMocks();
 });
@@ -25,5 +26,17 @@ describe("play nav click tracking", () => {
       destination: "/play",
       source: "sidebar_mobile",
     });
+  });
+
+  it("sends only one event for rapid repeat clicks, then allows a later click", () => {
+    const gtag = vi.fn();
+    vi.stubGlobal("window", { gtag });
+    vi.spyOn(console, "debug").mockImplementation(() => {});
+    expect(trackPlayNavClick("sidebar_desktop", 10_000)).toBe(true);
+    expect(trackPlayNavClick("sidebar_desktop", 10_100)).toBe(false);
+    expect(trackPlayNavClick("sidebar_mobile", 10_200)).toBe(false);
+    expect(gtag).toHaveBeenCalledTimes(1);
+    expect(trackPlayNavClick("sidebar_desktop", 10_000 + PLAY_NAV_DEDUPE_MS)).toBe(true);
+    expect(gtag).toHaveBeenCalledTimes(2);
   });
 });
