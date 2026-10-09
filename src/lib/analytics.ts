@@ -20,6 +20,7 @@ export function trackEvent(evt: AnalyticsEvent) {
   if (typeof window === "undefined") return;
   try {
     window.gtag?.("event", evt.event, {
+      event_name: evt.event,
       label: evt.label,
       destination: evt.destination,
       source: evt.source,
@@ -35,3 +36,20 @@ export function trackEvent(evt: AnalyticsEvent) {
 // Shared constants so both sidebars emit the same values for /play.
 export const PLAY_NAV_LABEL = "Play · Find games";
 export const PLAY_NAV_DESTINATION = "/play";
+
+export type NavSource = NavClickEvent["source"];
+
+/** Single builder for the /play click event, so every surface sends identical fields. */
+export function buildPlayNavClickEvent(source: NavSource): NavClickEvent {
+  return {
+    event: "nav_click",
+    label: PLAY_NAV_LABEL,
+    destination: PLAY_NAV_DESTINATION,
+    source,
+  };
+}
+
+/** Records a /play click from either sidebar. */
+export function trackPlayNavClick(source: NavSource) {
+  trackEvent(buildPlayNavClickEvent(source));
+}

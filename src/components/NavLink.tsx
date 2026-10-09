@@ -1,12 +1,12 @@
 import { Link } from "@tanstack/react-router";
 import { cn } from "@/lib/utils";
-import { trackEvent, PLAY_NAV_LABEL, PLAY_NAV_DESTINATION } from "@/lib/analytics";
+import { trackPlayNavClick, PLAY_NAV_DESTINATION, type NavSource } from "@/lib/analytics";
 import type { NavItem } from "@/config/nav";
 
 export type NavLinkProps = {
   item: NavItem;
   active: boolean;
-  source?: "sidebar_desktop" | "sidebar_mobile";
+  source?: NavSource;
   showLabel?: boolean;
   className?: string;
 };
@@ -14,13 +14,7 @@ export type NavLinkProps = {
 export function NavLink({ item, active, source, showLabel = true, className }: NavLinkProps) {
   const onClick =
     item.to === PLAY_NAV_DESTINATION && source
-      ? () =>
-          trackEvent({
-            event: "nav_click",
-            label: PLAY_NAV_LABEL,
-            destination: PLAY_NAV_DESTINATION,
-            source,
-          })
+      ? () => trackPlayNavClick(source)
       : undefined;
 
   return (
