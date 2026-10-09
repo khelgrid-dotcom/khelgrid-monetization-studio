@@ -35,7 +35,7 @@ export function Breadcrumbs() {
           <BreadcrumbLink asChild>
             <Link to="/" preload="intent" className="flex items-center gap-1">
               <Home className="h-4 w-4" />
-              <span className="hidden sm:inline">Home</span>
+              <span className="sr-only sm:not-sr-only">Home</span>
             </Link>
           </BreadcrumbLink>
         </BreadcrumbItem>
