@@ -1,6 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useMemo, useEffect, useCallback, useRef } from "react";
-import { LIVE_SPORTS_UPDATES, type LiveMatchUpdate } from "@/data/liveSports";
+import {
+  LIVE_SPORTS_UPDATES,
+  GOOGLE_CRICKET_SEARCH_URL,
+  type LiveMatchUpdate,
+} from "@/data/liveSports";
 import { buildSeoHead } from "@/lib/seo";
 import { playScoreChime, playWhistleSound } from "@/lib/sports-audio";
 import { InFeedAd, ResponsiveAd } from "@/components/ads";
@@ -191,7 +195,7 @@ export function LiveScoresPage() {
     return () => clearInterval(timer);
   }, [handleManualRefresh]);
 
-  // Subtle in-play match progression simulation (ticks live cricket balls, football minutes, kabaddi raids)
+  // Subtle in-play match progression simulation (ticks live football minutes, hockey clock, etc. Cricket scores are hosted on Google)
   useEffect(() => {
     if (!simulationActive) return;
     const simInterval = setInterval(() => {
@@ -199,35 +203,7 @@ export function LiveScoresPage() {
         prev.map((m) => {
           if (m.status !== "LIVE") return m;
 
-          // Cricket in-play tick
-          if (
-            m.sport === "Cricket" &&
-            m.teamA.score.includes("*") &&
-            m.teamA.score.includes("ov")
-          ) {
-            const matchScore = m.teamA.score.match(/\*(\d+)\/(\d+)\s*\(([\d.]+)\s*ov\)/);
-            if (matchScore) {
-              const runs = parseInt(matchScore[1], 10);
-              const wickets = parseInt(matchScore[2], 10);
-              const overs = parseFloat(matchScore[3]);
-              const addedRuns = Math.random() > 0.4 ? (Math.random() > 0.7 ? 4 : 1) : 0;
-              const newRuns = runs + addedRuns;
-              const newOvers = (overs + 0.1).toFixed(1);
-              return {
-                ...m,
-                teamA: {
-                  ...m.teamA,
-                  score: `*${newRuns}/${wickets} (${newOvers} ov)`,
-                },
-                highlight:
-                  addedRuns === 4
-                    ? "CRACKING BOUNDARY! Smashed through cover point"
-                    : addedRuns === 1
-                      ? "Quick single rotated to deep square leg"
-                      : m.highlight,
-              };
-            }
-          }
+          // Note: Cricket live scores are not simulated; they are hosted on Google per specification.
 
           // Football clock progression
           if (m.sport === "Football" && m.venueOrOvers && m.venueOrOvers.includes("'")) {
@@ -546,6 +522,36 @@ export function LiveScoresPage() {
               );
             })}
           </div>
+
+          {/* Cricket Google Live Score Notice Banner */}
+          {selectedSport === "Cricket" && (
+            <div className="flex items-start gap-3 rounded-2xl border border-primary/30 bg-primary/10 p-3.5 sm:p-4 text-xs">
+              <span className="text-2xl shrink-0">🏏</span>
+              <div className="space-y-1 flex-1 min-w-0">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <h3 className="font-bold text-foreground text-sm">
+                    Live Cricket Matches · Official Schedule Today
+                  </h3>
+                  <a
+                    href={GOOGLE_CRICKET_SEARCH_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 font-bold text-primary hover:underline text-xs"
+                  >
+                    <span>Open Google Live Scores</span>
+                    <ExternalLink className="h-3 w-3" />
+                  </a>
+                </div>
+                <p className="text-muted-foreground leading-relaxed">
+                  Listing all scheduled international and qualifier matches today. Per official
+                  Google feeds, real-time ball-by-ball live scores, wagon wheel charts, and
+                  commentary are hosted on Google. Click{" "}
+                  <strong>&quot;For Live Score visit Google&quot;</strong> on any match to view
+                  instant live scores.
+                </p>
+              </div>
+            </div>
+          )}
 
           {/* 3. SUB-FILTER BAR: STATUS + SEARCH + VIEW MODE */}
           <div className="flex flex-col gap-3 rounded-2xl border border-border/70 bg-card/60 p-3 sm:flex-row sm:items-center sm:justify-between">
@@ -869,43 +875,100 @@ export function LiveScoresPage() {
             </DialogHeader>
 
             {/* Scorecard Hero */}
-            <div className="rounded-2xl border border-border/80 bg-secondary/30 p-4 space-y-3">
-              <div className="grid grid-cols-2 gap-4 divide-x divide-border/60">
-                {/* Team A */}
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2">
-                    <span className="text-lg">{activeModalMatch.teamA.flag || "⚡"}</span>
-                    <span className="text-sm font-bold text-foreground truncate">
-                      {activeModalMatch.teamA.name}
+            {activeModalMatch.sport === "Cricket" ? (
+              <div className="rounded-2xl border border-primary/30 bg-primary/10 p-4 space-y-3">
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+                  <div className="space-y-1 text-center sm:text-left">
+                    <div className="flex items-center justify-center sm:justify-start gap-2">
+                      <span className="text-xl">🏏</span>
+                      <h4 className="font-extrabold text-foreground text-sm sm:text-base">
+                        Google Live Cricket Match
+                      </h4>
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      Ball-by-ball updates, wagon wheels, fall of wickets, and commentary are hosted
+                      directly on Google.
+                    </p>
+                  </div>
+
+                  <a
+                    href={activeModalMatch.googleUrl || GOOGLE_CRICKET_SEARCH_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 rounded-xl bg-primary px-4 py-2 text-xs font-bold text-primary-foreground hover:bg-primary/90 transition shadow-md shadow-primary/20 shrink-0"
+                  >
+                    <span>For Live Score visit Google</span>
+                    <ExternalLink className="h-3.5 w-3.5" />
+                  </a>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4 divide-x divide-border/60 border-t border-border/40 pt-3">
+                  <div className="space-y-0.5">
+                    <span className="text-sm font-bold text-foreground flex items-center gap-1.5">
+                      <span>{activeModalMatch.teamA.flag || "⚡"}</span>
+                      <span>{activeModalMatch.teamA.name}</span>
+                    </span>
+                    <span className="text-xs text-muted-foreground font-mono">
+                      {activeModalMatch.teamA.code}
                     </span>
                   </div>
-                  <div className="text-xl sm:text-2xl font-extrabold font-mono text-foreground">
-                    {activeModalMatch.teamA.score}
+                  <div className="pl-4 space-y-0.5">
+                    <span className="text-sm font-bold text-foreground flex items-center gap-1.5">
+                      <span>{activeModalMatch.teamB.flag || "⚡"}</span>
+                      <span>{activeModalMatch.teamB.name}</span>
+                    </span>
+                    <span className="text-xs text-muted-foreground font-mono">
+                      {activeModalMatch.teamB.code}
+                    </span>
                   </div>
                 </div>
 
-                {/* Team B */}
-                <div className="pl-4 space-y-1">
-                  <div className="flex items-center gap-2">
-                    <span className="text-lg">{activeModalMatch.teamB.flag || "⚡"}</span>
-                    <span className="text-sm font-bold text-foreground truncate">
-                      {activeModalMatch.teamB.name}
-                    </span>
-                  </div>
-                  <div className="text-xl sm:text-2xl font-extrabold font-mono text-muted-foreground">
-                    {activeModalMatch.teamB.score}
-                  </div>
+                <div className="rounded-xl bg-card p-3 border border-border/60 text-xs">
+                  <span className="font-bold text-primary mr-1.5">Match Timing & Status:</span>
+                  <span className="text-foreground">
+                    {activeModalMatch.statusText || activeModalMatch.highlight}
+                  </span>
                 </div>
               </div>
+            ) : (
+              <div className="rounded-2xl border border-border/80 bg-secondary/30 p-4 space-y-3">
+                <div className="grid grid-cols-2 gap-4 divide-x divide-border/60">
+                  {/* Team A */}
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <span className="text-lg">{activeModalMatch.teamA.flag || "⚡"}</span>
+                      <span className="text-sm font-bold text-foreground truncate">
+                        {activeModalMatch.teamA.name}
+                      </span>
+                    </div>
+                    <div className="text-xl sm:text-2xl font-extrabold font-mono text-foreground">
+                      {activeModalMatch.teamA.score}
+                    </div>
+                  </div>
 
-              {/* Status / Commentary Highlight */}
-              <div className="rounded-xl bg-card p-3 border border-border/60 text-xs">
-                <span className="font-bold text-primary mr-1.5">Latest Update:</span>
-                <span className="text-foreground">
-                  {activeModalMatch.statusText || activeModalMatch.highlight}
-                </span>
+                  {/* Team B */}
+                  <div className="pl-4 space-y-1">
+                    <div className="flex items-center gap-2">
+                      <span className="text-lg">{activeModalMatch.teamB.flag || "⚡"}</span>
+                      <span className="text-sm font-bold text-foreground truncate">
+                        {activeModalMatch.teamB.name}
+                      </span>
+                    </div>
+                    <div className="text-xl sm:text-2xl font-extrabold font-mono text-muted-foreground">
+                      {activeModalMatch.teamB.score}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Status / Commentary Highlight */}
+                <div className="rounded-xl bg-card p-3 border border-border/60 text-xs">
+                  <span className="font-bold text-primary mr-1.5">Latest Update:</span>
+                  <span className="text-foreground">
+                    {activeModalMatch.statusText || activeModalMatch.highlight}
+                  </span>
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Match Information Details */}
             <div className="space-y-2 text-xs">
@@ -1033,19 +1096,52 @@ function MatchScoreCard({
               )}
             </div>
 
-            <div className="flex items-center gap-4 text-xs sm:text-sm font-bold text-foreground">
-              <span className="flex items-center gap-1.5">
-                <span>{match.teamA.flag || "⚡"}</span>
-                <span>{match.teamA.code}</span>
-                <span className="font-mono text-primary">{match.teamA.score}</span>
-              </span>
-              <span className="text-muted-foreground font-normal">vs</span>
-              <span className="flex items-center gap-1.5">
-                <span>{match.teamB.flag || "⚡"}</span>
-                <span>{match.teamB.code}</span>
-                <span className="font-mono text-muted-foreground">{match.teamB.score}</span>
-              </span>
-            </div>
+            {match.sport === "Cricket" ? (
+              <div className="flex flex-wrap items-center gap-3">
+                <div className="flex items-center gap-2 text-xs sm:text-sm font-bold text-foreground">
+                  <span className="flex items-center gap-1.5">
+                    <span>{match.teamA.flag || "⚡"}</span>
+                    <span>{match.teamA.name}</span>
+                    <span className="text-xs text-muted-foreground font-mono">
+                      ({match.teamA.code})
+                    </span>
+                  </span>
+                  <span className="text-muted-foreground font-normal">vs</span>
+                  <span className="flex items-center gap-1.5">
+                    <span>{match.teamB.flag || "⚡"}</span>
+                    <span>{match.teamB.name}</span>
+                    <span className="text-xs text-muted-foreground font-mono">
+                      ({match.teamB.code})
+                    </span>
+                  </span>
+                </div>
+
+                <a
+                  href={match.googleUrl || GOOGLE_CRICKET_SEARCH_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => e.stopPropagation()}
+                  className="inline-flex items-center gap-1 rounded-lg border border-primary/40 bg-primary/10 px-2.5 py-1 text-[11px] font-bold text-primary hover:bg-primary hover:text-primary-foreground transition-all"
+                >
+                  <span>For Live Score visit Google</span>
+                  <ExternalLink className="h-3 w-3" />
+                </a>
+              </div>
+            ) : (
+              <div className="flex items-center gap-4 text-xs sm:text-sm font-bold text-foreground">
+                <span className="flex items-center gap-1.5">
+                  <span>{match.teamA.flag || "⚡"}</span>
+                  <span>{match.teamA.code}</span>
+                  <span className="font-mono text-primary">{match.teamA.score}</span>
+                </span>
+                <span className="text-muted-foreground font-normal">vs</span>
+                <span className="flex items-center gap-1.5">
+                  <span>{match.teamB.flag || "⚡"}</span>
+                  <span>{match.teamB.code}</span>
+                  <span className="font-mono text-muted-foreground">{match.teamB.score}</span>
+                </span>
+              </div>
+            )}
           </div>
         </div>
 
@@ -1141,49 +1237,87 @@ function MatchScoreCard({
       </div>
 
       {/* Middle: Teams & Scores */}
-      <div className="py-3.5 space-y-2.5">
-        {/* Team A */}
-        <div className="flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2 min-w-0">
-            <span className="text-base shrink-0">{match.teamA.flag || "⚡"}</span>
-            <div className="min-w-0">
-              <span
-                className="font-bold text-sm text-foreground block truncate"
-                title={match.teamA.name}
-              >
-                {match.teamA.name}
+      {match.sport === "Cricket" ? (
+        <div className="py-3.5 space-y-3">
+          <div className="space-y-2">
+            <div className="flex items-center justify-between text-sm font-bold text-foreground">
+              <span className="flex items-center gap-2 truncate">
+                <span className="text-base">{match.teamA.flag || "⚡"}</span>
+                <span className="truncate">{match.teamA.name}</span>
               </span>
-              <span className="text-[10px] text-muted-foreground uppercase">
+              <span className="text-xs text-muted-foreground font-mono uppercase">
                 {match.teamA.code}
               </span>
             </div>
-          </div>
-          <span className="font-mono text-base font-extrabold text-foreground tracking-tight">
-            {match.teamA.score}
-          </span>
-        </div>
 
-        {/* Team B */}
-        <div className="flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2 min-w-0">
-            <span className="text-base shrink-0">{match.teamB.flag || "⚡"}</span>
-            <div className="min-w-0">
-              <span
-                className="font-bold text-sm text-foreground block truncate"
-                title={match.teamB.name}
-              >
-                {match.teamB.name}
+            <div className="flex items-center justify-between text-sm font-bold text-foreground">
+              <span className="flex items-center gap-2 truncate">
+                <span className="text-base">{match.teamB.flag || "⚡"}</span>
+                <span className="truncate">{match.teamB.name}</span>
               </span>
-              <span className="text-[10px] text-muted-foreground uppercase">
+              <span className="text-xs text-muted-foreground font-mono uppercase">
                 {match.teamB.code}
               </span>
             </div>
           </div>
-          <span className="font-mono text-base font-semibold text-muted-foreground tracking-tight">
-            {match.teamB.score}
-          </span>
+
+          {/* Action button to Google */}
+          <a
+            href={match.googleUrl || GOOGLE_CRICKET_SEARCH_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            className="flex items-center justify-center gap-1.5 w-full rounded-xl border border-primary/40 bg-primary/10 py-2 px-3 text-xs font-bold text-primary hover:bg-primary hover:text-primary-foreground transition-all shadow-xs"
+          >
+            <span>For Live Score visit Google</span>
+            <ExternalLink className="h-3.5 w-3.5" />
+          </a>
         </div>
-      </div>
+      ) : (
+        <div className="py-3.5 space-y-2.5">
+          {/* Team A */}
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2 min-w-0">
+              <span className="text-base shrink-0">{match.teamA.flag || "⚡"}</span>
+              <div className="min-w-0">
+                <span
+                  className="font-bold text-sm text-foreground block truncate"
+                  title={match.teamA.name}
+                >
+                  {match.teamA.name}
+                </span>
+                <span className="text-[10px] text-muted-foreground uppercase">
+                  {match.teamA.code}
+                </span>
+              </div>
+            </div>
+            <span className="font-mono text-base font-extrabold text-foreground tracking-tight">
+              {match.teamA.score}
+            </span>
+          </div>
+
+          {/* Team B */}
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2 min-w-0">
+              <span className="text-base shrink-0">{match.teamB.flag || "⚡"}</span>
+              <div className="min-w-0">
+                <span
+                  className="font-bold text-sm text-foreground block truncate"
+                  title={match.teamB.name}
+                >
+                  {match.teamB.name}
+                </span>
+                <span className="text-[10px] text-muted-foreground uppercase">
+                  {match.teamB.code}
+                </span>
+              </div>
+            </div>
+            <span className="font-mono text-base font-semibold text-muted-foreground tracking-tight">
+              {match.teamB.score}
+            </span>
+          </div>
+        </div>
+      )}
 
       {/* Commentary Highlight Banner */}
       <div className="rounded-xl bg-secondary/50 p-2.5 text-[11px] space-y-1 mb-3">

@@ -65,4 +65,12 @@ describe("Live Scores Page and Navigation", () => {
     expect(html).toContain(LIVE_SPORTS_UPDATES[0].tournament);
     expect(html).toContain(LIVE_SPORTS_UPDATES[0].teamA.code);
   });
+
+  it("displays 'For Live Score visit Google' for cricket matches instead of fake numeric scores", () => {
+    const html = renderToString(<LiveScoresPage />);
+    expect(html).toContain("For Live Score visit Google");
+    expect(html).toContain("West Indies Tour of India 2026");
+    expect(html).toContain("Australia Tour of South Africa 2026");
+    expect(html).toContain("Afghanistan vs Bangladesh in UAE 2026");
+  });
 });

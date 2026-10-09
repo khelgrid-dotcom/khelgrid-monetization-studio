@@ -61,15 +61,19 @@ export function SidebarLiveScoreWidget() {
       </div>
 
       {/* Mini Teams & Scores */}
-      <Link to="/live-scores" className="block mt-2 space-y-1 hover:opacity-90">
+      <Link to="/live-scores" className="block mt-2 space-y-1.5 hover:opacity-90">
         <div className="flex items-center justify-between text-xs">
           <div className="flex items-center gap-1.5 min-w-0">
             <span className="text-xs">{currentMatch.teamA.flag || "🇨🇦"}</span>
             <span className="font-bold text-foreground truncate">{currentMatch.teamA.code}</span>
           </div>
-          <span className="font-mono text-xs font-bold text-foreground">
-            {currentMatch.teamA.score}
-          </span>
+          {currentMatch.sport === "Cricket" ? (
+            <span className="text-[10px] text-primary font-bold">Google Live</span>
+          ) : (
+            <span className="font-mono text-xs font-bold text-foreground">
+              {currentMatch.teamA.score}
+            </span>
+          )}
         </div>
 
         <div className="flex items-center justify-between text-xs">
@@ -77,9 +81,13 @@ export function SidebarLiveScoreWidget() {
             <span className="text-xs">{currentMatch.teamB.flag || "⚡"}</span>
             <span className="font-bold text-foreground truncate">{currentMatch.teamB.code}</span>
           </div>
-          <span className="font-mono text-xs font-semibold text-muted-foreground">
-            {currentMatch.teamB.score}
-          </span>
+          {currentMatch.sport === "Cricket" ? (
+            <span className="text-[10px] text-muted-foreground font-semibold">Ball-by-ball</span>
+          ) : (
+            <span className="font-mono text-xs font-semibold text-muted-foreground">
+              {currentMatch.teamB.score}
+            </span>
+          )}
         </div>
       </Link>
 
