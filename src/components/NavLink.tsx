@@ -14,7 +14,7 @@ export type NavLinkProps = {
 export function NavLink({ item, active, source, showLabel = true, className }: NavLinkProps) {
   const onClick =
     item.to === PLAY_NAV_DESTINATION && source
-      ? () => trackPlayNavClick(source)
+      ? () => void trackPlayNavClick(source)
       : undefined;
 
   return (
