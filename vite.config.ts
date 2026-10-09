@@ -81,6 +81,10 @@ export default defineConfig({
       host: "0.0.0.0",
       port: 3000,
       allowedHosts: true,
+      cors: true,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+      },
     },
     define: {
       "process.env.TSS_ROUTER_BASEPATH": JSON.stringify(""),

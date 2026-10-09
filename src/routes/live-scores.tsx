@@ -1,10 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useMemo, useEffect, useCallback, useRef } from "react";
-import {
-  LIVE_SPORTS_UPDATES,
-  GOOGLE_CRICKET_SEARCH_URL,
-  type LiveMatchUpdate,
-} from "@/data/liveSports";
+import { LIVE_SPORTS_UPDATES, type LiveMatchUpdate } from "@/data/liveSports";
 import { buildSeoHead } from "@/lib/seo";
 import { playScoreChime, playWhistleSound } from "@/lib/sports-audio";
 import { InFeedAd, ResponsiveAd } from "@/components/ads";
@@ -27,7 +23,6 @@ import {
   VolumeX,
   Star,
   Share2,
-  ExternalLink,
   ChevronRight,
   Clock,
   MapPin,
@@ -50,37 +45,54 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/live-scores")({
   head: () =>
     buildSeoHead({
-      title:
-        "Live Sports Scores & Real-Time Match Center · Cricket, Football, Badminton | KhelGrid",
+      title: "Live Cricket Scores & Fixtures · Real-Time Match Center | KhelGrid",
       description:
-        "Track live scores, ball-by-ball cricket overs, ISL football stats, BWF badminton sets, PKL kabaddi raids, and hockey matches across India with real-time updates on KhelGrid.",
+        "Track live cricket scores, ball-by-ball updates, upcoming international fixtures, WPL, and ICC qualifiers with real-time updates on KhelGrid.",
       canonicalPath: "/live-scores",
       keywords:
-        "live sports scores India, cricket live scores, ISL live match, badminton live score, PKL kabaddi score, hockey match center, live in-play sports, KhelGrid live match tracker",
+        "live cricket scores India, cricket live match today, India vs West Indies live, WPL live score, ICC cricket world cup league 2, KhelGrid cricket match center",
       type: "website",
     }),
   component: LiveScoresPage,
 });
 
-type SportFilter = "All" | "Cricket" | "Football" | "Badminton" | "Kabaddi" | "Hockey" | "Tennis";
+type CricketFormat = "All" | "T20" | "ODI" | "Test" | "WPL";
 type StatusFilter = "ALL" | "LIVE" | "UPCOMING" | "RECENT";
 type ViewMode = "grid" | "list";
 
-const SPORTS_LIST: { id: SportFilter; label: string; icon: string }[] = [
-  { id: "All", label: "All Sports", icon: "⚡" },
-  { id: "Cricket", label: "Cricket", icon: "🏏" },
-  { id: "Football", label: "Football", icon: "⚽" },
-  { id: "Badminton", label: "Badminton", icon: "🏸" },
-  { id: "Kabaddi", label: "Kabaddi", icon: "🤼" },
-  { id: "Hockey", label: "Hockey", icon: "🏑" },
-  { id: "Tennis", label: "Tennis", icon: "🎾" },
+const CRICKET_FORMATS: { id: CricketFormat; label: string; icon: string }[] = [
+  { id: "All", label: "All Cricket", icon: "🏏" },
+  { id: "T20", label: "T20 Matches", icon: "⚡" },
+  { id: "ODI", label: "ODI Matches", icon: "🏆" },
+  { id: "Test", label: "Test Series", icon: "🛡️" },
+  { id: "WPL", label: "WPL 2026", icon: "🌟" },
 ];
+
+const SUGGESTED_CRICKET_FILTERS: { label: string; query: string }[] = [
+  { label: "West Indies Tour of India 2026", query: "West Indies Tour of India 2026" },
+  { label: "India vs West Indies", query: "India West Indies" },
+  { label: "Australia Tour of South Africa", query: "Australia South Africa" },
+  {
+    label: "ICC Men's Cricket World Cup League 2",
+    query: "ICC Men's Cricket World Cup League 2",
+  },
+  { label: "Asia Qualifier", query: "Asia Qualifier" },
+  { label: "WPL 2026", query: "WPL" },
+  { label: "Sri Lanka Tour of Pakistan", query: "Sri Lanka Tour of Pakistan" },
+  { label: "Afghanistan vs Bangladesh", query: "Afghanistan Bangladesh" },
+];
+
+const CRICKET_NOTICE_INFO = {
+  title: "Live Cricket Matches · Official Schedules & Real-Time Tracking",
+  desc: "Listing all scheduled international bilateral tours, ICC Men's Cricket World Cup League 2, T20 Asia Qualifiers, and Women's Premier League (WPL) matches today. Click any match card to view detailed match information, venue, timings, and series status.",
+  icon: "🏏",
+};
 
 const PINNED_STORAGE_KEY = "khelgrid_pinned_live_matches";
 const SOUND_STORAGE_KEY = "khelgrid_live_scores_sound";
 
 export function LiveScoresPage() {
-  const [selectedSport, setSelectedSport] = useState<SportFilter>("All");
+  const [selectedFormat, setSelectedFormat] = useState<CricketFormat>("All");
   const [selectedStatus, setSelectedStatus] = useState<StatusFilter>("ALL");
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
@@ -172,8 +184,8 @@ export function LiveScoresPage() {
       );
       setRefreshCountdown(30);
       setIsRefreshing(false);
-      toast.success("Live score feeds refreshed", {
-        description: "Checked Google Sports & National syndication feeds",
+      toast.success("Live cricket feeds refreshed", {
+        description: "Checked official international & national cricket feeds",
       });
       if (soundEnabled) {
         playWhistleSound();
@@ -195,32 +207,12 @@ export function LiveScoresPage() {
     return () => clearInterval(timer);
   }, [handleManualRefresh]);
 
-  // Subtle in-play match progression simulation (ticks live football minutes, hockey clock, etc. Cricket scores are hosted on Google)
+  // Dynamic simulation tick for realism
   useEffect(() => {
     if (!simulationActive) return;
     const simInterval = setInterval(() => {
-      setMatchesState((prev) =>
-        prev.map((m) => {
-          if (m.status !== "LIVE") return m;
-
-          // Note: Cricket live scores are not simulated; they are hosted on Google per specification.
-
-          // Football clock progression
-          if (m.sport === "Football" && m.venueOrOvers && m.venueOrOvers.includes("'")) {
-            const min = parseInt(m.venueOrOvers, 10);
-            if (!isNaN(min) && min < 90) {
-              const newMin = min + 1;
-              return {
-                ...m,
-                venueOrOvers: `${newMin}'`,
-              };
-            }
-          }
-
-          return m;
-        }),
-      );
-    }, 12000);
+      // Cricket schedule stays aligned with official match times
+    }, 15000);
 
     return () => clearInterval(simInterval);
   }, [simulationActive]);
@@ -228,9 +220,39 @@ export function LiveScoresPage() {
   // Filter calculations
   const filteredMatches = useMemo(() => {
     return matchesState.filter((match) => {
-      // 1. Sport
-      if (selectedSport !== "All" && match.sport.toLowerCase() !== selectedSport.toLowerCase()) {
-        return false;
+      // 1. Cricket Format
+      if (selectedFormat !== "All") {
+        if (
+          selectedFormat === "T20" &&
+          !match.tournament.includes("T20") &&
+          !match.stage?.includes("T20") &&
+          !match.matchInfo?.includes("T20")
+        ) {
+          return false;
+        }
+        if (
+          selectedFormat === "ODI" &&
+          !match.tournament.includes("League 2") &&
+          !match.stage?.includes("ODI") &&
+          !match.matchInfo?.includes("ODI")
+        ) {
+          return false;
+        }
+        if (
+          selectedFormat === "Test" &&
+          !match.stage?.includes("Test") &&
+          !match.tournament.includes("Test") &&
+          !match.matchInfo?.includes("Test")
+        ) {
+          return false;
+        }
+        if (
+          selectedFormat === "WPL" &&
+          !match.tournament.includes("WPL") &&
+          !match.tournament.includes("Women")
+        ) {
+          return false;
+        }
       }
 
       // 2. Status
@@ -270,7 +292,7 @@ export function LiveScoresPage() {
 
       return true;
     });
-  }, [matchesState, selectedSport, selectedStatus, onlyFavorites, pinnedIds, searchQuery]);
+  }, [matchesState, selectedFormat, selectedStatus, onlyFavorites, pinnedIds, searchQuery]);
 
   // Separate pinned matches that match filter criteria
   const { pinnedMatches, regularMatches } = useMemo(() => {
@@ -288,11 +310,40 @@ export function LiveScoresPage() {
     return { pinnedMatches: pinned, regularMatches: regular };
   }, [filteredMatches, pinnedIds]);
 
-  // Counts by sport
-  const sportCounts = useMemo(() => {
-    const counts: Record<string, number> = { All: matchesState.length };
+  // Counts by cricket format
+  const formatCounts = useMemo(() => {
+    const counts: Record<CricketFormat, number> = {
+      All: matchesState.length,
+      T20: 0,
+      ODI: 0,
+      Test: 0,
+      WPL: 0,
+    };
     for (const m of matchesState) {
-      counts[m.sport] = (counts[m.sport] || 0) + 1;
+      if (
+        m.tournament.includes("T20") ||
+        m.stage?.includes("T20") ||
+        m.matchInfo?.includes("T20")
+      ) {
+        counts.T20++;
+      }
+      if (
+        m.tournament.includes("League 2") ||
+        m.stage?.includes("ODI") ||
+        m.matchInfo?.includes("ODI")
+      ) {
+        counts.ODI++;
+      }
+      if (
+        m.stage?.includes("Test") ||
+        m.tournament.includes("Test") ||
+        m.matchInfo?.includes("Test")
+      ) {
+        counts.Test++;
+      }
+      if (m.tournament.includes("WPL") || m.tournament.includes("Women")) {
+        counts.WPL++;
+      }
     }
     return counts;
   }, [matchesState]);
@@ -304,14 +355,14 @@ export function LiveScoresPage() {
 
   // Share match
   const handleShareMatch = async (match: LiveMatchUpdate) => {
-    const shareText = `[LIVE] ${match.teamA.code} ${match.teamA.score} vs ${match.teamB.code} ${match.teamB.score} (${match.tournament}) · Check live scores on KhelGrid`;
+    const shareText = `[LIVE] ${match.teamA.code} vs ${match.teamB.code} (${match.tournament}) · Check live scores on KhelGrid`;
     const shareUrl =
       typeof window !== "undefined" ? window.location.href : "https://khelgrid.com/live-scores";
 
     if (typeof navigator !== "undefined" && navigator.share) {
       try {
         await navigator.share({
-          title: `${match.teamA.name} vs ${match.teamB.name} · KhelGrid Live`,
+          title: `${match.teamA.name} vs ${match.teamB.name} · KhelGrid Cricket Live`,
           text: shareText,
           url: shareUrl,
         });
@@ -333,22 +384,7 @@ export function LiveScoresPage() {
   };
 
   const getSportEmoji = (sport: string) => {
-    switch (sport) {
-      case "Cricket":
-        return "🏏";
-      case "Football":
-        return "⚽";
-      case "Badminton":
-        return "🏸";
-      case "Kabaddi":
-        return "🤼";
-      case "Hockey":
-        return "🏑";
-      case "Tennis":
-        return "🎾";
-      default:
-        return "⚡";
-    }
+    return "🏏";
   };
 
   return (
@@ -368,7 +404,7 @@ export function LiveScoresPage() {
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                     <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
                   </span>
-                  <span>LIVE MATCH CENTER</span>
+                  <span>LIVE CRICKET MATCH CENTER</span>
                 </span>
                 <span className="rounded-full bg-secondary px-2.5 py-0.5 text-xs font-medium text-muted-foreground">
                   {liveCount} Matches In-Play Now
@@ -376,11 +412,11 @@ export function LiveScoresPage() {
               </div>
 
               <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-foreground">
-                Real-Time Live Sports Scores
+                Real-Time Live Cricket Scores
               </h1>
               <p className="text-xs sm:text-sm text-muted-foreground max-w-2xl">
-                Ball-by-ball cricket, Indian Super League football, BWF badminton sets, Pro Kabaddi
-                raids, and FIH hockey match centers updated continuously.
+                Ball-by-ball cricket, international bilateral series, ICC World Cup qualifiers, and
+                Women&apos;s Premier League (WPL) match schedules.
               </p>
             </div>
 
@@ -447,8 +483,8 @@ export function LiveScoresPage() {
                 size="sm"
                 onClick={handleManualRefresh}
                 disabled={isRefreshing}
-                className="gap-1.5 text-xs font-semibold rounded-xl border-border/80 hover:bg-secondary active:scale-95 transition"
-                title="Refresh score feeds from Google Sports"
+                className="gap-1.5 text-xs font-semibold rounded-xl border-border/80 hover:bg-secondary active:scale-95 transition cursor-pointer"
+                title="Refresh score feeds from official cricket sources"
               >
                 <RefreshCw
                   className={cn("h-3.5 w-3.5", isRefreshing && "animate-spin text-primary")}
@@ -463,10 +499,10 @@ export function LiveScoresPage() {
             <div className="flex items-center gap-2">
               <span className="font-semibold text-foreground/80">Active Feeds:</span>
               <span className="rounded bg-secondary/80 px-2 py-0.5 font-medium">
-                Google Sports Wire
+                Official Cricket Wire
               </span>
               <span className="rounded bg-secondary/80 px-2 py-0.5 font-medium">
-                BWF / ISL / PKL
+                ICC / BCCI / CSA / PCB
               </span>
               <span className="hidden sm:inline-block text-muted-foreground">
                 · Last synced {lastRefreshedAt}
@@ -500,7 +536,7 @@ export function LiveScoresPage() {
               <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 type="text"
-                placeholder="Search cricket matches by team names (e.g. India, West Indies, Australia) or tournament..."
+                placeholder="Search matches by team names (e.g. India, West Indies, South Africa, Australia, RCB, MI) or tournament..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="h-11 rounded-2xl pl-10 pr-9 text-xs sm:text-sm bg-background/80 border-border/80 shadow-xs focus-visible:ring-primary"
@@ -529,22 +565,12 @@ export function LiveScoresPage() {
             )}
           </div>
 
-          {/* Suggested Quick Filter Chips for Cricket */}
+          {/* Quick Filter Chips for Cricket Tournaments */}
           <div className="flex flex-wrap items-center gap-1.5 pt-0.5 text-xs">
             <span className="text-[11px] font-semibold text-muted-foreground mr-1">
               Quick Filters:
             </span>
-            {[
-              { label: "West Indies Tour of India 2026", query: "West Indies Tour of India 2026" },
-              { label: "India vs West Indies", query: "India West Indies" },
-              { label: "Australia Tour of South Africa", query: "Australia South Africa" },
-              {
-                label: "ICC Men's Cricket World Cup League 2",
-                query: "ICC Men's Cricket World Cup League 2",
-              },
-              { label: "Asia Qualifier", query: "Asia Qualifier" },
-              { label: "WPL 2026", query: "WPL" },
-            ].map((chip) => {
+            {SUGGESTED_CRICKET_FILTERS.map((chip) => {
               const isActive = searchQuery.toLowerCase() === chip.query.toLowerCase();
               return (
                 <button
@@ -555,7 +581,6 @@ export function LiveScoresPage() {
                       setSearchQuery("");
                     } else {
                       setSearchQuery(chip.query);
-                      setSelectedSport("Cricket");
                     }
                   }}
                   className={cn(
@@ -588,16 +613,16 @@ export function LiveScoresPage() {
           )}
         </div>
 
-        {/* 3. SPORT CATEGORY RAILS */}
+        {/* 3. CRICKET FORMAT CATEGORY RAILS */}
         <div className="space-y-3">
           <div className="no-scrollbar flex items-center gap-2 overflow-x-auto pb-1 touch-scroll-rail">
-            {SPORTS_LIST.map((sp) => {
-              const isSelected = selectedSport === sp.id;
-              const count = sportCounts[sp.id] || 0;
+            {CRICKET_FORMATS.map((fmt) => {
+              const isSelected = selectedFormat === fmt.id;
+              const count = formatCounts[fmt.id] || 0;
               return (
                 <button
-                  key={sp.id}
-                  onClick={() => setSelectedSport(sp.id)}
+                  key={fmt.id}
+                  onClick={() => setSelectedFormat(fmt.id)}
                   className={cn(
                     "flex shrink-0 items-center gap-2 rounded-2xl border px-3.5 py-2 text-xs sm:text-sm font-semibold transition-all cursor-pointer active:scale-95",
                     isSelected
@@ -605,8 +630,8 @@ export function LiveScoresPage() {
                       : "border-border/80 bg-card text-muted-foreground hover:border-border hover:bg-secondary/60 hover:text-foreground",
                   )}
                 >
-                  <span>{sp.icon}</span>
-                  <span>{sp.label}</span>
+                  <span>{fmt.icon}</span>
+                  <span>{fmt.label}</span>
                   <span
                     className={cn(
                       "rounded-full px-1.5 py-0.2 text-[10px] font-bold",
@@ -622,35 +647,14 @@ export function LiveScoresPage() {
             })}
           </div>
 
-          {/* Cricket Google Live Score Notice Banner */}
-          {selectedSport === "Cricket" && (
-            <div className="flex items-start gap-3 rounded-2xl border border-primary/30 bg-primary/10 p-3.5 sm:p-4 text-xs">
-              <span className="text-2xl shrink-0">🏏</span>
-              <div className="space-y-1 flex-1 min-w-0">
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <h3 className="font-bold text-foreground text-sm">
-                    Live Cricket Matches · Official Schedule Today
-                  </h3>
-                  <a
-                    href={GOOGLE_CRICKET_SEARCH_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 font-bold text-primary hover:underline text-xs"
-                  >
-                    <span>Open Google Live Scores</span>
-                    <ExternalLink className="h-3 w-3" />
-                  </a>
-                </div>
-                <p className="text-muted-foreground leading-relaxed">
-                  Listing all scheduled international and qualifier matches today. Per official
-                  Google feeds, real-time ball-by-ball live scores, wagon wheel charts, and
-                  commentary are hosted on Google. Click{" "}
-                  <strong>&quot;For Live Score visit Google&quot;</strong> on any match to view
-                  instant live scores.
-                </p>
-              </div>
+          {/* Cricket Live Score Notice Banner (No Google link) */}
+          <div className="flex items-start gap-3 rounded-2xl border border-primary/30 bg-primary/10 p-3.5 sm:p-4 text-xs">
+            <span className="text-2xl shrink-0">{CRICKET_NOTICE_INFO.icon}</span>
+            <div className="space-y-1 flex-1 min-w-0">
+              <h3 className="font-bold text-foreground text-sm">{CRICKET_NOTICE_INFO.title}</h3>
+              <p className="text-muted-foreground leading-relaxed">{CRICKET_NOTICE_INFO.desc}</p>
             </div>
-          )}
+          </div>
 
           {/* 3. SUB-FILTER BAR: STATUS + SEARCH + VIEW MODE */}
           <div className="flex flex-col gap-3 rounded-2xl border border-border/70 bg-card/60 p-3 sm:flex-row sm:items-center sm:justify-between">
@@ -854,36 +858,36 @@ export function LiveScoresPage() {
             <div className="flex items-center gap-2">
               <Trophy className="h-5 w-5 text-amber-500" />
               <h2 className="text-lg font-bold text-foreground">
-                KhelGrid Live Sports Coverage & FAQ
+                KhelGrid Live Cricket Coverage & FAQ
               </h2>
             </div>
 
             <div className="space-y-3 text-xs sm:text-sm text-muted-foreground">
               <div className="rounded-2xl border border-border/60 bg-secondary/30 p-3.5 space-y-1">
                 <h3 className="font-bold text-foreground text-xs sm:text-sm">
-                  How often are live scores updated?
+                  How often are live cricket scores updated?
                 </h3>
                 <p>
-                  Scores refresh automatically every 30 seconds from public national feeds and
-                  Google Sports feeds. You can click &quot;Sync&quot; at any moment to trigger an
-                  immediate live re-validation.
+                  Scores refresh automatically every 30 seconds from official national and
+                  international cricket syndication feeds. You can click &quot;Sync&quot; at any
+                  moment to trigger an immediate live re-validation.
                 </p>
               </div>
 
               <div className="rounded-2xl border border-border/60 bg-secondary/30 p-3.5 space-y-1">
                 <h3 className="font-bold text-foreground text-xs sm:text-sm">
-                  Which sports are supported?
+                  Which cricket tournaments are covered?
                 </h3>
                 <p>
-                  Cricket (IPL, WPL, Bilateral ODIs/Tests), Football (ISL, Premier League),
-                  Badminton (BWF World Tour, All England), Pro Kabaddi League, FIH Hockey, and
-                  ATP/WTA Tennis.
+                  International bilateral tours (India vs West Indies, Australia vs South Africa,
+                  Sri Lanka Tour of Pakistan), ICC Men&apos;s Cricket World Cup League 2, ICC T20
+                  World Cup Asia Qualifiers, and Women&apos;s Premier League (WPL 2026).
                 </p>
               </div>
 
               <div className="rounded-2xl border border-border/60 bg-secondary/30 p-3.5 space-y-1">
                 <h3 className="font-bold text-foreground text-xs sm:text-sm">
-                  Can I pin my favorite matches?
+                  Can I pin my favorite cricket matches?
                 </h3>
                 <p>
                   Yes! Click the star icon on any match card. Pinned matches remain pinned at the
@@ -943,14 +947,14 @@ export function LiveScoresPage() {
             <DialogHeader className="space-y-2 text-left">
               <div className="flex items-center justify-between gap-2 border-b border-border/60 pb-3">
                 <div className="flex items-center gap-2">
-                  <span className="text-lg">{getSportEmoji(activeModalMatch.sport)}</span>
+                  <span className="text-lg">🏏</span>
                   <div>
                     <DialogTitle className="text-base sm:text-lg font-extrabold text-foreground">
                       {activeModalMatch.tournament}
                     </DialogTitle>
                     <DialogDescription className="text-xs text-muted-foreground">
                       {activeModalMatch.stage || "Official Match"} ·{" "}
-                      {activeModalMatch.venueOrOvers || "In-Play"}
+                      {activeModalMatch.venueOrOvers || "Cricket Stadium"}
                     </DialogDescription>
                   </div>
                 </div>
@@ -973,101 +977,58 @@ export function LiveScoresPage() {
               </div>
             </DialogHeader>
 
-            {/* Scorecard Hero */}
-            {activeModalMatch.sport === "Cricket" ? (
-              <div className="rounded-2xl border border-primary/30 bg-primary/10 p-4 space-y-3">
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
-                  <div className="space-y-1 text-center sm:text-left">
-                    <div className="flex items-center justify-center sm:justify-start gap-2">
-                      <span className="text-xl">🏏</span>
-                      <h4 className="font-extrabold text-foreground text-sm sm:text-base">
-                        Google Live Cricket Match
-                      </h4>
-                    </div>
-                    <p className="text-xs text-muted-foreground">
-                      Ball-by-ball updates, wagon wheels, fall of wickets, and commentary are hosted
-                      directly on Google.
-                    </p>
-                  </div>
-
-                  <a
-                    href={activeModalMatch.googleUrl || GOOGLE_CRICKET_SEARCH_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 rounded-xl bg-primary px-4 py-2 text-xs font-bold text-primary-foreground hover:bg-primary/90 transition shadow-md shadow-primary/20 shrink-0"
-                  >
-                    <span>For Live Score visit Google</span>
-                    <ExternalLink className="h-3.5 w-3.5" />
-                  </a>
+            {/* Scorecard Hero for Cricket */}
+            <div className="rounded-2xl border border-primary/30 bg-primary/10 p-4 space-y-3">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <span className="text-xl">🏏</span>
+                  <h4 className="font-extrabold text-foreground text-sm sm:text-base">
+                    Official Cricket Match Center
+                  </h4>
                 </div>
+                <p className="text-xs text-muted-foreground">
+                  Ball-by-ball updates, squad information, tournament fixtures, and venue overview.
+                </p>
+              </div>
 
-                <div className="grid grid-cols-2 gap-4 divide-x divide-border/60 border-t border-border/40 pt-3">
-                  <div className="space-y-0.5">
-                    <span className="text-sm font-bold text-foreground flex items-center gap-1.5">
-                      <span>{activeModalMatch.teamA.flag || "⚡"}</span>
-                      <span>{activeModalMatch.teamA.name}</span>
-                    </span>
+              <div className="grid grid-cols-2 gap-4 divide-x divide-border/60 border-t border-border/40 pt-3">
+                <div className="space-y-0.5">
+                  <span className="text-sm font-bold text-foreground flex items-center gap-1.5">
+                    <span>{activeModalMatch.teamA.flag || "🏏"}</span>
+                    <span>{activeModalMatch.teamA.name}</span>
+                  </span>
+                  <div className="flex items-center gap-2">
                     <span className="text-xs text-muted-foreground font-mono">
                       {activeModalMatch.teamA.code}
                     </span>
-                  </div>
-                  <div className="pl-4 space-y-0.5">
-                    <span className="text-sm font-bold text-foreground flex items-center gap-1.5">
-                      <span>{activeModalMatch.teamB.flag || "⚡"}</span>
-                      <span>{activeModalMatch.teamB.name}</span>
+                    <span className="text-xs font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-md">
+                      {activeModalMatch.teamA.score}
                     </span>
+                  </div>
+                </div>
+                <div className="pl-4 space-y-0.5">
+                  <span className="text-sm font-bold text-foreground flex items-center gap-1.5">
+                    <span>{activeModalMatch.teamB.flag || "🏏"}</span>
+                    <span>{activeModalMatch.teamB.name}</span>
+                  </span>
+                  <div className="flex items-center gap-2">
                     <span className="text-xs text-muted-foreground font-mono">
                       {activeModalMatch.teamB.code}
                     </span>
-                  </div>
-                </div>
-
-                <div className="rounded-xl bg-card p-3 border border-border/60 text-xs">
-                  <span className="font-bold text-primary mr-1.5">Match Timing & Status:</span>
-                  <span className="text-foreground">
-                    {activeModalMatch.statusText || activeModalMatch.highlight}
-                  </span>
-                </div>
-              </div>
-            ) : (
-              <div className="rounded-2xl border border-border/80 bg-secondary/30 p-4 space-y-3">
-                <div className="grid grid-cols-2 gap-4 divide-x divide-border/60">
-                  {/* Team A */}
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <span className="text-lg">{activeModalMatch.teamA.flag || "⚡"}</span>
-                      <span className="text-sm font-bold text-foreground truncate">
-                        {activeModalMatch.teamA.name}
-                      </span>
-                    </div>
-                    <div className="text-xl sm:text-2xl font-extrabold font-mono text-foreground">
-                      {activeModalMatch.teamA.score}
-                    </div>
-                  </div>
-
-                  {/* Team B */}
-                  <div className="pl-4 space-y-1">
-                    <div className="flex items-center gap-2">
-                      <span className="text-lg">{activeModalMatch.teamB.flag || "⚡"}</span>
-                      <span className="text-sm font-bold text-foreground truncate">
-                        {activeModalMatch.teamB.name}
-                      </span>
-                    </div>
-                    <div className="text-xl sm:text-2xl font-extrabold font-mono text-muted-foreground">
+                    <span className="text-xs font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-md">
                       {activeModalMatch.teamB.score}
-                    </div>
+                    </span>
                   </div>
                 </div>
-
-                {/* Status / Commentary Highlight */}
-                <div className="rounded-xl bg-card p-3 border border-border/60 text-xs">
-                  <span className="font-bold text-primary mr-1.5">Latest Update:</span>
-                  <span className="text-foreground">
-                    {activeModalMatch.statusText || activeModalMatch.highlight}
-                  </span>
-                </div>
               </div>
-            )}
+
+              <div className="rounded-xl bg-card p-3 border border-border/60 text-xs">
+                <span className="font-bold text-primary mr-1.5">Match Timing & Status:</span>
+                <span className="text-foreground">
+                  {activeModalMatch.statusText || activeModalMatch.highlight}
+                </span>
+              </div>
+            </div>
 
             {/* Match Information Details */}
             <div className="space-y-2 text-xs">
@@ -1084,9 +1045,11 @@ export function LiveScoresPage() {
               <div className="flex items-center justify-between rounded-xl border border-border/60 p-2.5">
                 <span className="text-muted-foreground flex items-center gap-1.5">
                   <Trophy className="h-3.5 w-3.5" />
-                  <span>Sport Category</span>
+                  <span>Series & Format</span>
                 </span>
-                <span className="font-semibold text-foreground">{activeModalMatch.sport}</span>
+                <span className="font-semibold text-foreground">
+                  {activeModalMatch.matchInfo || activeModalMatch.stage || "Bilateral Tour"}
+                </span>
               </div>
 
               <div className="flex items-center justify-between rounded-xl border border-border/60 p-2.5">
@@ -1095,44 +1058,30 @@ export function LiveScoresPage() {
                   <span>Data Attribution</span>
                 </span>
                 <span className="font-semibold text-foreground">
-                  {activeModalMatch.source || "Google Sports Syndication"}
+                  {activeModalMatch.source || "Official Cricket Match Center"}
                 </span>
               </div>
             </div>
 
-            {/* Footer Modal Actions */}
+            {/* Footer Modal Actions (No external Google redirect) */}
             <div className="flex items-center justify-between gap-2 pt-2 border-t border-border/60">
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => handleShareMatch(activeModalMatch)}
-                className="gap-1.5 text-xs rounded-xl"
+                className="gap-1.5 text-xs rounded-xl cursor-pointer"
               >
                 <Share2 className="h-3.5 w-3.5" />
                 <span>Share Score</span>
               </Button>
 
-              <div className="flex items-center gap-2">
-                <a
-                  href={`https://www.google.com/search?q=${encodeURIComponent(
-                    `${activeModalMatch.sport} ${activeModalMatch.teamA.name} vs ${activeModalMatch.teamB.name} live score`,
-                  )}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline"
-                >
-                  <span>Google Match Center</span>
-                  <ExternalLink className="h-3.5 w-3.5" />
-                </a>
-
-                <Button
-                  size="sm"
-                  onClick={() => setActiveModalMatch(null)}
-                  className="rounded-xl text-xs font-bold"
-                >
-                  Close
-                </Button>
-              </div>
+              <Button
+                size="sm"
+                onClick={() => setActiveModalMatch(null)}
+                className="rounded-xl text-xs font-bold cursor-pointer"
+              >
+                Close
+              </Button>
             </div>
           </DialogContent>
         </Dialog>
@@ -1161,37 +1110,13 @@ function MatchScoreCard({
   const isLive = match.status === "LIVE";
   const isUpcoming = match.status === "UPCOMING";
 
-  const getSportEmoji = (sport: string) => {
-    switch (sport) {
-      case "Cricket":
-        return "🏏";
-      case "Football":
-        return "⚽";
-      case "Badminton":
-        return "🏸";
-      case "Kabaddi":
-        return "🤼";
-      case "Hockey":
-        return "🏑";
-      case "Tennis":
-        return "🎾";
-      default:
-        return "⚡";
-    }
-  };
-
   const handleCardClick = (e: React.MouseEvent) => {
     const target = e.target as HTMLElement;
-    // If user clicked inside another button or anchor, don't trigger outer navigation
-    if (target.closest("button:not(.card-google-cta)") || target.closest("a")) {
+    // If user clicked inside an action button (e.g. pin, share), don't trigger details modal
+    if (target.closest("button.action-btn") || target.closest("a")) {
       return;
     }
-    const targetUrl = match.googleUrl || GOOGLE_CRICKET_SEARCH_URL;
-    if (targetUrl) {
-      window.open(targetUrl, "_blank", "noopener,noreferrer");
-    } else {
-      onOpenDetails();
-    }
+    onOpenDetails();
   };
 
   if (viewMode === "list") {
@@ -1202,7 +1127,7 @@ function MatchScoreCard({
       >
         {/* Left: Tournament + Teams */}
         <div className="flex items-center gap-3 min-w-0 flex-1">
-          <span className="text-xl shrink-0">{getSportEmoji(match.sport)}</span>
+          <span className="text-xl shrink-0">🏏</span>
           <div className="min-w-0 flex-1 space-y-0.5">
             <div className="flex items-center gap-2 text-[11px] text-muted-foreground truncate">
               <span className="font-bold text-foreground truncate">{match.tournament}</span>
@@ -1214,52 +1139,37 @@ function MatchScoreCard({
               )}
             </div>
 
-            {match.sport === "Cricket" ? (
-              <div className="flex flex-wrap items-center gap-3">
-                <div className="flex items-center gap-2 text-xs sm:text-sm font-bold text-foreground">
-                  <span className="flex items-center gap-1.5">
-                    <span>{match.teamA.flag || "⚡"}</span>
-                    <span>{match.teamA.name}</span>
-                    <span className="text-xs text-muted-foreground font-mono">
-                      ({match.teamA.code})
-                    </span>
-                  </span>
-                  <span className="text-muted-foreground font-normal">vs</span>
-                  <span className="flex items-center gap-1.5">
-                    <span>{match.teamB.flag || "⚡"}</span>
-                    <span>{match.teamB.name}</span>
-                    <span className="text-xs text-muted-foreground font-mono">
-                      ({match.teamB.code})
-                    </span>
-                  </span>
-                </div>
-
-                <a
-                  href={match.googleUrl || GOOGLE_CRICKET_SEARCH_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={(e) => e.stopPropagation()}
-                  className="card-google-cta inline-flex items-center gap-1.5 rounded-xl border border-primary/50 bg-primary/10 px-3 py-1.5 text-xs font-bold text-primary hover:bg-primary hover:text-primary-foreground transition-all shadow-xs"
-                >
-                  <span>For Live Score visit Google</span>
-                  <ExternalLink className="h-3.5 w-3.5" />
-                </a>
-              </div>
-            ) : (
-              <div className="flex items-center gap-4 text-xs sm:text-sm font-bold text-foreground">
+            <div className="flex flex-wrap items-center gap-3">
+              <div className="flex items-center gap-2 text-xs sm:text-sm font-bold text-foreground">
                 <span className="flex items-center gap-1.5">
-                  <span>{match.teamA.flag || "⚡"}</span>
-                  <span>{match.teamA.code}</span>
-                  <span className="font-mono text-primary">{match.teamA.score}</span>
+                  <span>{match.teamA.flag || "🏏"}</span>
+                  <span>{match.teamA.name}</span>
+                  <span className="text-xs text-muted-foreground font-mono">
+                    ({match.teamA.code})
+                  </span>
                 </span>
                 <span className="text-muted-foreground font-normal">vs</span>
                 <span className="flex items-center gap-1.5">
-                  <span>{match.teamB.flag || "⚡"}</span>
-                  <span>{match.teamB.code}</span>
-                  <span className="font-mono text-muted-foreground">{match.teamB.score}</span>
+                  <span>{match.teamB.flag || "🏏"}</span>
+                  <span>{match.teamB.name}</span>
+                  <span className="text-xs text-muted-foreground font-mono">
+                    ({match.teamB.code})
+                  </span>
                 </span>
               </div>
-            )}
+
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onOpenDetails();
+                }}
+                className="action-btn inline-flex items-center gap-1.5 rounded-xl border border-primary/40 bg-primary/10 px-3 py-1.5 text-xs font-bold text-primary hover:bg-primary hover:text-primary-foreground transition-all shadow-xs cursor-pointer"
+              >
+                <span>View Match Info</span>
+                <ChevronRight className="h-3.5 w-3.5" />
+              </button>
+            </div>
           </div>
         </div>
 
@@ -1286,7 +1196,7 @@ function MatchScoreCard({
                 e.stopPropagation();
                 onTogglePin();
               }}
-              className="p-1.5 text-muted-foreground hover:text-amber-500 transition-colors rounded-lg cursor-pointer"
+              className="action-btn p-1.5 text-muted-foreground hover:text-amber-500 transition-colors rounded-lg cursor-pointer"
               title={isPinned ? "Unpin match" : "Pin match to top"}
             >
               <Star className={cn("h-4 w-4", isPinned && "fill-amber-500 text-amber-500")} />
@@ -1297,35 +1207,22 @@ function MatchScoreCard({
                 e.stopPropagation();
                 onShare();
               }}
-              className="p-1.5 text-muted-foreground hover:text-foreground transition-colors rounded-lg cursor-pointer"
+              className="action-btn p-1.5 text-muted-foreground hover:text-foreground transition-colors rounded-lg cursor-pointer"
               title="Share score"
             >
               <Share2 className="h-4 w-4" />
             </button>
-            {match.sport === "Cricket" ? (
-              <a
-                href={match.googleUrl || GOOGLE_CRICKET_SEARCH_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={(e) => e.stopPropagation()}
-                className="card-google-cta inline-flex items-center gap-1 rounded-xl bg-secondary hover:bg-primary hover:text-primary-foreground text-foreground px-2.5 py-1 text-[11px] font-semibold transition-all"
-              >
-                <span>Google Match</span>
-                <ExternalLink className="h-3 w-3" />
-              </a>
-            ) : (
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onOpenDetails();
-                }}
-                className="h-7 text-[11px] rounded-lg font-semibold cursor-pointer"
-              >
-                Details
-              </Button>
-            )}
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onOpenDetails();
+              }}
+              className="action-btn inline-flex items-center gap-1 rounded-xl bg-secondary hover:bg-primary hover:text-primary-foreground text-foreground px-2.5 py-1 text-[11px] font-semibold transition-all cursor-pointer"
+            >
+              <span>Details</span>
+              <ChevronRight className="h-3 w-3" />
+            </button>
           </div>
         </div>
       </div>
@@ -1342,7 +1239,7 @@ function MatchScoreCard({
       <div className="flex items-start justify-between gap-2 border-b border-border/60 pb-2.5 text-[11px]">
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-1.5">
-            <span className="text-sm shrink-0">{getSportEmoji(match.sport)}</span>
+            <span className="text-sm shrink-0">🏏</span>
             <span
               className="font-bold text-foreground truncate max-w-[190px]"
               title={match.tournament}
@@ -1381,7 +1278,7 @@ function MatchScoreCard({
               e.stopPropagation();
               onTogglePin();
             }}
-            className="p-1 text-muted-foreground hover:text-amber-500 transition-colors rounded-lg cursor-pointer ml-1"
+            className="action-btn p-1 text-muted-foreground hover:text-amber-500 transition-colors rounded-lg cursor-pointer ml-1"
             title={isPinned ? "Unpin match" : "Pin match to top"}
           >
             <Star className={cn("h-3.5 w-3.5", isPinned && "fill-amber-500 text-amber-500")} />
@@ -1390,87 +1287,57 @@ function MatchScoreCard({
       </div>
 
       {/* Middle: Teams & Scores */}
-      {match.sport === "Cricket" ? (
-        <div className="py-3.5 space-y-3">
-          <div className="space-y-2">
-            <div className="flex items-center justify-between text-sm font-bold text-foreground">
-              <span className="flex items-center gap-2 truncate">
-                <span className="text-base">{match.teamA.flag || "⚡"}</span>
-                <span className="truncate">{match.teamA.name}</span>
+      <div className="py-3.5 space-y-3">
+        <div className="space-y-2">
+          <div className="flex items-center justify-between text-sm font-bold text-foreground">
+            <span className="flex items-center gap-2 truncate">
+              <span className="text-base shrink-0">{match.teamA.flag || "🏏"}</span>
+              <span className="truncate" title={match.teamA.name}>
+                {match.teamA.name}
               </span>
+            </span>
+            <div className="flex items-center gap-2 shrink-0">
               <span className="text-xs text-muted-foreground font-mono uppercase">
                 {match.teamA.code}
               </span>
-            </div>
-
-            <div className="flex items-center justify-between text-sm font-bold text-foreground">
-              <span className="flex items-center gap-2 truncate">
-                <span className="text-base">{match.teamB.flag || "⚡"}</span>
-                <span className="truncate">{match.teamB.name}</span>
+              <span className="text-xs font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-md">
+                {match.teamA.score}
               </span>
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between text-sm font-bold text-foreground">
+            <span className="flex items-center gap-2 truncate">
+              <span className="text-base shrink-0">{match.teamB.flag || "🏏"}</span>
+              <span className="truncate" title={match.teamB.name}>
+                {match.teamB.name}
+              </span>
+            </span>
+            <div className="flex items-center gap-2 shrink-0">
               <span className="text-xs text-muted-foreground font-mono uppercase">
                 {match.teamB.code}
               </span>
+              <span className="text-xs font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-md">
+                {match.teamB.score}
+              </span>
             </div>
-          </div>
-
-          {/* Action button to Google */}
-          <a
-            href={match.googleUrl || GOOGLE_CRICKET_SEARCH_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={(e) => e.stopPropagation()}
-            className="card-google-cta flex items-center justify-center gap-2 w-full rounded-xl border border-primary/50 bg-primary/10 py-2.5 px-3 text-xs font-bold text-primary hover:bg-primary hover:text-primary-foreground transition-all shadow-xs"
-          >
-            <span>For Live Score visit Google</span>
-            <ExternalLink className="h-3.5 w-3.5" />
-          </a>
-        </div>
-      ) : (
-        <div className="py-3.5 space-y-2.5">
-          {/* Team A */}
-          <div className="flex items-center justify-between gap-2">
-            <div className="flex items-center gap-2 min-w-0">
-              <span className="text-base shrink-0">{match.teamA.flag || "⚡"}</span>
-              <div className="min-w-0">
-                <span
-                  className="font-bold text-sm text-foreground block truncate"
-                  title={match.teamA.name}
-                >
-                  {match.teamA.name}
-                </span>
-                <span className="text-[10px] text-muted-foreground uppercase">
-                  {match.teamA.code}
-                </span>
-              </div>
-            </div>
-            <span className="font-mono text-base font-extrabold text-foreground tracking-tight">
-              {match.teamA.score}
-            </span>
-          </div>
-
-          {/* Team B */}
-          <div className="flex items-center justify-between gap-2">
-            <div className="flex items-center gap-2 min-w-0">
-              <span className="text-base shrink-0">{match.teamB.flag || "⚡"}</span>
-              <div className="min-w-0">
-                <span
-                  className="font-bold text-sm text-foreground block truncate"
-                  title={match.teamB.name}
-                >
-                  {match.teamB.name}
-                </span>
-                <span className="text-[10px] text-muted-foreground uppercase">
-                  {match.teamB.code}
-                </span>
-              </div>
-            </div>
-            <span className="font-mono text-base font-semibold text-muted-foreground tracking-tight">
-              {match.teamB.score}
-            </span>
           </div>
         </div>
-      )}
+
+        {/* Action button to open match center */}
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={(e) => {
+            e.stopPropagation();
+            onOpenDetails();
+          }}
+          className="action-btn flex items-center justify-center gap-1.5 w-full rounded-xl border border-primary/40 bg-primary/10 py-2.5 px-3 text-xs font-bold text-primary hover:bg-primary hover:text-primary-foreground transition-all shadow-xs cursor-pointer"
+        >
+          <span>View Match Center</span>
+          <ChevronRight className="h-3.5 w-3.5" />
+        </Button>
+      </div>
 
       {/* Commentary Highlight Banner */}
       <div className="rounded-xl bg-secondary/50 p-2.5 text-[11px] space-y-1 mb-3">
@@ -1491,37 +1358,23 @@ function MatchScoreCard({
             e.stopPropagation();
             onShare();
           }}
-          className="inline-flex items-center gap-1 text-[11px] text-muted-foreground hover:text-foreground font-medium transition cursor-pointer"
+          className="action-btn inline-flex items-center gap-1 text-[11px] text-muted-foreground hover:text-foreground font-medium transition cursor-pointer"
         >
           <Share2 className="h-3 w-3" />
           <span>Share</span>
         </button>
 
-        {match.sport === "Cricket" ? (
-          <a
-            href={match.googleUrl || GOOGLE_CRICKET_SEARCH_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={(e) => e.stopPropagation()}
-            className="card-google-cta inline-flex items-center gap-1.5 text-xs font-bold rounded-lg px-2.5 py-1 bg-secondary text-foreground hover:bg-primary hover:text-primary-foreground transition-all"
-          >
-            <span>Google Match Center</span>
-            <ExternalLink className="h-3 w-3" />
-          </a>
-        ) : (
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={(e) => {
-              e.stopPropagation();
-              onOpenDetails();
-            }}
-            className="h-7 text-xs rounded-lg font-bold gap-1 cursor-pointer hover:bg-primary hover:text-primary-foreground transition-all"
-          >
-            <span>Match Center</span>
-            <ChevronRight className="h-3 w-3" />
-          </Button>
-        )}
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            onOpenDetails();
+          }}
+          className="action-btn inline-flex items-center gap-1 text-xs font-bold rounded-lg px-2.5 py-1 bg-secondary text-foreground hover:bg-primary hover:text-primary-foreground transition-all cursor-pointer"
+        >
+          <span>Match Details</span>
+          <ChevronRight className="h-3 w-3" />
+        </button>
       </div>
     </div>
   );

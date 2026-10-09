@@ -49,48 +49,58 @@ describe("Live Scores Page and Navigation", () => {
     expect(html).toContain("bottom-tab-live");
   });
 
-  it("renders LiveScoresPage without SSR hydration errors", () => {
+  it("renders LiveScoresPage without SSR hydration errors and focused on cricket", () => {
     const html = renderToString(<LiveScoresPage />);
-    expect(html).toContain("Real-Time Live Sports Scores");
-    expect(html).toContain("LIVE MATCH CENTER");
-    expect(html).toContain("All Sports");
-    expect(html).toContain("Cricket");
-    expect(html).toContain("Football");
-    expect(html).toContain("Badminton");
-    expect(html).toContain("Kabaddi");
+    expect(html).toContain("Real-Time Live Cricket Scores");
+    expect(html).toContain("LIVE CRICKET MATCH CENTER");
+    expect(html).toContain("All Cricket");
+    expect(html).toContain("T20 Matches");
+    expect(html).toContain("ODI Matches");
+    expect(html).toContain("Test Series");
+    expect(html).toContain("WPL 2026");
+    // Verify non-cricket sports tabs are removed
+    expect(html).not.toContain("Football");
+    expect(html).not.toContain("Badminton");
+    expect(html).not.toContain("Kabaddi");
   });
 
-  it("contains sports matches from LIVE_SPORTS_UPDATES in page render", () => {
+  it("contains cricket matches from LIVE_SPORTS_UPDATES in page render", () => {
     const html = renderToString(<LiveScoresPage />);
     expect(html).toContain(LIVE_SPORTS_UPDATES[0].tournament);
     expect(html).toContain(LIVE_SPORTS_UPDATES[0].teamA.code);
   });
 
-  it("displays 'For Live Score visit Google' for cricket matches instead of fake numeric scores", () => {
+  it("displays cricket match cards with native match center actions and without Google links", () => {
     const html = renderToString(<LiveScoresPage />);
-    expect(html).toContain("For Live Score visit Google");
     expect(html).toContain("West Indies Tour of India 2026");
     expect(html).toContain("Australia Tour of South Africa 2026");
     expect(html).toContain("Afghanistan vs Bangladesh in UAE 2026");
+    expect(html).toContain("View Match Center");
+    // Ensure no links to Google are in the output
+    expect(html).not.toContain("google.com");
+    expect(html).not.toContain("For Live Score visit Google");
+    expect(html).not.toContain("Google Sports Wire");
   });
 
   it("renders search bar at the top of Live Scores page with cricket filter options", () => {
     const html = renderToString(<LiveScoresPage />);
-    expect(html).toContain("Search cricket matches by team names");
+    expect(html).toContain("Search matches by team names");
     expect(html).toContain("Quick Filters:");
-    expect(html).toContain("West Indies Tour of India 2026");
-    expect(html).toContain("India vs West Indies");
+    expect(html).toContain("West Indies Tour of India");
+    expect(html).toContain("Australia Tour of South Africa");
+    expect(html).toContain("WPL 2026");
   });
 
-  it("includes specific Google match link for West Indies Tour of India 2026 2nd T20I", () => {
+  it("ensures other sports and external Google search redirects are removed from live page", () => {
     const html = renderToString(<LiveScoresPage />);
-    const specificUrl =
-      "https://www.google.com/search?num=10&amp;sca_esv=afb89ae158309890&amp;sxsrf=APpeQnv7S_hYa8j3xghYQ4nz5MsSmeFQOQ:1791525759353&amp;q=Live+Cricket+match+today&amp;sa=X&amp;sqi=2&amp;ved=2ahUKEwivt_fDoayXAxX6zDgGHQu0G64Q1QJ6BAgxEAE&amp;biw=1280&amp;bih=631&amp;dpr=1.5#sie=m;/g/11z3y_p23j;5;/m/021q23;dt;fp;1;;;;-1";
-    // Check either decoded or HTML encoded ampersands
-    const hasSpecificUrl =
-      html.includes("11z3y_p23j") &&
-      html.includes("West Indies Tour of India 2026") &&
-      html.includes("2nd T20I · Starts 7:00 PM IST");
-    expect(hasSpecificUrl).toBe(true);
+    expect(html).not.toContain("Mumbai City FC");
+    expect(html).not.toContain("Mohun Bagan SG");
+    expect(html).not.toContain("Lakshya Sen");
+    expect(html).not.toContain("Viktor Axelsen");
+    expect(html).not.toContain("Dabang Delhi KC");
+    expect(html).not.toContain("Carlos Alcaraz");
+    expect(html).not.toContain("Live+ISL+score");
+    expect(html).not.toContain("Live+Badminton+score");
+    expect(html).not.toContain("Live+PKL+score");
   });
 });
