@@ -88,7 +88,8 @@ export const TRIALS: Trial[] = [
       {
         label: "Last Date for General Entry",
         date: "20th November 2026",
-        description: "Official institutional registration deadline set by host Rashtriya Raksha University (RRU)",
+        description:
+          "Official institutional registration deadline set by host Rashtriya Raksha University (RRU)",
       },
       {
         label: "Last Date for Detailed Entry",

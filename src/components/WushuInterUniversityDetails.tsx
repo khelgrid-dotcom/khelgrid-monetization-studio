@@ -132,10 +132,12 @@ export function WushuInterUniversityDetails() {
         </h2>
         <p className="text-sm leading-relaxed text-muted-foreground sm:text-base">
           Selection trials for the All India Inter-University Wushu Championship 2026–27 are{" "}
-          <strong className="text-foreground">handled independently by each individual university</strong>.
-          Because <strong className="text-foreground">Rashtriya Raksha University (RRU)</strong> is the national host,
-          they set the institutional entry deadlines, but your specific university will determine its own local trial
-          dates to select the team representing them.
+          <strong className="text-foreground">
+            handled independently by each individual university
+          </strong>
+          . Because <strong className="text-foreground">Rashtriya Raksha University (RRU)</strong>{" "}
+          is the national host, they set the institutional entry deadlines, but your specific
+          university will determine its own local trial dates to select the team representing them.
         </p>
       </div>
 
@@ -146,7 +148,8 @@ export function WushuInterUniversityDetails() {
           <h3 className="text-lg font-bold text-foreground">Crucial Timelines</h3>
         </div>
         <p className="text-xs text-muted-foreground">
-          If you want to clear your local university trials and be registered for the national stage, you must coordinate with your sports department well before these host deadlines:
+          If you want to clear your local university trials and be registered for the national
+          stage, you must coordinate with your sports department well before these host deadlines:
         </p>
 
         <div className="grid gap-3 sm:grid-cols-3">
@@ -204,9 +207,13 @@ export function WushuInterUniversityDetails() {
               </h4>
               <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
                 Local selection trials for Inter-University events are typically conducted{" "}
-                <strong className="text-foreground">4 to 6 weeks before the general entry deadline</strong> (usually mid-October to early November). Visit your university&apos;s{" "}
+                <strong className="text-foreground">
+                  4 to 6 weeks before the general entry deadline
+                </strong>{" "}
+                (usually mid-October to early November). Visit your university&apos;s{" "}
                 <strong className="text-foreground">Directorate of Physical Education</strong> or{" "}
-                <strong className="text-foreground">Sports Board office</strong> immediately to look for the official selection notification.
+                <strong className="text-foreground">Sports Board office</strong> immediately to look
+                for the official selection notification.
               </p>
             </div>
           </div>
@@ -217,10 +224,14 @@ export function WushuInterUniversityDetails() {
               2
             </div>
             <div className="space-y-1">
-              <h4 className="text-sm font-bold text-foreground">Weight Categories &amp; Disciplines</h4>
+              <h4 className="text-sm font-bold text-foreground">
+                Weight Categories &amp; Disciplines
+              </h4>
               <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                Trials are split into <strong className="text-foreground">Sanda</strong> (sanshou / combat sparring) and{" "}
-                <strong className="text-foreground">Taolu</strong> (routines / forms) for both Men and Women. Ensure you are practicing and measuring within your target weight bracket. Official weigh-in is conducted strictly prior to trial bouts.
+                Trials are split into <strong className="text-foreground">Sanda</strong> (sanshou /
+                combat sparring) and <strong className="text-foreground">Taolu</strong> (routines /
+                forms) for both Men and Women. Ensure you are practicing and measuring within your
+                target weight bracket. Official weigh-in is conducted strictly prior to trial bouts.
               </p>
             </div>
           </div>
@@ -233,13 +244,15 @@ export function WushuInterUniversityDetails() {
             <div className="space-y-2">
               <h4 className="text-sm font-bold text-foreground">Mandatory Documentation</h4>
               <p className="text-xs text-muted-foreground">
-                If selected during the trials, you will need to provide your university sports board with:
+                If selected during the trials, you will need to provide your university sports board
+                with:
               </p>
               <ul className="space-y-2 text-xs sm:text-sm text-muted-foreground">
                 <li className="flex items-start gap-2">
                   <CheckCircle className="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" />
                   <span>
-                    <strong className="text-foreground">Unique AIU ID</strong> (generated via the official{" "}
+                    <strong className="text-foreground">Unique AIU ID</strong> (generated via the
+                    official{" "}
                     <a
                       href="https://aiu.ac.in/"
                       target="_blank"
@@ -254,13 +267,17 @@ export function WushuInterUniversityDetails() {
                 <li className="flex items-start gap-2">
                   <CheckCircle className="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" />
                   <span>
-                    <strong className="text-foreground">Current college/university ID card</strong> and official fee receipts.
+                    <strong className="text-foreground">Current college/university ID card</strong>{" "}
+                    and official fee receipts.
                   </span>
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle className="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" />
                   <span>
-                    <strong className="text-foreground">Class 10th and 12th passing certificates</strong> (for age and eligibility verification under AIU rules).
+                    <strong className="text-foreground">
+                      Class 10th and 12th passing certificates
+                    </strong>{" "}
+                    (for age and eligibility verification under AIU rules).
                   </span>
                 </li>
               </ul>
@@ -276,7 +293,8 @@ export function WushuInterUniversityDetails() {
           <h3 className="text-lg font-bold text-foreground">National Organizing Secretariat</h3>
         </div>
         <p className="text-xs text-muted-foreground leading-relaxed">
-          If your university&apos;s sports board requires clarification regarding the entry processes, they can reach out directly to the national organizers at RRU:
+          If your university&apos;s sports board requires clarification regarding the entry
+          processes, they can reach out directly to the national organizers at RRU:
         </p>
 
         <div className="grid gap-3 sm:grid-cols-2">
@@ -311,7 +329,9 @@ export function WushuInterUniversityDetails() {
             </span>
             <p className="font-bold text-foreground text-base">Mr. Kalpesh Sharma</p>
             <div className="space-y-1 text-xs text-muted-foreground">
-              <div className="text-muted-foreground">Host Event Logistics &amp; Scheduling Desk</div>
+              <div className="text-muted-foreground">
+                Host Event Logistics &amp; Scheduling Desk
+              </div>
               <a
                 href="tel:+919898230979"
                 className="flex items-center gap-1.5 text-foreground hover:text-primary font-medium"
@@ -328,10 +348,14 @@ export function WushuInterUniversityDetails() {
       <div className="space-y-4 rounded-xl border border-border bg-card/60 p-5">
         <div className="flex items-center gap-2">
           <GraduationCap className="h-5 w-5 text-primary" />
-          <h3 className="text-lg font-bold text-foreground">Find Your University&apos;s Sports Department</h3>
+          <h3 className="text-lg font-bold text-foreground">
+            Find Your University&apos;s Sports Department
+          </h3>
         </div>
         <p className="text-xs sm:text-sm text-muted-foreground">
-          Which university in Gujarat (or India) are you currently enrolled in? Search or select your university below to check typical sports department channels and how to look for their selection trial datesheet:
+          Which university in Gujarat (or India) are you currently enrolled in? Search or select
+          your university below to check typical sports department channels and how to look for
+          their selection trial datesheet:
         </p>
 
         <div className="relative">
@@ -373,7 +397,8 @@ export function WushuInterUniversityDetails() {
               <strong className="text-foreground">Sports Office:</strong> {selectedUni.sportsOffice}
             </p>
             <p className="text-muted-foreground">
-              <strong className="text-foreground">Trial Window:</strong> {selectedUni.expectedTrialWindow}
+              <strong className="text-foreground">Trial Window:</strong>{" "}
+              {selectedUni.expectedTrialWindow}
             </p>
             <p className="text-muted-foreground">
               <strong className="text-foreground">Guidance:</strong> {selectedUni.notes}
@@ -384,7 +409,9 @@ export function WushuInterUniversityDetails() {
         <div className="rounded-lg bg-secondary/30 p-3 text-xs text-muted-foreground flex items-start gap-2">
           <Info className="h-4 w-4 shrink-0 text-primary mt-0.5" />
           <span>
-            Don&apos;t see your university listed? Contact your college&apos;s Director of Physical Education (DPE) or Dean of Student Welfare (DSW). Every university affiliated with AIU sends circulars to affiliated colleges 4–6 weeks before the Nov 20 deadline.
+            Don&apos;t see your university listed? Contact your college&apos;s Director of Physical
+            Education (DPE) or Dean of Student Welfare (DSW). Every university affiliated with AIU
+            sends circulars to affiliated colleges 4–6 weeks before the Nov 20 deadline.
           </span>
         </div>
       </div>

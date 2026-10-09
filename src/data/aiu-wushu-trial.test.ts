@@ -18,18 +18,39 @@ describe("All India Inter-University Wushu Championship 2026–27 Selection Tria
 
     // Timelines
     expect(trial.timelines).toBeDefined();
-    expect(trial.timelines?.some((t) => t.label.includes("General Entry") && t.date.includes("20th November 2026"))).toBe(true);
-    expect(trial.timelines?.some((t) => t.label.includes("Detailed Entry") && t.date.includes("5th December 2026"))).toBe(true);
-    expect(trial.timelines?.some((t) => t.label.includes("Main Championship") && t.date.includes("25th – 30th December 2026"))).toBe(true);
+    expect(
+      trial.timelines?.some(
+        (t) => t.label.includes("General Entry") && t.date.includes("20th November 2026"),
+      ),
+    ).toBe(true);
+    expect(
+      trial.timelines?.some(
+        (t) => t.label.includes("Detailed Entry") && t.date.includes("5th December 2026"),
+      ),
+    ).toBe(true);
+    expect(
+      trial.timelines?.some(
+        (t) =>
+          t.label.includes("Main Championship") && t.date.includes("25th – 30th December 2026"),
+      ),
+    ).toBe(true);
 
     // Disciplines
     expect(trial.gender).toContain("Sanda");
     expect(trial.gender).toContain("Taolu");
 
     // Mandatory documentation
-    expect(trial.requiredDocuments?.some((doc) => doc.includes("AIU ID") && doc.includes("aiu.ac.in"))).toBe(true);
-    expect(trial.requiredDocuments?.some((doc) => doc.includes("college/university identity card") || doc.includes("fee receipts"))).toBe(true);
-    expect(trial.requiredDocuments?.some((doc) => doc.includes("10th and 12th passing certificates"))).toBe(true);
+    expect(
+      trial.requiredDocuments?.some((doc) => doc.includes("AIU ID") && doc.includes("aiu.ac.in")),
+    ).toBe(true);
+    expect(
+      trial.requiredDocuments?.some(
+        (doc) => doc.includes("college/university identity card") || doc.includes("fee receipts"),
+      ),
+    ).toBe(true);
+    expect(
+      trial.requiredDocuments?.some((doc) => doc.includes("10th and 12th passing certificates")),
+    ).toBe(true);
 
     // National Organizing Secretariat
     expect(trial.organizerContacts).toBeDefined();
@@ -44,9 +65,19 @@ describe("All India Inter-University Wushu Championship 2026–27 Selection Tria
 
     // Verified Source URLs [1], [2], [3]
     expect(trial.sources).toBeDefined();
-    expect(trial.sources?.some((s) => s.url.includes("scribd.com/document/1042960239/AIIU-Wushu-Selection-Trials"))).toBe(true);
+    expect(
+      trial.sources?.some((s) =>
+        s.url.includes("scribd.com/document/1042960239/AIIU-Wushu-Selection-Trials"),
+      ),
+    ).toBe(true);
     expect(trial.sources?.some((s) => s.url.includes("instagram.com/p/DeOpkCNPoaz/"))).toBe(true);
-    expect(trial.sources?.some((s) => s.url.includes("aiu.ac.in/wp-content/uploads/docs/2026/09/AIU-Sports-Calendar-2026-27-Final_compressed.pdf"))).toBe(true);
+    expect(
+      trial.sources?.some((s) =>
+        s.url.includes(
+          "aiu.ac.in/wp-content/uploads/docs/2026/09/AIU-Sports-Calendar-2026-27-Final_compressed.pdf",
+        ),
+      ),
+    ).toBe(true);
   });
 
   it("should have Wushu in SPORTS and Gandhinagar in CITIES", () => {

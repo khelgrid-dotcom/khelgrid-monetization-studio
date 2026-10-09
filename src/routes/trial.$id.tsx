@@ -83,10 +83,10 @@ function TrialDetailPage() {
   const startDateIso = trial.date.includes("Dec 25")
     ? "2026-12-25T08:00:00+05:30"
     : trial.date.includes("Oct 10")
-    ? "2026-10-10T08:00:00+05:30"
-    : trial.date.includes("Sep 30")
-    ? "2026-09-30T08:00:00+05:30"
-    : "2026-09-23T09:00:00+05:30";
+      ? "2026-10-10T08:00:00+05:30"
+      : trial.date.includes("Sep 30")
+        ? "2026-09-30T08:00:00+05:30"
+        : "2026-09-23T09:00:00+05:30";
 
   const sportsEventSchema = {
     "@context": "https://schema.org",

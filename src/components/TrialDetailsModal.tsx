@@ -538,7 +538,10 @@ export function TrialDetailsModal({
             </h4>
             <div className="grid gap-2 sm:grid-cols-2">
               {(trial as Trial).timelines!.map((tl) => (
-                <div key={tl.label} className="rounded-lg border border-border bg-card/60 p-3 space-y-1">
+                <div
+                  key={tl.label}
+                  className="rounded-lg border border-border bg-card/60 p-3 space-y-1"
+                >
                   <span className="text-[11px] font-medium text-muted-foreground">{tl.label}</span>
                   <p className="text-xs font-bold text-foreground">{tl.date}</p>
                   {tl.description && (
