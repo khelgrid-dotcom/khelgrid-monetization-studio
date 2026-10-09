@@ -25,6 +25,39 @@ export interface Trial {
 
 export const TRIALS: Trial[] = [
   {
+    id: "t-delhi-pickleball-selection-trials-2026",
+    title: "Delhi State Selection Trials (PWR 400 Pickleball)",
+    academy: "Indian Pickleball Association (IPA) & Delhi State Pickleball Association",
+    sport: "Pickleball",
+    city: "Delhi",
+    date: "Oct 10 - Oct 11, 2026",
+    registrationDeadline: "Oct 10, 2026",
+    fee: 0,
+    spots: 64,
+    tag: "Official State Trial",
+    ageCategory: "Open & Age-Group Divisions (PWR System)",
+    gender: "Men & Women (Singles, Doubles, Mixed Doubles)",
+    verifiedLabel: "Indian Pickleball Association (IPA) Sanctioned",
+    urgencyText: "PWR 400 Tier Event · State Ranking & Team Selection",
+    badge: "New",
+    sourceUrl:
+      "https://www.timesnownews.com/sports/pickleball/delhi-state-selection-trials-to-bring-top-pickleball-talent-together-article-156289906",
+    sourceLabel: "Times Now Sports Official Article (Oct 2026)",
+    lastVerified: "Oct 09, 2026",
+    venue: "The Blue Court, New Delhi",
+    eligibility:
+      "Pickleball players and aspirants residing or training in Delhi-NCR across Open, Under-19, and Masters divisions. Players compete in singles, doubles, and mixed doubles categories under Indian Pickleball Association (IPA) tournament guidelines.",
+    requiredDocuments: [
+      "Government-issued Date of Birth / Address Proof (Aadhaar / Voter ID / Passport)",
+      "Proof of Delhi-NCR residency, school, academy or club affiliation",
+      "Indian Pickleball Association (IPA) player ID or registration confirmation",
+      "Medical fitness certificate signed by a registered practitioner",
+      "USAPA / IPA standard pickleball paddle and non-marking court shoes",
+    ],
+    selectionProcess:
+      "Two-day high-intensity PWR 400 selection trials held on October 10-11 at The Blue Court, New Delhi. Competition features round-robin group play followed by knockout rounds evaluating paddle control, consistency, shot execution, unforced error rate, and match temperament under IPA official selectors to finalize the Delhi state squad and national rankings.",
+  },
+  {
     id: "t-fit-india-namchi-sikkim-2026",
     title: "Fit India School Games District Selection Trials (Namchi, Sikkim)",
     academy: "Sports & Youth Affairs Department, Government of Sikkim",
@@ -407,5 +440,6 @@ export const SPORTS = [
   "Hockey",
   "Tennis",
   "Wrestling",
+  "Pickleball",
 ] as const;
 export const CITIES = ["Delhi", "Mumbai", "Bengaluru", "Hyderabad", "Chandigarh", "Pune"] as const;

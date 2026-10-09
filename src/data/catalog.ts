@@ -248,6 +248,19 @@ export const SPORTS_CATALOG: Sport[] = [
       "Player safety and fair-play guidance",
     ],
   },
+  {
+    slug: "pickleball",
+    name: "Pickleball",
+    tagline: "PWR state selection, ranking tournaments & national squad pathways",
+    level: "Elite",
+    ageBand: "Open & Age-Group",
+    emoji: "🏓",
+    highlights: [
+      "Indian Pickleball Association (IPA) sanctioned events",
+      "PWR 400 state selection trials and ranking points",
+      "Singles, doubles, and mixed doubles competitive brackets",
+    ],
+  },
 ];
 
 export const CITIES_CATALOG: City[] = [

@@ -191,6 +191,14 @@ export const TRIAL_IMAGES: Record<string, string> = {
     sportLabel: "Kabaddi NYP Combine",
     subLabel: "Pro Combine",
   }),
+  Pickleball: createSportSvg({
+    themeColor1: "#0284c7", // Sky blue / The Blue Court
+    themeColor2: "#0f172a", // Deep slate
+    sportIcon: "🏓",
+    fieldPattern: "court",
+    sportLabel: "Pickleball State Selection",
+    subLabel: "PWR 400 Delhi",
+  }),
 };
 
 export function getTrialCardImage(sport: string): string {

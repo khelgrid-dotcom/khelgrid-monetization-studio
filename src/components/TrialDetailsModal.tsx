@@ -106,6 +106,18 @@ export function getOrganizerContact(trial: Partial<Trial | TrialDiscoveryItem>):
     };
   }
 
+  if (academy.includes("Pickleball") || academy.includes("Indian Pickleball Association")) {
+    return {
+      name: "Indian Pickleball Association (IPA) Selection Cell",
+      role: "PWR Tournament Director & State Selection Desk",
+      email: "delhi.trials@ipaofficial.com",
+      phone: "+91 11 4152 3890",
+      helpline: "1800-IPA-DELHI",
+      address: trial.venue || "The Blue Court, New Delhi",
+      website: trial.sourceUrl,
+    };
+  }
+
   return {
     name: `${academy} Secretariat`,
     role: "Official Trials Coordinator",

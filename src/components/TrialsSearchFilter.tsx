@@ -106,7 +106,7 @@ export const SPORT_TYPES: SportTypeDefinition[] = [
   {
     id: "racquet",
     name: "Racquet & Net Sports",
-    sports: ["Badminton", "Tennis", "Table Tennis", "Squash"],
+    sports: ["Badminton", "Tennis", "Table Tennis", "Squash", "Pickleball"],
     icon: "🏸",
   },
   {

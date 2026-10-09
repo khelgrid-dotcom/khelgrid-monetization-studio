@@ -91,6 +91,7 @@ const SPORT_ICONS: Record<string, string> = {
   Archery: "🏹",
   Boxing: "🥊",
   Wrestling: "🤼",
+  Pickleball: "🏓",
 };
 
 const POPULAR_SEARCHES = [
