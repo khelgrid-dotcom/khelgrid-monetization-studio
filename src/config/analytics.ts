@@ -15,22 +15,19 @@ const GA_ID_RE = /^(G|GT|AW|DC|UA)-[A-Z0-9-]+$/i;
 export const analyticsConfig = {
   /** GA4 measurement ID. */
   measurementId:
-    ((import.meta.env["VITE_GA_MEASUREMENT_ID"] as string | undefined) ?? "").trim() ||
-    DEFAULT_GA_ID,
+    ((import.meta.env["VITE_GA_MEASUREMENT_ID"] as string | undefined) ?? "").trim() || DEFAULT_GA_ID,
   /** Google tag ID (loaded alongside the GA4 ID). */
   googleTagId:
-    ((import.meta.env["VITE_GOOGLE_TAG_ID"] as string | undefined) ?? "").trim() ||
-    DEFAULT_GOOGLE_TAG_ID,
+    ((import.meta.env["VITE_GOOGLE_TAG_ID"] as string | undefined) ?? "").trim() || DEFAULT_GOOGLE_TAG_ID,
   /** Don't send hits from the dev preview. */
   enabled: !import.meta.env.DEV,
 } as const;
 
-/** Every tag ID that should be configured on load, deduplicated. */
+/** Every tag ID that should be configured on load. */
 export function googleTagIds(): string[] {
-  const ids = [analyticsConfig.measurementId, analyticsConfig.googleTagId]
-    .map((id) => (id || "").trim())
-    .filter((id) => id && GA_ID_RE.test(id));
-  return Array.from(new Set(ids));
+  return [analyticsConfig.measurementId, analyticsConfig.googleTagId].filter(
+    (id) => id && GA_ID_RE.test(id),
+  );
 }
 
 export function hasValidGoogleTag(): boolean {

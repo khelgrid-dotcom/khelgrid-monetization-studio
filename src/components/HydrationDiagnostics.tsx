@@ -25,11 +25,7 @@ export function HydrationDiagnostics() {
     for (const d of found) {
       console.error(`[hydration-diagnostics] ${d.title}: ${d.detail}`);
     }
-    setDiagnostics((prev) => {
-      const existing = new Set(prev.map((p) => p.title + p.detail));
-      const toAdd = found.filter((f) => !existing.has(f.title + f.detail));
-      return toAdd.length > 0 ? [...prev, ...toAdd] : prev;
-    });
+    setDiagnostics((prev) => [...prev, ...found]);
   }, [router]);
 
   // 2. Intercept console.error to catch React hydration mismatches.

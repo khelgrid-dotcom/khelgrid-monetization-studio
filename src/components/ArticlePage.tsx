@@ -11,6 +11,7 @@ import { ArrowRight, CalendarDays, Clock, ListTree } from "lucide-react";
 import { InArticleAd } from "@/components/ads";
 import type { Block, ContentPage } from "@/content/types";
 
+
 function slugify(s: string) {
   return s
     .toLowerCase()
@@ -95,6 +96,7 @@ export function ArticlePage({ page, ads = true }: { page: ContentPage; ads?: boo
   const totalBlocks = page.sections.reduce((n, s) => n + s.blocks.length, 0);
   const showAds = ads && sections.length >= 3 && totalBlocks >= 8;
 
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
@@ -123,10 +125,7 @@ export function ArticlePage({ page, ads = true }: { page: ContentPage; ads?: boo
 
   return (
     <main className="mx-auto max-w-3xl px-4 py-10 sm:py-14">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       <Badge variant="outline" className="border-primary/40 bg-primary/5 text-primary">
         {page.eyebrow}
@@ -191,6 +190,7 @@ export function ArticlePage({ page, ads = true }: { page: ContentPage; ads?: boo
         </div>
       ))}
 
+
       {page.faqs.length > 0 && (
         <section className="mt-12">
           <h2 className="font-heading text-xl font-semibold sm:text-2xl">
@@ -212,11 +212,8 @@ export function ArticlePage({ page, ads = true }: { page: ContentPage; ads?: boo
       {showAds && <InArticleAd adSlot="inArticleEnd" className="mt-12" />}
 
       <div className="mt-12 flex flex-wrap gap-3">
-        <Button
-          asChild
-          size="lg"
-          className="bg-gradient-hero text-primary-foreground hover:opacity-95"
-        >
+
+        <Button asChild size="lg" className="bg-gradient-hero text-primary-foreground hover:opacity-95">
           <Link to={page.cta?.to ?? "/search"}>
             {page.cta?.label ?? "Find a trial near you"} <ArrowRight className="ml-1 h-4 w-4" />
           </Link>

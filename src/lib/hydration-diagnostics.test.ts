@@ -18,8 +18,6 @@ describe("inspectRouterStores", () => {
 
   it("passes a healthy router", () => {
     expect(inspectRouterStores({ stores: { matchesId: {}, location: {} } })).toEqual([]);
-    expect(inspectRouterStores({ stores: { ids: {}, location: {} } })).toEqual([]);
-    expect(inspectRouterStores({ stores: { matches: {}, location: {} } })).toEqual([]);
   });
 });
 

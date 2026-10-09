@@ -1,7 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { PRIMARY_ITEMS, FEATURE_ITEMS } from "@/config/nav";
 import { Facebook, Twitter, Instagram, Linkedin, Mail, MapPin, Phone } from "lucide-react";
-import { TrialNewsletterSignup } from "@/components/TrialNewsletterSignup";
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -9,24 +8,12 @@ export function Footer() {
   return (
     <footer className="border-t border-border/60 bg-background/95 backdrop-blur-xl">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        {/* Newsletter Signup for Automatic Trial Notifications */}
-        <div className="mb-12">
-          <TrialNewsletterSignup
-            title="Get Automatic Notifications Whenever a Sports Trial is Posted"
-            subtitle="Subscribe to free email alerts tailored to your sport and state. Be the first to apply to official trials, academy scoutings, and SAI selection camps."
-          />
-        </div>
-
         {/* Main Footer Content */}
         <div className="grid grid-cols-1 md:grid-cols-5 gap-8 mb-8">
           {/* Brand Section */}
           <div className="space-y-4">
             <div className="flex items-center gap-2">
-              <img
-                src="https://cdn.builder.io/api/v1/image/assets%2Fbb0e1ceb11294a31a719df6ba93a7331%2Fc8513d4ae3bd4939b4defe6841f88dd7?format=webp&width=800&height=1200"
-                alt="KhelGrid"
-                className="h-8 w-8"
-              />
+              <img src="https://cdn.builder.io/api/v1/image/assets%2Fbb0e1ceb11294a31a719df6ba93a7331%2Fc8513d4ae3bd4939b4defe6841f88dd7?format=webp&width=800&height=1200" alt="KhelGrid" className="h-8 w-8" />
               <span className="text-lg font-bold">
                 Khel<span className="text-primary">Grid</span>
               </span>
@@ -108,77 +95,40 @@ export function Footer() {
               <ul className="space-y-3">
                 <li className="flex gap-2 text-sm">
                   <Mail className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
-                  <a
-                    href="mailto:support@khelgrid.com"
-                    className="text-muted-foreground hover:text-primary transition"
-                  >
+                  <a href="mailto:support@khelgrid.com" className="text-muted-foreground hover:text-primary transition">
                     support@khelgrid.com
                   </a>
                 </li>
                 <li className="flex gap-2 text-sm">
                   <Phone className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
-                  <a
-                    href="tel:+919876543210"
-                    className="text-muted-foreground hover:text-primary transition"
-                  >
+                  <a href="tel:+919876543210" className="text-muted-foreground hover:text-primary transition">
                     +91 98765 43210
                   </a>
                 </li>
                 <li className="flex gap-2 text-sm">
                   <MapPin className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
-                  <span className="text-muted-foreground">Mumbai, India</span>
+                  <span className="text-muted-foreground">
+                    Mumbai, India
+                  </span>
                 </li>
               </ul>
             </div>
 
             <div>
-              <h4 className="font-semibold text-foreground mb-4">Legal & Trust</h4>
+              <h4 className="font-semibold text-foreground mb-4">Legal</h4>
               <ul className="space-y-2">
                 <li>
-                  <Link
-                    to="/privacy"
-                    className="text-sm text-muted-foreground hover:text-primary transition"
-                  >
+                  <Link to="/privacy" className="text-sm text-muted-foreground hover:text-primary transition">
                     Privacy Policy
                   </Link>
                 </li>
                 <li>
-                  <Link
-                    to="/terms"
-                    className="text-sm text-muted-foreground hover:text-primary transition"
-                  >
+                  <Link to="/terms" className="text-sm text-muted-foreground hover:text-primary transition">
                     Terms of Service
                   </Link>
                 </li>
                 <li>
-                  <Link
-                    to="/cancellation-policy"
-                    className="text-sm text-muted-foreground hover:text-primary transition"
-                  >
-                    Cancellation Policy
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/posh-policy"
-                    className="text-sm text-muted-foreground hover:text-primary transition"
-                  >
-                    POSH Policy
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/trust-center"
-                    className="text-sm text-muted-foreground hover:text-primary transition"
-                  >
-                    Trust Center
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/settings"
-                    className="text-sm text-muted-foreground hover:text-primary transition"
-                  >
+                  <Link to="/settings" className="text-sm text-muted-foreground hover:text-primary transition">
                     Settings
                   </Link>
                 </li>
@@ -193,21 +143,12 @@ export function Footer() {
         {/* Bottom Footer */}
         <div className="flex flex-col sm:flex-row justify-between items-center text-sm text-muted-foreground">
           <p>© {currentYear} KhelGrid. All rights reserved.</p>
-          <div className="flex flex-wrap gap-x-6 gap-y-2 mt-4 sm:mt-0">
+          <div className="flex gap-6 mt-4 sm:mt-0">
             <Link to="/privacy" className="hover:text-primary transition">
               Privacy
             </Link>
             <Link to="/terms" className="hover:text-primary transition">
               Terms
-            </Link>
-            <Link to="/ipr-policy" className="hover:text-primary transition">
-              IPR & Copyright
-            </Link>
-            <Link to="/cancellation-policy" className="hover:text-primary transition">
-              Cancellation
-            </Link>
-            <Link to="/posh-policy" className="hover:text-primary transition">
-              POSH Policy
             </Link>
             <Link to="/settings" className="hover:text-primary transition">
               Settings

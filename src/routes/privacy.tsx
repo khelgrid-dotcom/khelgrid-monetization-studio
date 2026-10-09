@@ -1,17 +1,28 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { ShieldCheck } from "lucide-react";
 import { CookieSettingsButton } from "@/components/ads";
-import { buildSeoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/privacy")({
-  head: () =>
-    buildSeoHead({
-      title: "Privacy Policy, Cookies & Data Protection · KhelGrid",
-      description:
-        "How KhelGrid collects, uses, and safeguards athlete data, parent consent, cookies, analytics, and Google AdSense privacy choices.",
-      canonicalPath: "/privacy",
-      type: "website",
-    }),
+  head: () => ({
+    meta: [
+      { title: "Privacy Policy · KhelGrid" },
+      {
+        name: "description",
+        content:
+          "How KhelGrid collects, uses and protects athlete data, including cookies, Google Analytics and Google AdSense advertising.",
+      },
+      { property: "og:title", content: "Privacy Policy · KhelGrid" },
+      {
+        property: "og:description",
+        content:
+          "Our full privacy policy: data we collect, cookies, third-party advertising partners and your choices.",
+      },
+      { property: "og:type", content: "article" },
+      { property: "og:url", content: "/privacy" },
+      { name: "twitter:card", content: "summary" },
+    ],
+    links: [{ rel: "canonical", href: "/privacy" }],
+  }),
   component: PrivacyPage,
 });
 
@@ -19,7 +30,7 @@ const SECTIONS: Array<{ heading: string; body: string[] }> = [
   {
     heading: "1. Who we are",
     body: [
-      'KhelGrid ("we", "us") operates khelgrid.com, an India-focused platform for discovering sports opportunities, venues, coaching resources and athlete guidance. KhelGrid is currently delivered as a beta product, so some features use browser storage or demonstration data rather than a live account database. For privacy questions, contact privacy@khelgrid.com.',
+      "KhelGrid (\"we\", \"us\") operates khelgrid.com, an India-focused platform for discovering sports opportunities, venues, coaching resources and athlete guidance. KhelGrid is currently delivered as a beta product, so some features use browser storage or demonstration data rather than a live account database. For privacy questions, contact privacy@khelgrid.com.",
     ],
   },
   {
@@ -111,15 +122,13 @@ function PrivacyPage() {
     <main className="mx-auto max-w-3xl px-4 py-10 md:px-6 md:py-14">
       <div className="flex items-center gap-3">
         <ShieldCheck className="h-6 w-6 text-primary" aria-hidden="true" />
-        <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-          Legal
-        </p>
+        <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Legal</p>
       </div>
       <h1 className="mt-3 font-heading text-3xl font-extrabold md:text-4xl">Privacy Policy</h1>
       <p className="mt-2 text-sm text-muted-foreground">Last updated: 5 August 2026</p>
       <p className="mt-6 text-sm leading-relaxed text-muted-foreground">
-        This policy explains what data KhelGrid collects, why we collect it, and the control you
-        have over it — including the cookies used by our advertising and analytics partners.
+        This policy explains what data KhelGrid collects, why we collect it, and the control you have over
+        it — including the cookies used by our advertising and analytics partners.
       </p>
 
       <div className="mt-10 space-y-8">

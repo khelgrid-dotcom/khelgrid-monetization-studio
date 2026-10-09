@@ -34,17 +34,9 @@ const STATIC_PATHS = [
   "/mobile-app",
   "/about",
   "/contact",
-  "/careers",
-  "/partner",
-  "/trust-center",
   "/editorial-policy",
-  "/verification-policy",
-  "/correction-policy",
-  "/cancellation-policy",
-  "/posh-policy",
   "/privacy",
   "/terms",
-  "/chronicle",
   "/blog",
 ];
 
@@ -63,7 +55,8 @@ export const Route = createFileRoute("/sitemap.xml")({
           ...TRIALS.map((trial) => `/trial/${trial.id}`),
         ];
         const urls = [...new Set(paths)].map(
-          (path) => `  <url><loc>${BASE_URL}${path}</loc><changefreq>weekly</changefreq></url>`,
+          (path) =>
+            `  <url><loc>${BASE_URL}${path}</loc><changefreq>weekly</changefreq></url>`,
         );
         const xml = [
           `<?xml version="1.0" encoding="UTF-8"?>`,

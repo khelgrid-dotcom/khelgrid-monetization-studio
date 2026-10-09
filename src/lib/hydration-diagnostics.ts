@@ -51,22 +51,9 @@ export function inspectRouterStores(router: RouterLike | null | undefined): Diag
     ];
   }
 
-  const storesRecord = stores as Record<string, unknown>;
-  const missing: string[] = [];
-
-  // Match store: modern router-core uses 'ids' (and derived 'matches'); legacy uses 'matchesId'
-  const hasMatchStore =
-    storesRecord.ids !== undefined ||
-    storesRecord.matches !== undefined ||
-    storesRecord.matchesId !== undefined;
-
-  if (!hasMatchStore) {
-    missing.push("matchesId");
-  }
-
-  if (storesRecord.location === undefined) {
-    missing.push("location");
-  }
+  const missing = REQUIRED_ROUTER_STORE_KEYS.filter(
+    (key) => (stores as Record<string, unknown>)[key] === undefined,
+  );
 
   if (missing.length > 0) {
     return [

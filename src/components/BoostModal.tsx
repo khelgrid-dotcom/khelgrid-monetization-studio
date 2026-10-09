@@ -1,11 +1,5 @@
 import { useState } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
 import { Flame, Wallet, QrCode } from "lucide-react";
@@ -26,10 +20,7 @@ export function BoostModal({ open, onOpenChange, trialId, trialTitle }: Props) {
   const handlePay = () => {
     if (method === "wallet") {
       const ok = boostTrial(trialId, "wallet");
-      if (!ok) {
-        toast.error("Insufficient wallet balance.");
-        return;
-      }
+      if (!ok) { toast.error("Insufficient wallet balance."); return; }
       toast.success("🔥 Listing boosted · pinned to top");
       onOpenChange(false);
       return;
@@ -51,8 +42,7 @@ export function BoostModal({ open, onOpenChange, trialId, trialTitle }: Props) {
             <Flame className="h-5 w-5 text-primary" /> Boost this listing
           </DialogTitle>
           <DialogDescription>
-            Pin <span className="text-foreground font-medium">{trialTitle}</span> to the top of
-            search results with a glowing Featured badge for 7 days.
+            Pin <span className="text-foreground font-medium">{trialTitle}</span> to the top of search results with a glowing Featured badge for 7 days.
           </DialogDescription>
         </DialogHeader>
 
@@ -61,11 +51,8 @@ export function BoostModal({ open, onOpenChange, trialId, trialTitle }: Props) {
             { icon: Flame, label: "Featured row" },
             { icon: Flame, label: "7-day placement" },
             { icon: Flame, label: "Organizer control" },
-          ].map((s) => (
-            <div
-              key={s.label}
-              className="rounded-xl border border-border bg-background/40 p-3 text-center"
-            >
+          ].map(s => (
+            <div key={s.label} className="rounded-xl border border-border bg-background/40 p-3 text-center">
               <s.icon className="mx-auto h-4 w-4 text-primary" />
               <div className="mt-1 text-xs text-muted-foreground">{s.label}</div>
             </div>
@@ -94,17 +81,8 @@ export function BoostModal({ open, onOpenChange, trialId, trialTitle }: Props) {
           </button>
         </div>
 
-        <Button
-          onClick={handlePay}
-          className="w-full"
-          size="lg"
-          disabled={processing || (method === "wallet" && wallet < 1500)}
-        >
-          {processing
-            ? "Confirming UPI…"
-            : method === "wallet" && wallet < 1500
-              ? "Insufficient balance"
-              : "Boost for ₹1,500"}
+        <Button onClick={handlePay} className="w-full" size="lg" disabled={processing || (method === "wallet" && wallet < 1500)}>
+          {processing ? "Confirming UPI…" : method === "wallet" && wallet < 1500 ? "Insufficient balance" : "Boost for ₹1,500"}
         </Button>
       </DialogContent>
     </Dialog>
