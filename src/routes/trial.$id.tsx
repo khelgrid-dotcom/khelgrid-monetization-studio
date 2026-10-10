@@ -8,6 +8,8 @@ import { getRealtimeOpportunityBadge } from "@/lib/opportunity-badge";
 import { buildSeoHead, SITE_URL, DEFAULT_SITE_NAME, TWITTER_HANDLE } from "@/lib/seo";
 import { FitIndiaFAQ, FIT_INDIA_FAQS } from "@/components/FitIndiaFAQ";
 import { WushuInterUniversityDetails } from "@/components/WushuInterUniversityDetails";
+import { KcaKanpurCricketDetails } from "@/components/KcaKanpurCricketDetails";
+import { GreenParkBasketballDetails } from "@/components/GreenParkBasketballDetails";
 import { TrialSocialShare } from "@/components/TrialSocialShare";
 import { TrialNewsletterSignup } from "@/components/TrialNewsletterSignup";
 
@@ -395,6 +397,25 @@ function TrialDetailPage() {
         trial.title.toLowerCase().includes("wushu")) && (
         <div className="mt-10">
           <WushuInterUniversityDetails />
+        </div>
+      )}
+
+      {/* Kanpur Cricket Association (KCA) U-14 Dedicated Details & UPCA Pathway Section */}
+      {(trial.id === "t-kca-u14-cricket-trials-kanpur-2026" ||
+        (trial.city.toLowerCase() === "kanpur" && trial.sport.toLowerCase() === "cricket") ||
+        trial.academy.toLowerCase().includes("kanpur cricket association")) && (
+        <div className="mt-10">
+          <KcaKanpurCricketDetails sourceUrl={trial.sourceUrl} />
+        </div>
+      )}
+
+      {/* UP Sports Directorate Green Park Basketball Selection Trials Section */}
+      {(trial.id === "t-up-sports-directorate-junior-basketball-trials-kanpur-2026" ||
+        (trial.city.toLowerCase() === "kanpur" && trial.sport.toLowerCase() === "basketball") ||
+        (trial.title.toLowerCase().includes("basketball") &&
+          trial.city.toLowerCase() === "kanpur")) && (
+        <div className="mt-10">
+          <GreenParkBasketballDetails sourceUrl={trial.sourceUrl} />
         </div>
       )}
 

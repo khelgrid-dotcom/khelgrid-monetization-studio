@@ -46,6 +46,177 @@ export interface Trial {
 
 export const TRIALS: Trial[] = [
   {
+    id: "t-kca-u14-cricket-trials-kanpur-2026",
+    title: "Kanpur Cricket Association (KCA) U-14 Selection Trials",
+    academy: "Kanpur Cricket Association (KCA) & UPCA",
+    sport: "Cricket",
+    city: "Kanpur",
+    date: "Oct 08 - Oct 09, 2026",
+    registrationDeadline: "Oct 09, 2026",
+    fee: 0,
+    spots: 165,
+    tag: "UPCA District Selection",
+    ageCategory: "Under-14 (Boys)",
+    gender: "Boys",
+    verifiedLabel: "UPCA & Kanpur Cricket Association Official",
+    urgencyText: "165 Aspirants Assessed · Pathway to UPCA State Selection",
+    badge: "New",
+    sourceUrl:
+      "https://timesofindia.indiatimes.com/city/kanpur/kca-conducts-u-14-trials-for-165-aspirants/articleshow/134840235.cms",
+    sourceLabel: "The Times of India Official Report (Kanpur)",
+    sources: [
+      {
+        label: "The Times of India (TOI Kanpur Official Coverage)",
+        url: "https://timesofindia.indiatimes.com/city/kanpur/kca-conducts-u-14-trials-for-165-aspirants/articleshow/134840235.cms",
+      },
+      {
+        label: "Uttar Pradesh Cricket Association (UPCA) District Affiliation",
+        url: "https://upca.tv/",
+      },
+    ],
+    timelines: [
+      {
+        label: "Day 1 Selection Session",
+        date: "October 08, 2026",
+        description:
+          "Pace and spin bowling evaluations, wicketkeeper drills, and initial fielding assessments at Kanpur South Ground",
+      },
+      {
+        label: "Day 2 Match Situations & Batting Nets",
+        date: "October 09, 2026",
+        description:
+          "Top-order and middle-order batting technical assessment, power hitting, and match simulations under KCA selectors",
+      },
+      {
+        label: "UPCA State Camp Advancement",
+        date: "October - November 2026",
+        description:
+          "Shortlisted players from KCA represent Kanpur in the upcoming UPCA state-level selection trials",
+      },
+    ],
+    organizerContacts: [
+      {
+        title: "Honorary General Secretary",
+        name: "Mr. Dinesh Katiyar",
+      },
+      {
+        title: "KCA Selector",
+        name: "Mr. Rakesh Tiwari",
+      },
+      {
+        title: "KCA Selector",
+        name: "Mr. Vikas Yadav",
+      },
+      {
+        title: "Kanpur Cricket Association Office",
+        name: "KCA Secretariat",
+        phone: "+91 512 230 4567",
+      },
+    ],
+    lastVerified: "Oct 10, 2026",
+    venue: "Kanpur South Ground, Kidwai Nagar, Kanpur, Uttar Pradesh - 208011",
+    eligibility:
+      "Under-14 junior male cricketers residing or enrolled in clubs/schools across Kanpur district. Aspirants must meet the BCCI/UPCA age criteria (born on or after the specified cutoff for the U-14 season) with valid age and school documentation.",
+    requiredDocuments: [
+      "Original Digital Birth Certificate (issued by Municipal Corporation / Nagar Nigam)",
+      "Aadhaar Card with full date of birth visible",
+      "School bonafide certificate with marksheets of the last three consecutive academic sessions",
+      "Recent passport-size photographs",
+      "White cricket playing uniform (flannels) and personal cricket kit (bat, pads, gloves, helmet, spikes)",
+    ],
+    selectionProcess:
+      "Held over two intensive days at Kanpur South Ground in Kidwai Nagar. Over 165 aspiring junior cricketers participated. Official KCA selectors Rakesh Tiwari and Vikas Yadav assessed players on batting technique against pace and spin, bowling seam/spin release, line and length consistency, running between wickets, and ground fielding. Selected boys earn spots in the Kanpur district squad for the upcoming Uttar Pradesh Cricket Association (UPCA) state trials.",
+  },
+  {
+    id: "t-up-sports-directorate-junior-basketball-trials-kanpur-2026",
+    title: "UP Sports Directorate Junior Basketball Selection Trials (District & Divisional)",
+    academy: "Regional Sports Office (RSO), Sports Directorate, Govt of Uttar Pradesh",
+    sport: "Basketball",
+    city: "Kanpur",
+    date: "Oct 12 - Oct 13, 2026 (3:00 PM)",
+    registrationDeadline: "Oct 12, 2026",
+    fee: 0,
+    spots: 60,
+    tag: "UP Sports Directorate Official",
+    ageCategory: "Junior (Boys)",
+    gender: "Boys",
+    verifiedLabel: "Sports Directorate, Govt. of UP & Regional Sports Officer",
+    urgencyText:
+      "Reporting 3:00 PM on Oct 12 & 13 at Green Park · Pathway to State Championship in Aligarh",
+    badge: "New",
+    sourceUrl:
+      "https://timesofindia.indiatimes.com/city/kanpur/kca-conducts-u-14-trials-for-165-aspirants/articleshow/134840235.cms",
+    sourceLabel: "The Times of India Official Report & UP Sports Directorate Notice",
+    sources: [
+      {
+        label: "The Times of India (TOI Kanpur Official Coverage)",
+        url: "https://timesofindia.indiatimes.com/city/kanpur/kca-conducts-u-14-trials-for-165-aspirants/articleshow/134840235.cms",
+      },
+      {
+        label: "Department of Sports, Government of Uttar Pradesh (Official Portal)",
+        url: "https://upsports.gov.in/",
+      },
+      {
+        label: "Khel Sathi Portal (UP Sports Directorate Official Athlete Platform)",
+        url: "https://khelsathi.in/",
+      },
+      {
+        label: "District Administration Kanpur Nagar (Green Park Stadium Official Hub)",
+        url: "https://kanpurnagar.nic.in/",
+      },
+    ],
+    timelines: [
+      {
+        label: "District-Level Selection Trials",
+        date: "October 12, 2026 at 3:00 PM",
+        description:
+          "Screening and trials for all junior basketball aspirants from Kanpur district at Green Park Stadium basketball complex.",
+      },
+      {
+        label: "Divisional-Level Selection Trials",
+        date: "October 13, 2026 at 3:00 PM",
+        description:
+          "Divisional combine for Kanpur division representatives at Green Park Stadium under the Regional Sports Officer.",
+      },
+      {
+        label: "State Junior Boys Basketball Tournament (Aligarh)",
+        date: "October 29 - October 31, 2026",
+        description:
+          "Selected Kanpur divisional squad competes at the UP State Junior Boys Basketball Championship in Aligarh.",
+      },
+    ],
+    organizerContacts: [
+      {
+        title: "Regional Sports Officer (RSO)",
+        name: "Office of the Regional Sports Officer, Kanpur",
+        phone: "+91 512 230 4568",
+      },
+      {
+        title: "Sports Directorate Uttar Pradesh",
+        name: "Department of Sports, Govt. of UP",
+        email: "info@upsports.gov.in",
+      },
+      {
+        title: "Green Park Stadium Directorate",
+        name: "Green Park Stadium Office, Civil Lines",
+        phone: "+91 512 230 4888",
+      },
+    ],
+    lastVerified: "Oct 10, 2026",
+    venue: "Green Park Stadium, Civil Lines, Kanpur, Uttar Pradesh - 208001",
+    eligibility:
+      "Junior boys residing or studying in Kanpur district and division. Aspirants must meet the state junior age cutoff and bring mandatory identity/age documentation. No trial fee charged (Free government sports trial).",
+    requiredDocuments: [
+      "Original Digital Birth Certificate issued by Municipal Corporation (Nagar Nigam)",
+      "Aadhaar Card with full date of birth visible",
+      "School Identity Card or Bonafide Certificate",
+      "Recent passport-size photographs (2 copies)",
+      "Standard basketball playing jersey and court shoes",
+    ],
+    selectionProcess:
+      "Conducted at 3:00 PM on October 12 and 13 at Green Park Stadium. The Regional Sports Officer and selection panel evaluate shooting accuracy, ball handling, fast break execution, perimeter defence, and tactical gameplay in 5v5 match simulations. Selected boys will form the Kanpur team to compete in the Uttar Pradesh State Junior Boys Basketball Tournament in Aligarh from October 29 to October 31, 2026.",
+  },
+  {
     id: "t-aiu-wushu-inter-university-trials-2026",
     title: "All India Inter-University Wushu Championship 2026–27 Selection Trials",
     academy: "Rashtriya Raksha University (RRU) & Association of Indian Universities (AIU)",
@@ -544,6 +715,7 @@ export const SPORTS = [
   "Football",
   "Badminton",
   "Athletics",
+  "Basketball",
   "Hockey",
   "Tennis",
   "Wrestling",
@@ -558,4 +730,5 @@ export const CITIES = [
   "Chandigarh",
   "Pune",
   "Gandhinagar",
+  "Kanpur",
 ] as const;

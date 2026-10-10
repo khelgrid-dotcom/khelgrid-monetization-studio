@@ -426,6 +426,14 @@ export const CITIES_CATALOG: City[] = [
     venueNote: "Paljor Stadium, Mining Ground and Sikkim State Sports Complex",
     hubs: ["Paljor Stadium", "TNA Ground", "Sikkim Sports Complex"],
   },
+  {
+    slug: "kanpur",
+    name: "Kanpur",
+    state: "Uttar Pradesh",
+    tagline: "Historic Green Park, KCA district trials & UPCA cricket pipeline",
+    venueNote: "Kanpur South Ground (Kidwai Nagar), Green Park Stadium and Kamla Club Ground",
+    hubs: ["Kanpur South Ground", "Green Park Stadium", "Kamla Club Ground"],
+  },
 ];
 
 const GUIDE_ENTRIES: Guide[] = [

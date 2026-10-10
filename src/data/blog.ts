@@ -47,6 +47,164 @@ const image = (id: string) => `https://images.unsplash.com/${id}?auto=format&fit
 
 export const BLOG_POSTS: BlogPost[] = [
   {
+    slug: "green-park-stadium-kanpur-junior-basketball-selection-trials",
+    title:
+      "Green Park Stadium Kanpur Hosts District & Divisional Junior Basketball Selection Trials on Oct 12 & 13",
+    metaTitle: "Junior Basketball Trials at Green Park Kanpur: UP State Selection in Aligarh",
+    metaDescription:
+      "Official selection trials for junior basketball teams at Green Park Stadium, Kanpur on Oct 12-13. Reporting 3 PM under Regional Sports Officer for UP state tournament in Aligarh.",
+    excerpt:
+      "The Sports Directorate, Government of Uttar Pradesh has announced district and divisional-level selection trials for junior boys basketball teams at Green Park Stadium, Kanpur on October 12 and 13 at 3:00 PM. Standout players will qualify for the state junior championship in Aligarh.",
+    category: "Trial preparation",
+    author: "UP Sports Directorate & TOI Sports Desk",
+    authorRole: "State Government Sports Administration Correspondent",
+    publishedAt: "2026-10-10",
+    updatedAt: "2026-10-10",
+    readMins: 4,
+    coverImage: image("photo-1546519638-68e109498ffc"),
+    tags: [
+      "Basketball",
+      "Kanpur",
+      "Green Park Stadium",
+      "Sports Directorate",
+      "UP Sports",
+      "Aligarh Championship",
+      "Junior Basketball Trials",
+    ],
+    keywords:
+      "Green Park stadium basketball trials, Kanpur basketball trials October 2026, Regional Sports Officer Kanpur, UP sports directorate trials, Aligarh state junior basketball tournament",
+    faqs: [
+      {
+        question: "When and where are the Kanpur basketball selection trials being held?",
+        answer:
+          "The trials will take place at Green Park Stadium, Civil Lines, Kanpur on October 12 and October 13, 2026, starting at 3:00 PM both days.",
+      },
+      {
+        question: "What is the tournament pathway for selected players?",
+        answer:
+          "Selected junior boys will form the Kanpur divisional team to compete in the Uttar Pradesh State Junior Boys Basketball Tournament in Aligarh from October 29 to October 31, 2026.",
+      },
+      {
+        question: "What documents must players bring to Green Park stadium?",
+        answer:
+          "Interested players must bring their original birth certificate issued by the municipal corporation (Nagar Nigam) along with their Aadhaar card and recent photographs.",
+      },
+      {
+        question: "Who is organizing and supervising these trials?",
+        answer:
+          "The trials are officially organized by the Regional Sports Officer (RSO), Sports Directorate, Department of Sports, Government of Uttar Pradesh (upsports.gov.in).",
+      },
+    ],
+    sections: [
+      {
+        heading: "1. Official Circular and Schedule at Green Park Stadium",
+        paragraphs: [
+          "District-level and divisional-level selection trials for junior boys basketball teams are scheduled at the iconic Green Park Stadium, Kanpur on October 12 and October 13, 2026, commencing at 3:00 PM.",
+          "The notification was issued by the Regional Sports Officer, Sports Directorate, Uttar Pradesh, inviting eligible junior basketball players across schools, academies, and clubs in the district.",
+        ],
+        bullets: [
+          "Dates: October 12 (District selection) and October 13 (Divisional combine)",
+          "Reporting Time: 3:00 PM at Green Park Stadium basketball courts",
+          "Organizer: Regional Sports Office (RSO), Sports Directorate, Govt. of UP",
+          "Destination: State Junior Boys Basketball Tournament in Aligarh (Oct 29–31)",
+        ],
+      },
+      {
+        heading: "2. Mandatory Document Verification and Eligibility Criteria",
+        paragraphs: [
+          "To guarantee strict age integrity and compliance with state sports regulations, every participant must present their original digital birth certificate issued by the municipal corporation (Nagar Nigam / Nagar Palika) and an Aadhaar card at reporting time.",
+          "No registration or entry fees are charged, as these are official government selection trials under the Department of Sports, Government of Uttar Pradesh.",
+        ],
+      },
+      {
+        heading: "3. Direct Contact and Authentic Verification Channels",
+        paragraphs: [
+          "Candidates and school coaches requiring additional information are encouraged to visit the office of the Regional Sports Officer situated at Green Park Stadium, Civil Lines, Kanpur.",
+          "Further details on state sports schemes and athlete registrations are accessible via the UP Sports Directorate portal (upsports.gov.in) and the Khel Sathi platform (khelsathi.in).",
+        ],
+      },
+    ],
+  },
+  {
+    slug: "kca-conducts-u-14-trials-for-165-aspirants-kanpur",
+    title:
+      "KCA Conducts Under-14 Cricket Selection Trials for 165 Aspirants at Kanpur South Ground",
+    metaTitle: "KCA U-14 Cricket Trials in Kanpur: 165 Aspirants & UPCA Selection Pathway",
+    metaDescription:
+      "Official coverage of Kanpur Cricket Association U-14 trials at Kanpur South ground, Kidwai Nagar. Over 165 junior cricketers assessed by KCA selectors for UPCA state selection.",
+    excerpt:
+      "The Kanpur Cricket Association (KCA) conducted selection trials for Under-14 cricketers over two days at the Kanpur South ground in Kidwai Nagar. Over 165 aspirants showcased their talent before senior selectors Rakesh Tiwari and Vikas Yadav, competing for spots in the upcoming Uttar Pradesh Cricket Association (UPCA) state selection rounds.",
+    category: "Trial preparation",
+    author: "KhelGrid Cricket Bureau & TOI Sports Desk",
+    authorRole: "Official Junior Cricket Selection Correspondent",
+    publishedAt: "2026-10-10",
+    updatedAt: "2026-10-10",
+    readMins: 5,
+    coverImage: image("photo-1540747913346-19e32dc3e97e"),
+    tags: [
+      "KCA",
+      "Kanpur Cricket Association",
+      "Under-14 Trials",
+      "Kidwai Nagar",
+      "UPCA",
+      "Cricket Trials",
+      "Vijay Merchant Trophy",
+    ],
+    keywords:
+      "KCA U-14 trials, Kanpur cricket trials, Kanpur South ground Kidwai Nagar, Rakesh Tiwari KCA, Vikas Yadav KCA, Dinesh Katiyar Kanpur Cricket, UPCA state cricket trials, Under 14 cricket selection Uttar Pradesh",
+    faqs: [
+      {
+        question: "Where were the KCA Under-14 cricket trials held?",
+        answer:
+          "The trials took place at the Kanpur South ground located in Kidwai Nagar, Kanpur, Uttar Pradesh.",
+      },
+      {
+        question: "How many young cricketers participated in the trials?",
+        answer:
+          "Over 165 aspiring junior cricketers attended the two-day selection sessions organized by the Kanpur Cricket Association.",
+      },
+      {
+        question: "Who were the official selectors appointed by KCA?",
+        answer:
+          "Senior KCA selectors Mr. Rakesh Tiwari and Mr. Vikas Yadav evaluated the skill sets, match fitness, and technical execution of all candidates under the leadership of Honorary General Secretary Mr. Dinesh Katiyar.",
+      },
+      {
+        question: "What is the next stage for the selected players?",
+        answer:
+          "Shortlisted cricketers will earn direct berths in the Kanpur district squad to participate in the upcoming Uttar Pradesh Cricket Association (UPCA) state-level selection trials.",
+      },
+    ],
+    sections: [
+      {
+        heading: "1. Overview of the KCA Under-14 Selection Combine",
+        paragraphs: [
+          "The Kanpur Cricket Association (KCA) conducted comprehensive selection trials for Under-14 aspirants at the Kanpur South ground in Kidwai Nagar over two intensive days.",
+          "According to Dinesh Katiyar, Honorary General Secretary of KCA, 165 enthusiastic young cricketers attended the sessions. A supplementary round was held on Saturday, October 10, to ensure every registered candidate received a fair evaluation.",
+        ],
+        bullets: [
+          "Venue: Kanpur South Ground, Kidwai Nagar, Kanpur",
+          "Participants: 165+ junior players across Kanpur district",
+          "Selectors: Mr. Rakesh Tiwari (Batting/Technical) and Mr. Vikas Yadav (Bowling/Temperament)",
+          "Advancement: Uttar Pradesh Cricket Association (UPCA) State Selection Camp",
+        ],
+      },
+      {
+        heading: "2. Rigorous Evaluation in Match Simulation and Nets",
+        paragraphs: [
+          "The selection panel implemented structured nets sessions divided into distinct skill assessments. Fast bowlers were scrutinized on run-up balance, seam presentation, and consistent line and length, while spinners were evaluated on release RPM, trajectory control, and variation.",
+          "Batters faced both raw pace and spin on turf wickets to gauge defensive composure, footwork against movement, and boundary-scoring intent without sacrificing technique.",
+        ],
+      },
+      {
+        heading: "3. Pathway to UPCA State Trials and BCCI Tournaments",
+        paragraphs: [
+          "Kanpur district holds an illustrious cricketing tradition as the host of historic Green Park and feeder of numerous state and national icons. Standout performers identified by KCA selectors will represent the Kanpur district contingent in upcoming UPCA selection camps.",
+          "This serves as the foundational feeder system for the Uttar Pradesh Under-14 squad and the subsequent BCCI Vijay Merchant Trophy junior domestic setup.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "asian-games-2026-live-updates-september-23-india-medal-tally-analysis",
     title:
       "Asian Games 2026 Day 5 Live Analysis: India Medal Tally at 12, Mirabai's Historic Silver & Tactical Breakdown",

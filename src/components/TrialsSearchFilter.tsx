@@ -47,7 +47,17 @@ export const REGIONS: RegionDefinition[] = [
   {
     id: "north",
     name: "North Zone",
-    cities: ["Delhi", "Chandigarh", "Jaipur", "Lucknow", "Dehradun", "Gurugram", "Noida", "Punjab"],
+    cities: [
+      "Delhi",
+      "Chandigarh",
+      "Jaipur",
+      "Lucknow",
+      "Kanpur",
+      "Dehradun",
+      "Gurugram",
+      "Noida",
+      "Punjab",
+    ],
   },
   {
     id: "south",

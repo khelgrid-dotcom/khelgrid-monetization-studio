@@ -11,6 +11,7 @@ export interface SportsNewsArticle {
     | "Football"
     | "Tennis"
     | "Badminton"
+    | "Basketball"
     | "Athletics"
     | "Wrestling"
     | "Kabaddi"
@@ -30,6 +31,75 @@ export interface SportsNewsArticle {
 }
 
 export const SPORTS_NEWS_CATALOG: SportsNewsArticle[] = [
+  {
+    id: "news-kca-kanpur-u14-cricket-trials-2026",
+    slug: "kca-conducts-u-14-trials-for-165-aspirants-kanpur",
+    blogSlug: "kca-conducts-u-14-trials-for-165-aspirants-kanpur",
+    title: "KCA Conducts U-14 Selection Trials for 165 Aspirants at Kanpur South Ground",
+    headline:
+      "Kanpur Cricket Association selectors Rakesh Tiwari and Vikas Yadav assess junior cricketers across two days for UPCA state selection pathway.",
+    excerpt:
+      "Official TOI coverage: Over 165 aspiring cricketers attended two-day Under-14 trials conducted by KCA at Kanpur South ground in Kidwai Nagar to earn berths in the upcoming UPCA state trials.",
+    content:
+      "The Kanpur Cricket Association (KCA) successfully conducted comprehensive selection trials for the Under-14 age group, drawing 165 aspiring young cricketers from across the district. The two-day trials were hosted at the Kanpur South ground in Kidwai Nagar. Senior KCA selectors Rakesh Tiwari and Vikas Yadav closely assessed the skills, technique, and match temperament of the aspirants across bowling, batting, and fielding drills. The standout performers identified during this trial process will advance to represent Kanpur district in the upcoming Uttar Pradesh Cricket Association (UPCA) state selection trials, forming the pathway to the Vijay Merchant Trophy junior domestic setup.",
+    sport: "Cricket",
+    category: "Trials & Selection",
+    publishedAt: "2026-10-09T14:30:00.000Z",
+    readTime: "3 min read",
+    imageUrl:
+      "https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?auto=format&fit=crop&w=1200&q=80",
+    author: {
+      name: "The Times of India / KCA Desk",
+      role: "Official TOI Sports Report",
+    },
+    tags: [
+      "Cricket",
+      "Kanpur",
+      "KCA",
+      "UPCA",
+      "U-14",
+      "Kidwai Nagar",
+      "Selection Trials",
+      "Grassroots",
+    ],
+    trending: true,
+    featured: true,
+  },
+  {
+    id: "news-green-park-kanpur-junior-basketball-trials-2026",
+    slug: "green-park-stadium-kanpur-junior-basketball-selection-trials-oct-12-13-2026",
+    blogSlug: "green-park-stadium-kanpur-junior-basketball-selection-trials",
+    title:
+      "District & Divisional Junior Basketball Selection Trials at Green Park Stadium on Oct 12 & 13",
+    headline:
+      "Regional Sports Officer, Sports Directorate confirms trials for junior boys at Green Park Stadium for UP State Tournament in Aligarh.",
+    excerpt:
+      "Official UP Sports Directorate announcement: District-level and divisional-level selection trials of junior basketball teams will take place at Green Park Stadium on Oct 12 and Oct 13 at 3:00 PM for the upcoming state championship in Aligarh.",
+    content:
+      "District-level and divisional-level selection trials of junior basketball teams will be held at Green Park Stadium on October 12 and October 13 at 3:00 PM. The selected team will participate in the Uttar Pradesh State Junior Boys Basketball Tournament to be held in Aligarh from October 29 to October 31, 2026. According to the Regional Sports Officer, Sports Directorate, interested players should bring their birth certificate issued by the municipal corporation (Nagar Nigam) and Aadhaar card at the time of the trials. For more details, players can contact his office at Green Park Stadium, Civil Lines, Kanpur. The initiative is supervised by the Sports Directorate, Department of Sports, Government of Uttar Pradesh (upsports.gov.in / khelsathi.in).",
+    sport: "Basketball",
+    category: "Trials & Selection",
+    publishedAt: "2026-10-10T09:00:00.000Z",
+    readTime: "3 min read",
+    imageUrl:
+      "https://images.unsplash.com/photo-1546519638-68e109498ffc?auto=format&fit=crop&w=1200&q=80",
+    author: {
+      name: "The Times of India / UP Sports Directorate",
+      role: "Official Sports Directorate Correspondent",
+    },
+    tags: [
+      "Basketball",
+      "Kanpur",
+      "Green Park Stadium",
+      "Sports Directorate",
+      "RSO Kanpur",
+      "Aligarh Tournament",
+      "Junior Basketball",
+      "Trials",
+    ],
+    trending: true,
+    featured: true,
+  },
   {
     id: "news-fit-india-school-games-namchi-2026",
     slug: "fit-india-school-games-district-level-selection-trials-namchi-sikkim-2026",

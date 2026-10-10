@@ -21,6 +21,7 @@ export const PLAYO_CITIES = [
   "Chennai",
   "Pune",
   "Chandigarh",
+  "Kanpur",
 ] as const;
 
 export interface Venue {
@@ -139,6 +140,34 @@ export interface Membership {
 const IMG = (q: string) => `https://images.unsplash.com/${q}?auto=format&fit=crop&w=900&q=70`;
 
 export const VENUES: Venue[] = [
+  {
+    id: "v-green-park-stadium-kanpur",
+    name: "Green Park Stadium Sports Complex",
+    area: "Civil Lines",
+    city: "Kanpur",
+    distanceKm: 1.5,
+    rating: 4.9,
+    reviews: 320,
+    sports: ["Cricket", "Basketball"],
+    pricePerHour: 0,
+    featured: true,
+    bookable: true,
+    image: IMG("photo-1546519638-68e109498ffc"),
+  },
+  {
+    id: "v-kanpur-south-ground",
+    name: "Kanpur South Ground",
+    area: "Kidwai Nagar",
+    city: "Kanpur",
+    distanceKm: 2.1,
+    rating: 4.85,
+    reviews: 165,
+    sports: ["Cricket"],
+    pricePerHour: 900,
+    featured: true,
+    bookable: true,
+    image: IMG("photo-1540747913346-19e32dc3e97e"),
+  },
   {
     id: "v1",
     name: "FerroHub Sports | Millers",
@@ -763,6 +792,80 @@ export const COACHES: CoachProfile[] = [
 ];
 
 export const EVENTS: SportEvent[] = [
+  {
+    id: "e-kca-u14-kanpur-cricket-trials-2026",
+    title: "KCA U-14 Cricket Selection Trials & UPCA Camp",
+    sport: "Cricket",
+    city: "Kanpur",
+    area: "Kidwai Nagar",
+    venue: "Kanpur South Ground",
+    date: "Oct 08 - Oct 10, 2026",
+    time: "8:00 AM",
+    entryFee: 0,
+    spotsLeft: 0,
+    totalSpots: 165,
+    format: "2-Day Selection Combine + Net Sessions",
+    category: "Youth & Grassroots",
+    scope: "State",
+    status: "Upcoming",
+    teamFormat: "Open Individual",
+    skillLevel: "Competitive / Semi-Pro",
+    prizePool: "UPCA Uttar Pradesh State Selection Berth",
+    organizer: {
+      name: "Kanpur Cricket Association (KCA)",
+      verified: true,
+      contact: "+91 512 230 4567",
+    },
+    perks: [
+      "Assessed by KCA selectors Rakesh Tiwari & Vikas Yadav",
+      "Direct pathway to UPCA State Selection Camp",
+      "Official Times of India verified selection notice",
+      "No registration fee for eligible junior district aspirants",
+    ],
+    rulesHighlights: [
+      "Under-14 age verification with valid Nagar Nigam birth certificate",
+      "White cricket kit and personal safety equipment mandatory",
+      "Organized under supervision of Hony. General Secretary Dinesh Katiyar",
+    ],
+    image: IMG("photo-1540747913346-19e32dc3e97e"),
+  },
+  {
+    id: "e-green-park-junior-basketball-trials-kanpur-2026",
+    title: "UP Sports Directorate Junior Basketball Selection Trials",
+    sport: "Basketball",
+    city: "Kanpur",
+    area: "Civil Lines",
+    venue: "Green Park Stadium",
+    date: "Oct 12 - Oct 13, 2026",
+    time: "3:00 PM",
+    entryFee: 0,
+    spotsLeft: 60,
+    totalSpots: 60,
+    format: "District & Divisional Selection Combine",
+    category: "Youth & Grassroots",
+    scope: "State",
+    status: "Upcoming",
+    teamFormat: "Open Individual",
+    skillLevel: "Competitive / Semi-Pro",
+    prizePool: "State Junior Boys Basketball Tournament (Aligarh) Berth",
+    organizer: {
+      name: "Regional Sports Officer (RSO), Sports Directorate UP",
+      verified: true,
+      contact: "+91 512 230 4568",
+    },
+    perks: [
+      "Supervised by Regional Sports Officer at Green Park Stadium",
+      "Direct pathway to UP State Junior Championship in Aligarh",
+      "Free government sports trial (₹0 fee)",
+      "Official Times of India and UP Sports Directorate notice",
+    ],
+    rulesHighlights: [
+      "Mandatory municipal corporation (Nagar Nigam) birth certificate",
+      "Original Aadhaar card required at reporting time (3:00 PM)",
+      "Standard basketball kit and court shoes required",
+    ],
+    image: IMG("photo-1546519638-68e109498ffc"),
+  },
   {
     id: "e1",
     title: "Sunday Pickleball Open Cup",

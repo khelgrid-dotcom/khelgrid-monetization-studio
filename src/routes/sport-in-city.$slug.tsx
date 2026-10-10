@@ -7,6 +7,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { MapPin, ArrowRight } from "lucide-react";
 import { noindexMeta } from "@/lib/seo";
+import { KcaKanpurCricketDetails } from "@/components/KcaKanpurCricketDetails";
+import { GreenParkBasketballDetails } from "@/components/GreenParkBasketballDetails";
 
 const PAGE_SIZE = 8;
 
@@ -127,7 +129,7 @@ function SportInCityPage() {
               {t.academy} · {t.city}
             </p>
             <Button asChild size="sm" className="mt-3">
-              <Link to="/search">
+              <Link to="/trial/$id" params={{ id: t.id }}>
                 View & apply <ArrowRight className="ml-1 h-3 w-3" />
               </Link>
             </Button>
@@ -148,6 +150,20 @@ function SportInCityPage() {
             </Link>
           ))}
         </nav>
+      )}
+
+      {/* KCA Kanpur Cricket Official Selection Details */}
+      {city.slug === "kanpur" && sport.slug === "cricket" && (
+        <div className="mt-10">
+          <KcaKanpurCricketDetails />
+        </div>
+      )}
+
+      {/* UP Sports Directorate Green Park Basketball Selection Details */}
+      {city.slug === "kanpur" && sport.slug === "basketball" && (
+        <div className="mt-10">
+          <GreenParkBasketballDetails />
+        </div>
       )}
 
       <section className="mt-8 rounded-2xl border border-border bg-card/50 p-6">

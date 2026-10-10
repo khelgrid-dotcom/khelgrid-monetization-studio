@@ -104,14 +104,8 @@ function SportPage() {
             {matching.map((t) => (
               <Link
                 key={t.id}
-                to="/search"
-                search={{
-                  q: t.title,
-                  sport: sport.name,
-                  city: "All Locations",
-                  sort: "Soonest",
-                  free: false,
-                }}
+                to="/trial/$id"
+                params={{ id: t.id }}
                 className="rounded-2xl border border-border bg-gradient-card p-5 transition hover:border-primary/40"
               >
                 <div className="text-sm font-semibold">{t.title}</div>

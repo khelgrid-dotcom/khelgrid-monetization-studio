@@ -6,6 +6,8 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowRight, MapPin, Building2 } from "lucide-react";
 import { buildSeoHead } from "@/lib/seo";
 import { FitIndiaFAQ } from "@/components/FitIndiaFAQ";
+import { KcaKanpurCricketDetails } from "@/components/KcaKanpurCricketDetails";
+import { GreenParkBasketballDetails } from "@/components/GreenParkBasketballDetails";
 
 export const Route = createFileRoute("/city/$slug")({
   loader: ({ params }) => {
@@ -103,14 +105,8 @@ function CityPage() {
             {matching.map((t) => (
               <Link
                 key={t.id}
-                to="/search"
-                search={{
-                  q: t.title,
-                  sport: "All Sports",
-                  city: city.name,
-                  sort: "Soonest",
-                  free: false,
-                }}
+                to="/trial/$id"
+                params={{ id: t.id }}
                 className="rounded-2xl border border-border bg-gradient-card p-5 transition hover:border-primary/40"
               >
                 <div className="text-sm font-semibold">{t.title}</div>
@@ -132,6 +128,18 @@ function CityPage() {
         <section className="mt-12">
           <FitIndiaFAQ />
         </section>
+      )}
+
+      {/* Kanpur Cricket Association (KCA) Official Details for Kanpur Hub */}
+      {city.slug === "kanpur" && (
+        <>
+          <section className="mt-12">
+            <KcaKanpurCricketDetails />
+          </section>
+          <section className="mt-12">
+            <GreenParkBasketballDetails />
+          </section>
+        </>
       )}
 
       <section className="mt-12">

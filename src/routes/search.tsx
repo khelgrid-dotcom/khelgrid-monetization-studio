@@ -97,6 +97,8 @@ const SPORT_ICONS: Record<string, string> = {
 
 const POPULAR_SEARCHES = [
   { label: "❤️ My Favorites", savedOnly: true },
+  { label: "KCA U-14 Kanpur", query: "KCA Kanpur", sport: "Cricket", city: "Kanpur" },
+  { label: "🏀 Green Park Basketball", query: "Basketball", sport: "Basketball", city: "Kanpur" },
   { label: "U-19 Cricket", query: "Cricket", sport: "Cricket" },
   { label: "Football Combine", query: "Combine", sport: "Football" },
   { label: "Badminton Hyderabad", query: "Gopichand", city: "Hyderabad" },
