@@ -1,4 +1,3 @@
-import { StrictMode, startTransition } from "react";
 import { hydrateRoot } from "react-dom/client";
 import { StartClient } from "@tanstack/react-start/client";
 
@@ -11,15 +10,8 @@ if (typeof window !== "undefined") {
   }
 }
 
-startTransition(() => {
-  try {
-    hydrateRoot(
-      document,
-      <StrictMode>
-        <StartClient />
-      </StrictMode>,
-    );
-  } catch (error) {
-    console.error("[KhelGrid] Client hydration failed:", error);
-  }
-});
+try {
+  hydrateRoot(document, <StartClient />);
+} catch (error) {
+  console.error("[KhelGrid] Client hydration failed:", error);
+}
