@@ -1,0 +1,122 @@
+name: Supabase Daily Backup to Google Drive
+
+on:
+  schedule:
+    - cron: "30 18 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: supabase-backup
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      SUPABASE_DB_URL: \${{ secrets.SUPABASE_DB_URL }}
+      GOOGLE_CLIENT_ID: \${{ secrets.GOOGLE_CLIENT_ID }}
+      GOOGLE_CLIENT_SECRET: \${{ secrets.GOOGLE_CLIENT_SECRET }}
+      GOOGLE_REFRESH_TOKEN: \${{ secrets.GOOGLE_REFRESH_TOKEN }}
+      GOOGLE_DRIVE_FOLDER_ID: \${{ secrets.GOOGLE_DRIVE_FOLDER_ID }}
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Validate required secrets
+        run: |
+          set -euo pipefail
+          test -n "$SUPABASE_DB_URL"
+          test -n "$GOOGLE_CLIENT_ID"
+          test -n "$GOOGLE_CLIENT_SECRET"
+          test -n "$GOOGLE_REFRESH_TOKEN"
+          test -n "$GOOGLE_DRIVE_FOLDER_ID"
+
+      - name: Create database dump
+        run: |
+          set -euo pipefail
+          mkdir -p backup
+          supabase db dump --db-url "$SUPABASE_DB_URL" -f backup/roles.sql --role-only
+          supabase db dump --db-url "$SUPABASE_DB_URL" -f backup/schema.sql -x "storage.buckets_vectors" -x "storage.vector_indexes"
+          supabase db dump --db-url "$SUPABASE_DB_URL" -f backup/data.sql --use-copy --data-only -x "storage.buckets_vectors" -x "storage.vector_indexes"
+          date -u +"%Y-%m-%dT%H:%M:%SZ" > backup/created_at.txt
+
+      - name: Compress backup
+        run: |
+          set -euo pipefail
+          BACKUP_DATE="$(date -u +%Y-%m-%d)"
+          ARCHIVE="khelgrid-supabase-\${BACKUP_DATE}.tar.gz"
+          tar -czf "$ARCHIVE" -C backup .
+          sha256sum "$ARCHIVE" > "\${ARCHIVE}.sha256"
+          echo "ARCHIVE=$ARCHIVE" >> "$GITHUB_ENV"
+
+      - name: Upload backup to Google Drive
+        run: |
+          set -euo pipefail
+          python3 <<'PY'
+          import json, os, time, urllib.parse, urllib.request, uuid
+
+          client_id = os.environ["GOOGLE_CLIENT_ID"]
+          client_secret = os.environ["GOOGLE_CLIENT_SECRET"]
+          refresh_token = os.environ["GOOGLE_REFRESH_TOKEN"]
+          folder_id = os.environ["GOOGLE_DRIVE_FOLDER_ID"]
+          archive = os.environ["ARCHIVE"]
+
+          token_req = urllib.request.Request(
+              "https://oauth2.googleapis.com/token",
+              data=urllib.parse.urlencode({
+                  "client_id": client_id,
+                  "client_secret": client_secret,
+                  "refresh_token": refresh_token,
+                  "grant_type": "refresh_token",
+              }).encode(),
+              headers={"Content-Type": "application/x-www-form-urlencoded"},
+              method="POST",
+          )
+          with urllib.request.urlopen(token_req, timeout=60) as response:
+              access_token = json.load(response)["access_token"]
+
+          boundary = "----KhelGridBackup" + uuid.uuid4().hex
+          metadata = json.dumps({
+              "name": archive,
+              "parents": [folder_id],
+              "description": "KhelGrid Supabase database backup",
+          }).encode()
+
+          with open(archive, "rb") as f:
+              file_data = f.read()
+
+          body = (
+              ("--" + boundary + "\\r\\nContent-Type: application/json; charset=UTF-8\\r\\n\\r\\n").encode()
+              + metadata
+              + ("\\r\\n--" + boundary + "\\r\\nContent-Type: application/gzip\\r\\n\\r\\n").encode()
+              + file_data
+              + ("\\r\\n--" + boundary + "--\\r\\n").encode()
+          )
+
+          upload_req = urllib.request.Request(
+              "https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart",
+              data=body,
+              headers={
+                  "Authorization": "Bearer " + access_token,
+                  "Content-Type": "multipart/related; boundary=" + boundary,
+              },
+              method="POST",
+          )
+
+          with urllib.request.urlopen(upload_req, timeout=300) as response:
+              result = json.load(response)
+
+          print("Uploaded:", archive, "Google Drive file ID:", result.get("id"))
+          PY
+
+      - name: Remove local backup files
+        if: always()
+        run: rm -rf backup *.tar.gz *.sha256
