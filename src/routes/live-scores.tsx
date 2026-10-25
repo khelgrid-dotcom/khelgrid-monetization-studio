@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useMemo, useEffect, useCallback, useRef } from "react";
-import { LIVE_SPORTS_UPDATES, type LiveMatchUpdate } from "@/data/liveSports";
+import { type LiveMatchUpdate } from "@/data/liveSports";
+import { useLiveSportsUpdates } from "@/lib/live-sports-api";
 import { buildSeoHead } from "@/lib/seo";
 import { playScoreChime } from "@/lib/sports-audio";
 import { InFeedAd, ResponsiveAd } from "@/components/ads";
@@ -70,7 +71,7 @@ export const Route = createFileRoute("/live-scores")({
     buildSeoHead({
       title: "Live Cricket Scores & Match Center · KhelGrid",
       description:
-        "Track live cricket scores, ball-by-ball updates, upcoming international fixtures, WPL, and ICC qualifiers with real-time updates on KhelGrid.",
+        "Check cricket, football, and tennis match updates when an authorized sports data provider is connected.",
       canonicalPath: "/live-scores",
       keywords:
         "live cricket scores India, cricket live match today, India vs West Indies live, WPL live score, ICC cricket world cup league 2, KhelGrid cricket match center",
@@ -106,8 +107,8 @@ const SUGGESTED_CRICKET_FILTERS: { label: string; query: string }[] = [
 ];
 
 const CRICKET_NOTICE_INFO = {
-  title: "Live Cricket Matches · Official Schedules & Real-Time Tracking",
-  desc: "Listing all scheduled international bilateral tours, ICC Men's Cricket World Cup League 2, T20 Asia Qualifiers, and Women's Premier League (WPL) matches today. Click any match card to view detailed match information, venue, timings, and series status.",
+  title: "Live Cricket Scores & Match Center",
+  desc: "Match data is shown only when returned by a connected sports data provider. No simulated scores are displayed.",
   icon: "🏏",
 };
 
@@ -148,9 +149,8 @@ export function LiveScoresPage() {
     return new Set<string>();
   });
 
-  // Dynamic simulation tick for in-play realism
-  const [matchesState, setMatchesState] = useState<LiveMatchUpdate[]>(LIVE_SPORTS_UPDATES);
-  const [isRefreshing, setIsRefreshing] = useState(false);
+  // Live match records only come from the provider-backed Supabase function.
+  const { matches: matchesState, loading: isRefreshing, error: feedError, fetchedAt, stale, unavailableSports, refresh } = useLiveSportsUpdates();
 
   // Save pinned matches
   const togglePin = (matchId: string, matchTitle: string) => {
@@ -192,16 +192,11 @@ export function LiveScoresPage() {
     });
   };
 
-  // Status check only: live data fetching is not connected yet.
-  const handleManualRefresh = useCallback(() => {
-    setIsRefreshing(true);
-    window.setTimeout(() => {
-      setIsRefreshing(false);
-      toast.info("Live scores are not connected to a live data provider yet.", {
-        description: "The current match listing has not been refreshed from an external source.",
-      });
-    }, 250);
-  }, []);
+  const handleManualRefresh = useCallback(async () => {
+    const result = await refresh();
+    if (result.error) toast.error("Live scores could not be refreshed", { description: result.error });
+    else toast.success("Live scores refreshed from the connected provider");
+  }, [refresh]);
 
   // Filter calculations
   const filteredMatches = useMemo(() => {
@@ -672,10 +667,10 @@ export function LiveScoresPage() {
                 <Activity className="h-7 w-7" />
               </div>
               <div className="space-y-1">
-                <h3 className="text-base sm:text-lg font-bold text-foreground">No matches found</h3>
+                <h3 className="text-base sm:text-lg font-bold text-foreground">{isRefreshing ? "Checking live sports providers…" : "No verified matches available"}</h3>
                 <p className="text-xs sm:text-sm text-muted-foreground max-w-md mx-auto">
-                  No sports matches match your current filters. Try changing your sport or status
-                  filter, or clearing search query.
+                  {feedError || (stale ? "The provider is unavailable; cached provider data may be shown." : unavailableSports.length ? `Live feeds are not configured for: ${unavailableSports.join(", ")}.` : "No matches are currently returned by the connected providers. No simulated scores are shown.")}
+                  {fetchedAt ? ` Last provider update: ${new Date(fetchedAt).toLocaleString()}.` : ""}
                 </p>
               </div>
               <Button
@@ -743,9 +738,9 @@ export function LiveScoresPage() {
                   How often are live cricket scores updated?
                 </h3>
                 <p>
-                  Scores refresh automatically every 30 seconds from official national and
-                  international cricket syndication feeds. You can click &quot;Sync&quot; at any
-                  moment to trigger an immediate live re-validation.
+                  Scores refresh when a configured provider returns new data. Update timing depends
+                  on the provider and its plan. If no provider is connected, KhelGrid will not display
+                  simulated scores.
                 </p>
               </div>
 
@@ -754,9 +749,8 @@ export function LiveScoresPage() {
                   Which cricket tournaments are covered?
                 </h3>
                 <p>
-                  International bilateral tours (India vs West Indies, Australia vs South Africa,
-                  Sri Lanka Tour of Pakistan), ICC Men&apos;s Cricket World Cup League 2, ICC T20
-                  World Cup Asia Qualifiers, and Women&apos;s Premier League (WPL 2026).
+                  Coverage depends on the sports providers configured for KhelGrid. Competitions
+                  without verified provider data are not represented with sample match records.
                 </p>
               </div>
 
@@ -933,7 +927,7 @@ export function LiveScoresPage() {
                   <span>Data Attribution</span>
                 </span>
                 <span className="font-semibold text-foreground">
-                  {activeModalMatch.source || "Official Cricket Match Center"}
+                  {activeModalMatch.source || "External provider source unavailable"}
                 </span>
               </div>
             </div>
