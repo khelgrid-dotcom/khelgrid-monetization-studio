@@ -188,6 +188,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       // Monetag advertising network host prefetch
       { rel: "dns-prefetch", href: "https://5gvci.com" },
       { rel: "dns-prefetch", href: "https://3nbf4.com" },
+      { rel: "dns-prefetch", href: "https://al5sm.com" },
     ],
     scripts: [
       // Canonical Organization, WebSite & BreadcrumbList JSON-LD in main layout
@@ -339,6 +340,13 @@ function RootShell({ children }: { children: ReactNode }) {
           src="https://5gvci.com/act/files/tag.min.js?z=12165692"
           data-cfasync="false"
           suppressHydrationWarning
+        />
+        {/* Monetag In-Page Push / Ad Tag (Zone 12165707) */}
+        <script
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{
+            __html: `(function(s){s.dataset.zone='12165707',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));`,
+          }}
         />
         {/* Monetag site ownership verification meta tag directly embedded in initial server-side HTML */}
         <meta name="monetag" content={monetagConfig.verificationToken} suppressHydrationWarning />

@@ -58,6 +58,8 @@ describe("Monetag Advertising & Verification Configuration", () => {
     const { monetagConfig, hasMonetagZone, isMonetagActive } = await import("./ads");
     expect(typeof monetagConfig.zoneId).toBe("string");
     expect(typeof monetagConfig.enabled).toBe("boolean");
+    expect(monetagConfig.inPagePushZoneId).toBe("12165707");
+    expect(monetagConfig.inPagePushScriptUrl).toBe("https://al5sm.com/tag.min.js");
     expect(hasMonetagZone()).toBe(true);
     expect(isMonetagActive()).toBe(true);
   });

@@ -159,10 +159,18 @@ export const monetagConfig = {
   domain: ((import.meta.env["VITE_MONETAG_DOMAIN"] as string | undefined) ?? "3nbf4.com").trim(),
 
   /**
-   * Optional In-Page Push (IPP) zone ID
+   * In-Page Push (IPP) / Ad Tag zone ID
    */
   inPagePushZoneId: (
-    (import.meta.env["VITE_MONETAG_IPP_ZONE_ID"] as string | undefined) ?? ""
+    (import.meta.env["VITE_MONETAG_IPP_ZONE_ID"] as string | undefined) ?? "12165707"
+  ).trim(),
+
+  /**
+   * In-Page Push (IPP) / Ad Tag script URL
+   */
+  inPagePushScriptUrl: (
+    (import.meta.env["VITE_MONETAG_IPP_SCRIPT_URL"] as string | undefined) ??
+    "https://al5sm.com/tag.min.js"
   ).trim(),
 
   /**
