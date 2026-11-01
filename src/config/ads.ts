@@ -142,21 +142,21 @@ export const monetagConfig = {
    * Primary Monetag MultiTag / Zone ID.
    * Can be configured via VITE_MONETAG_ZONE_ID in .env or dashboard settings.
    */
-  zoneId: ((import.meta.env["VITE_MONETAG_ZONE_ID"] as string | undefined) ?? "12115401").trim(),
+  zoneId: ((import.meta.env["VITE_MONETAG_ZONE_ID"] as string | undefined) ?? "12165692").trim(),
 
   /**
    * Monetag script CDN host / URL for MultiTag integration.
-   * Default: "https://5gvci.com/act/files/tag.min.js"
+   * Default: "https://5gvci.com/act/files/tag.min.js?z=12165692"
    */
   scriptUrl: (
     (import.meta.env["VITE_MONETAG_SCRIPT_URL"] as string | undefined) ??
-    "https://5gvci.com/act/files/tag.min.js"
+    "https://5gvci.com/act/files/tag.min.js?z=12165692"
   ).trim(),
 
   /**
    * Primary Monetag CDN domain for preconnecting / dns-prefetch.
    */
-  domain: ((import.meta.env["VITE_MONETAG_DOMAIN"] as string | undefined) ?? "5gvci.com").trim(),
+  domain: ((import.meta.env["VITE_MONETAG_DOMAIN"] as string | undefined) ?? "3nbf4.com").trim(),
 
   /**
    * Optional In-Page Push (IPP) zone ID

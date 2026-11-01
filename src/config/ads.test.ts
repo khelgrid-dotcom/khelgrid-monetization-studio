@@ -49,9 +49,9 @@ describe("Monetag Advertising & Verification Configuration", () => {
   it("contains the official Monetag site verification token", async () => {
     const { monetagConfig, getMonetagScriptUrl } = await import("./ads");
     expect(monetagConfig.verificationToken).toBe("6849cf6d9be2966239a31c15fef2755c");
-    expect(monetagConfig.domain).toBe("5gvci.com");
-    expect(monetagConfig.zoneId).toBe("12115401");
-    expect(getMonetagScriptUrl()).toContain("tag.min.js");
+    expect(monetagConfig.domain).toBe("3nbf4.com");
+    expect(monetagConfig.zoneId).toBe("12165692");
+    expect(getMonetagScriptUrl()).toContain("tag.min.js?z=12165692");
   });
 
   it("safely handles zone configuration and default flags", async () => {
@@ -74,7 +74,7 @@ describe("Monetag Advertising & Verification Configuration", () => {
     expect(fs.existsSync(rootSwFile)).toBe(true);
 
     const swContent = fs.readFileSync(swFile, "utf-8");
-    expect(swContent).toContain("5gvci.com");
-    expect(swContent).toContain("12115401");
+    expect(swContent).toContain("3nbf4.com");
+    expect(swContent).toContain("12165692");
   });
 });

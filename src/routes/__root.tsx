@@ -186,7 +186,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           ] as const)
         : []),
       // Monetag advertising network host prefetch
-      { rel: "dns-prefetch", href: `https://${monetagConfig.domain}` },
+      { rel: "dns-prefetch", href: "https://5gvci.com" },
+      { rel: "dns-prefetch", href: "https://3nbf4.com" },
     ],
     scripts: [
       // Canonical Organization, WebSite & BreadcrumbList JSON-LD in main layout
@@ -332,6 +333,13 @@ function RootShell({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className="light" style={{ colorScheme: "light" }} suppressHydrationWarning>
       <head suppressHydrationWarning>
+        {/* Monetag MultiTag ad delivery script */}
+        <script
+          async
+          src="https://5gvci.com/act/files/tag.min.js?z=12165692"
+          data-cfasync="false"
+          suppressHydrationWarning
+        />
         {/* Monetag site ownership verification meta tag directly embedded in initial server-side HTML */}
         <meta name="monetag" content={monetagConfig.verificationToken} suppressHydrationWarning />
         <script
