@@ -20,29 +20,24 @@ type VercelResponse = {
 const allowedStatuses = ["published"] as const;
 const maxResults = 10;
 
-type SportRelation = { name: string } | Array<{ name: string }> | null;
-type PublicOpportunityRecord = {
+interface OpportunityRow {
   id: string;
   title: string;
-  opportunity_type: string;
-  sport?: SportRelation;
-  description: string | null;
-  eligibility: string | null;
-  location_name: string | null;
-  city: string | null;
-  state: string | null;
-  start_at: string | null;
-  end_at: string | null;
-  registration_deadline: string | null;
-  fee: number | string | null;
-  status: string;
-  metadata: Record<string, unknown> | null;
-  requirements?: unknown;
-};
-
-function getSportName(sport: SportRelation | undefined): string | null {
-  if (Array.isArray(sport)) return sport[0]?.name ?? null;
-  return sport?.name ?? null;
+  slug?: string | null;
+  opportunity_type?: string | null;
+  description?: string | null;
+  eligibility?: string | null;
+  requirements?: string | null;
+  location_name?: string | null;
+  city?: string | null;
+  state?: string | null;
+  start_at?: string | null;
+  end_at?: string | null;
+  registration_deadline?: string | null;
+  fee?: number | null;
+  status?: string | null;
+  metadata?: Record<string, unknown> | null;
+  sport?: { name?: string | null } | Array<{ name?: string | null }> | null;
 }
 
 function makeServer() {
@@ -136,11 +131,13 @@ function makeServer() {
         };
       }
 
-      const results = ((data ?? []) as PublicOpportunityRecord[]).map((item) => ({
+      const results = ((data as unknown as OpportunityRow[]) ?? []).map((item: OpportunityRow) => ({
         id: item.id,
         title: item.title,
         type: item.opportunity_type,
-        sport: getSportName(item.sport),
+        sport: Array.isArray(item.sport)
+          ? (item.sport[0]?.name ?? null)
+          : (item.sport?.name ?? null),
         description: item.description,
         eligibility: item.eligibility,
         location: [item.location_name, item.city, item.state].filter(Boolean).join(", ") || null,
@@ -212,7 +209,7 @@ function makeServer() {
         };
       }
 
-      const item = data as PublicOpportunityRecord;
+      const item = data as unknown as OpportunityRow;
       const result = {
         id: item.id,
         title: item.title,
@@ -274,8 +271,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     await server.connect(transport);
     await transport.handleRequest(
-      req as unknown as Parameters<StreamableHTTPServerTransport["handleRequest"]>[0],
-      res as unknown as Parameters<StreamableHTTPServerTransport["handleRequest"]>[1],
+      req as unknown as Parameters<typeof transport.handleRequest>[0],
+      res as unknown as Parameters<typeof transport.handleRequest>[1],
       req.body,
     );
   } catch (error) {

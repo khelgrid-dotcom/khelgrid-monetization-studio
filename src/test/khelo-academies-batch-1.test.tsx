@@ -18,6 +18,8 @@ import {
   DEFAULT_BATCH_11_ACADEMIES,
   DEFAULT_BATCH_12_ACADEMIES,
   DEFAULT_BATCH_13_ACADEMIES,
+  DEFAULT_BATCH_14_ACADEMIES,
+  DEFAULT_BATCH_15_ACADEMIES,
 } from "@/components/academy/AccreditedAcademyList";
 import { AccreditedAcademyCard } from "@/components/academy/AccreditedAcademyCard";
 
@@ -50,14 +52,14 @@ vi.mock("react-helmet-async", () => ({
   Helmet: ({ children }: any) => <div data-testid="mock-helmet">{children}</div>,
 }));
 
-describe("Khelo India & SAI Accredited Academies (Batches 1 to 13)", () => {
+describe("Khelo India & SAI Accredited Academies (Batches 1 to 15)", () => {
   const allAcademies = COACHING.filter(
     (c) => c.entityType === "academy" && c.id.startsWith("academy-khelo-"),
   );
 
   it("contains deduplicated accredited academies with zero duplicate listings", () => {
-    expect(allAcademies.length).toBe(260);
-    expect(ALL_KHELO_ACADEMIES.length).toBeLessThan(260);
+    expect(allAcademies.length).toBe(300);
+    expect(ALL_KHELO_ACADEMIES.length).toBeLessThan(300);
     expect(ALL_KHELO_ACADEMIES.length).toBeGreaterThan(200);
 
     // Verify deduplication of key institutions requested by user:
@@ -496,6 +498,108 @@ describe("Khelo India & SAI Accredited Academies (Batches 1 to 13)", () => {
       <AccreditedAcademyList academies={ALL_KHELO_ACADEMIES} initialBatch="batch12" />,
     );
     expect(html).toContain("Batch 12");
+    expect(html).toContain('type="application/ld+json"');
+    expect(html).toContain("SportsActivityLocation");
+  });
+
+  it("includes flagship Batch 14 accredited academies (261 through 280)", () => {
+    const names = DEFAULT_BATCH_14_ACADEMIES.map((a) => a.academyName);
+    expect(names).toContain("SAI NCOE Cycling Velodrome Delhi");
+    expect(names).toContain("Tata Football Academy Jamshedpur");
+    expect(names).toContain("SAI STC Cuttack Gymnastics");
+    expect(names).toContain("Haryana State Boxing Academy Rohtak");
+    expect(names).toContain("SAI National Water Sports Academy Pong Dam");
+    expect(names).toContain("TN State Table Tennis Academy Chennai");
+    expect(names).toContain("SAI STC Kurnool Taekwondo");
+    expect(names).toContain("Karnataka State Swimming Academy Bengaluru");
+    expect(names).toContain("SAI NCOE Shooting Range Jagatpur");
+    expect(names).toContain("Kerala State Volleyball Academy Kozhikode");
+    expect(names).toContain("MP State Shooting Academy Bhopal");
+    expect(names).toContain("Gujarat State Table Tennis Academy Bhavnagar");
+    expect(names).toContain("SAI STC Dimapur Archery");
+    expect(names).toContain("Punjab State Hockey Academy Jalandhar");
+    expect(names).toContain("SAI STC Agartala Gymnastics");
+    expect(names).toContain("AP State Badminton Academy Vijayawada");
+    expect(names).toContain("Rajasthan State Archery Academy Dungarpur");
+    expect(names).toContain("SAI STC Kashipur Athletics");
+    expect(names).toContain("Goa State Football Academy Mapusa");
+    expect(names).toContain("SAI NCOE Sonipat High Performance Hub");
+  });
+
+  it("renders AccreditedAcademyCard with semantic Schema.org microdata and internal links for Batch 14", () => {
+    const tfa = DEFAULT_BATCH_14_ACADEMIES.find((a) => a.id === "academy-khelo-262")!; // Tata Football Academy Jamshedpur
+    const html = renderToString(<AccreditedAcademyCard academy={tfa} />);
+
+    // Schema.org Microdata
+    expect(html.toLowerCase()).toContain("itemscope");
+    expect(html).toContain("schema.org/SportsActivityLocation");
+    expect(html).toContain(tfa.academyName!);
+    expect(html).toContain(tfa.city);
+    expect(html).toContain(tfa.area);
+
+    // Internal links for SEO & discoverability
+    expect(html).toContain('href="/sport/football"');
+    expect(html).toContain('href="/city/jamshedpur"');
+    expect(html).toContain('href="/search"');
+    expect(html).toContain('href="/train"');
+  });
+
+  it("renders AccreditedAcademyList component with Batch 14 switcher active", () => {
+    const html = renderToString(
+      <AccreditedAcademyList academies={ALL_KHELO_ACADEMIES} initialBatch="batch14" />,
+    );
+    expect(html).toContain("Batch 14");
+    expect(html).toContain('type="application/ld+json"');
+    expect(html).toContain("SportsActivityLocation");
+  });
+
+  it("includes flagship Batch 15 accredited academies (281 through 300)", () => {
+    const names = DEFAULT_BATCH_15_ACADEMIES.map((a) => a.academyName);
+    expect(names).toContain("SAI NCOE Water Sports Complex Alappuzha");
+    expect(names).toContain("Army Sports Institute Archery Node Pune");
+    expect(names).toContain("SAI STC Kurukshetra Hockey & Athletics");
+    expect(names).toContain("Mizoram State Sports Academy Aizawl");
+    expect(names).toContain("SAI National Cycling Academy New Delhi");
+    expect(names).toContain("Usha School of Athletics Kozhikode");
+    expect(names).toContain("SAI STC Mayiladuthurai Weightlifting");
+    expect(names).toContain("PPBA Padukone-Dravid CSE Bengaluru");
+    expect(names).toContain("SAI NCOE Boxing & Wushu Hub Itanagar");
+    expect(names).toContain("MP State Water Sports Academy Bhopal");
+    expect(names).toContain("SAI STC Dharamshala Athletics");
+    expect(names).toContain("Odisha Naval Tata Hockey HPC Bhubaneswar");
+    expect(names).toContain("SAI STC Tellicherry Gymnastics Thalassery");
+    expect(names).toContain("Chhatrasal Stadium Wrestling Akhada Delhi");
+    expect(names).toContain("SAI STC Visakhapatnam Swimming");
+    expect(names).toContain("IIS Bellary Combat & Track Hub");
+    expect(names).toContain("SAI STC Patna Kabaddi & Sepak Takraw");
+    expect(names).toContain("Mary Kom Regional Boxing Foundation Imphal");
+    expect(names).toContain("SAI STC Port Blair Kayaking & Rowing");
+    expect(names).toContain("Gun For Glory Shooting Academy Balewadi Pune");
+  });
+
+  it("renders AccreditedAcademyCard with semantic Schema.org microdata and internal links for Batch 15", () => {
+    const alappuzha = DEFAULT_BATCH_15_ACADEMIES.find((a) => a.id === "academy-khelo-281")!;
+    const html = renderToString(<AccreditedAcademyCard academy={alappuzha} />);
+
+    // Schema.org Microdata
+    expect(html.toLowerCase()).toContain("itemscope");
+    expect(html).toContain("schema.org/SportsActivityLocation");
+    expect(html).toContain(alappuzha.academyName!);
+    expect(html).toContain(alappuzha.city);
+    expect(html).toContain(alappuzha.area);
+
+    // Internal links for SEO & discoverability
+    expect(html).toContain('href="/sport/rowing"');
+    expect(html).toContain('href="/city/alappuzha"');
+    expect(html).toContain('href="/search"');
+    expect(html).toContain('href="/train"');
+  });
+
+  it("renders AccreditedAcademyList component with Batch 15 switcher active", () => {
+    const html = renderToString(
+      <AccreditedAcademyList academies={ALL_KHELO_ACADEMIES} initialBatch="batch15" />,
+    );
+    expect(html).toContain("Batch 15");
     expect(html).toContain('type="application/ld+json"');
     expect(html).toContain("SportsActivityLocation");
   });

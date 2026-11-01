@@ -1,15 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { PRIMARY_ITEMS, FEATURE_ITEMS } from "@/config/nav";
-import {
-  Facebook,
-  Twitter,
-  Instagram,
-  Linkedin,
-  MessageCircle,
-  Mail,
-  MapPin,
-  Phone,
-} from "lucide-react";
+import { Facebook, Twitter, Instagram, Linkedin, Youtube, Mail, MapPin, Phone } from "lucide-react";
 import { TrialNewsletterSignup } from "@/components/TrialNewsletterSignup";
 
 export function Footer() {
@@ -48,39 +39,53 @@ export function Footer() {
               India's sports trials, scouted & monetized. Find opportunities, build your career.
             </p>
             <div className="flex gap-3">
-              <a href="#" className="text-muted-foreground hover:text-primary transition">
-                <Facebook className="h-5 w-5" />
+              <a
+                href="https://www.youtube.com/channel/UCfz_oxfKQ2uX08P0Dfj1OZw"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-muted-foreground hover:text-primary transition"
+                aria-label="KhelGrid YouTube Channel"
+                title="KhelGrid YouTube Channel"
+              >
+                <Youtube className="h-5 w-5" />
               </a>
-              <a href="#" className="text-muted-foreground hover:text-primary transition">
+              <a
+                href="https://x.com/Khelgrid"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-muted-foreground hover:text-primary transition"
+                aria-label="KhelGrid on X"
+              >
                 <Twitter className="h-5 w-5" />
               </a>
-              <a href="#" className="text-muted-foreground hover:text-primary transition">
+              <a
+                href="https://www.instagram.com/khelgrid?igsh=YmZmeHI1M2hyMHMw"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-muted-foreground hover:text-primary transition"
+                aria-label="KhelGrid on Instagram"
+              >
                 <Instagram className="h-5 w-5" />
               </a>
-              <a href="#" className="text-muted-foreground hover:text-primary transition">
+              <a
+                href="https://www.linkedin.com/company/khelgrid"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-muted-foreground hover:text-primary transition"
+                aria-label="KhelGrid on LinkedIn"
+              >
                 <Linkedin className="h-5 w-5" />
               </a>
               <a
-                href="https://www.reddit.com/r/Khelgridonline/"
+                href="https://www.facebook.com/khelgrid"
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="Join KhelGrid on Reddit"
-                title="KhelGrid on Reddit"
                 className="text-muted-foreground hover:text-primary transition"
+                aria-label="KhelGrid on Facebook"
               >
-                <MessageCircle className="h-5 w-5" />
+                <Facebook className="h-5 w-5" />
               </a>
             </div>
-            <a
-              href="https://www.reddit.com/r/Khelgridonline/"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Visit the KhelGrid Reddit community"
-              className="mt-3 inline-flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-2 text-sm font-medium text-foreground transition hover:border-primary/50 hover:text-primary"
-            >
-              <MessageCircle className="h-4 w-4 text-primary" />
-              Join our Reddit community
-            </a>
           </div>
 
           {/* Primary Navigation */}

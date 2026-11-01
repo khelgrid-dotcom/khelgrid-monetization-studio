@@ -38,11 +38,7 @@ export function parseTrialDate(dateStr?: string): Date | null {
 export function getTrialEndDate(dateStr?: string): Date | null {
   if (!dateStr?.trim()) return null;
 
-  let clean = dateStr
-    .trim()
-    .split("·")[0]
-    .replace(/\([^)]*\)/g, "")
-    .trim();
+  let clean = dateStr.trim().split("·")[0].replace(/\([^)]*\)/g, "").trim();
   clean = clean.replace(/[–—]/g, "-");
 
   const finish = (value: string): Date | null => {
@@ -59,9 +55,7 @@ export function getTrialEndDate(dateStr?: string): Date | null {
   }
 
   // Multiple days in one month: "Oct 23, 24 & 25, 2026".
-  const multiDay = clean.match(
-    /^([A-Za-z]{3,9})\s+\d{1,2},\s*\d{1,2}\s*(?:&|and|,)\s*(\d{1,2}),?\s*(\d{4})$/i,
-  );
+  const multiDay = clean.match(/^([A-Za-z]{3,9})\s+\d{1,2},\s*\d{1,2}\s*(?:&|and|,)\s*(\d{1,2}),?\s*(\d{4})$/i);
   if (multiDay) {
     return finish(`${multiDay[1]} ${multiDay[2]}, ${multiDay[3]}`);
   }
@@ -91,12 +85,7 @@ export function getTrialEndDate(dateStr?: string): Date | null {
 export function getTrialStartDate(dateStr?: string): Date | null {
   if (!dateStr?.trim()) return null;
 
-  const clean = dateStr
-    .trim()
-    .split("·")[0]
-    .replace(/\([^)]*\)/g, "")
-    .replace(/[–—]/g, "-")
-    .trim();
+  const clean = dateStr.trim().split("·")[0].replace(/\([^)]*\)/g, "").replace(/[–—]/g, "-").trim();
   const startPart = clean.split(/\s+-\s+/)[0].trim();
   const direct = new Date(startPart);
   if (!Number.isNaN(direct.getTime()) && /\b20\d{2}\b/.test(startPart)) {
@@ -116,10 +105,7 @@ export function getTrialStartDate(dateStr?: string): Date | null {
 }
 
 /** True only after the scheduled event's final date has elapsed. */
-export function isTrialArchived(
-  trial: Pick<Trial, "date">,
-  currentDate: Date = new Date(),
-): boolean {
+export function isTrialArchived(trial: Pick<Trial, "date">, currentDate: Date = new Date()): boolean {
   const endDate = getTrialEndDate(trial.date);
   return Boolean(endDate && endDate.getTime() < currentDate.getTime());
 }

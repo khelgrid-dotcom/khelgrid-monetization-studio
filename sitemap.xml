@@ -13,6 +13,12 @@
     <priority>0.90</priority>
   </url>
   <url>
+    <loc>https://www.khelgrid.com/search?archive=true</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.55</priority>
+  </url>
+  <url>
     <loc>https://www.khelgrid.com/opportunities</loc>
     <lastmod>2026-10-20</lastmod>
     <changefreq>daily</changefreq>
@@ -259,40 +265,10 @@
     <priority>0.30</priority>
   </url>
   <url>
-    <loc>https://www.khelgrid.com/trial/t-sai-ncoe-aurangabad-women-boxing-trials-2026</loc>
-    <lastmod>2026-10-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.90</priority>
-  </url>
-  <url>
-    <loc>https://www.khelgrid.com/opportunities/t-sai-ncoe-aurangabad-women-boxing-trials-2026</loc>
-    <lastmod>2026-10-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://www.khelgrid.com/trial/t-jk-kho-kho-junior-national-trials-2026</loc>
-    <lastmod>2026-10-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.90</priority>
-  </url>
-  <url>
-    <loc>https://www.khelgrid.com/opportunities/t-jk-kho-kho-junior-national-trials-2026</loc>
-    <lastmod>2026-10-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
     <loc>https://www.khelgrid.com/trial/t-bcci-arunachal-pradesh-ranji-trials-2026</loc>
     <lastmod>2026-10-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.90</priority>
-  </url>
-  <url>
-    <loc>https://www.khelgrid.com/opportunities/t-bcci-arunachal-pradesh-ranji-trials-2026</loc>
-    <lastmod>2026-10-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
   </url>
   <url>
     <loc>https://www.khelgrid.com/trial/t-khel-maharan-3-assam-2026</loc>
@@ -301,22 +277,10 @@
     <priority>0.90</priority>
   </url>
   <url>
-    <loc>https://www.khelgrid.com/opportunities/t-khel-maharan-3-assam-2026</loc>
-    <lastmod>2026-10-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
     <loc>https://www.khelgrid.com/trial/t-ddca-delhi-womens-u15-cricket-2026</loc>
     <lastmod>2026-10-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.90</priority>
-  </url>
-  <url>
-    <loc>https://www.khelgrid.com/opportunities/t-ddca-delhi-womens-u15-cricket-2026</loc>
-    <lastmod>2026-10-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
   </url>
   <url>
     <loc>https://www.khelgrid.com/trial/t-crpf-meritorious-sportspersons-recruitment-2026</loc>
@@ -325,166 +289,10 @@
     <priority>0.90</priority>
   </url>
   <url>
-    <loc>https://www.khelgrid.com/opportunities/t-crpf-meritorious-sportspersons-recruitment-2026</loc>
-    <lastmod>2026-10-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://www.khelgrid.com/trial/t-kca-u14-cricket-trials-kanpur-2026</loc>
-    <lastmod>2026-10-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.90</priority>
-  </url>
-  <url>
-    <loc>https://www.khelgrid.com/opportunities/t-kca-u14-cricket-trials-kanpur-2026</loc>
-    <lastmod>2026-10-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://www.khelgrid.com/trial/t-up-sports-directorate-junior-basketball-trials-kanpur-2026</loc>
-    <lastmod>2026-10-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.90</priority>
-  </url>
-  <url>
-    <loc>https://www.khelgrid.com/opportunities/t-up-sports-directorate-junior-basketball-trials-kanpur-2026</loc>
-    <lastmod>2026-10-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
     <loc>https://www.khelgrid.com/trial/t-aiu-wushu-inter-university-trials-2026</loc>
     <lastmod>2026-10-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.90</priority>
-  </url>
-  <url>
-    <loc>https://www.khelgrid.com/opportunities/t-aiu-wushu-inter-university-trials-2026</loc>
-    <lastmod>2026-10-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://www.khelgrid.com/trial/t-delhi-pickleball-selection-trials-2026</loc>
-    <lastmod>2026-10-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.90</priority>
-  </url>
-  <url>
-    <loc>https://www.khelgrid.com/opportunities/t-delhi-pickleball-selection-trials-2026</loc>
-    <lastmod>2026-10-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://www.khelgrid.com/trial/t-fit-india-namchi-sikkim-2026</loc>
-    <lastmod>2026-10-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.90</priority>
-  </url>
-  <url>
-    <loc>https://www.khelgrid.com/opportunities/t-fit-india-namchi-sikkim-2026</loc>
-    <lastmod>2026-10-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://www.khelgrid.com/trial/t-sai-wrestling-mumbai-2026</loc>
-    <lastmod>2026-10-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.90</priority>
-  </url>
-  <url>
-    <loc>https://www.khelgrid.com/opportunities/t-sai-wrestling-mumbai-2026</loc>
-    <lastmod>2026-10-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://www.khelgrid.com/trial/t-1</loc>
-    <lastmod>2026-10-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.90</priority>
-  </url>
-  <url>
-    <loc>https://www.khelgrid.com/opportunities/t-1</loc>
-    <lastmod>2026-10-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://www.khelgrid.com/trial/t-2</loc>
-    <lastmod>2026-10-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.90</priority>
-  </url>
-  <url>
-    <loc>https://www.khelgrid.com/opportunities/t-2</loc>
-    <lastmod>2026-10-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://www.khelgrid.com/trial/t-3</loc>
-    <lastmod>2026-10-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.90</priority>
-  </url>
-  <url>
-    <loc>https://www.khelgrid.com/opportunities/t-3</loc>
-    <lastmod>2026-10-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://www.khelgrid.com/trial/t-4</loc>
-    <lastmod>2026-10-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.90</priority>
-  </url>
-  <url>
-    <loc>https://www.khelgrid.com/opportunities/t-4</loc>
-    <lastmod>2026-10-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://www.khelgrid.com/trial/t-5</loc>
-    <lastmod>2026-10-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.90</priority>
-  </url>
-  <url>
-    <loc>https://www.khelgrid.com/opportunities/t-5</loc>
-    <lastmod>2026-10-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://www.khelgrid.com/trial/t-6</loc>
-    <lastmod>2026-10-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.90</priority>
-  </url>
-  <url>
-    <loc>https://www.khelgrid.com/opportunities/t-6</loc>
-    <lastmod>2026-10-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://www.khelgrid.com/trial/t-7</loc>
-    <lastmod>2026-10-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.90</priority>
-  </url>
-  <url>
-    <loc>https://www.khelgrid.com/opportunities/t-7</loc>
-    <lastmod>2026-10-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
   </url>
   <url>
     <loc>https://www.khelgrid.com/trial/t-8</loc>
@@ -493,22 +301,10 @@
     <priority>0.90</priority>
   </url>
   <url>
-    <loc>https://www.khelgrid.com/opportunities/t-8</loc>
-    <lastmod>2026-10-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
     <loc>https://www.khelgrid.com/trial/t-9</loc>
     <lastmod>2026-10-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.90</priority>
-  </url>
-  <url>
-    <loc>https://www.khelgrid.com/opportunities/t-9</loc>
-    <lastmod>2026-10-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
   </url>
   <url>
     <loc>https://www.khelgrid.com/trial/t-10</loc>
@@ -517,46 +313,10 @@
     <priority>0.90</priority>
   </url>
   <url>
-    <loc>https://www.khelgrid.com/opportunities/t-10</loc>
-    <lastmod>2026-10-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://www.khelgrid.com/trial/t-11</loc>
-    <lastmod>2026-10-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.90</priority>
-  </url>
-  <url>
-    <loc>https://www.khelgrid.com/opportunities/t-11</loc>
-    <lastmod>2026-10-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
     <loc>https://www.khelgrid.com/trial/t-12</loc>
     <lastmod>2026-10-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.90</priority>
-  </url>
-  <url>
-    <loc>https://www.khelgrid.com/opportunities/t-12</loc>
-    <lastmod>2026-10-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://www.khelgrid.com/trial/t-13</loc>
-    <lastmod>2026-10-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.90</priority>
-  </url>
-  <url>
-    <loc>https://www.khelgrid.com/opportunities/t-13</loc>
-    <lastmod>2026-10-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
   </url>
   <url>
     <loc>https://www.khelgrid.com/trial/t-14</loc>
@@ -565,46 +325,10 @@
     <priority>0.90</priority>
   </url>
   <url>
-    <loc>https://www.khelgrid.com/opportunities/t-14</loc>
-    <lastmod>2026-10-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://www.khelgrid.com/trial/t-15</loc>
-    <lastmod>2026-10-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.90</priority>
-  </url>
-  <url>
-    <loc>https://www.khelgrid.com/opportunities/t-15</loc>
-    <lastmod>2026-10-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
     <loc>https://www.khelgrid.com/trial/t-16</loc>
     <lastmod>2026-10-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.90</priority>
-  </url>
-  <url>
-    <loc>https://www.khelgrid.com/opportunities/t-16</loc>
-    <lastmod>2026-10-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://www.khelgrid.com/trial/t-17</loc>
-    <lastmod>2026-10-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.90</priority>
-  </url>
-  <url>
-    <loc>https://www.khelgrid.com/opportunities/t-17</loc>
-    <lastmod>2026-10-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
   </url>
   <url>
     <loc>https://www.khelgrid.com/trial/t-18</loc>
@@ -613,10 +337,316 @@
     <priority>0.90</priority>
   </url>
   <url>
-    <loc>https://www.khelgrid.com/opportunities/t-18</loc>
+    <loc>https://www.khelgrid.com/trial/t-sgfi-70th-badminton-u14-sagar-2026</loc>
     <lastmod>2026-10-20</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://www.khelgrid.com/trial/t-sgfi-70th-squash-u17-ajmer-2026</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://www.khelgrid.com/trial/t-sgfi-70th-soft-tennis-dewas-2026</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://www.khelgrid.com/trial/t-sgfi-70th-karate-u17-indore-2026</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://www.khelgrid.com/trial/t-sgfi-70th-basketball-u19-raipur-2026</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://www.khelgrid.com/trial/t-sgfi-70th-hockey-u19-ludhiana-2026</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://www.khelgrid.com/trial/t-sgfi-70th-hockey-u14-mandsaur-2026</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://www.khelgrid.com/trial/t-sgfi-70th-cricket-u17-gwalior-2026</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://www.khelgrid.com/trial/t-sgfi-70th-volleyball-u17-sikar-2026</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://www.khelgrid.com/trial/t-sgfi-70th-football-u14-ranchi-2026</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://www.khelgrid.com/trial/t-sgfi-70th-netball-u17-satna-2026</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://www.khelgrid.com/trial/t-sgfi-70th-fencing-u17-jammu-2026</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://www.khelgrid.com/trial/t-sgfi-70th-badminton-u17-bareilly-2026</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://www.khelgrid.com/trial/t-sgfi-70th-kho-kho-u14-ayodhya-2026</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://www.khelgrid.com/trial/t-sgfi-70th-chess-u17-sikar-2026</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://www.khelgrid.com/trial/t-sgfi-70th-cricket-u14-bhopal-2026</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://www.khelgrid.com/trial/t-sgfi-70th-rugby-u19-delhi-2026</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://www.khelgrid.com/trial/t-sgfi-70th-tennis-u17-u19-delhi-2026</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://www.khelgrid.com/trial/t-sgfi-70th-thang-ta-multi-age-delhi-2026</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://www.khelgrid.com/trial/t-sgfi-70th-weightlifting-u19-delhi-2026</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://www.khelgrid.com/trial/t-sgfi-70th-wrestling-freestyle-multi-age-delhi-2026</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://www.khelgrid.com/trial/t-sgfi-70th-football-u17-ballia-2026</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://www.khelgrid.com/trial/t-sgfi-70th-cricket-u19-narshinghpur-2026</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://www.khelgrid.com/trial/t-sgfi-70th-athletics-u17-boys-shivpuri-2026</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://www.khelgrid.com/trial/t-sgfi-70th-football-u14-boys-chhatarpur-2026</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://www.khelgrid.com/trial/t-sgfi-70th-cricket-u17-girls-jammu-2026</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://www.khelgrid.com/trial/t-sgfi-70th-softball-u19-chandigarh-2026</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://www.khelgrid.com/trial/t-sgfi-70th-athletics-u17-girls-shivpuri-2026</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://www.khelgrid.com/trial/t-sgfi-70th-volleyball-u14-shirdi-2026</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://www.khelgrid.com/trial/t-sgfi-70th-shooting-u17-mandrem-2026</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://www.khelgrid.com/trial/t-sgfi-70th-taekwondo-u19-ranchi-2026</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://www.khelgrid.com/trial/t-sgfi-70th-karate-u19-girls-ludhiana-2026</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://www.khelgrid.com/trial/t-sgfi-70th-karate-u14-ludhiana-2026</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://www.khelgrid.com/trial/t-sgfi-70th-netball-u19-ludhiana-2026</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://www.khelgrid.com/trial/t-sgfi-70th-basketball-u14-girls-kotagiri-2026</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://www.khelgrid.com/trial/t-sgfi-70th-football-u19-sri-vijaya-puram-2026</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://www.khelgrid.com/trial/t-sgfi-70th-yogasana-u17-boys-pune-2026</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://www.khelgrid.com/trial/t-sgfi-70th-taekwondo-u14-dimapur-2026</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://www.khelgrid.com/trial/t-sgfi-70th-hockey-u17-girls-sundargarh-2026</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://www.khelgrid.com/trial/t-sgfi-70th-kabaddi-u17-gorakhpur-2026</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://www.khelgrid.com/trial/t-sgfi-70th-football-u17-girls-ranchi-2026</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://www.khelgrid.com/trial/t-sgfi-70th-hockey-u14-girls-gwalior-2026</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://www.khelgrid.com/trial/t-sgfi-70th-yogasana-u17-girls-bikaner-2026</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://www.khelgrid.com/trial/t-sgfi-70th-basketball-u14-boys-guna-2026</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://www.khelgrid.com/trial/t-sgfi-70th-chess-u14-sehore-2026</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://www.khelgrid.com/trial/t-sgfi-70th-sepak-takraw-u14-raisen-2026</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://www.khelgrid.com/trial/t-sgfi-70th-track-cycling-multi-age-ranchi-2026</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://www.khelgrid.com/trial/t-sgfi-70th-wushu-u19-ranchi-2026</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://www.khelgrid.com/trial/t-sgfi-70th-basketball-u19-girls-ranchi-2026</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://www.khelgrid.com/trial/t-sgfi-70th-yogasana-u19-ranchi-2026</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://www.khelgrid.com/trial/t-sgfi-70th-hockey-u17-boys-ranchi-2026</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://www.khelgrid.com/trial/t-sgfi-70th-table-tennis-u17-delhi-2026</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
   </url>
   <url>
     <loc>https://www.khelgrid.com/venue/v-sai-ncoe-aurangabad-sports-complex</loc>
@@ -904,115 +934,115 @@
     <loc>https://www.khelgrid.com/city/delhi</loc>
     <lastmod>2026-10-20</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
+    <priority>0.80</priority>
   </url>
   <url>
     <loc>https://www.khelgrid.com/city/mumbai</loc>
     <lastmod>2026-10-20</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
+    <priority>0.80</priority>
   </url>
   <url>
     <loc>https://www.khelgrid.com/city/bengaluru</loc>
     <lastmod>2026-10-20</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
+    <priority>0.80</priority>
   </url>
   <url>
     <loc>https://www.khelgrid.com/city/hyderabad</loc>
     <lastmod>2026-10-20</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
+    <priority>0.80</priority>
   </url>
   <url>
     <loc>https://www.khelgrid.com/city/chandigarh</loc>
     <lastmod>2026-10-20</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
+    <priority>0.80</priority>
   </url>
   <url>
     <loc>https://www.khelgrid.com/city/pune</loc>
     <lastmod>2026-10-20</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
+    <priority>0.80</priority>
   </url>
   <url>
     <loc>https://www.khelgrid.com/city/kolkata</loc>
     <lastmod>2026-10-20</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
+    <priority>0.80</priority>
   </url>
   <url>
     <loc>https://www.khelgrid.com/city/chennai</loc>
     <lastmod>2026-10-20</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
+    <priority>0.80</priority>
   </url>
   <url>
     <loc>https://www.khelgrid.com/city/ahmedabad</loc>
     <lastmod>2026-10-20</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
+    <priority>0.80</priority>
   </url>
   <url>
     <loc>https://www.khelgrid.com/city/jaipur</loc>
     <lastmod>2026-10-20</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
+    <priority>0.80</priority>
   </url>
   <url>
     <loc>https://www.khelgrid.com/city/lucknow</loc>
     <lastmod>2026-10-20</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
+    <priority>0.80</priority>
   </url>
   <url>
     <loc>https://www.khelgrid.com/city/bhubaneswar</loc>
     <lastmod>2026-10-20</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
+    <priority>0.80</priority>
   </url>
   <url>
     <loc>https://www.khelgrid.com/city/guwahati</loc>
     <lastmod>2026-10-20</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
+    <priority>0.80</priority>
   </url>
   <url>
     <loc>https://www.khelgrid.com/city/indore</loc>
     <lastmod>2026-10-20</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
+    <priority>0.80</priority>
   </url>
   <url>
     <loc>https://www.khelgrid.com/city/kochi</loc>
     <lastmod>2026-10-20</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
+    <priority>0.80</priority>
   </url>
   <url>
     <loc>https://www.khelgrid.com/city/goa</loc>
     <lastmod>2026-10-20</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
+    <priority>0.80</priority>
   </url>
   <url>
     <loc>https://www.khelgrid.com/city/namchi</loc>
     <lastmod>2026-10-20</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
+    <priority>0.80</priority>
   </url>
   <url>
     <loc>https://www.khelgrid.com/city/gangtok</loc>
     <lastmod>2026-10-20</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
+    <priority>0.80</priority>
   </url>
   <url>
     <loc>https://www.khelgrid.com/city/kanpur</loc>
     <lastmod>2026-10-20</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
+    <priority>0.80</priority>
   </url>
   <url>
     <loc>https://www.khelgrid.com/guide/cricket-trial-prep-checklist</loc>

@@ -55,7 +55,6 @@ export function normalizeSupabaseTrial(row: TrialRow): TrialDiscoveryItem {
     date: row.trial_date,
     registrationDeadline: row.registration_deadline || undefined,
     fee: Number(row.fee) || 0,
-    feeLabel: row.fee_label || undefined,
     spots: row.spots_available > 0 ? row.spots_available : row.spots_total,
     tag: row.tag || "Open",
     ageCategory: row.age_category || undefined,
@@ -147,7 +146,10 @@ export async function fetchAvailableTrialsFromSupabase(options?: {
       }
     } catch (err: unknown) {
       queryError = err instanceof Error ? err.message : String(err);
-      console.warn("Supabase trials query failed, using curated listings:", queryError);
+      console.warn(
+        "Supabase trials query failed, using curated listings:",
+        queryError,
+      );
     }
   }
 

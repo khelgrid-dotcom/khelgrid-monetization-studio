@@ -44,3 +44,37 @@ describe("Google AdSense Configuration & ads.txt Verification", () => {
     expect(parts[3]).toBe("f08c47fec0942fa0");
   });
 });
+
+describe("Monetag Advertising & Verification Configuration", () => {
+  it("contains the official Monetag site verification token", async () => {
+    const { monetagConfig, getMonetagScriptUrl } = await import("./ads");
+    expect(monetagConfig.verificationToken).toBe("6849cf6d9be2966239a31c15fef2755c");
+    expect(monetagConfig.domain).toBe("5gvci.com");
+    expect(monetagConfig.zoneId).toBe("12115401");
+    expect(getMonetagScriptUrl()).toContain("tag.min.js");
+  });
+
+  it("safely handles zone configuration and default flags", async () => {
+    const { monetagConfig, hasMonetagZone, isMonetagActive } = await import("./ads");
+    expect(typeof monetagConfig.zoneId).toBe("string");
+    expect(typeof monetagConfig.enabled).toBe("boolean");
+    expect(hasMonetagZone()).toBe(true);
+    expect(isMonetagActive()).toBe(true);
+  });
+
+  it("verifies Monetag verification files and service worker exist in public directory", () => {
+    const pubFile1 = path.resolve(process.cwd(), "public/6c71a3962bfa4c5ea1f5927c81d83ee6.txt");
+    const pubFile2 = path.resolve(process.cwd(), "public/cb4187fd3a8148d4b13e5346b017aade.txt");
+    const swFile = path.resolve(process.cwd(), "public/sw.js");
+    const rootSwFile = path.resolve(process.cwd(), "sw.js");
+
+    expect(fs.existsSync(pubFile1)).toBe(true);
+    expect(fs.existsSync(pubFile2)).toBe(true);
+    expect(fs.existsSync(swFile)).toBe(true);
+    expect(fs.existsSync(rootSwFile)).toBe(true);
+
+    const swContent = fs.readFileSync(swFile, "utf-8");
+    expect(swContent).toContain("5gvci.com");
+    expect(swContent).toContain("12115401");
+  });
+});

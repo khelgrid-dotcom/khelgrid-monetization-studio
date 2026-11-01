@@ -126,3 +126,69 @@ export function adsenseScriptSrc(): string {
 export function resolveAdSlot(slot: AdSlotKey | string): string {
   return (AD_SLOTS as Record<string, string>)[slot] ?? slot;
 }
+
+/**
+ * Configuration for Monetag (PropellerAds) advertising network.
+ * Provides verification tokens, multi-tag zone IDs, script delivery URLs,
+ * and runtime activation flags.
+ */
+export const monetagConfig = {
+  /**
+   * Official Monetag website verification meta token for khelgrid.com
+   */
+  verificationToken: "6849cf6d9be2966239a31c15fef2755c",
+
+  /**
+   * Primary Monetag MultiTag / Zone ID.
+   * Can be configured via VITE_MONETAG_ZONE_ID in .env or dashboard settings.
+   */
+  zoneId: ((import.meta.env["VITE_MONETAG_ZONE_ID"] as string | undefined) ?? "12115401").trim(),
+
+  /**
+   * Monetag script CDN host / URL for MultiTag integration.
+   * Default: "https://5gvci.com/act/files/tag.min.js"
+   */
+  scriptUrl: (
+    (import.meta.env["VITE_MONETAG_SCRIPT_URL"] as string | undefined) ??
+    "https://5gvci.com/act/files/tag.min.js"
+  ).trim(),
+
+  /**
+   * Primary Monetag CDN domain for preconnecting / dns-prefetch.
+   */
+  domain: ((import.meta.env["VITE_MONETAG_DOMAIN"] as string | undefined) ?? "5gvci.com").trim(),
+
+  /**
+   * Optional In-Page Push (IPP) zone ID
+   */
+  inPagePushZoneId: (
+    (import.meta.env["VITE_MONETAG_IPP_ZONE_ID"] as string | undefined) ?? ""
+  ).trim(),
+
+  /**
+   * Master killswitch for Monetag ad loading.
+   * Defaults to true unless explicitly disabled with VITE_MONETAG_ENABLED="false".
+   */
+  enabled: (import.meta.env["VITE_MONETAG_ENABLED"] as string | undefined) !== "false",
+} as const;
+
+/**
+ * Returns true if a Monetag zone ID has been configured.
+ */
+export function hasMonetagZone(): boolean {
+  return Boolean(monetagConfig.zoneId && monetagConfig.zoneId.length > 0);
+}
+
+/**
+ * Returns true if Monetag is configured and active for ad delivery.
+ */
+export function isMonetagActive(): boolean {
+  return monetagConfig.enabled && hasMonetagZone();
+}
+
+/**
+ * Generates the full Monetag MultiTag script URL.
+ */
+export function getMonetagScriptUrl(): string {
+  return monetagConfig.scriptUrl;
+}

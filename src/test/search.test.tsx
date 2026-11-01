@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { renderToString } from "react-dom/server";
 import SearchPage, { Route } from "@/routes/search";
 import { TRIALS, SPORTS, CITIES } from "@/data/trials";
+import { isTrialArchived } from "@/lib/opportunity-badge";
 
 // Mock router
 let mockSearchParams: Record<string, unknown> = {
@@ -157,8 +158,15 @@ describe("Search Trials Page & SEO Optimization", () => {
     it("renders trial cards in grid view by default", () => {
       const html = renderToString(<SearchPage />);
 
-      expect(html).toContain(TRIALS[0].title.replace(/&/g, "&amp;"));
-      expect(html).toContain(TRIALS[0].academy.replace(/&/g, "&amp;"));
+      const activeTrial = TRIALS.find((t) => !isTrialArchived(t)) || TRIALS[0];
+      const encodedTitle = activeTrial.title
+        .replace(/&/g, "&amp;")
+        .replace(/'/g, "&#x27;");
+      const encodedAcademy = activeTrial.academy
+        .replace(/&/g, "&amp;")
+        .replace(/'/g, "&#x27;");
+      expect(html).toContain(encodedTitle);
+      expect(html).toContain(encodedAcademy);
     });
 
     it("renders compact list view when view parameter is list", () => {

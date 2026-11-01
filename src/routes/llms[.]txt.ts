@@ -16,6 +16,7 @@ try {
 - [Trust Center & Verification Policy](https://www.khelgrid.com/trust-center): Rigorous verification methodology ensuring authentic, zero fake trials across all states.
 - [Athlete Sports CV Documentation](https://www.khelgrid.com/start-from-zero): Comprehensive guide to building standardized digital athletic resumes for scouting.
 - [Terms of Service](https://www.khelgrid.com/terms): Official platform terms, athlete code of conduct, and participation guidelines.
+- [Official YouTube Channel](https://www.youtube.com/channel/UCfz_oxfKQ2uX08P0Dfj1OZw): Official video tutorials, trial walkthroughs, athlete interviews, and academy tours.
 
 ## Core Opportunities & Selection Trials
 - [Search Sports Selection Trials](https://www.khelgrid.com/search): Real-time searchable directory of verified sports selection trials across India.

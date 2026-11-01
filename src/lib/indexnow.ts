@@ -3,7 +3,7 @@
  * Instant search engine URL discovery and indexing API.
  */
 
-export const INDEXNOW_KEY = "6c71a3962bfa4c5ea1f5927c81d83ee6";
+export const INDEXNOW_KEY = "cb4187fd3a8148d4b13e5346b017aade";
 export const INDEXNOW_HOST = "www.khelgrid.com";
 export const INDEXNOW_KEY_LOCATION = `https://${INDEXNOW_HOST}/${INDEXNOW_KEY}.txt`;
 export const INDEXNOW_ENDPOINT = "https://api.indexnow.org/indexnow";

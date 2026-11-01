@@ -1,6 +1,9 @@
 import { Link } from "@tanstack/react-router";
-import { TRIALS, type Trial } from "@/data/trials";
-import type { TrialDiscoveryItem } from "@/lib/trials-service";
+import { useEffect, useState } from "react";
+import {
+  fetchAvailableTrialsFromSupabase,
+  type TrialDiscoveryItem,
+} from "@/lib/trials-service";
 import { useSavedOpportunities } from "@/context/SavedOpportunityContext";
 import {
   Trophy,
@@ -27,48 +30,41 @@ export function FeaturedTrialsRadar({
 }: FeaturedTrialsRadarProps) {
   const { isSaved, toggleSaved } = useSavedOpportunities();
   const { scrollRef, scroll } = useTouchScroll(340);
-  const trials: TrialDiscoveryItem[] = TRIALS
-    .filter((trial) => {
-      const sportMatches =
-        selectedSport === "All" ||
-        trial.sport.toLowerCase().includes(selectedSport.toLowerCase());
-      const cityMatches =
-        selectedCity === "All Cities" ||
-        trial.city.toLowerCase().includes(selectedCity.toLowerCase());
-      return sportMatches && cityMatches;
-    })
-    .map((trial: Trial): TrialDiscoveryItem => ({
-      id: trial.id,
-      title: trial.title,
-      academy: trial.academy,
-      sport: trial.sport,
-      city: trial.city,
-      venue: trial.venue,
-      date: trial.date,
-      registrationDeadline: trial.registrationDeadline,
-      fee: trial.fee,
-      feeLabel: trial.feeLabel || (trial.fee === 0 ? "Fee not stated" : undefined),
-      spots: trial.spots,
-      tag: trial.tag,
-      ageCategory: trial.ageCategory,
-      gender: trial.gender,
-      eligibility: trial.eligibility,
-      verifiedLabel: trial.verifiedLabel,
-      urgencyText: trial.urgencyText,
-      badge: trial.badge,
-      sourceUrl: trial.sourceUrl,
-      sourceLabel: trial.sourceLabel,
-      sources: trial.sources,
-      timelines: trial.timelines,
-      organizerContacts: trial.organizerContacts,
-      requiredDocuments: trial.requiredDocuments,
-      selectionProcess: trial.selectionProcess,
-      lastVerified: trial.lastVerified,
-      listingType: trial.listingType,
-      entryStatus: trial.entryStatus,
-    }));
-  const isLoading = false;
-  const loadError: string | null = null;
+  const [trials, setTrials] = useState<TrialDiscoveryItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadTrials() {
+      setIsLoading(true);
+      setLoadError(null);
+      try {
+        const result = await fetchAvailableTrialsFromSupabase({
+          sport: selectedSport === "All" ? "All Sports" : selectedSport,
+          city: selectedCity === "All Cities" ? "All Locations" : selectedCity,
+          maxLimit: 100,
+        });
+        if (!cancelled) {
+          setTrials(result.trials);
+          if (result.error) setLoadError(result.error);
+        }
+      } catch (error) {
+        if (!cancelled) {
+          setLoadError(error instanceof Error ? error.message : "Unable to load trials.");
+          setTrials([]);
+        }
+      } finally {
+        if (!cancelled) setIsLoading(false);
+      }
+    }
+
+    void loadTrials();
+    return () => {
+      cancelled = true;
+    };
+  }, [selectedSport, selectedCity]);
 
   const displayTrials = trials.slice(0, 8);
 
@@ -104,7 +100,7 @@ export function FeaturedTrialsRadar({
             <span className="truncate">Selection Trials & Combines</span>
           </h2>
           <div className="text-[11px] text-muted-foreground truncate">
-            Sports trial listings · Confirm details with the organizer before travelling
+            Verified SAI, federation & academy scouting trials · Swipe to explore
           </div>
         </div>
 
@@ -159,129 +155,125 @@ export function FeaturedTrialsRadar({
           <div className="w-full rounded-xl border border-border/70 bg-card p-5 text-sm text-muted-foreground">
             No upcoming trials match these filters yet.
           </div>
-        ) : (
-          displayTrials.map((trial) => {
-            const saved = isSaved(trial.id);
+        ) : displayTrials.map((trial) => {
+          const saved = isSaved(trial.id);
 
-            return (
-              <Link
-                key={trial.id}
-                to="/search"
-                search={{
-                  q:
-                    trial.id === "t-crpf-meritorious-sportspersons-recruitment-2026"
-                      ? "CRPF"
-                      : trial.title,
-                  sport:
-                    trial.sport && trial.sport !== "Multi-Discipline Sports Quota"
-                      ? trial.sport
-                      : "All Sports",
-                  city: "All Locations",
-                  sort: "Soonest",
-                  free: false,
-                  trialId: trial.id,
-                }}
-                hash={
+          return (
+            <Link
+              key={trial.id}
+              to="/search"
+              search={{
+                q:
                   trial.id === "t-crpf-meritorious-sportspersons-recruitment-2026"
-                    ? "crpf-recruitment-notification-card"
-                    : `trial-card-${trial.id}`
-                }
-                className="snap-start shrink-0 w-[82vw] max-w-[320px] sm:w-[320px] lg:w-[340px] group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-border/80 bg-card p-3 sm:p-3.5 transition-all hover:border-primary/50 hover:shadow-md cursor-pointer select-auto"
-              >
-                <div>
-                  {/* Visual Card Image Banner */}
-                  <div className="relative aspect-[16/10] w-full overflow-hidden rounded-xl bg-muted mb-3 shrink-0">
-                    <img
-                      src={getTrialCardImage(trial.sport)}
-                      alt={`${trial.title} - ${trial.sport} Selection Trial`}
-                      width={400}
-                      height={250}
-                      loading="lazy"
-                      decoding="async"
-                      referrerPolicy="no-referrer"
-                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent pointer-events-none" />
+                    ? "CRPF"
+                    : trial.title,
+                sport:
+                  trial.sport && trial.sport !== "Multi-Discipline Sports Quota"
+                    ? trial.sport
+                    : "All Sports",
+                city: "All Locations",
+                sort: "Soonest",
+                free: false,
+                trialId: trial.id,
+              }}
+              hash={
+                trial.id === "t-crpf-meritorious-sportspersons-recruitment-2026"
+                  ? "crpf-recruitment-notification-card"
+                  : `trial-card-${trial.id}`
+              }
+              className="snap-start shrink-0 w-[82vw] max-w-[320px] sm:w-[320px] lg:w-[340px] group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-border/80 bg-card p-3 sm:p-3.5 transition-all hover:border-primary/50 hover:shadow-md cursor-pointer select-auto"
+            >
+              <div>
+                {/* Visual Card Image Banner */}
+                <div className="relative aspect-[16/10] w-full overflow-hidden rounded-xl bg-muted mb-3 shrink-0">
+                  <img
+                    src={getTrialCardImage(trial.sport)}
+                    alt={`${trial.title} - ${trial.sport} Selection Trial`}
+                    width={400}
+                    height={250}
+                    loading="lazy"
+                    decoding="async"
+                    referrerPolicy="no-referrer"
+                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent pointer-events-none" />
 
-                    {/* Top Overlay: Sport & Badge */}
-                    <div className="absolute top-2 left-2 flex items-center gap-1.5 z-10">
-                      <span className="rounded-md bg-black/70 backdrop-blur-xs px-2 py-0.5 text-[10px] font-bold text-white uppercase tracking-wider">
-                        {trial.sport}
+                  {/* Top Overlay: Sport & Badge */}
+                  <div className="absolute top-2 left-2 flex items-center gap-1.5 z-10">
+                    <span className="rounded-md bg-black/70 backdrop-blur-xs px-2 py-0.5 text-[10px] font-bold text-white uppercase tracking-wider">
+                      {trial.sport}
+                    </span>
+                    {trial.badge && (
+                      <span className="rounded-md bg-primary/90 px-2 py-0.5 text-[10px] font-bold text-white shadow-xs">
+                        {trial.badge}
                       </span>
-                      {trial.badge && (
-                        <span className="rounded-md bg-primary/90 px-2 py-0.5 text-[10px] font-bold text-white shadow-xs">
-                          {trial.badge}
-                        </span>
-                      )}
-                    </div>
-
-                    {/* Top Right Action Buttons */}
-                    <div className="absolute top-2 right-2 flex items-center gap-1 z-10">
-                      <button
-                        type="button"
-                        onClick={(e) => handleShare(e, trial)}
-                        className="grid h-7 w-7 place-items-center rounded-lg bg-black/60 text-white/90 hover:bg-black/90 hover:text-white cursor-pointer transition backdrop-blur-xs"
-                        title="Share trial"
-                        aria-label="Share trial on WhatsApp"
-                      >
-                        <Share2 className="h-3.5 w-3.5" />
-                      </button>
-                      <button
-                        type="button"
-                        onClick={(e) => handleBookmark(e, trial.id, trial.title)}
-                        className={`grid h-7 w-7 place-items-center rounded-lg transition cursor-pointer backdrop-blur-xs ${
-                          saved
-                            ? "bg-rose-500 text-white shadow-xs"
-                            : "bg-black/60 text-white/90 hover:bg-black/90 hover:text-white"
-                        }`}
-                        title={saved ? "Remove from favorites" : "Save to favorites"}
-                        aria-label={saved ? "Remove from favorites" : "Save to favorites"}
-                      >
-                        <Heart className={`h-3.5 w-3.5 ${saved ? "fill-white" : ""}`} />
-                      </button>
-                    </div>
-
-                    {/* Bottom Overlay: City & Fee */}
-                    <div className="absolute bottom-2 left-2 right-2 flex items-center justify-between text-xs text-white/95 z-10 pointer-events-none">
-                      <span className="text-[11px] font-medium text-white/95 truncate flex items-center gap-1">
-                        <MapPin className="h-3 w-3 text-white/80 shrink-0" />
-                        <span>{trial.city}</span>
-                      </span>
-                      <span
-                        className={`rounded-md px-2 py-0.5 text-[10px] font-bold shadow-xs shrink-0 ${trial.feeLabel?.toLowerCase().includes("free") ? "bg-emerald-500/90 text-white" : "bg-secondary text-foreground"}`}
-                      >
-                        {trial.feeLabel || (trial.fee > 0 ? `₹${trial.fee}` : "Fee not stated")}
-                      </span>
-                    </div>
+                    )}
                   </div>
 
-                  {/* Trial Title */}
-                  <h3 className="text-sm font-bold text-foreground group-hover:text-primary transition-colors line-clamp-2 min-h-[2.5rem]">
-                    {trial.title}
-                  </h3>
+                  {/* Top Right Action Buttons */}
+                  <div className="absolute top-2 right-2 flex items-center gap-1 z-10">
+                    <button
+                      type="button"
+                      onClick={(e) => handleShare(e, trial)}
+                      className="grid h-7 w-7 place-items-center rounded-lg bg-black/60 text-white/90 hover:bg-black/90 hover:text-white cursor-pointer transition backdrop-blur-xs"
+                      title="Share trial"
+                      aria-label="Share trial on WhatsApp"
+                    >
+                      <Share2 className="h-3.5 w-3.5" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={(e) => handleBookmark(e, trial.id, trial.title)}
+                      className={`grid h-7 w-7 place-items-center rounded-lg transition cursor-pointer backdrop-blur-xs ${
+                        saved
+                          ? "bg-rose-500 text-white shadow-xs"
+                          : "bg-black/60 text-white/90 hover:bg-black/90 hover:text-white"
+                      }`}
+                      title={saved ? "Remove from favorites" : "Save to favorites"}
+                      aria-label={saved ? "Remove from favorites" : "Save to favorites"}
+                    >
+                      <Heart className={`h-3.5 w-3.5 ${saved ? "fill-white" : ""}`} />
+                    </button>
+                  </div>
 
-                  {/* Academy / Organizer */}
-                  <div className="mt-1 text-xs text-muted-foreground truncate flex items-center gap-1">
-                    <ShieldCheck className="h-3.5 w-3.5 text-emerald-500 shrink-0" />
-                    <span>{trial.academy}</span>
+                  {/* Bottom Overlay: City & Fee */}
+                  <div className="absolute bottom-2 left-2 right-2 flex items-center justify-between text-xs text-white/95 z-10 pointer-events-none">
+                    <span className="text-[11px] font-medium text-white/95 truncate flex items-center gap-1">
+                      <MapPin className="h-3 w-3 text-white/80 shrink-0" />
+                      <span>{trial.city}</span>
+                    </span>
+                    <span className={`rounded-md px-2 py-0.5 text-[10px] font-bold shadow-xs shrink-0 ${(!trial.feeLabel && trial.fee === 0) || trial.feeLabel?.toLowerCase().includes("free") ? "bg-emerald-500/90 text-white" : "bg-secondary text-foreground"}`}>
+                      {trial.feeLabel || (trial.fee === 0 ? "Free Entry" : `₹${trial.fee}`)}
+                    </span>
                   </div>
                 </div>
 
-                {/* Card Footer: Date, Eligibility */}
-                <div className="mt-3.5 pt-2.5 border-t border-border/60 flex items-center justify-between text-xs">
-                  <div className="flex items-center gap-1 text-muted-foreground">
-                    <Calendar className="h-3.5 w-3.5 text-primary shrink-0" />
-                    <span className="text-[11px] font-medium">{trial.date}</span>
-                  </div>
+                {/* Trial Title */}
+                <h3 className="text-sm font-bold text-foreground group-hover:text-primary transition-colors line-clamp-2 min-h-[2.5rem]">
+                  {trial.title}
+                </h3>
 
-                  <span className="rounded-md bg-secondary px-2 py-0.5 text-[10px] font-semibold text-secondary-foreground">
-                    {trial.ageCategory || "Open Age"}
-                  </span>
+                {/* Academy / Organizer */}
+                <div className="mt-1 text-xs text-muted-foreground truncate flex items-center gap-1">
+                  <ShieldCheck className="h-3.5 w-3.5 text-emerald-500 shrink-0" />
+                  <span>{trial.academy}</span>
                 </div>
-              </Link>
-            );
-          })
-        )}
+              </div>
+
+              {/* Card Footer: Date, Eligibility */}
+              <div className="mt-3.5 pt-2.5 border-t border-border/60 flex items-center justify-between text-xs">
+                <div className="flex items-center gap-1 text-muted-foreground">
+                  <Calendar className="h-3.5 w-3.5 text-primary shrink-0" />
+                  <span className="text-[11px] font-medium">{trial.date}</span>
+                </div>
+
+                <span className="rounded-md bg-secondary px-2 py-0.5 text-[10px] font-semibold text-secondary-foreground">
+                  {trial.ageCategory || "Open Age"}
+                </span>
+              </div>
+            </Link>
+          );
+        })}
       </div>
     </section>
   );

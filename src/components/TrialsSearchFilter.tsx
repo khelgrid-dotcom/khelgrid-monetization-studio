@@ -124,19 +124,7 @@ export const SPORT_TYPES: SportTypeDefinition[] = [
   {
     id: "team_ball",
     name: "Team & Ball Sports",
-    sports: [
-      "Cricket",
-      "Football",
-      "Hockey",
-      "Basketball",
-      "Volleyball",
-      "Handball",
-      "Kho-Kho",
-      "Rugby",
-      "Softball",
-      "Netball",
-      "Sepak Takraw",
-    ],
+    sports: ["Cricket", "Football", "Hockey", "Basketball", "Volleyball", "Handball", "Kho-Kho", "Rugby", "Softball", "Netball", "Sepak Takraw"],
     icon: "⚽",
   },
   {
@@ -154,17 +142,7 @@ export const SPORT_TYPES: SportTypeDefinition[] = [
   {
     id: "combat",
     name: "Combat & Martial Arts",
-    sports: [
-      "Wrestling",
-      "Wrestling Freestyle",
-      "Boxing",
-      "Kabaddi",
-      "Judo",
-      "Taekwondo",
-      "Karate",
-      "Wushu",
-      "Thang-Ta",
-    ],
+    sports: ["Wrestling", "Wrestling Freestyle", "Boxing", "Kabaddi", "Judo", "Taekwondo", "Karate", "Wushu", "Thang-Ta"],
     icon: "🤼",
   },
   {

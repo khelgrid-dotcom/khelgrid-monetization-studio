@@ -49,6 +49,7 @@ export function getSportSlug(sport: string): string {
     Rowing: "rowing",
     Equestrian: "equestrian",
     Fencing: "fencing",
+    Cycling: "cycling",
   };
   return map[sport] || sport.toLowerCase().replace(/[^a-z0-9]+/g, "-");
 }
@@ -147,6 +148,9 @@ export function getCitySlug(city: string): string {
     Ludhiana: "ludhiana",
     Bikaner: "bikaner",
     Udaipur: "udaipur",
+    Kangra: "kangra",
+    Bhavnagar: "bhavnagar",
+    Dungarpur: "dungarpur",
   };
   return map[city] || city.toLowerCase().replace(/[^a-z0-9]+/g, "-");
 }

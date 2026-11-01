@@ -10,15 +10,11 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as R6c71a3962bfa4c5ea1f5927c81d83ee6DottxtRouteImport } from './routes/6c71a3962bfa4c5ea1f5927c81d83ee6[.]txt'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AcademyRouteImport } from './routes/academy'
-import { Route as AdminVenueSubmissionsRouteImport } from './routes/admin-venue-submissions'
-import { Route as AdsDottxtRouteImport } from './routes/ads[.]txt'
 import { Route as AiGuideRouteImport } from './routes/ai-guide'
 import { Route as BlogRouteImport } from './routes/blog'
 import { Route as BookRouteImport } from './routes/book'
-import { Route as CalendarRouteImport } from './routes/calendar'
 import { Route as CancellationPolicyRouteImport } from './routes/cancellation-policy'
 import { Route as CareersRouteImport } from './routes/careers'
 import { Route as ChronicleRouteImport } from './routes/chronicle'
@@ -29,16 +25,13 @@ import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CopyrightPolicyRouteImport } from './routes/copyright-policy'
 import { Route as CorrectionPolicyRouteImport } from './routes/correction-policy'
 import { Route as DashboardRouteImport } from './routes/dashboard'
-import { Route as DistrictInfrastructureRouteImport } from './routes/district-infrastructure'
 import { Route as EditorialPolicyRouteImport } from './routes/editorial-policy'
 import { Route as EventsRouteImport } from './routes/events'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as GuidesRouteImport } from './routes/guides'
 import { Route as IprPolicyRouteImport } from './routes/ipr-policy'
 import { Route as LearningHubRouteImport } from './routes/learning-hub'
-import { Route as ListVenueRouteImport } from './routes/list-venue'
 import { Route as LiveScoresRouteImport } from './routes/live-scores'
-import { Route as LlmsDottxtRouteImport } from './routes/llms[.]txt'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as MembershipsRouteImport } from './routes/memberships'
 import { Route as MobileAppRouteImport } from './routes/mobile-app'
@@ -53,7 +46,6 @@ import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as RecommendationsRouteImport } from './routes/recommendations'
 import { Route as ResourcesRouteImport } from './routes/resources'
-import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as ScoutPortalRouteImport } from './routes/scout-portal'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as SettingsRouteImport } from './routes/settings'
@@ -68,8 +60,6 @@ import { Route as TrialsRouteImport } from './routes/trials'
 import { Route as TrustCenterRouteImport } from './routes/trust-center'
 import { Route as VerificationPolicyRouteImport } from './routes/verification-policy'
 import { Route as VerifyRouteImport } from './routes/verify'
-import { Route as ApiIndexnowRouteImport } from './routes/api.indexnow'
-import { Route as ApiTrialsRouteImport } from './routes/api.trials'
 import { Route as BestToolsCategoryRouteImport } from './routes/best-tools.$category'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as BlogWriteRouteImport } from './routes/blog.write'
@@ -91,12 +81,6 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const R6c71a3962bfa4c5ea1f5927c81d83ee6DottxtRoute =
-  R6c71a3962bfa4c5ea1f5927c81d83ee6DottxtRouteImport.update({
-    id: '/6c71a3962bfa4c5ea1f5927c81d83ee6.txt',
-    path: '/6c71a3962bfa4c5ea1f5927c81d83ee6.txt',
-    getParentRoute: () => rootRouteImport,
-  } as any)
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
@@ -105,16 +89,6 @@ const AboutRoute = AboutRouteImport.update({
 const AcademyRoute = AcademyRouteImport.update({
   id: '/academy',
   path: '/academy',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdminVenueSubmissionsRoute = AdminVenueSubmissionsRouteImport.update({
-  id: '/admin-venue-submissions',
-  path: '/admin-venue-submissions',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdsDottxtRoute = AdsDottxtRouteImport.update({
-  id: '/ads.txt',
-  path: '/ads.txt',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AiGuideRoute = AiGuideRouteImport.update({
@@ -130,11 +104,6 @@ const BlogRoute = BlogRouteImport.update({
 const BookRoute = BookRouteImport.update({
   id: '/book',
   path: '/book',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CalendarRoute = CalendarRouteImport.update({
-  id: '/calendar',
-  path: '/calendar',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CancellationPolicyRoute = CancellationPolicyRouteImport.update({
@@ -187,11 +156,6 @@ const DashboardRoute = DashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DistrictInfrastructureRoute = DistrictInfrastructureRouteImport.update({
-  id: '/district-infrastructure',
-  path: '/district-infrastructure',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const EditorialPolicyRoute = EditorialPolicyRouteImport.update({
   id: '/editorial-policy',
   path: '/editorial-policy',
@@ -222,19 +186,9 @@ const LearningHubRoute = LearningHubRouteImport.update({
   path: '/learning-hub',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ListVenueRoute = ListVenueRouteImport.update({
-  id: '/list-venue',
-  path: '/list-venue',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const LiveScoresRoute = LiveScoresRouteImport.update({
   id: '/live-scores',
   path: '/live-scores',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LlmsDottxtRoute = LlmsDottxtRouteImport.update({
-  id: '/llms.txt',
-  path: '/llms.txt',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -307,11 +261,6 @@ const ResourcesRoute = ResourcesRouteImport.update({
   path: '/resources',
   getParentRoute: () => rootRouteImport,
 } as any)
-const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
-  id: '/robots.txt',
-  path: '/robots.txt',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ScoutPortalRoute = ScoutPortalRouteImport.update({
   id: '/scout-portal',
   path: '/scout-portal',
@@ -380,16 +329,6 @@ const VerificationPolicyRoute = VerificationPolicyRouteImport.update({
 const VerifyRoute = VerifyRouteImport.update({
   id: '/verify',
   path: '/verify',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiIndexnowRoute = ApiIndexnowRouteImport.update({
-  id: '/api/indexnow',
-  path: '/api/indexnow',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiTrialsRoute = ApiTrialsRouteImport.update({
-  id: '/api/trials',
-  path: '/api/trials',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BestToolsCategoryRoute = BestToolsCategoryRouteImport.update({
@@ -470,15 +409,11 @@ const VenueIdRoute = VenueIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/6c71a3962bfa4c5ea1f5927c81d83ee6.txt': typeof R6c71a3962bfa4c5ea1f5927c81d83ee6DottxtRoute
   '/about': typeof AboutRoute
   '/academy': typeof AcademyRoute
-  '/admin-venue-submissions': typeof AdminVenueSubmissionsRoute
-  '/ads.txt': typeof AdsDottxtRoute
   '/ai-guide': typeof AiGuideRoute
   '/blog': typeof BlogRouteWithChildren
   '/book': typeof BookRoute
-  '/calendar': typeof CalendarRoute
   '/cancellation-policy': typeof CancellationPolicyRoute
   '/careers': typeof CareersRoute
   '/chronicle': typeof ChronicleRoute
@@ -489,16 +424,13 @@ export interface FileRoutesByFullPath {
   '/copyright-policy': typeof CopyrightPolicyRoute
   '/correction-policy': typeof CorrectionPolicyRoute
   '/dashboard': typeof DashboardRoute
-  '/district-infrastructure': typeof DistrictInfrastructureRoute
   '/editorial-policy': typeof EditorialPolicyRoute
   '/events': typeof EventsRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/guides': typeof GuidesRoute
   '/ipr-policy': typeof IprPolicyRoute
   '/learning-hub': typeof LearningHubRoute
-  '/list-venue': typeof ListVenueRoute
   '/live-scores': typeof LiveScoresRoute
-  '/llms.txt': typeof LlmsDottxtRoute
   '/login': typeof LoginRoute
   '/memberships': typeof MembershipsRoute
   '/mobile-app': typeof MobileAppRoute
@@ -513,7 +445,6 @@ export interface FileRoutesByFullPath {
   '/profile': typeof ProfileRoute
   '/recommendations': typeof RecommendationsRoute
   '/resources': typeof ResourcesRoute
-  '/robots.txt': typeof RobotsDottxtRoute
   '/scout-portal': typeof ScoutPortalRoute
   '/search': typeof SearchRoute
   '/settings': typeof SettingsRoute
@@ -528,8 +459,6 @@ export interface FileRoutesByFullPath {
   '/trust-center': typeof TrustCenterRoute
   '/verification-policy': typeof VerificationPolicyRoute
   '/verify': typeof VerifyRoute
-  '/api/indexnow': typeof ApiIndexnowRoute
-  '/api/trials': typeof ApiTrialsRoute
   '/best-tools/$category': typeof BestToolsCategoryRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/write': typeof BlogWriteRoute
@@ -548,15 +477,11 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/6c71a3962bfa4c5ea1f5927c81d83ee6.txt': typeof R6c71a3962bfa4c5ea1f5927c81d83ee6DottxtRoute
   '/about': typeof AboutRoute
   '/academy': typeof AcademyRoute
-  '/admin-venue-submissions': typeof AdminVenueSubmissionsRoute
-  '/ads.txt': typeof AdsDottxtRoute
   '/ai-guide': typeof AiGuideRoute
   '/blog': typeof BlogRouteWithChildren
   '/book': typeof BookRoute
-  '/calendar': typeof CalendarRoute
   '/cancellation-policy': typeof CancellationPolicyRoute
   '/careers': typeof CareersRoute
   '/chronicle': typeof ChronicleRoute
@@ -567,16 +492,13 @@ export interface FileRoutesByTo {
   '/copyright-policy': typeof CopyrightPolicyRoute
   '/correction-policy': typeof CorrectionPolicyRoute
   '/dashboard': typeof DashboardRoute
-  '/district-infrastructure': typeof DistrictInfrastructureRoute
   '/editorial-policy': typeof EditorialPolicyRoute
   '/events': typeof EventsRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/guides': typeof GuidesRoute
   '/ipr-policy': typeof IprPolicyRoute
   '/learning-hub': typeof LearningHubRoute
-  '/list-venue': typeof ListVenueRoute
   '/live-scores': typeof LiveScoresRoute
-  '/llms.txt': typeof LlmsDottxtRoute
   '/login': typeof LoginRoute
   '/memberships': typeof MembershipsRoute
   '/mobile-app': typeof MobileAppRoute
@@ -591,7 +513,6 @@ export interface FileRoutesByTo {
   '/profile': typeof ProfileRoute
   '/recommendations': typeof RecommendationsRoute
   '/resources': typeof ResourcesRoute
-  '/robots.txt': typeof RobotsDottxtRoute
   '/scout-portal': typeof ScoutPortalRoute
   '/search': typeof SearchRoute
   '/settings': typeof SettingsRoute
@@ -606,8 +527,6 @@ export interface FileRoutesByTo {
   '/trust-center': typeof TrustCenterRoute
   '/verification-policy': typeof VerificationPolicyRoute
   '/verify': typeof VerifyRoute
-  '/api/indexnow': typeof ApiIndexnowRoute
-  '/api/trials': typeof ApiTrialsRoute
   '/best-tools/$category': typeof BestToolsCategoryRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/write': typeof BlogWriteRoute
@@ -627,15 +546,11 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/6c71a3962bfa4c5ea1f5927c81d83ee6.txt': typeof R6c71a3962bfa4c5ea1f5927c81d83ee6DottxtRoute
   '/about': typeof AboutRoute
   '/academy': typeof AcademyRoute
-  '/admin-venue-submissions': typeof AdminVenueSubmissionsRoute
-  '/ads.txt': typeof AdsDottxtRoute
   '/ai-guide': typeof AiGuideRoute
   '/blog': typeof BlogRouteWithChildren
   '/book': typeof BookRoute
-  '/calendar': typeof CalendarRoute
   '/cancellation-policy': typeof CancellationPolicyRoute
   '/careers': typeof CareersRoute
   '/chronicle': typeof ChronicleRoute
@@ -646,16 +561,13 @@ export interface FileRoutesById {
   '/copyright-policy': typeof CopyrightPolicyRoute
   '/correction-policy': typeof CorrectionPolicyRoute
   '/dashboard': typeof DashboardRoute
-  '/district-infrastructure': typeof DistrictInfrastructureRoute
   '/editorial-policy': typeof EditorialPolicyRoute
   '/events': typeof EventsRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/guides': typeof GuidesRoute
   '/ipr-policy': typeof IprPolicyRoute
   '/learning-hub': typeof LearningHubRoute
-  '/list-venue': typeof ListVenueRoute
   '/live-scores': typeof LiveScoresRoute
-  '/llms.txt': typeof LlmsDottxtRoute
   '/login': typeof LoginRoute
   '/memberships': typeof MembershipsRoute
   '/mobile-app': typeof MobileAppRoute
@@ -670,7 +582,6 @@ export interface FileRoutesById {
   '/profile': typeof ProfileRoute
   '/recommendations': typeof RecommendationsRoute
   '/resources': typeof ResourcesRoute
-  '/robots.txt': typeof RobotsDottxtRoute
   '/scout-portal': typeof ScoutPortalRoute
   '/search': typeof SearchRoute
   '/settings': typeof SettingsRoute
@@ -685,8 +596,6 @@ export interface FileRoutesById {
   '/trust-center': typeof TrustCenterRoute
   '/verification-policy': typeof VerificationPolicyRoute
   '/verify': typeof VerifyRoute
-  '/api/indexnow': typeof ApiIndexnowRoute
-  '/api/trials': typeof ApiTrialsRoute
   '/best-tools/$category': typeof BestToolsCategoryRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/write': typeof BlogWriteRoute
@@ -707,15 +616,11 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/6c71a3962bfa4c5ea1f5927c81d83ee6.txt'
     | '/about'
     | '/academy'
-    | '/admin-venue-submissions'
-    | '/ads.txt'
     | '/ai-guide'
     | '/blog'
     | '/book'
-    | '/calendar'
     | '/cancellation-policy'
     | '/careers'
     | '/chronicle'
@@ -726,16 +631,13 @@ export interface FileRouteTypes {
     | '/copyright-policy'
     | '/correction-policy'
     | '/dashboard'
-    | '/district-infrastructure'
     | '/editorial-policy'
     | '/events'
     | '/forgot-password'
     | '/guides'
     | '/ipr-policy'
     | '/learning-hub'
-    | '/list-venue'
     | '/live-scores'
-    | '/llms.txt'
     | '/login'
     | '/memberships'
     | '/mobile-app'
@@ -750,7 +652,6 @@ export interface FileRouteTypes {
     | '/profile'
     | '/recommendations'
     | '/resources'
-    | '/robots.txt'
     | '/scout-portal'
     | '/search'
     | '/settings'
@@ -765,8 +666,6 @@ export interface FileRouteTypes {
     | '/trust-center'
     | '/verification-policy'
     | '/verify'
-    | '/api/indexnow'
-    | '/api/trials'
     | '/best-tools/$category'
     | '/blog/$slug'
     | '/blog/write'
@@ -785,15 +684,11 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/6c71a3962bfa4c5ea1f5927c81d83ee6.txt'
     | '/about'
     | '/academy'
-    | '/admin-venue-submissions'
-    | '/ads.txt'
     | '/ai-guide'
     | '/blog'
     | '/book'
-    | '/calendar'
     | '/cancellation-policy'
     | '/careers'
     | '/chronicle'
@@ -804,16 +699,13 @@ export interface FileRouteTypes {
     | '/copyright-policy'
     | '/correction-policy'
     | '/dashboard'
-    | '/district-infrastructure'
     | '/editorial-policy'
     | '/events'
     | '/forgot-password'
     | '/guides'
     | '/ipr-policy'
     | '/learning-hub'
-    | '/list-venue'
     | '/live-scores'
-    | '/llms.txt'
     | '/login'
     | '/memberships'
     | '/mobile-app'
@@ -828,7 +720,6 @@ export interface FileRouteTypes {
     | '/profile'
     | '/recommendations'
     | '/resources'
-    | '/robots.txt'
     | '/scout-portal'
     | '/search'
     | '/settings'
@@ -843,8 +734,6 @@ export interface FileRouteTypes {
     | '/trust-center'
     | '/verification-policy'
     | '/verify'
-    | '/api/indexnow'
-    | '/api/trials'
     | '/best-tools/$category'
     | '/blog/$slug'
     | '/blog/write'
@@ -863,15 +752,11 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
-    | '/6c71a3962bfa4c5ea1f5927c81d83ee6.txt'
     | '/about'
     | '/academy'
-    | '/admin-venue-submissions'
-    | '/ads.txt'
     | '/ai-guide'
     | '/blog'
     | '/book'
-    | '/calendar'
     | '/cancellation-policy'
     | '/careers'
     | '/chronicle'
@@ -882,16 +767,13 @@ export interface FileRouteTypes {
     | '/copyright-policy'
     | '/correction-policy'
     | '/dashboard'
-    | '/district-infrastructure'
     | '/editorial-policy'
     | '/events'
     | '/forgot-password'
     | '/guides'
     | '/ipr-policy'
     | '/learning-hub'
-    | '/list-venue'
     | '/live-scores'
-    | '/llms.txt'
     | '/login'
     | '/memberships'
     | '/mobile-app'
@@ -906,7 +788,6 @@ export interface FileRouteTypes {
     | '/profile'
     | '/recommendations'
     | '/resources'
-    | '/robots.txt'
     | '/scout-portal'
     | '/search'
     | '/settings'
@@ -921,8 +802,6 @@ export interface FileRouteTypes {
     | '/trust-center'
     | '/verification-policy'
     | '/verify'
-    | '/api/indexnow'
-    | '/api/trials'
     | '/best-tools/$category'
     | '/blog/$slug'
     | '/blog/write'
@@ -942,15 +821,11 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  R6c71a3962bfa4c5ea1f5927c81d83ee6DottxtRoute: typeof R6c71a3962bfa4c5ea1f5927c81d83ee6DottxtRoute
   AboutRoute: typeof AboutRoute
   AcademyRoute: typeof AcademyRoute
-  AdminVenueSubmissionsRoute: typeof AdminVenueSubmissionsRoute
-  AdsDottxtRoute: typeof AdsDottxtRoute
   AiGuideRoute: typeof AiGuideRoute
   BlogRoute: typeof BlogRouteWithChildren
   BookRoute: typeof BookRoute
-  CalendarRoute: typeof CalendarRoute
   CancellationPolicyRoute: typeof CancellationPolicyRoute
   CareersRoute: typeof CareersRoute
   ChronicleRoute: typeof ChronicleRoute
@@ -961,16 +836,13 @@ export interface RootRouteChildren {
   CopyrightPolicyRoute: typeof CopyrightPolicyRoute
   CorrectionPolicyRoute: typeof CorrectionPolicyRoute
   DashboardRoute: typeof DashboardRoute
-  DistrictInfrastructureRoute: typeof DistrictInfrastructureRoute
   EditorialPolicyRoute: typeof EditorialPolicyRoute
   EventsRoute: typeof EventsRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   GuidesRoute: typeof GuidesRoute
   IprPolicyRoute: typeof IprPolicyRoute
   LearningHubRoute: typeof LearningHubRoute
-  ListVenueRoute: typeof ListVenueRoute
   LiveScoresRoute: typeof LiveScoresRoute
-  LlmsDottxtRoute: typeof LlmsDottxtRoute
   LoginRoute: typeof LoginRoute
   MembershipsRoute: typeof MembershipsRoute
   MobileAppRoute: typeof MobileAppRoute
@@ -985,7 +857,6 @@ export interface RootRouteChildren {
   ProfileRoute: typeof ProfileRoute
   RecommendationsRoute: typeof RecommendationsRoute
   ResourcesRoute: typeof ResourcesRoute
-  RobotsDottxtRoute: typeof RobotsDottxtRoute
   ScoutPortalRoute: typeof ScoutPortalRoute
   SearchRoute: typeof SearchRoute
   SettingsRoute: typeof SettingsRoute
@@ -1000,8 +871,6 @@ export interface RootRouteChildren {
   TrustCenterRoute: typeof TrustCenterRoute
   VerificationPolicyRoute: typeof VerificationPolicyRoute
   VerifyRoute: typeof VerifyRoute
-  ApiIndexnowRoute: typeof ApiIndexnowRoute
-  ApiTrialsRoute: typeof ApiTrialsRoute
   BestToolsCategoryRoute: typeof BestToolsCategoryRoute
   CitySlugRoute: typeof CitySlugRoute
   CvIdRoute: typeof CvIdRoute
@@ -1023,13 +892,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/6c71a3962bfa4c5ea1f5927c81d83ee6.txt': {
-      id: '/6c71a3962bfa4c5ea1f5927c81d83ee6.txt'
-      path: '/6c71a3962bfa4c5ea1f5927c81d83ee6.txt'
-      fullPath: '/6c71a3962bfa4c5ea1f5927c81d83ee6.txt'
-      preLoaderRoute: typeof R6c71a3962bfa4c5ea1f5927c81d83ee6DottxtRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/about': {
       id: '/about'
       path: '/about'
@@ -1042,20 +904,6 @@ declare module '@tanstack/react-router' {
       path: '/academy'
       fullPath: '/academy'
       preLoaderRoute: typeof AcademyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin-venue-submissions': {
-      id: '/admin-venue-submissions'
-      path: '/admin-venue-submissions'
-      fullPath: '/admin-venue-submissions'
-      preLoaderRoute: typeof AdminVenueSubmissionsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/ads.txt': {
-      id: '/ads.txt'
-      path: '/ads.txt'
-      fullPath: '/ads.txt'
-      preLoaderRoute: typeof AdsDottxtRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/ai-guide': {
@@ -1077,13 +925,6 @@ declare module '@tanstack/react-router' {
       path: '/book'
       fullPath: '/book'
       preLoaderRoute: typeof BookRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/calendar': {
-      id: '/calendar'
-      path: '/calendar'
-      fullPath: '/calendar'
-      preLoaderRoute: typeof CalendarRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/cancellation-policy': {
@@ -1156,13 +997,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/district-infrastructure': {
-      id: '/district-infrastructure'
-      path: '/district-infrastructure'
-      fullPath: '/district-infrastructure'
-      preLoaderRoute: typeof DistrictInfrastructureRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/editorial-policy': {
       id: '/editorial-policy'
       path: '/editorial-policy'
@@ -1205,25 +1039,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LearningHubRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/list-venue': {
-      id: '/list-venue'
-      path: '/list-venue'
-      fullPath: '/list-venue'
-      preLoaderRoute: typeof ListVenueRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/live-scores': {
       id: '/live-scores'
       path: '/live-scores'
       fullPath: '/live-scores'
       preLoaderRoute: typeof LiveScoresRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/llms.txt': {
-      id: '/llms.txt'
-      path: '/llms.txt'
-      fullPath: '/llms.txt'
-      preLoaderRoute: typeof LlmsDottxtRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -1324,13 +1144,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResourcesRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/robots.txt': {
-      id: '/robots.txt'
-      path: '/robots.txt'
-      fullPath: '/robots.txt'
-      preLoaderRoute: typeof RobotsDottxtRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/scout-portal': {
       id: '/scout-portal'
       path: '/scout-portal'
@@ -1427,20 +1240,6 @@ declare module '@tanstack/react-router' {
       path: '/verify'
       fullPath: '/verify'
       preLoaderRoute: typeof VerifyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/indexnow': {
-      id: '/api/indexnow'
-      path: '/api/indexnow'
-      fullPath: '/api/indexnow'
-      preLoaderRoute: typeof ApiIndexnowRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/trials': {
-      id: '/api/trials'
-      path: '/api/trials'
-      fullPath: '/api/trials'
-      preLoaderRoute: typeof ApiTrialsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/best-tools/$category': {
@@ -1598,16 +1397,11 @@ const ToolsRouteWithChildren = ToolsRoute._addFileChildren(ToolsRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  R6c71a3962bfa4c5ea1f5927c81d83ee6DottxtRoute:
-    R6c71a3962bfa4c5ea1f5927c81d83ee6DottxtRoute,
   AboutRoute: AboutRoute,
   AcademyRoute: AcademyRoute,
-  AdminVenueSubmissionsRoute: AdminVenueSubmissionsRoute,
-  AdsDottxtRoute: AdsDottxtRoute,
   AiGuideRoute: AiGuideRoute,
   BlogRoute: BlogRouteWithChildren,
   BookRoute: BookRoute,
-  CalendarRoute: CalendarRoute,
   CancellationPolicyRoute: CancellationPolicyRoute,
   CareersRoute: CareersRoute,
   ChronicleRoute: ChronicleRoute,
@@ -1618,16 +1412,13 @@ const rootRouteChildren: RootRouteChildren = {
   CopyrightPolicyRoute: CopyrightPolicyRoute,
   CorrectionPolicyRoute: CorrectionPolicyRoute,
   DashboardRoute: DashboardRoute,
-  DistrictInfrastructureRoute: DistrictInfrastructureRoute,
   EditorialPolicyRoute: EditorialPolicyRoute,
   EventsRoute: EventsRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
   GuidesRoute: GuidesRoute,
   IprPolicyRoute: IprPolicyRoute,
   LearningHubRoute: LearningHubRoute,
-  ListVenueRoute: ListVenueRoute,
   LiveScoresRoute: LiveScoresRoute,
-  LlmsDottxtRoute: LlmsDottxtRoute,
   LoginRoute: LoginRoute,
   MembershipsRoute: MembershipsRoute,
   MobileAppRoute: MobileAppRoute,
@@ -1642,7 +1433,6 @@ const rootRouteChildren: RootRouteChildren = {
   ProfileRoute: ProfileRoute,
   RecommendationsRoute: RecommendationsRoute,
   ResourcesRoute: ResourcesRoute,
-  RobotsDottxtRoute: RobotsDottxtRoute,
   ScoutPortalRoute: ScoutPortalRoute,
   SearchRoute: SearchRoute,
   SettingsRoute: SettingsRoute,
@@ -1657,8 +1447,6 @@ const rootRouteChildren: RootRouteChildren = {
   TrustCenterRoute: TrustCenterRoute,
   VerificationPolicyRoute: VerificationPolicyRoute,
   VerifyRoute: VerifyRoute,
-  ApiIndexnowRoute: ApiIndexnowRoute,
-  ApiTrialsRoute: ApiTrialsRoute,
   BestToolsCategoryRoute: BestToolsCategoryRoute,
   CitySlugRoute: CitySlugRoute,
   CvIdRoute: CvIdRoute,

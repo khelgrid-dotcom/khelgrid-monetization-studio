@@ -260,7 +260,13 @@ export function generateOrganizationSchema() {
     logo: `${SITE_URL}/favicon-96x96.png`,
     image: DEFAULT_OG_IMAGE,
     description: "India's premier sports discovery and talent development network.",
-    sameAs: ["https://twitter.com/khelgrid", "https://www.instagram.com/khelgrid"],
+    sameAs: [
+      "https://twitter.com/khelgrid",
+      "https://www.instagram.com/khelgrid",
+      "https://www.facebook.com/khelgrid",
+      "https://www.linkedin.com/company/khelgrid",
+      "https://www.youtube.com/channel/UCfz_oxfKQ2uX08P0Dfj1OZw",
+    ],
     contactPoint: {
       "@type": "ContactPoint",
       contactType: "customer service",
@@ -284,7 +290,13 @@ export function generateGeneralOrganizationSchema() {
     logo: `${SITE_URL}/favicon-96x96.png`,
     image: DEFAULT_OG_IMAGE,
     description: "India's premier sports discovery and talent development network.",
-    sameAs: ["https://twitter.com/khelgrid", "https://www.instagram.com/khelgrid"],
+    sameAs: [
+      "https://twitter.com/khelgrid",
+      "https://www.instagram.com/khelgrid",
+      "https://www.facebook.com/khelgrid",
+      "https://www.linkedin.com/company/khelgrid",
+      "https://www.youtube.com/channel/UCfz_oxfKQ2uX08P0Dfj1OZw",
+    ],
     contactPoint: {
       "@type": "ContactPoint",
       contactType: "customer service",

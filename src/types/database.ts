@@ -78,7 +78,6 @@ export interface Database {
           trial_date: string;
           reporting_time: string | null;
           fee: number;
-          fee_label?: string | null;
           spots_total: number;
           spots_available: number;
           tag: string;

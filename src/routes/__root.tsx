@@ -27,9 +27,16 @@ import {
   AdConsentProvider,
   AdConsentBanner,
   AdSenseLoader,
+  MonetagLoader,
   StickyMobileAdSlot,
 } from "@/components/ads";
-import { adsConfig, hasValidPublisherId, hasAdSenseEnvId, getEnvPublisherId } from "@/config/ads";
+import {
+  adsConfig,
+  hasValidPublisherId,
+  hasAdSenseEnvId,
+  getEnvPublisherId,
+  monetagConfig,
+} from "@/config/ads";
 import { analyticsConfig } from "@/config/analytics";
 import { GoogleTagLoader } from "@/components/GoogleTagLoader";
 import { SEO } from "@/components/seo/SEO";
@@ -178,6 +185,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
             { rel: "dns-prefetch", href: "https://tpc.googlesyndication.com" },
           ] as const)
         : []),
+      // Monetag advertising network host prefetch
+      { rel: "dns-prefetch", href: `https://${monetagConfig.domain}` },
     ],
     scripts: [
       // Canonical Organization, WebSite & BreadcrumbList JSON-LD in main layout
@@ -229,7 +238,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
                 "Sports Quota Recruitment 2026",
                 "Grassroots Sports in India",
               ],
-              sameAs: ["https://twitter.com/khelgrid", "https://www.instagram.com/khelgrid"],
+              sameAs: [
+                "https://twitter.com/khelgrid",
+                "https://www.instagram.com/khelgrid",
+                "https://www.facebook.com/khelgrid",
+                "https://www.linkedin.com/company/khelgrid",
+                "https://www.youtube.com/channel/UCfz_oxfKQ2uX08P0Dfj1OZw",
+              ],
               contactPoint: {
                 "@type": "ContactPoint",
                 contactType: "customer service",
@@ -317,6 +332,8 @@ function RootShell({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className="light" style={{ colorScheme: "light" }} suppressHydrationWarning>
       <head suppressHydrationWarning>
+        {/* Monetag site ownership verification meta tag directly embedded in initial server-side HTML */}
+        <meta name="monetag" content={monetagConfig.verificationToken} suppressHydrationWarning />
         <script
           suppressHydrationWarning
           dangerouslySetInnerHTML={{
@@ -372,7 +389,13 @@ function RootShell({ children }: { children: ReactNode }) {
               image: "https://www.khelgrid.com/og-image.svg",
               description:
                 "India's sports opportunity network connecting grassroots athletes with verified selection trials, Khelo India academies, and sports quota recruitments.",
-              sameAs: ["https://twitter.com/khelgrid", "https://www.instagram.com/khelgrid"],
+              sameAs: [
+                "https://twitter.com/khelgrid",
+                "https://www.instagram.com/khelgrid",
+                "https://www.facebook.com/khelgrid",
+                "https://www.linkedin.com/company/khelgrid",
+                "https://www.youtube.com/channel/UCfz_oxfKQ2uX08P0Dfj1OZw",
+              ],
               contactPoint: {
                 "@type": "ContactPoint",
                 contactType: "customer service",
@@ -421,6 +444,7 @@ function RootComponent() {
                         />
                         <SEOHead />
                         <AdSenseLoader />
+                        <MonetagLoader registerServiceWorker={true} />
 
                         <Navbar />
                         <Breadcrumbs />

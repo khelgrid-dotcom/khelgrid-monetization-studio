@@ -50,3 +50,6 @@ export {
   type AdSenseDiagnosticReport,
   type UseAdSenseDiagnosticsReturn,
 } from "@/hooks/use-adsense-diagnostics";
+export { MonetagLoader, type MonetagLoaderProps } from "./MonetagLoader";
+export { MonetagBanner, type MonetagBannerProps } from "./MonetagBanner";
+export { monetagConfig, hasMonetagZone, isMonetagActive, getMonetagScriptUrl } from "@/config/ads";

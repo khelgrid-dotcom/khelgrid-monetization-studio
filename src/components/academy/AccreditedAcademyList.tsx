@@ -105,7 +105,9 @@ export const DEFAULT_BATCH_9_ACADEMIES = RAW_KHELO_ACADEMIES.slice(160, 180);
 export const DEFAULT_BATCH_10_ACADEMIES = RAW_KHELO_ACADEMIES.slice(180, 200);
 export const DEFAULT_BATCH_11_ACADEMIES = RAW_KHELO_ACADEMIES.slice(200, 220);
 export const DEFAULT_BATCH_12_ACADEMIES = RAW_KHELO_ACADEMIES.slice(220, 240);
-export const DEFAULT_BATCH_13_ACADEMIES = RAW_KHELO_ACADEMIES.slice(240);
+export const DEFAULT_BATCH_13_ACADEMIES = RAW_KHELO_ACADEMIES.slice(240, 260);
+export const DEFAULT_BATCH_14_ACADEMIES = RAW_KHELO_ACADEMIES.slice(260, 280);
+export const DEFAULT_BATCH_15_ACADEMIES = RAW_KHELO_ACADEMIES.slice(280, 300);
 
 export type BatchFilterType =
   | "all"
@@ -121,7 +123,9 @@ export type BatchFilterType =
   | "batch10"
   | "batch11"
   | "batch12"
-  | "batch13";
+  | "batch13"
+  | "batch14"
+  | "batch15";
 
 export interface AccreditedAcademyListProps {
   /** Array of academies to render. Defaults to all unique Khelo India academies */
@@ -180,6 +184,8 @@ export function AccreditedAcademyList({
     if (selectedBatch === "batch11") return DEFAULT_BATCH_11_ACADEMIES;
     if (selectedBatch === "batch12") return DEFAULT_BATCH_12_ACADEMIES;
     if (selectedBatch === "batch13") return DEFAULT_BATCH_13_ACADEMIES;
+    if (selectedBatch === "batch14") return DEFAULT_BATCH_14_ACADEMIES;
+    if (selectedBatch === "batch15") return DEFAULT_BATCH_15_ACADEMIES;
     return academies;
   }, [academies, selectedBatch]);
 
@@ -510,6 +516,26 @@ export function AccreditedAcademyList({
                 className="h-7.5 px-2.5 text-xs font-medium cursor-pointer"
               >
                 Batch 13
+              </Button>
+
+              <Button
+                type="button"
+                variant={selectedBatch === "batch14" ? "default" : "ghost"}
+                size="sm"
+                onClick={() => setSelectedBatch("batch14")}
+                className="h-7.5 px-2.5 text-xs font-medium cursor-pointer"
+              >
+                Batch 14
+              </Button>
+
+              <Button
+                type="button"
+                variant={selectedBatch === "batch15" ? "default" : "ghost"}
+                size="sm"
+                onClick={() => setSelectedBatch("batch15")}
+                className="h-7.5 px-2.5 text-xs font-medium cursor-pointer"
+              >
+                Batch 15
               </Button>
             </div>
           </div>
