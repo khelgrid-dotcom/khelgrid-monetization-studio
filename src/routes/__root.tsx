@@ -191,6 +191,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "dns-prefetch", href: "https://al5sm.com" },
     ],
     scripts: [
+      // Monetag In-Page Push / Ad Tag (Zone 12165707)
+      {
+        children: `(function(s){s.dataset.zone='12165707',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));`,
+      },
+      // Monetag MultiTag ad delivery script
+      {
+        src: "https://5gvci.com/act/files/tag.min.js?z=12165692",
+        async: true,
+        "data-cfasync": "false",
+      },
       // Canonical Organization, WebSite & BreadcrumbList JSON-LD in main layout
       {
         type: "application/ld+json",
@@ -334,19 +344,19 @@ function RootShell({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className="light" style={{ colorScheme: "light" }} suppressHydrationWarning>
       <head suppressHydrationWarning>
-        {/* Monetag MultiTag ad delivery script */}
-        <script
-          async
-          src="https://5gvci.com/act/files/tag.min.js?z=12165692"
-          data-cfasync="false"
-          suppressHydrationWarning
-        />
         {/* Monetag In-Page Push / Ad Tag (Zone 12165707) */}
         <script
           suppressHydrationWarning
           dangerouslySetInnerHTML={{
             __html: `(function(s){s.dataset.zone='12165707',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));`,
           }}
+        />
+        {/* Monetag MultiTag ad delivery script */}
+        <script
+          async
+          src="https://5gvci.com/act/files/tag.min.js?z=12165692"
+          data-cfasync="false"
+          suppressHydrationWarning
         />
         {/* Monetag site ownership verification meta tag directly embedded in initial server-side HTML */}
         <meta name="monetag" content={monetagConfig.verificationToken} suppressHydrationWarning />
