@@ -189,8 +189,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "dns-prefetch", href: "https://5gvci.com" },
       { rel: "dns-prefetch", href: "https://3nbf4.com" },
       { rel: "dns-prefetch", href: "https://al5sm.com" },
+      { rel: "dns-prefetch", href: "https://quge5.com" },
     ],
     scripts: [
+      // Monetag MultiTag tag (Zone 304298)
+      {
+        src: "https://quge5.com/88/tag.min.js",
+        async: true,
+        "data-cfasync": "false",
+        "data-zone": "304298",
+      },
       // Monetag In-Page Push / Ad Tag (Zone 12165707)
       {
         children: `(function(s){s.dataset.zone='12165707',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));`,
@@ -344,6 +352,14 @@ function RootShell({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className="light" style={{ colorScheme: "light" }} suppressHydrationWarning>
       <head suppressHydrationWarning>
+        {/* Monetag Tag (Zone 304298) */}
+        <script
+          async
+          src="https://quge5.com/88/tag.min.js"
+          data-zone="304298"
+          data-cfasync="false"
+          suppressHydrationWarning
+        />
         {/* Monetag In-Page Push / Ad Tag (Zone 12165707) */}
         <script
           suppressHydrationWarning

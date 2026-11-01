@@ -50,7 +50,9 @@ describe("Monetag Advertising & Verification Configuration", () => {
     const { monetagConfig, getMonetagScriptUrl } = await import("./ads");
     expect(monetagConfig.verificationToken).toBe("6849cf6d9be2966239a31c15fef2755c");
     expect(monetagConfig.domain).toBe("3nbf4.com");
-    expect(monetagConfig.zoneId).toBe("12165692");
+    expect(monetagConfig.zoneId).toBe("12165869");
+    expect(monetagConfig.multiTagZoneId).toBe("304298");
+    expect(monetagConfig.multiTagScriptUrl).toBe("https://quge5.com/88/tag.min.js");
     expect(getMonetagScriptUrl()).toContain("tag.min.js?z=12165692");
   });
 
@@ -77,6 +79,6 @@ describe("Monetag Advertising & Verification Configuration", () => {
 
     const swContent = fs.readFileSync(swFile, "utf-8");
     expect(swContent).toContain("3nbf4.com");
-    expect(swContent).toContain("12165692");
+    expect(swContent).toContain("12165869");
   });
 });

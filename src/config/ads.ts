@@ -139,13 +139,28 @@ export const monetagConfig = {
   verificationToken: "6849cf6d9be2966239a31c15fef2755c",
 
   /**
-   * Primary Monetag MultiTag / Zone ID.
+   * Primary Monetag Web Push / Service Worker Zone ID.
    * Can be configured via VITE_MONETAG_ZONE_ID in .env or dashboard settings.
    */
-  zoneId: ((import.meta.env["VITE_MONETAG_ZONE_ID"] as string | undefined) ?? "12165692").trim(),
+  zoneId: ((import.meta.env["VITE_MONETAG_ZONE_ID"] as string | undefined) ?? "12165869").trim(),
 
   /**
-   * Monetag script CDN host / URL for MultiTag integration.
+   * Monetag MultiTag tag zone ID
+   */
+  multiTagZoneId: (
+    (import.meta.env["VITE_MONETAG_MULTITAG_ZONE_ID"] as string | undefined) ?? "304298"
+  ).trim(),
+
+  /**
+   * Monetag MultiTag script URL
+   */
+  multiTagScriptUrl: (
+    (import.meta.env["VITE_MONETAG_MULTITAG_SCRIPT_URL"] as string | undefined) ??
+    "https://quge5.com/88/tag.min.js"
+  ).trim(),
+
+  /**
+   * Monetag script CDN host / URL for Push / MultiTag integration.
    * Default: "https://5gvci.com/act/files/tag.min.js?z=12165692"
    */
   scriptUrl: (
