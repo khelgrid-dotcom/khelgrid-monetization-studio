@@ -160,12 +160,12 @@ export const monetagConfig = {
   ).trim(),
 
   /**
-   * Monetag script CDN host / URL for Push / MultiTag integration.
-   * Default: "https://5gvci.com/act/files/tag.min.js?z=12165692"
+   * Monetag script CDN host / URL for unified MultiTag delivery.
+   * Default: "https://quge5.com/88/tag.min.js"
    */
   scriptUrl: (
     (import.meta.env["VITE_MONETAG_SCRIPT_URL"] as string | undefined) ??
-    "https://5gvci.com/act/files/tag.min.js?z=12165692"
+    "https://quge5.com/88/tag.min.js"
   ).trim(),
 
   /**

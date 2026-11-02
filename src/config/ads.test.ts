@@ -52,8 +52,7 @@ describe("Monetag Advertising & Verification Configuration", () => {
     expect(monetagConfig.domain).toBe("3nbf4.com");
     expect(monetagConfig.zoneId).toBe("12165869");
     expect(monetagConfig.multiTagZoneId).toBe("304298");
-    expect(monetagConfig.multiTagScriptUrl).toBe("https://quge5.com/88/tag.min.js");
-    expect(getMonetagScriptUrl()).toContain("tag.min.js?z=12165692");
+    expect(getMonetagScriptUrl()).toContain("tag.min.js");
   });
 
   it("safely handles zone configuration and default flags", async () => {

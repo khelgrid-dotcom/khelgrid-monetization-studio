@@ -59,7 +59,11 @@ export function MonetagLoader({
     if (initAttempted.current) return;
 
     // Check if script is already present in document
-    if (document.getElementById(SCRIPT_ELEMENT_ID)) {
+    if (
+      document.getElementById(SCRIPT_ELEMENT_ID) ||
+      document.querySelector('script[src*="tag.min.js"]') ||
+      document.querySelector('script[src*="quge5.com"]')
+    ) {
       initAttempted.current = true;
       return;
     }
