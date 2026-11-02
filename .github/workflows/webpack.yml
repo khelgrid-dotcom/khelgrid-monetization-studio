@@ -22,6 +22,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: npm
+          cache-dependency-path: package-lock.json
 
       - name: Report Node.js and npm versions
         # Record exact resolved runtime versions for reproducible CI diagnostics.
@@ -30,7 +31,12 @@ jobs:
           npm --version
 
       - name: Install dependencies from lockfile
-        run: npm ci --no-audit --no-fund
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci --no-audit --no-fund || npm install --no-audit --no-fund
+          else
+            npm install --no-audit --no-fund
+          fi
 
       - name: Build
         run: npm run build
