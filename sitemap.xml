@@ -253,6 +253,12 @@
     <priority>0.30</priority>
   </url>
   <url>
+    <loc>https://www.khelgrid.com/workplace-policy</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.40</priority>
+  </url>
+  <url>
     <loc>https://www.khelgrid.com/privacy</loc>
     <lastmod>2026-10-20</lastmod>
     <changefreq>yearly</changefreq>
