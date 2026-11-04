@@ -578,6 +578,22 @@ export const CITIES_CATALOG: City[] = [
     venueNote: "Kanpur South Ground (Kidwai Nagar), Green Park Stadium and Kamla Club Ground",
     hubs: ["Kanpur South Ground", "Green Park Stadium", "Kamla Club Ground"],
   },
+  {
+    slug: "dhar",
+    name: "Dhar",
+    state: "Madhya Pradesh",
+    tagline: "SAI Sports Training Centre (STC) hub for Badminton, Archery & Taekwondo",
+    venueNote: "SAI Sports Training Centre (STC) Dhar and district athletic facilities",
+    hubs: ["SAI Sports Training Centre (STC) Dhar", "Dhar District Sports Complex"],
+  },
+  {
+    slug: "rajnandgaon",
+    name: "Rajnandgaon",
+    state: "Chhattisgarh",
+    tagline: "SAI Sports Training Centre (STC) basketball nursery & state sports hub",
+    venueNote: "SAI Sports Training Centre (STC) Rajnandgaon and Digvijay Stadium complex",
+    hubs: ["SAI Sports Training Centre (STC) Rajnandgaon", "Digvijay Stadium Complex"],
+  },
 ];
 
 const GUIDE_ENTRIES: Guide[] = [

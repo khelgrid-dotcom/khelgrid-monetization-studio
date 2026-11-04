@@ -301,12 +301,6 @@
     <priority>0.90</priority>
   </url>
   <url>
-    <loc>https://www.khelgrid.com/trial/t-8</loc>
-    <lastmod>2026-10-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.90</priority>
-  </url>
-  <url>
     <loc>https://www.khelgrid.com/trial/t-9</loc>
     <lastmod>2026-10-20</lastmod>
     <changefreq>weekly</changefreq>
@@ -650,6 +644,30 @@
   </url>
   <url>
     <loc>https://www.khelgrid.com/trial/t-sgfi-70th-table-tennis-u17-delhi-2026</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://www.khelgrid.com/trial/t-sai-stc-dhar-badminton-trials-2026</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://www.khelgrid.com/trial/t-sai-stc-dhar-archery-trials-2026</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://www.khelgrid.com/trial/t-sai-stc-dhar-taekwondo-trials-2026</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://www.khelgrid.com/trial/t-sai-stc-rajnandgaon-basketball-trials-2026</loc>
     <lastmod>2026-10-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.90</priority>
@@ -1046,6 +1064,18 @@
   </url>
   <url>
     <loc>https://www.khelgrid.com/city/kanpur</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://www.khelgrid.com/city/dhar</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://www.khelgrid.com/city/rajnandgaon</loc>
     <lastmod>2026-10-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.80</priority>
